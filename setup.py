@@ -1,0 +1,37 @@
+from setuptools import setup, find_packages
+
+setup(
+name='webull_sdk',
+version='0.2.0',
+author='chuckdustin12',
+author_email='chuckdustin12@gmail.com',
+description='This package is designed to help users gather market data for trading.',
+packages=find_packages(),
+install_requires=[
+'numpy>=1.18',
+'pandas>=1.0',
+'aiohttp==3.8.4',
+'aiosignal==1.3.1',
+'anyio==3.6.2',
+'async-timeout==4.0.2',
+'attrs==23.1.0',
+'certifi==2022.12.7',
+'charset-normalizer==3.1.0',
+'frozenlist==1.3.3',
+'h11==0.14.0',
+'httpcore==0.17.0',
+'httpx==0.24.0',
+'idna==3.4',
+'multidict==6.0.4',
+'numpy==1.24.3',
+'pandas==2.0.1',
+'requests==2.29.0',
+'scipy==1.10.1',
+'sniffio==1.3.0',
+'urllib3==1.26.15',
+'websocket-client==1.5.1',
+'websockets==10.4',
+'yarl==1.9.2',],
+license='MIT',
+keywords=['finance', 'trading', 'stocks', 'analysis', 'async', 'webull', 'api', 'markets']
+)
