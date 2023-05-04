@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
 name='webull_sdk',
-version='0.2.0',
+version='0.3.0',
 author='chuckdustin12',
 author_email='chuckdustin12@gmail.com',
 description='This package is designed to help users gather market data for trading.',
