@@ -31,7 +31,7 @@ from .aggregates import AggregatesData
 from .quote import Quote
 import aiohttp
 from datetime import datetime, timedelta
-from discord.embeddings.embeddings import make_news_embed
+from discord_utils.embeddings import Data
 
 ten_days_ago = datetime.utcnow() - timedelta(days=5)
 date_string = ten_days_ago.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -433,7 +433,7 @@ class AsyncPolygonSDK:
 
                 for keyword, webhook_url in keyword_hooks.items():
                     if keyword in article_keywords:
-                        await make_news_embed(webhook_url, image_url[article_index], title[article_index], description[article_index], name[article_index], icon_url[article_index], article_url, tickers[article_index], home_url[article_index], article_keywords, author[article_index])
+                        await Data().make_news_embed(webhook_url, image_url[article_index], title[article_index], description[article_index], name[article_index], icon_url[article_index], article_url, tickers[article_index], home_url[article_index], article_keywords, author[article_index])
                         sent_articles.add(article_url)
                         sent_webhook = True
                         print(f"New article processed: {title[article_index]} {keywords}")
