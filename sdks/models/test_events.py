@@ -285,7 +285,6 @@ class TestOptionsEvent:
     change_to_break_even: float
     price: float
     underlying_ticker: str
-
     @classmethod
     def from_row(cls, row) -> 'TestOptionsEvent':
         last_trade_conditions = row["last_trade_conditions"] if pd.notna(row["last_trade_conditions"]) else None
