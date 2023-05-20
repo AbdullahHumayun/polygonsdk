@@ -1,14 +1,15 @@
+
+
+
 from discord_webhook import DiscordEmbed, AsyncDiscordWebhook
 
-from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
-from sdks.polygon_sdk.mapping_dicts import STOCK_EXCHANGES, stock_condition_dict
 
-from discord_utils import emojis
+
+
 from discord_utils.hooks.channel_webhooks import daybanana,weekbanana,hourbanana
 
-from cfg import YOUR_API_KEY
+
 
 
 
