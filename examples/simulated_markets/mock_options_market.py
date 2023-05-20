@@ -9,8 +9,10 @@ import asyncio
 from asyncio import Queue
 from datetime import datetime
 from dataclasses import asdict
+from sdks.helpers.helpers import human_readable
 from sdks.models.test_events import TestOptionsEvent, option_condition_dict, OPTIONS_EXCHANGES
 import pandas as pd
+
 
 
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
@@ -25,7 +27,7 @@ df = pd.read_csv('files/options/all_options_data.csv')
 
 async def handle_msg(msgs: List[TestOptionsEvent], queue: Queue):
     for m in msgs:
-        
+
         await queue.put(m) 
 
 async def send_messages(handler, queue: Queue): 
@@ -40,7 +42,7 @@ async def consume(queue: Queue):
     while True:
         m = await queue.get()
         #do something
-        print(m.ask)
+        print(f"{human_readable(m.ticker)} | ASK: ${m.ask} | BID: ${m.bid} | VOLUME: ${m.day_volume}")
 
 
 
