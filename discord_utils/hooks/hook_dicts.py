@@ -1,0 +1,376 @@
+"""REPLACE WITH DISCORD CHANNEL WEBHOOKS TO MONITOR SPECIFIC COUNTRY TICKERS / INDEX TICKERS"""
+
+##CHINA##
+
+ACH="YOUR WEBHOOK CHANNEL URL HERE"
+AMBO="YOUR WEBHOOK CHANNEL URL HERE"
+APTO="YOUR WEBHOOK CHANNEL URL HERE"
+BABA="YOUR WEBHOOK CHANNEL URL HERE"
+BEKE="YOUR WEBHOOK CHANNEL URL HERE"
+BIDU="YOUR WEBHOOK CHANNEL URL HERE"
+DADA="YOUR WEBHOOK CHANNEL URL HERE"
+DAO="YOUR WEBHOOK CHANNEL URL HERE"
+CD="YOUR WEBHOOK CHANNEL URL HERE"
+DQ="YOUR WEBHOOK CHANNEL URL HERE"
+EDU="YOUR WEBHOOK CHANNEL URL HERE"
+EH="YOUR WEBHOOK CHANNEL URL HERE"
+EJH="YOUR WEBHOOK CHANNEL URL HERE"
+FENG="YOUR WEBHOOK CHANNEL URL HERE"
+GDS="YOUR WEBHOOK CHANNEL URL HERE"
+GHG="YOUR WEBHOOK CHANNEL URL HERE"
+GSH="YOUR WEBHOOK CHANNEL URL HERE"
+GOTU="YOUR WEBHOOK CHANNEL URL HERE"
+GTYH="YOUR WEBHOOK CHANNEL URL HERE"
+HNP="YOUR WEBHOOK CHANNEL URL HERE"
+HTHT="YOUR WEBHOOK CHANNEL URL HERE"
+HUYA="YOUR WEBHOOK CHANNEL URL HERE"
+JD="YOUR WEBHOOK CHANNEL URL HERE"
+JG="YOUR WEBHOOK CHANNEL URL HERE"
+JMIA="YOUR WEBHOOK CHANNEL URL HERE"
+JRJC="YOUR WEBHOOK CHANNEL URL HERE"
+KONG="YOUR WEBHOOK CHANNEL URL HERE"
+KC="YOUR WEBHOOK CHANNEL URL HERE"
+AMGN="YOUR WEBHOOK CHANNEL URL HERE"
+LFC="YOUR WEBHOOK CHANNEL URL HERE"
+LFT="YOUR WEBHOOK CHANNEL URL HERE"
+LGVW="YOUR WEBHOOK CHANNEL URL HERE"
+LIZI="YOUR WEBHOOK CHANNEL URL HERE"
+LK="YOUR WEBHOOK CHANNEL URL HERE"
+MOTV="YOUR WEBHOOK CHANNEL URL HERE"
+NIO="YOUR WEBHOOK CHANNEL URL HERE"
+NPTN="YOUR WEBHOOK CHANNEL URL HERE"
+PDD="YOUR WEBHOOK CHANNEL URL HERE"
+QD="YOUR WEBHOOK CHANNEL URL HERE"
+QIWI="YOUR WEBHOOK CHANNEL URL HERE"
+SFUN="YOUR WEBHOOK CHANNEL URL HERE"
+SMICY="YOUR WEBHOOK CHANNEL URL HERE"
+TAL="YOUR WEBHOOK CHANNEL URL HERE"
+TC="YOUR WEBHOOK CHANNEL URL HERE"
+TME="YOUR WEBHOOK CHANNEL URL HERE"
+TUYA="YOUR WEBHOOK CHANNEL URL HERE"
+TSM="YOUR WEBHOOK CHANNEL URL HERE"
+UPWK="YOUR WEBHOOK CHANNEL URL HERE"
+VIPS="YOUR WEBHOOK CHANNEL URL HERE"
+ZLAB="YOUR WEBHOOK CHANNEL URL HERE"
+
+china_hooks = { 
+    'ACH':ACH,
+    'AMBO':AMBO,
+    'APTO':APTO,
+    'BABA':BABA,
+    'BEKE':BEKE,
+    'BIDU':BIDU,
+    'DADA':DADA,
+    'DAO':DAO,
+    'CD':CD,
+    'DQ':DQ,
+    'EDU':EDU,
+    'EH':EH,
+    'EJH':EJH,
+    'FENG':FENG,
+    'GDS':GDS,
+    'GHG':GHG,
+    'GSH':GSH,
+    'GOTU':GOTU,
+    'GTYH':GTYH,
+    'HNP':HNP,
+    'HTHT':HTHT,
+    'HUYA':HUYA,
+    'JD': JD,
+    'JG': JG,
+    'JMIA':JMIA,
+    'JRJC':JRJC,
+    'KONG':KONG,
+    'KC': KC,
+    'LFC':LFC,
+    'LFG':LFT,
+    'LGVW':LGVW,
+    'LIZI':LIZI,
+    'LK':LK,
+    'MOTV':MOTV,
+    'NIO':NIO,
+    'NPTN':NPTN,
+    'PDD':PDD,
+    'QD':QD,
+    'QIWI':QIWI,
+    'SFUN':SFUN,
+    'SMICY':SMICY,
+    'TAL':TAL,
+    'TC':TC,
+    'TME':TME,
+    'TUYA':TUYA,
+    'TSM':TSM,
+    'UPWK': UPWK,
+    'VIPS': VIPS,
+    'ZLAB': ZLAB,
+
+
+
+##INDEX##
+
+}   
+
+AMC="YOUR WEBHOOK CHANNEL URL HERE"
+GME="YOUR WEBHOOK CHANNEL URL HERE"
+MULN="YOUR WEBHOOK CHANNEL URL HERE"
+BBBY="YOUR WEBHOOK CHANNEL URL HERE"
+meme_hooks = { 
+    'AMC':AMC,
+    'GME':GME,
+    'MULN':MULN,
+    'BBBY':BBBY,
+}
+
+AAPL="YOUR WEBHOOK CHANNEL URL HERE"
+ADI="YOUR WEBHOOK CHANNEL URL HERE"
+ADP="YOUR WEBHOOK CHANNEL URL HERE"
+AMAT="YOUR WEBHOOK CHANNEL URL HERE"
+AMZN="YOUR WEBHOOK CHANNEL URL HERE"
+CSCO="YOUR WEBHOOK CHANNEL URL HERE"
+CMCSA="YOUR WEBHOOK CHANNEL URL HERE"
+COST="YOUR WEBHOOK CHANNEL URL HERE"
+CTSH="YOUR WEBHOOK CHANNEL URL HERE"
+AVGO="YOUR WEBHOOK CHANNEL URL HERE"
+GILD="YOUR WEBHOOK CHANNEL URL HERE"
+INTC="YOUR WEBHOOK CHANNEL URL HERE"
+GOOG="YOUR WEBHOOK CHANNEL URL HERE"
+FAST="YOUR WEBHOOK CHANNEL URL HERE"
+FISV="YOUR WEBHOOK CHANNEL URL HERE"
+INTU="YOUR WEBHOOK CHANNEL URL HERE"
+MSFT="YOUR WEBHOOK CHANNEL URL HERE"
+ILMN="YOUR WEBHOOK CHANNEL URL HERE"
+NFLX="YOUR WEBHOOK CHANNEL URL HERE"
+NVDA="YOUR WEBHOOK CHANNEL URL HERE"
+PYPL="YOUR WEBHOOK CHANNEL URL HERE"
+SBUX="YOUR WEBHOOK CHANNEL URL HERE"
+TSLA="YOUR WEBHOOK CHANNEL URL HERE"
+QCOM="YOUR WEBHOOK CHANNEL URL HERE"
+PEP="YOUR WEBHOOK CHANNEL URL HERE"
+MELI="YOUR WEBHOOK CHANNEL URL HERE"
+MU="YOUR WEBHOOK CHANNEL URL HERE"
+PAYX="YOUR WEBHOOK CHANNEL URL HERE"
+TXN="YOUR WEBHOOK CHANNEL URL HERE"
+KLAC="YOUR WEBHOOK CHANNEL URL HERE"
+KHC="YOUR WEBHOOK CHANNEL URL HERE"
+LRCX="YOUR WEBHOOK CHANNEL URL HERE"
+MAR="YOUR WEBHOOK CHANNEL URL HERE"
+MNST="YOUR WEBHOOK CHANNEL URL HERE"
+VRSK="YOUR WEBHOOK CHANNEL URL HERE"
+VRSN="YOUR WEBHOOK CHANNEL URL HERE"
+VRTX="YOUR WEBHOOK CHANNEL URL HERE"
+WBA="YOUR WEBHOOK CHANNEL URL HERE"
+WDAY="YOUR WEBHOOK CHANNEL URL HERE"
+XEL="YOUR WEBHOOK CHANNEL URL HERE"
+ZM = "YOUR WEBHOOK CHANNEL URL HERE"
+META="YOUR WEBHOOK CHANNEL URL HERE"
+ISRG="YOUR WEBHOOK CHANNEL URL HERE"
+
+index_hooks = { 
+    'AAPL':AAPL,
+    'ADI':ADI,
+    'ADP':ADP,
+    'AMGN': AMGN,
+    'AMAT': AMAT,
+    'AMZN': AMZN,
+    'AVGO': AVGO,
+    'META': META,
+    'CSCO': CSCO,
+    'CMCSA':CMCSA,
+    'COST':COST,
+    'CTSH': CTSH,
+    'GILD': GILD,
+    'INTC': INTC,
+    'ISRG': ISRG,
+    'GOOG': GOOG,
+    'FAST': FAST,
+    'FISV':FISV,
+    'INTU':INTU,
+    'MSFT':MSFT,
+    'ILMN':ILMN,
+    'NFLX':NFLX,
+    'NVDA':NVDA,
+    'PYPL':PYPL,
+    'MU':MU,
+    'TSLA':TSLA,
+    'QCOM':QCOM,
+    'SBUX':SBUX,
+    'PEP':PEP,
+    'MELI':MELI,
+    'PAYX':PAYX,
+    'TXN':TXN,
+    'KLAC':KLAC,
+    'KHC': KHC,
+    'LRCX': LRCX,
+    'MAR': MAR,
+    'MNST': MNST,
+    'VRSK': VRSK,
+    'VRSN': VRSN,
+    'VRTX': VRTX,
+    'WBA': WBA,
+    'WDAY': WDAY,
+    'XEL': XEL,
+    'ZM': ZM,
+
+
+
+}
+
+##INDIA##
+
+AXIS="YOUR WEBHOOK CHANNEL URL HERE"
+HDB="YOUR WEBHOOK CHANNEL URL HERE"
+IBN="YOUR WEBHOOK CHANNEL URL HERE"
+INFY="YOUR WEBHOOK CHANNEL URL HERE"
+MAKE="YOUR WEBHOOK CHANNEL URL HERE"
+REDY="YOUR WEBHOOK CHANNEL URL HERE"
+SIFY="YOUR WEBHOOK CHANNEL URL HERE"
+WIPRO="YOUR WEBHOOK CHANNEL URL HERE"
+WNS="YOUR WEBHOOK CHANNEL URL HERE"
+YTRA="YOUR WEBHOOK CHANNEL URL HERE"
+YPRL="YOUR WEBHOOK CHANNEL URL HERE"
+ZEEL="YOUR WEBHOOK CHANNEL URL HERE"
+
+
+india_hooks = { 
+    'AXIS': AXIS,
+    'HDB': HDB,
+    'IBN': IBN,
+    'INFY': INFY,
+    'MAKE': MAKE,
+    'REDY': REDY,
+    'SIFY': SIFY,
+    'WIPRO': WIPRO,
+    'WNS': WNS,
+    'YTRA': YTRA,
+    'YPRL': YPRL,
+    'ZEEL': ZEEL
+
+}
+
+
+##RUSSIA##
+
+
+GZFPY="YOUR WEBHOOK CHANNEL URL HERE"
+LUKOY="YOUR WEBHOOK CHANNEL URL HERE"
+MTL="YOUR WEBHOOK CHANNEL URL HERE"
+MBT="YOUR WEBHOOK CHANNEL URL HERE"
+NOVKY="YOUR WEBHOOK CHANNEL URL HERE"
+NILSY="YOUR WEBHOOK CHANNEL URL HERE"
+RNFTF="YOUR WEBHOOK CHANNEL URL HERE"
+russia_hooks = { 
+    'GZFPY': GZFPY,
+    'LUKOY': LUKOY,
+    'MTL': MTL,
+    'MBT': MBT,
+    'NOVKY': NOVKY,
+    'NILSY': NILSY,
+    'RNFTF': RNFTF
+
+
+
+}
+SPXW="YOUR WEBHOOK CHANNEL URL HERE"
+SPY="YOUR WEBHOOK CHANNEL URL HERE"
+TQQQ="YOUR WEBHOOK CHANNEL URL HERE"
+SQQQ="YOUR WEBHOOK CHANNEL URL HERE"
+QQQ="YOUR WEBHOOK CHANNEL URL HERE"
+KRE="YOUR WEBHOOK CHANNEL URL HERE"
+FXI="YOUR WEBHOOK CHANNEL URL HERE"
+EEM="YOUR WEBHOOK CHANNEL URL HERE"
+EWZ="YOUR WEBHOOK CHANNEL URL HERE"
+IWM="YOUR WEBHOOK CHANNEL URL HERE"
+ETF_BROAD_MARKET_HOOKS = { 
+    'SPXW': SPXW,
+    'SPY': SPY,
+    'EEM': EEM,
+    'FXI': FXI,
+    'KRE': KRE,
+    'QQQ': QQQ,
+    'IWM': IWM,
+    'SQQQ': SQQQ,
+    'TQQQ': TQQQ,
+    'EWZ': EWZ
+}
+
+
+stock_condition_hooks = {
+
+"Intermarket Sweep": "https://discord.com/api/webhooks/1109365382684344380/ze0a5r-LLldnd__2mxs3NxqNn1vzkB06YBoFjsc3fZtRIUwNqiZfmpPTUdIvwS8Xe_qT",
+"SSR In Effect": "https://discord.com/api/webhooks/1109365427877974147/E0EQjec_9tOwhluPRXWCCOsvvReW0QlvfTqRi2dmvaKrRbRoZb7_oeg6ffREmHp_u7pU",
+"Odd Lot Trade": "https://discord.com/api/webhooks/1109365472840908810/BWz1vjBsXLSMg_cAme8h-RGyx2wbzPNIDqlIgNgNcdAYxVncQ0B08qWeIsXp0CTvOLXG",
+"Closing Prints": "https://discord.com/api/webhooks/1109365517585748069/NYU9q621zqXkTjUebpNrk_PRymTv1sCZgRSwl1K4Zd3rS0-LcG1U2v1kSSsZzw1LIMIQ",
+"Derivatively Priced": "https://discord.com/api/webhooks/1109365562506743839/MtfdrkBUv9MwO0-1ZipQ6ruf5ckuxQ79QixEXMayd9J20l5BZerH0bDePERATvNpbeov",
+"Opening Prings": "https://discord.com/api/webhooks/1109365607859765269/Rm3G2SHaHH3bluKsENgUR5Mjyd8TttdwCG6Yjv5R4rbWddGYlD4rCcA72_eiVmKM-p4u",
+
+
+}
+
+stock_exchange_hooks = { 
+"Nyse Arca, Inc": "https://discord.com/api/webhooks/1109365738948542506/7LUotTHVseYQTwBXKWePzDUP6bVPPyWkn3ufN6QyrQ8AMxkOhpvzFC4KAwuZCnvsFaH9",
+"New York Stock Exchange": "https://discord.com/api/webhooks/1109365784360276049/qJ-LaWE8zTyijss5xS_5BXOAgmcEOzM_1jAgCgNjRn5SAa-AGhRv2c8cRICM9y7SJf23",
+"Finra Alternative Display Facility": "https://discord.com/api/webhooks/1109365829847482378/MjdR8RjclGsrQtRSoUC10FbLnaO9JfAumaWrV4fn6FhW4pxsK4m83vximZvqMLmnh7jG",
+"Nasdaq": "https://discord.com/api/webhooks/1109365875712200765/j-03bBIkG-LI7VNLmnSXrRv41QYOLWC0_7TgtIhqkxhus46-TxJNnlsgScKyILfxN7nW",
+"CboeEDGA": "https://discord.com/api/webhooks/1109365920847122512/QZpFnpNJ5aqqHct_ky6cX2HUhIbd9TGpK8vd7-Qd4GHXti1JxXHkn4AfmHSXwX_X81q8",
+"Cboe EDGX": "https://discord.com/api/webhooks/1109365965948465152/7gff8D2kPsszRMd8Gn0y7ziH0deWudN6oRZKNE9rfXPl7fRxmailv_cBXMU1MlIDl3GT",
+"Cboe BZX": "https://discord.com/api/webhooks/1109366010999488573/BZd1PsgJEwtPEd7LFyUOHMcaXi_XD76l4gvsH3cpCFhySbjPOlwrGvdp4yCmw67SUVRC",
+"NYSE American, LLC": "https://discord.com/api/webhooks/1109366056394432583/oEoHhj5c_nP8pg4giZAORiNfHY3ObNfs82ynvKfPgwbRIBKpjtGwa1n-ZOwMN-rgjiEn",
+"Cboe BYX": "https://discord.com/api/webhooks/1109366101554507796/3w6oVmcMA07GI8m_YsRyP9iSzZE2ry_sSjDqBCnCWT1NS---xQU9AHPgXt1COx24ol2r",
+"Investors Exchange": "https://discord.com/api/webhooks/1109366146643263508/Hiftg9wGNQ5wq1HJhwEAgvLRphwLGqbQNLZAtpyAzwxx6M1gyGODCDqmn4npccuBRlgb",
+"Members Exchange": "https://discord.com/api/webhooks/1109366191853678602/A1GuNqYSsLTewNgivR8GvTF0oOLLgVb68AMxja70GVRFGfU37zWB63P16sWVlVNdMb6w",
+"MIAX Pearl": "https://discord.com/api/webhooks/1109366236824993842/gQbhYbTvMXoO6lWv4AwGRZU-lVd1fasCZKt4Oo-N4cADOh0qAEDS7cXC5Szx_KD8FiLG",
+"Nasdaq Philadelphia Exchange LLC":"https://discord.com/api/webhooks/1109366282047991818/H4Kebu2yVZv53IduDJMeoA4qTtaUe7-99hCu1d40nyCLQWOxPzBuUt-lcn2jO_y3UWLQ",
+"Consolidated Tape Association": "https://discord.com/api/webhooks/1109366327505862758/H-NTi7jf4xxIVFpoiKjchUup1-ShAxRriNJn_urdDjg8D4Z0qKyigfam8FfcXELWz8Tk",}
+
+
+
+
+options_exchange_hooks = { 
+ 
+'NYSE American Options': "https://discord.com/api/webhooks/1109487304550141992/2OhDYAtFgiPpT9BziPo0f2vez8plzIF8nQEE6u3W26p6w2WvS7fl4FBLPS7NhBWSLGBD",
+'Boston Options Exchange': "https://discord.com/api/webhooks/1109487350486159432/bS-eT5Wc_qxmKkzAh3kbnItG_omEfvMTm5zCB9-oSEYGaeO2e7EVToEnZ0haKmihWhgi",
+'Chicago Board Options Exchange': "https://discord.com/api/webhooks/1109487397038739578/IU6r4wzxylubcyCj4Hi_wk13lGrooqpt6cZJdvznUS1di_CPOtw1H0LozdB6vdpf-Up1",
+'MIAX Emerald, LLC': "https://discord.com/api/webhooks/1109489503653085274/CapY4oLG8r2-x7HEQxml0stD8NLhc0ITeQdxLvwL76EL5D96B-Y4bUR-6EDtzX89yJzH",
+'Cboe EDGX Options': "https://discord.com/api/webhooks/1109487856134668360/-ebo3_7unV-jptRtYPZ-gE2ncEuzhJC4lpG4iZAZQOG8M3G3X7b39bZuzGKB3M8yOk1b",
+'Nasdaq Global Markets Exchange Group': "https://discord.com/api/webhooks/1109487442823761940/4LbRBJr63ZCoO6EkQRPyhcvrz_1wQWy2CJ2Wois1l5zvgnCBexQdGIkIhFdSOmbJhh6s",
+'International Securities Exchange, LLC': "https://discord.com/api/webhooks/1109487488524881960/iFKcJg8KdSHUfhVL5n2PKjNOYDGSoVRUxnQW0xlxlsmWhRUztv4N678qIPcB6ASx_YW6",
+'Nasdaq MRX Options Exchange': "https://discord.com/api/webhooks/1109487534532198440/o89bQcGtyjZXs7Lved3GUxaeBDaan30ze-TeV7ZV9Vy9EUzCzu2VwreQx7_XUY6bu2uo",
+'MIAX International Securities Exchange, LLC': "https://discord.com/api/webhooks/1109487580006854717/SIWioT2z5IE4rwcefzz2h6JjNPXdXyV5cbBF5iWaZcV3lvCMQ2PWPUG4h3-G0YxehGCm",
+'NYSE Arca, Inc. - Options': "https://discord.com/api/webhooks/1109487625909309460/9gcHaTti3OZ4-RYaH5KKQGf88liQi2Nl2so4eTMxTboct9y_9_oxSyzZjfhcoh_JgM3-",
+'Options Price Reporting Authority': "https://discord.com/api/webhooks/1109487672126361630/Vvryhu9CQs-c_MviF5yfcKZraU_7OwK4WKpsfJlI0BV_wX5-7ykR8JyZ2jiU4toWl0vg",
+'MIAX Pearl, LLC - Options': "https://discord.com/api/webhooks/1109487718527926477/c4uRfYgR-tBvr2WSStWgNiC5mk3roq_pyurbwnE_xe1aC7RLqWmNZJQ7R5X9O1Sx-i2l",
+'Nasdaq BX - Options': "https://discord.com/api/webhooks/1109487764635914291/qtJta1fMQKoxMuxetIhHYOwj9mQdwewVEM0IE9a_x1k36QSC7b8dWpwSP83MRg2b1bbW",
+'Nasdaq Philadelphia Exchange, LLC - Options': "https://discord.com/api/webhooks/1109487810320277646/iiOnMraj1Nozb1eHzVNGKiXSVCGLXoJzcBqRRvl23blK4LHdedihdnIHE1SnQRPlTkXn",
+'Cboe BZX Options Exchange': "https://discord.com/api/webhooks/1109487856134668360/-ebo3_7unV-jptRtYPZ-gE2ncEuzhJC4lpG4iZAZQOG8M3G3X7b39bZuzGKB3M8yOk1b",
+"MIAX Pearl, LLC": "https://discord.com/api/webhooks/1109487718527926477/c4uRfYgR-tBvr2WSStWgNiC5mk3roq_pyurbwnE_xe1aC7RLqWmNZJQ7R5X9O1Sx-i2l",
+"Cboe EDGX": "https://discord.com/api/webhooks/1109490074996981923/3pnsQ1s8R-nQTNR1hrpM8MGBwWMfI9XlY8rvGGF8WjpM3e5EU0yJ74NaC7uhkVal4Gtw",
+"Cboe C2 Options Exchange": "https://discord.com/api/webhooks/1109487397038739578/IU6r4wzxylubcyCj4Hi_wk13lGrooqpt6cZJdvznUS1di_CPOtw1H0LozdB6vdpf-Up1"
+}
+
+
+option_condition_hooks = { 
+    "Intermarket Sweep Order": "https://discord.com/api/webhooks/1109486244569821265/JALpQjPsQGdpJrvC8BUqKfoleGJezUv_-0z_pb8h-ouw7L0D_hqgyvCGq8bx4Ezfoiaq",
+    "Reopening Trade": "https://discord.com/api/webhooks/1109486290220613722/VfPiBCQBPKknbWoSBzNy7tzF3tNkJJJa1Q6KWKPbC6QYu89uAxWLY7NpKjmJLHm1UEJQ",
+    "Canceled": "https://discord.com/api/webhooks/1109486336626405508/K0VixXlZb2epZjX5GYHdytjOMpTfKIBOawTFFdmCu_IGzHEA8gjOA8zGa7f7uhEF8UGZ",
+    "Reopening Trade": "https://discord.com/api/webhooks/1109486383619387492/S5PDaIF6SysqcRBc8Hp-XvTc1GC9D3E2zDobJRM3hV8qnwleXrzx0f9GOLNtIjwySijo",
+    "Single Leg Auction ISO": "https://discord.com/api/webhooks/1109486475122327583/mzygOx5ABZfnS9L_wKMDAirphu9OOj30stnpzCQJMDScOyrwAEIrWqJuXnoDNKxJdFzC",
+    "Single Leg Auction Non ISO": "https://discord.com/api/webhooks/1109486521683296316/ZIWTTqQ-5r0wShykkL3ERUOKHHVgXVZ7-g2DaGn9--d2I0zRdtwen7TQWF82L-ECP4lr",
+    "Single Leg Cross ISO": "https://discord.com/api/webhooks/1109486566532980767/3X-6iYklWXJk9qsCGtKOI6kObKjwTI8o9-atVVo2dqoBSt0ccsucB1fD1e5pWatJYeT2",
+    "Single Leg Cross Non ISO": "https://discord.com/api/webhooks/1109486612334784552/Wk2A9MeajaOWM2FngB2Aa663TJEZzQl18qTJUBkt4QRCYTEGV08la0n6CSj5QKrpV7m3",
+    "Single Leg Floor Trade": "https://discord.com/api/webhooks/1109486658295955516/c9HsnImXnRsOp8gLrGu1H9MaW5zwYtFN4-YmsZm1tHgETYnajKYVTntINLAkVQQKywOB",
+    "Multi Leg auto-electronic trade": "https://discord.com/api/webhooks/1109486705410580581/eQwhjhOQn9Fxx8AIwCtgekEq1Q64qSxF23lRIC4UjtWHnaqz7bGHvWsUuoVHte2bxS9z",
+    "Multi leg cross": "https://discord.com/api/webhooks/1109486751845715978/hMY1AABfw0_krp9k4-cEzatjuLnhqvKtB4Dt9tnWDX6NuHvUXvZFqYTv3e7umagm3srl",
+    "Multi Leg floor trade": "https://discord.com/api/webhooks/1109486798398308352/g7rr0v3A5iVvmYRFpnaPbdfJwonXLE-bS9RfdhZJ-N38L9uVt-aRt1VOYuaOmRtzwMrj",
+    "Multi Leg Auction against single leg(s)": "https://discord.com/api/webhooks/1109486843910692925/bnHEU_cr0myjefD9pjjTmXDWUJg9_M_ARPkBHxroHHyR2ihAF3ge5JLxwUJJlbSMa4Ua",
+    "Stock Options Auction": "https://discord.com/api/webhooks/1109486890027069510/EDAVPQpo_eugWhzQlopA7CFUdyDDeKIb5Qfa5bFpiiT0rmV2hU17v0-oxG5wPKGe30DJ",
+    "Stock Options Cross": "https://discord.com/api/webhooks/1109486935401037904/9efsICeBdBQvmAy_fsrzRZyCWfGsylfBAM0p3g6MHSu0Vf1xDIb_o7FShrOpeAIROwII",
+    "Stock Options floor trade": "https://discord.com/api/webhooks/1109486985095172096/lB0c_V_IPtu_SD2KHVoNO1WL18jhz6hntvk12-EpeEuFvStOfrIKaPbzrXKXz5ZxqtbS",
+    "Stock Options Auction against single leg(s)": "https://discord.com/api/webhooks/1109487031341563924/630VfB0X71P9x1KngdmoXceKIpmmJeeI2OoRE-BudS80hOhg71GHDNnzfd3lwPDg-pi0",
+    "Stock Options floor trade against single leg(s)": "https://discord.com/api/webhooks/1109487078158381247/DxWEtdlfQPe_JNrVdsw09FUUzblG5MWtXwj1TkXpUImwza7qNZMyorOj4E8Qq2zxcGx6",
+    "Multi Leg Floor Trade of Proprietary Products": "https://discord.com/api/webhooks/1109487124014698566/c4cm4sS0YCn_QJFw2eYKvalYe7mrmsIw2KAJau-3owhsRmtS3i_UY26KbleDcPhyI10I",
+    "Multilateral Compression Trade of Proprietary Products": "https://discord.com/api/webhooks/1109487170013638709/svnucDs_B6WNnJ7K2UvGkV-NUwzbUHsRIdnX7SB1K-5C1E_AZ5Xtzy_DqZYlVJQiYDh4",
+    "Extended Hours Trade": "https://discord.com/api/webhooks/1109487215849001010/GtM8XOW5Qp0Nz88lSS0l_MOyBYyXONenJJgMnOhVK1k_PgTamsTyvnU8MXF0Gzzf4Ce6"
+
+}
+
+
