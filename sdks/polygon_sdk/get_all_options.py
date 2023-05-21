@@ -3,7 +3,7 @@ import asyncio
 import csv
 import aiofiles
 from cfg import YOUR_API_KEY as API_KEY
-MAX_SIMULTANEOUS_REQUESTS = 550
+MAX_SIMULTANEOUS_REQUESTS = 50
 
 
 

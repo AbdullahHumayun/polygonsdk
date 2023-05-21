@@ -231,10 +231,10 @@ class AsyncWebullSDK:
     async def get_etf_categories(self, type: str) -> Optional[List[ETFCommodity]]:
             """
             Retrieves a list of ETFs from the following types:
-            >>> Commodity
-            >>> Industry
-            >>> Index
-            >>> Other
+            >>> commodity
+            >>> industry
+            >>> index
+            >>> other
 
             Args:
                 type (str): The category type of ETFCommodity instances to retrieve. Must be one of "index", "industry", "commodity", or "other".
@@ -396,11 +396,11 @@ class AsyncWebullSDK:
         capital_flow = CapitalFlow(ticker)
         await capital_flow.fetch_data(id=tickerid)  # Add this line
         # Calculate total inflow and outflow
-        total_inflow = capital_flow.superin + capital_flow.largein + capital_flow.mediumin + capital_flow.smallin + capital_flow.majorin + capital_flow.retailin
-        total_outflow = capital_flow.superout + capital_flow.largeout + capital_flow.mediumout + capital_flow.smallout + capital_flow.majorout + capital_flow.retailout
+        total_inflow = capital_flow.superin[0] + capital_flow.largein[0] + capital_flow.mediumin[0] + capital_flow.smallin[0] + capital_flow.majorin[0] + capital_flow.retailin[0]
+        total_outflow = capital_flow.superout[0] + capital_flow.largeout[0] + capital_flow.mediumout[0] + capital_flow.smallout[0] + capital_flow.majorout[0] + capital_flow.retailout[0]
 
         # Calculate the net flow
-        net_flow = total_inflow - total_outflow
+        net_flow = float(total_inflow) - float(total_outflow)
 
         # Determine the level of inflow or outflow
         if net_flow > 0:
@@ -416,7 +416,7 @@ class AsyncWebullSDK:
             tickerid, _ = await self.fetch_ticker_id(ticker)
             async with session.get(f"https://quotes-gw.webullfintech.com/api/stock/capitalflow/ticker?tickerId={tickerid}&showHis=true") as response:
                 r = await response.json()
-                latest = r.get('latest', None)
+                latest = r['latest']
                 if latest is not None:
                     item = latest.get('item', None)
                     if item is not None:

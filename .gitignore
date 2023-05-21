@@ -2,6 +2,7 @@ cfg.py
 crypto_terminal.py
 __pycache__
 crypto.db
-myhooks.py
+my_hooks.py
 test.py
 my_mock.py
+mydata/

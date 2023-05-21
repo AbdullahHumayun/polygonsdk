@@ -1,8 +1,14 @@
+
 import requests
 from bs4 import BeautifulSoup
 import pdfplumber
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import inch
+from reportlab.pdfgen import canvas
 from urllib.request import url2pathname
 import torch
 import concurrent.futures
@@ -59,10 +65,16 @@ def create_sentiment_pipeline():
 
 sentiment_pipeline = create_sentiment_pipeline()
 def analyze_sentiment(text):
-    sentiment_results = sentiment_pipeline(text)
-    sentiment_label = sentiment_results[0]['label']
-    sentiment_score = sentiment_results[0]['score']
-    return sentiment_label, sentiment_score
+    sentiment_results = []
+    for i in range(0, len(text), 512):
+        chunk = text[i:i+512]
+        sentiment_results.extend(sentiment_pipeline(chunk))
+    sentiment_label = [result['label'] for result in sentiment_results]
+    sentiment_score = [result['score'] for result in sentiment_results]
+    # You may decide how to aggregate the results - here just the most common label and average score are returned
+    most_common_label = max(set(sentiment_label), key = sentiment_label.count)
+    average_score = sum(sentiment_score)/len(sentiment_score)
+    return most_common_label, average_score
 
 def extract_html_text(url):
     response = requests.get(url)
@@ -131,3 +143,33 @@ def create_summary(text):
 
     # Join the summaries with newline characters to create paragraphs
     return "\n\n".join(summaries)
+
+def save_summary_as_pdf(summary, filename):
+    doc = SimpleDocTemplate(filename, pagesize=letter)
+    Story = []
+    styles = getSampleStyleSheet()
+    style = styles["BodyText"]
+
+    lines = summary.split('\n')
+    for line in lines:
+        Story.append(Paragraph(line, style))
+        Story.append(Spacer(1, 0.2 * inch))
+    
+    doc.build(Story)
+
+# modify the main function
+async def main():
+    url_or_path = input("Please enter a URL or file path: ")
+    result = await summarize_url_or_path(url_or_path)
+
+    print("Summary: ", result['summary'])
+    print("Sentiment Label: ", result['sentiment_label'])
+    print("Sentiment Score: ", result['sentiment_score'])
+
+    # Save the summary to a PDF
+    save_summary_as_pdf(result['summary'], "files/summarized_pdfs/nscc_doc.pdf")
+
+# Run the main function
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())

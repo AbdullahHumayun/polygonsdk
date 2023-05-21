@@ -10,7 +10,7 @@ from datetime import datetime
 from sdks.webull_sdk.webull_sdk import thresholds
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.helpers.helpers import get_checkmark
-from examples.summarizer import extract_pdf_text,extract_html_text,extract_html_text_from_file,extract_pdf_text_from_url,create_summary
+from summarizer import extract_pdf_text,extract_html_text,extract_html_text_from_file,extract_pdf_text_from_url,create_summary
 from bs4 import BeautifulSoup
 from _discord.views.menus import AlertMenus
 import pandas as pd
@@ -39,7 +39,7 @@ polyoptions = PolygonOptionsSDK(YOUR_API_KEY)
 webull = AsyncWebullSDK()
 import disnake
 import asyncio
-from examples.summarizer import (
+from summarizer import (
     extract_html_text,
     extract_html_text_from_file,
     extract_pdf_text,
