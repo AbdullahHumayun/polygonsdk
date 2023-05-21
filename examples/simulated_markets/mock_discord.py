@@ -20,7 +20,7 @@ from asyncio import Queue
 from discord_utils.embeddings import Data
 
 sdk = AsyncPolygonSDK(YOUR_API_KEY)
-df = pd.read_csv('files/stocks/all_snapshots.csv')
+df = pd.read_csv('files/stocks/all_snapshots.csv') #create this  file in 'get_latest_ticker_data.py'
 
 class MockDiscord(Data):
     def __init__(self, symbol=None):

@@ -8,7 +8,7 @@ This is how to easily gather data for any subscription service to analyze market
 #from get_data.get_latest_crypto_data import get_all_crypto_data
 #from get_data.get_latest_forex_data import get_forex_data
 #from get_data.get_latest_indices_data import get_all_indices_data
-from examples.get_latest_ticker_data import get_all_ticker_data
+from get_latest_ticker_data import get_all_ticker_data
 
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK

@@ -74,6 +74,8 @@ async def handle_msg(msgs: List[WebSocketMessage], queue: Queue):
 Consumes queue data - packages and sends to discord using our csv file / live real-time websocket data
 """
 
+ticker_webhook_dict =  {}
+
 
 async def consume(queue: Queue):
     while True:
