@@ -23,13 +23,6 @@ poly = AsyncPolygonSDK(YOUR_API_KEY) #create instance of polygon SDK
 c = WebSocketClient(subscriptions=["T.*,A.*,Q.*"], market=Market.Stocks, api_key=YOUR_API_KEY) #connect to the options market trades, aggs, and quotes.
 
 
-def read_csv_as_dict(file_name):  #import the CSV with our channels and webhooks as a dictionary
-    with open(file_name, newline='') as file:
-        reader = csv.reader(file)
-        return {row[0]: row[1] for row in reader}
-
-ticker_webhook_dict = read_csv_as_dict("files/discord/webhooks/ticker_webhooks.csv")
-print(ticker_webhook_dict)
 
 
 
