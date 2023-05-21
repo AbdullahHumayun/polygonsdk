@@ -31,7 +31,7 @@ from .aggregates import AggregatesData
 from .quote import Quote
 import aiohttp
 from datetime import datetime, timedelta
-from discord_utils.embeddings import Data
+from _discord.embeddings import Data
 
 ten_days_ago = datetime.utcnow() - timedelta(days=5)
 date_string = ten_days_ago.strftime("%Y-%m-%dT%H:%M:%SZ")

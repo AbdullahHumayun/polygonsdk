@@ -9,10 +9,10 @@ from cfg import today_str, YOUR_OPENAI_KEY, YOUR_API_KEY
 from datetime import datetime
 from sdks.webull_sdk.webull_sdk import thresholds
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-from sdks.polygon_sdk.helpers.helpers import get_checkmark
+from sdks.helpers.helpers import get_checkmark
 from examples.summarizer import extract_pdf_text,extract_html_text,extract_html_text_from_file,extract_pdf_text_from_url,create_summary
 from bs4 import BeautifulSoup
-from discord_utils.menus import AlertMenus
+from _discord.views.menus import AlertMenus
 import pandas as pd
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 import disnake
@@ -21,7 +21,7 @@ webull = AsyncWebullSDK()
 import requests
 import disnake
 
-from ..menus import AlertMenus
+from ..views.menus import AlertMenus
 import requests
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from cfg import today_str

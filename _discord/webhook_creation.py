@@ -16,7 +16,7 @@ from time import sleep
 import csv
 import requests
 
-from discord_utils import emojis as e
+from _discord import emojis as e
 
 
 #EXAMPLE CHANNEL LIST - CREATES CHANNELS FOR YOU TO MONITOR IN REAL TIME

@@ -1,7 +1,7 @@
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
 
 
 import asyncio
@@ -9,7 +9,7 @@ import asyncio
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from cfg import YOUR_API_KEY
 
-ticker = "BAC"
+symbol = "BAC"
 polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
 
 
@@ -26,32 +26,27 @@ async def exponential_moving_average(ticker):
 
 
     """
-    ema_50, vwap, ema50_trend, ema50_historic = await polygonsdk.get_exponential_moving_average(
-        ticker=ticker,
+    ema_50, timestamps = await polygonsdk.get_exponential_moving_average(
+        symbol=symbol,
         timespan="minute",
         adjusted=True,
         window=50,
-        limit=500
+        limit=10
     )  # for 50 EMA
 
-    ema_21, vwap, ema21_trend, ema21_historic = await polygonsdk.get_exponential_moving_average(
-        ticker=ticker,
+    ema_21, timestamps = await polygonsdk.get_exponential_moving_average(
+        symbol=symbol,
         timespan="minute",
         adjusted=True,
         window=21,
-        limit=500
+        limit=10
     )  # for 21 EMA
 
-    
-    print(f"EMA 50 HISTORIC: {ema50_historic}")
-    print(f"EMA 21 HISTORIC: {ema21_historic}")
-    print()
-    print(f"LATEST EMA21: {ema_21} on the")
-    print(f"LATEST EMA50: {ema_50}")
-    print()
-    print(f"EMA 21 TREND: {ema21_trend}")
-    print(f"EMA 50 TREND: {ema50_trend}")
-    print(f"VWAP PRICE for {ticker}: ${vwap}")
 
 
-asyncio.run(exponential_moving_average(ticker))
+    print(f"EMA21: {ema_21}")
+    print(f"EMA50: {ema_50}")
+
+
+
+asyncio.run(exponential_moving_average(symbol))

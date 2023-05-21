@@ -1,6 +1,6 @@
 import aiohttp
 from discord_webhook import AsyncDiscordWebhook, DiscordEmbed
-from sdks.polygon_sdk.helpers.helpers import human_readable
+from sdks.helpers.helpers import human_readable
 
 async def send_webhook(webhook_url, logo, description,symb, price, ask, mid, bid, bid_size, ask_size, break_even, 
                        change_to_break_even, contract_type, day_change, day_change_percent, 

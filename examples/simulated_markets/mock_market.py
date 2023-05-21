@@ -1,7 +1,9 @@
 import sys
 import os
 
-sys.path.append(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
+
 
 
 
@@ -21,8 +23,7 @@ from asyncio import Queue
 
 
 sdk = AsyncPolygonSDK(YOUR_API_KEY)
-df = pd.read_csv('files/stocks/all_snapshots.csv')
-
+df = pd.read_csv('files/stocks/all_snapshots.csv') #you must first download this file by running the "get_latest_ticker_data.py" file.
 
 
 async def consume(queue: Queue):

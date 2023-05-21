@@ -8,7 +8,7 @@ This configuration file contains various settings and variables used in the prog
 from datetime import datetime, timedelta
 
 # API Keys
-YOUR_API_KEY = "YOUR POLYGON API KEY HERE" ##polygon.io APIKEY. If you don't have one - you can sign up here: https://www.polygon.io | Use code FUDSTOP at checkout for an exclusive discount on their real-time APIs.
+YOUR_API_KEY = "YOUR API KEY FROM POLYGON GOES HERE" ##polygon.io APIKEY. If you don't have one - you can sign up here: https://www.polygon.io | Use code FUDSTOP at checkout for an exclusive discount on their real-time APIs.
 YOUR_OPENAI_KEY = "" ##openAI key for integrating chatGPT into discord.
 YOUR_NASDAQ_KEY = "" ##nasdaq datalink key for using the nasdaq functions (iv_percentile)
 YOUR_WEBULL_HEADERS = "" ##headers needed to access the webull functions (news)

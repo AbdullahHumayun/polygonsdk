@@ -27,7 +27,7 @@ from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 
 #different ticker-hooks to send ticker-specific messages to discord
 
-from discord_utils.hooks.hook_dicts import (
+from _discord.hooks.hook_dicts import (
     china_hooks,
     india_hooks,
     index_hooks,
@@ -41,7 +41,7 @@ from discord_utils.hooks.hook_dicts import (
 
 
 
-from discord_utils.hooks.channel_webhooks import (
+from _discord.hooks.channel_webhooks import (
     sell,
     strongbuy,
     underperform,

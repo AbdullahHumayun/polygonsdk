@@ -1,3 +1,9 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
+
 
 
 from typing import List
@@ -5,7 +11,7 @@ import random
 import asyncio
 from datetime import datetime
 from sdks.models.test_events import TestStocksEvent, STOCK_EXCHANGES
-import time
+
 from sdks.polygon_sdk.mapping_dicts import stock_condition_dict, option_condition_dict, OPTIONS_EXCHANGES
 
 import pandas as pd
@@ -14,10 +20,10 @@ from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 
 from cfg import YOUR_API_KEY
 
-from discord_utils.hooks.hook_dicts import stock_exchange_hooks
+from _discord.hooks.hook_dicts import stock_exchange_hooks
 from discord_webhook import AsyncDiscordWebhook, DiscordEmbed
 from asyncio import Queue
-from discord_utils.embeddings import Data
+from _discord.embeddings import Data
 
 sdk = AsyncPolygonSDK(YOUR_API_KEY)
 df = pd.read_csv('files/stocks/all_snapshots.csv') #create this  file in 'get_latest_ticker_data.py'

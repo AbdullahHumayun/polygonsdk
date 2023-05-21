@@ -1,7 +1,7 @@
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
 
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
@@ -69,13 +69,7 @@ async def main():
         limit=5
         )
 
-    indices_sma  = await poly.get_simple_moving_average(
-        symbol=indicies_symbol, 
-        timespan="hour", 
-        adjusted=True, 
-        window=50, 
-        limit=10
-        )
+
     
     print(f"STOCK SMA64 FOR {stock_symbol}: {stock_sma[0]}")
     print()
@@ -84,9 +78,7 @@ async def main():
     print(f"FOREX SMA200 FOR {forex_symbol}: {forex_sma[0]}")
     print()
     print(f"CRYPTO SMA21 FOR {crypto_symbol}: {crypto_sma[0]}")
-    
-    print()
-    print(f"INDICES SMA50 LATEST TIMESTAMPS FOR {indicies_symbol}:")
+
 
 
 asyncio.run(main())

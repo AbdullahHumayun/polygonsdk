@@ -22,7 +22,7 @@ sdk= PolygonOptionsSDK(YOUR_API_KEY)
 
 
 
-df = pd.read_csv('files/options/all_options_data.csv')
+df = pd.read_csv('files/options/all_options_data.csv') #you must download this spreadsheet from the "get_latest_options_data.py" file.
 
 
 async def handle_msg(msgs: List[TestOptionsEvent], queue: Queue):

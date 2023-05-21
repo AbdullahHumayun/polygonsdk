@@ -1,8 +1,7 @@
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
 
 import asyncio
 
@@ -14,7 +13,7 @@ ticker = "NVDA"
 
 async def main():
 
-    x = await poly.get_bollinger_bands(symbol="GME",multiplier=1, timespan="hour", from_date="2023-01-01", to_date=today_str, window=20, num_std_dev=2)
+    x = await poly.get_bollinger_bands(symbol="GME",multiplier=1, timespan="hour", from_date="2023-04-01", to_date=today_str, window=20, num_std_dev=2)
     for i in x:
         print(i)
 

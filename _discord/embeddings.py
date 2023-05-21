@@ -7,7 +7,7 @@ from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 
 
 
-from discord_utils.hooks.channel_webhooks import daybanana,weekbanana,hourbanana
+from _discord.hooks.channel_webhooks import daybanana,weekbanana,hourbanana
 
 
 

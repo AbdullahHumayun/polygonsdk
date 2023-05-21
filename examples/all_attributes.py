@@ -11,7 +11,7 @@ from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from sdks.fudstop_sdk.fudstop_sdk import fudstopSDK
-from sdks.polygon_sdk.helpers.helpers import human_readable
+from sdks.helpers.helpers import human_readable
 
 from cfg import YOUR_API_KEY, five_days_ago_str, today_str
 
@@ -130,29 +130,25 @@ async def polygon_attributes(ticker):
     print()
 
     
-    rsi = await poly.get_rsi(ticker=ticker, timespan="day", adjusted=True, window=14, limit=1)
+    rsi = await poly.get_rsi(symbol=ticker, timespan="day", adjusted=True, window=14, limit=1)
     print(rsi)
 
-    macd, histogram, signal = await poly.get_macd(ticker=ticker, timespan="day", adjusted=True, short_window=12, long_window=26, signal_window=9, limit=5)
+    macd, histogram, signal = await poly.get_macd(symbol=ticker, timespan="day", adjusted=True, short_window=12, long_window=26, signal_window=9, limit=5)
 
     print(f"{ticker} MACD: {macd}")
     print(f"{ticker} MACD Histogram: {histogram}")
     print(f"{ticker} MACD Signal: {signal}")
     print()
 
-    latest_ema, vwap, ema_trend, ema_list  = await poly.get_exponential_moving_average(ticker=ticker, timespan="hour", adjusted=True, window=21, limit=5)
+    ema_list, ema_timestamps  = await poly.get_exponential_moving_average(symbol=ticker, timespan="hour", adjusted=True, window=21, limit=5)
 
-    print(f"{ticker}'s latest Hourly 21 EMA: {latest_ema}")
     print(f"{ticker}'s latest VWAP: ${vwap}")
-    print(f"{ticker} 21 EMA Trend: {ema_trend}")
     print(f"{ticker} 21 EMA Historic List: {ema_list}")
     print()
 
-    latest_sma, vwap, sma_trend, sma_list  = await poly.get_exponential_moving_average(ticker=ticker, timespan="hour", adjusted=True, window=50, limit=5)
+    sma_list, sma_timestamps  = await poly.get_exponential_moving_average(symbol=ticker, timespan="hour", adjusted=True, window=50, limit=5)
 
-    print(f"{ticker}'s latest Hourly 50 SMA: {latest_sma}")
     print(f"{ticker}'s latest VWAP: ${vwap}")
-    print(f"{ticker} SMA 50 Trend: {sma_trend}")
     print(f"{ticker} SMA 50 Historic List: {sma_list}")
     print()
 

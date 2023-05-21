@@ -4,12 +4,12 @@ import asyncio
 import numpy as np
 from sdks.polygon_sdk.technical_conditions import check_macd_condition_bearish,check_macd_condition_bullish,check_rsi_condition_bearish,check_rsi_condition_bullish
 
-from discord_utils.embeddings import send_daybanana,send_hourbanana,send_weekbanana
+from _discord.embeddings import send_daybanana,send_hourbanana,send_weekbanana
 
 
-from discord_utils.hooks.hook_dicts import china_hooks,india_hooks,index_hooks,meme_hooks,russia_hooks,ETF_BROAD_MARKET_HOOKS
-from discord_utils.hooks.channel_webhooks import sell,strongbuy,underperform,holdrating, oversold,overbought, overbought_1day,overbought_week,oversold_1day,oversold_week, eightypercent,tenorless,twentytoforty,fortytoeighty, onehundredplus
-from discord_utils.hooks.channel_webhooks import firesale,accumulate,neutzone, aboveavgvolume, belowavgvolume, fiftyhighh,fiftylowh, earningstoday, weekbanana,daybanana,hourbanana, lowfloat
+from _discord.hooks.hook_dicts import china_hooks,india_hooks,index_hooks,meme_hooks,russia_hooks,ETF_BROAD_MARKET_HOOKS
+from _discord.hooks.channel_webhooks import sell,strongbuy,underperform,holdrating, oversold,overbought, overbought_1day,overbought_week,oversold_1day,oversold_week, eightypercent,tenorless,twentytoforty,fortytoeighty, onehundredplus
+from _discord.hooks.channel_webhooks import firesale,accumulate,neutzone, aboveavgvolume, belowavgvolume, fiftyhighh,fiftylowh, earningstoday, weekbanana,daybanana,hourbanana, lowfloat
 c = WebSocketClient(YOUR_API_KEY, subscriptions=["T.*"], market= Market.Stocks)
 
 from cfg import today_str, YOUR_API_KEY, five_days_from_now_str
