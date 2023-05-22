@@ -1,14 +1,12 @@
-from typing import Optional, Union, List, NewType, Dict, Any
-from .common import EventType
-from dataclasses import dataclass
-import ast
 import pandas as pd
-from .common import EventType
-from datetime import datetime
+
+from typing import Union, List, NewType, Dict, Any
+from dataclasses import dataclass
+
+from maps import option_condition_dict, EQUITY_TRADE_CONDITIONS
 
 
 
-@dataclass
 class TestStocksEvent:
     """
     This class represents a simulated stock market event. It's designed to provide a detailed snapshot of a particular 
@@ -51,48 +49,8 @@ class TestStocksEvent:
         today_change: The change in price during the day.
     """
 
-    symbol: str
-    close: float
-    high: float
-    low: float
-    open: float
-    volume: float
-    vwap: float
-    last_quote_ask_price: float
-    last_quote_ask_size: int
-    last_quote_bid_price: float
-    last_quote_bid_size: int
-    last_quote_timestamp: str
-    last_trade_conditions: List[str]
-    last_exchange: str
-    last_price: float
-    last_size: int
-    last_id: int
-    last_trade_timestamp: str
-    min_close: float
-    min_high: float
-    min_low: float
-    min_open: float
-    min_volume: float
-    min_av: float
-    min_vwap: float
-    prev_vwap: float
-    prev_close: float
-    prev_high: float
-    prev_low: float
-    prev_open: float
-    prev_volume: float
-    today_change_percent: float
-    today_change: float
-
     @classmethod
     def from_row(cls, row):
-        last_trade_conditions = row.get("Last Trade Conditions")
-        if pd.notna(last_trade_conditions):
-            last_trade_conditions = ast.literal_eval(last_trade_conditions)
-        else:
-            last_trade_conditions = []
-
         return cls(
             symbol=row['Symbol'],
             today_change_percent=row['Change Percent'],
@@ -103,18 +61,20 @@ class TestStocksEvent:
             low=row['Day Low'],
             volume=row['Day Volume'],
             vwap=row['Day VWAP'],
-            last_trade_conditions=last_trade_conditions,
+            last_trade_conditions=EQUITY_TRADE_CONDITIONS.get(row["Last Trade Conditions"] if pd.notna(row["Last Trade Conditions"]) else ""),
+
             last_exchange=row['Last Trade Exchange'],
             last_price=row['Last Trade Price'],
             last_size=row['Last Trade Size'],
             last_trade_timestamp=row['Last Trade Timestamp'],
-            last_id=row['Last Trade ID'],
+            last_id = row['Last Trade ID'],
             last_quote_bid_price=row['Last Quote Bid Price'],
             last_quote_ask_price=row['Last Quote Ask Price'],
             last_quote_ask_size=row['Last Quote Ask Size'],
             last_quote_bid_size=row['Last Quote Bid Size'],
             last_quote_timestamp=row['Last Quote Timestamp'],
-            min_av=row['Minute Data Accumulated Volume'],
+            
+            min_av = row['Minute Data Accumulated Volume'],
             min_volume=row['Minute Data Volume'],
             min_close=row['Minute Data Close'],
             min_open=row['Minute Data Open'],
@@ -127,8 +87,11 @@ class TestStocksEvent:
             prev_low=row['Prev Day Low'],
             prev_volume=row['Prev Day Volume'],
             prev_vwap=row['Prev Day VWAP'],
-        )
 
+        )
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'TestStocksEvent':
+        return cls(**data)
 
 @dataclass
 class TestOptionsEvent:
@@ -180,6 +143,48 @@ class TestOptionsEvent:
         underlying_ticker: The ticker of the underlying asset.
 
     """
+    ticker: str
+    break_even_price: float
+    contract_type: str
+    exercise_style: str
+    expiration_date: str
+    shares_per_contract: float
+    strike_price: float
+    delta: float
+    gamma: float
+    theta: float
+    vega: float
+    implied_volatility: float
+    ask: float
+    ask_size: int
+    bid: float
+    bid_size: int
+    last_updated: str
+    midpoint: float
+    timeframe_quote: str
+    last_trade_conditions: list
+    last_trade_exchange: str
+    last_trade_price: float
+    last_trade_sip_timestamp: str
+    last_trade_size: int
+    timeframe_trade: str
+    day_change: float
+    day_change_percent: float
+    open_interest: float
+    day_close: float
+    day_high: float
+    day_last_updated: str
+    day_low: float
+    day_open: float
+    day_previous_close: float
+    day_volume: int
+    day_vwap: float
+    change_to_break_even: float
+    price: float
+    underlying_ticker: str
+    @property
+    def last_trade_condition_name(self) -> str:
+        return option_condition_dict.get(self.last_trade_conditions, "Unknown")
     @classmethod
     def from_row(cls, row) -> 'TestOptionsEvent':
         last_trade_conditions = row["last_trade_conditions"] if pd.notna(row["last_trade_conditions"]) else None
@@ -243,3 +248,5 @@ TestMessage = NewType(
         ]
     ],
 )
+
+
