@@ -3,167 +3,54 @@ from .common import EventType
 from dataclasses import dataclass
 import ast
 import pandas as pd
-from typing import Optional, Union, List, NewType, Dict, Any
 from .common import EventType
-from dataclasses import dataclass
 from datetime import datetime
-option_condition_dict = {
-    201: 'Canceled',
-    202: 'Late and Out Of Sequence',
-    203: 'Last and Canceled',
-    204: 'Late',
-    205: 'Opening Trade and Canceled',
-    206: 'Opening Trade, Late, and Out Of Sequence',
-    207: 'Only Trade and Canceled',
-    208: 'Opening Trade and Late',
-    209: 'Automatic Execution',
-    210: 'Reopening Trade',
-    219: 'Intermarket Sweep Order',
-    227: 'Single Leg Auction Non ISO',
-    228: 'Single Leg Auction ISO',
-    229: 'Single Leg Cross Non ISO',
-    230: 'Single Leg Cross ISO',
-    231: 'Single Leg Floor Trade',
-    232: 'Multi Leg auto-electronic trade',
-    233: 'Multi Leg Auction',
-    234: 'Multi Leg Cross',
-    235: 'Multi Leg floor trade',
-    236: 'Multi Leg auto-electronic trade against single leg(s)',
-    237: 'Stock Options Auction',
-    238: 'Multi Leg Auction against single leg(s)',
-    239: 'Multi Leg floor trade against single leg(s)',
-    240: 'Stock Options auto-electronic trade',
-    241: 'Stock Options Cross',
-    242: 'Stock Options floor trade',
-    243: 'Stock Options auto-electronic trade against single leg(s)',
-    244: 'Stock Options Auction against single leg(s)',
-    245: 'Stock Options floor trade against single leg(s)',
-    246: 'Multi Leg Floor Trade of Proprietary Products',
-    247: 'Multilateral Compression Trade of Proprietary Products',
-    248: 'Extended Hours Trade',
-}
-CRYPTO_TRADE_CONDITIONS = {
-    0: "Regular Trade",
-    1: "Sell Side",
-    2: "Buy Side",
-}
 
-OPTIONS_EXCHANGES = { 
-    300:'NYSE American Options',
-    301:'Boston Options Exchange',
-    302:'Chicago Board Options Exchange',
-    303:'MIAX Emerald, LLC',
-    304:'Cboe EDGX Options',
-    307:'Nasdaq Global Markets Exchange Group',
-    308:'International Securities Exchange, LLC',
-    309:'Nasdaq MRX Options Exchange',
-    312:'MIAX International Securities Exchange, LLC',
-    313:'NYSE Arca, Inc. - Options',
-    314:'Options Price Reporting Authority',
-    315:'MIAX Pearl, LLC - Options',
-    316:'Nasdaq Options Market',
-    319:'Nasdaq BX - Options',
-    322:'Cboe C2 Options Exchange',
-    323:'Nasdaq Philadelphia Exchange, LLC - Options',
-    325:'Cboe BZX Options Exchange'}
-
-STOCK_EXCHANGES = {
-1:'NYSE American, LLC',
-2:'Nasdaq OMX BX, Inc.',
-3:'NYSE National, Inc.',
-4:'FINRA NYSE TRF',
-4:'FINRA Nasdaq TRF Carteret',
-4:'FINRA Nasdaq TRF Chicago',
-4:'FINRA Alternative Display Facility',
-5:'Unlisted Trading Privileges',
-6:'International Securities Exchange, LLC - Stocks',
-7:'Cboe EDGA',
-8:'Cboe EDGX',
-9:'NYSE Chicago, Inc.',
-10:'New York Stock Exchange',
-11:'NYSE Arca, Inc.',
-12:'Nasdaq',
-13:'Consolidated Tape Association',
-14:'Long-Term Stock Exchange',
-15:'Investors Exchange',
-16:'Cboe Stock Exchange',
-17:'Nasdaq Philadelphia Exchange LLC',
-18:'Cboe BYX',
-19:'Cboe BZX',
-20:'MIAX Pearl',
-21:'Members Exchange',
-62:'OTC Equity Security',    
- }
-
-TAPES = {1: "NYSE", 2: "AMEX", 3: "Nasdaq"}
-
-EQUITY_TRADE_CONDITIONS = {
-    1: 'Acquisition',
-    2: 'Average Price Trade',
-    3: 'Automatic Execution',
-    4: 'Bunched Trade',
-    5: 'Bunched Sold Trade',
-    6: 'CAP Election',
-    7: 'Cash Sale',
-    8: 'Closing Prints',
-    9: 'Cross Trade',
-    10: 'Derivatively Priced',
-    11: 'Distribution',
-    12: 'Form T/Extended Hours',
-    13: 'Extended Hours (Sold Out Of Sequence)',
-    14: 'Intermarket Sweep',
-    15: 'Market Center Official Close',
-    16: 'Market Center Official Open',
-    17: 'Market Center Opening Trade',
-    18: 'Market Center Reopening Trade',
-    19: 'Market Center Closing Trade',
-    20: 'Next Day',
-    21: 'Price Variation Trade',
-    22: 'Prior Reference Price',
-    23: 'Rule 155 Trade (AMEX)',
-    24: 'Rule 127 (NYSE Only)',
-    25: 'Opening Prints',
-    27: 'Stopped Stock (Regular Trade)',
-    28: 'Re-Opening Prints',
-    29: 'Seller',
-    30: 'Sold Last',
-    31: 'Sold Last and Stopped Stock',
-    32: 'Sold (Out Of Sequence)',
-    33: 'Sold (Out of Sequence) and Stopped Stock',
-    34: 'Split Trade',
-    35: 'Stock Option',
-    36: 'Yellow Flag Regular Trade',
-    37: 'Odd Lot Trade',
-    38: 'Corrected Consolidated Close (per listing market)',
-    41: 'Trade Thru Exempt',
-    52: 'Contingent Trade',
-    53: 'Qualified Contingent Trade',
-    55: 'Opening Reopening Trade Detail',
-    57: 'Short Sale Restriction Activated',
-    58: 'Short Sale Restriction Continued',
-    59: 'Short Sale Restriction Deactivated',
-    60: 'Short Sale Restriction In Effect',
-    62: 'Financial Status - Bankrupt',
-    63: 'Financial Status - Deficient',
-    64: 'Financial Status - Delinquent',
-    65: 'Financial Status - Bankrupt and Deficient',
-    66: 'Financial Status - Bankrupt and Delinquent',
-    67: 'Financial Status - Deficient and Delinquent',
-    68: 'Financial Status - Deficienft, Delinquent, and Bankrupt',
-    69: 'Financial Status - Liquidation',
-    70: 'Financial Status - Creations Suspended',
-    71: 'Financial Status - Redemptions Suspended'}
-
-EXCHANGE_MAPPING = {
-    1: 'Coinbase',
-    2: 'Bitfinex',
-    6: 'Bitstamp',
-    23: 'Kraken',
-}
 
 
 @dataclass
 class TestStocksEvent:
+    """
+    This class represents a simulated stock market event. It's designed to provide a detailed snapshot of a particular 
+    stock's trading activity, encapsulating data like the stock's opening, closing, high, and low prices, as well as
+    volume information and details about the last trade and quote.
+
+    Attributes:
+        symbol: The ticker symbol for the stock.
+        close: The closing price of the stock.
+        high: The highest traded price of the stock.
+        low: The lowest traded price of the stock.
+        open: The opening price of the stock.
+        volume: The volume of shares traded.
+        vwap: The volume-weighted average price of the stock.
+        last_quote_ask_price: The last quoted ask price.
+        last_quote_ask_size: The size of the last quoted ask.
+        last_quote_bid_price: The last quoted bid price.
+        last_quote_bid_size: The size of the last quoted bid.
+        last_quote_timestamp: The timestamp of the last quote.
+        last_trade_conditions: The conditions of the last trade.
+        last_exchange: The exchange where the last trade occurred.
+        last_price: The price of the last trade.
+        last_size: The size of the last trade.
+        last_id: The unique identifier of the last trade.
+        last_trade_timestamp: The timestamp of the last trade.
+        min_close: The minimum closing price.
+        min_high: The minimum highest price.
+        min_low: The minimum lowest price.
+        min_open: The minimum opening price.
+        min_volume: The minimum volume.
+        min_av: The minimum average volume.
+        min_vwap: The minimum volume-weighted average price.
+        prev_vwap: The previous volume-weighted average price.
+        prev_close: The previous closing price.
+        prev_high: The previous highest price.
+        prev_low: The previous lowest price.
+        prev_open: The previous opening price.
+        prev_volume: The previous volume.
+        today_change_percent: The percentage change in price during the day.
+        today_change: The change in price during the day.
+    """
+
     symbol: str
     close: float
     high: float
@@ -176,8 +63,7 @@ class TestStocksEvent:
     last_quote_bid_price: float
     last_quote_bid_size: int
     last_quote_timestamp: str
-    last_trade_conditions: list
-
+    last_trade_conditions: List[str]
     last_exchange: str
     last_price: float
     last_size: int
@@ -246,45 +132,54 @@ class TestStocksEvent:
 
 @dataclass
 class TestOptionsEvent:
-    ticker: str
-    break_even_price: float
-    contract_type: str
-    exercise_style: str
-    expiration_date: str
-    shares_per_contract: float
-    strike_price: float
-    delta: float
-    gamma: float
-    theta: float
-    vega: float
-    implied_volatility: float
-    ask: float
-    ask_size: int
-    bid: float
-    bid_size: int
-    last_updated: str
-    midpoint: float
-    timeframe_quote: str
-    last_trade_conditions: list
-    last_trade_exchange: str
-    last_trade_price: float
-    last_trade_sip_timestamp: str
-    last_trade_size: int
-    timeframe_trade: str
-    day_change: float
-    day_change_percent: float
-    open_interest: float
-    day_close: float
-    day_high: float
-    day_last_updated: str
-    day_low: float
-    day_open: float
-    day_previous_close: float
-    day_volume: int
-    day_vwap: float
-    change_to_break_even: float
-    price: float
-    underlying_ticker: str
+    """
+    This class represents a simulated market event for options. It's primarily used during after-market hours to simulate 
+    a websocket feed and process data quickly. The data encapsulated in each instance of this class typically include
+    ticker information, break-even price, contract details, and various Greek values typically used in options trading.
+    This class provides an efficient way to manage and manipulate these pieces of information.
+
+    Attributes:
+        ticker: The ticker symbol for the option.
+        break_even_price: The price at which the option breaks even.
+        contract_type: Type of the option contract - 'Call' or 'Put'.
+        exercise_style: Style of the option contract - 'American' or 'European'.
+        expiration_date: Expiration date of the option contract.
+        shares_per_contract: Number of shares per option contract.
+        strike_price: The price at which the option can be exercised.
+        delta: The rate of change of the option price with respect to changes in the underlying asset's price.
+        gamma: The rate of change of the delta with respect to changes in the underlying asset's price.
+        theta: The rate of decrease in the option price with respect to time.
+        vega: The rate of change of the option price with respect to changes in the underlying asset's volatility.
+        implied_volatility: The option's implied volatility.
+        ask: The asking price of the option.
+        ask_size: The size of the ask order.
+        bid: The bid price of the option.
+        bid_size: The size of the bid order.
+        last_updated: The timestamp of the last update.
+        midpoint: The midpoint of the bid and ask prices.
+        timeframe_quote: The timeframe of the quote.
+        last_trade_conditions: The conditions of the last trade.
+        last_trade_exchange: The exchange where the last trade occurred.
+        last_trade_price: The price of the last trade.
+        last_trade_sip_timestamp: The SIP timestamp of the last trade.
+        last_trade_size: The size of the last trade.
+        timeframe_trade: The timeframe of the trade.
+        day_change: The change in price during the day.
+        day_change_percent: The percentage change in price during the day.
+        open_interest: The open interest of the option.
+        day_close: The closing price of the day.
+        day_high: The highest price of the day.
+        day_last_updated: The timestamp of the last update of the day.
+        day_low: The lowest price of the day.
+        day_open: The opening price of the day.
+        day_previous_close: The previous day's closing price.
+        day_volume: The volume of the day.
+        day_vwap: The volume-weighted average price of the day.
+        change_to_break_even: The change needed to reach the break-even price.
+        price: The current price of the option.
+        underlying_ticker: The ticker of the underlying asset.
+
+    """
     @classmethod
     def from_row(cls, row) -> 'TestOptionsEvent':
         last_trade_conditions = row["last_trade_conditions"] if pd.notna(row["last_trade_conditions"]) else None
@@ -348,4 +243,3 @@ TestMessage = NewType(
         ]
     ],
 )
-
