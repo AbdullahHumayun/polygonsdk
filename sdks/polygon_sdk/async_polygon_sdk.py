@@ -9,6 +9,7 @@ from typing import List, Union, Tuple, Optional
 from urllib.parse import urlencode, unquote
 import pandas as pd
 from .indices_snapshot import Indices,IndicesData
+from .company_info import CompanyInfo
 from .forex_crypto import ForexSnapshot, CryptoSnapshot
 from .technicals.rsi import RSI
 from .technicals.macd import MACDData
@@ -53,6 +54,13 @@ class AsyncPolygonSDK:
         await self.session.__aexit__(exc_type, exc, tb)
     async def initialize(self):
         self.conditions_map = await self.get_stock_conditions()
+
+
+    async def get_cik(self, ticker):
+
+        get_cik = await self.company_info(ticker)
+        cik = get_cik.cik
+        return cik
 
     async def _request(self, endpoint, params=None):
         if params is None:
@@ -670,8 +678,19 @@ class AsyncPolygonSDK:
 
 
 
+    async def company_info(self, ticker):
+        url = f"https://api.polygon.io/v3/reference/tickers/{ticker}?apiKey={self.api_key}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                data = await response.json()
+                results = data['results']
+                return(CompanyInfo(results))
 
-           
+    async def get_cik(self, ticker):
+
+        get_cik = await self.company_info(ticker)
+        cik = get_cik.cik
+        return cik          
 
     async def get_macd(self, symbol, timestamp=None, timespan: str=None, adjusted=True, short_window=12, long_window=26, signal_window=9, series_type="close", expand_underlying=None, order="desc", limit: str=None):
         """
@@ -782,7 +801,19 @@ class AsyncPolygonSDK:
 
         return pivot_data
 
+    async def get_sec_filings(self, ticker):
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
+            "Accept-Encoding": "gzip, deflate",
 
+        }
+        async with aiohttp.ClientSession() as session:
+            
+            cik = await self.get_cik(ticker)
+            url = f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json"
+            async with session.get(url, headers=headers) as response:
+                if response.status == 200:
+                    data = await response.json()
 
     async def write_snapshots_to_csv(self):
         """Gets all snapshots market-wide and saves
