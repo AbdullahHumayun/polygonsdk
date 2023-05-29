@@ -3,10 +3,10 @@ import pandas as pd
 from typing import Union, List, NewType, Dict, Any
 from dataclasses import dataclass
 
-from maps import option_condition_dict, EQUITY_TRADE_CONDITIONS
+from .maps import option_condition_dict, EQUITY_TRADE_CONDITIONS
 
 
-
+@dataclass
 class TestStocksEvent:
     """
     This class represents a simulated stock market event. It's designed to provide a detailed snapshot of a particular 
@@ -48,6 +48,39 @@ class TestStocksEvent:
         today_change_percent: The percentage change in price during the day.
         today_change: The change in price during the day.
     """
+    symbol: str=None
+    today_change_percent: float = None
+    today_change: float = None
+    open: float = None
+    high: float = None
+    low: float = None
+    close: float = None
+    volume: float = None
+    vwap: float = None
+    last_trade_conditions: List[Dict[int, str]] = None
+    last_exchange: Dict[int, str] = None
+    last_price: float = None
+    last_size: float = None
+    last_trade_timestamp: str=None
+    last_quote_timestamp: str=None
+    last_quote_bid: float = None
+    last_quote_ask: float = None
+    last_quote_ask_size: float = None
+    last_quote_bid_size: float = None
+    trade_id: int = None
+    min_av: float = None
+    min_volume: float = None
+    min_open: float = None
+    min_high: float = None
+    min_low: float = None
+    min_close: float = None
+    min_vwap: float = None
+    prev_open: float = None
+    prev_high: float = None
+    prev_low: float = None
+    prev_close: float = None
+    prev_volume: float = None
+    prev_vwap: float = None
 
     @classmethod
     def from_row(cls, row):
@@ -67,9 +100,9 @@ class TestStocksEvent:
             last_price=row['Last Trade Price'],
             last_size=row['Last Trade Size'],
             last_trade_timestamp=row['Last Trade Timestamp'],
-            last_id = row['Last Trade ID'],
-            last_quote_bid_price=row['Last Quote Bid Price'],
-            last_quote_ask_price=row['Last Quote Ask Price'],
+            trade_id = row['Last Trade ID'],
+            last_quote_bid=row['Last Quote Bid Price'],
+            last_quote_ask=row['Last Quote Ask Price'],
             last_quote_ask_size=row['Last Quote Ask Size'],
             last_quote_bid_size=row['Last Quote Bid Size'],
             last_quote_timestamp=row['Last Quote Timestamp'],
