@@ -1,0 +1,12 @@
+{
+  "name": "polygonsdk",
+  "version": "1.0.1",
+  "description": "Real-time and simulated market data analysis",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {}
+}
