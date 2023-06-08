@@ -19,7 +19,7 @@ from cfg_discord import discord_bot_token
 polygon = AsyncPolygonSDK(YOUR_API_KEY)
 poly_options = PolygonOptionsSDK(YOUR_API_KEY)
 webull = AsyncWebullSDK()
-intents = disnake.Intents.all()
+
 
 class PersistentViewBot(commands.Bot):
     def __init__(self, command_prefix, intents, ticker=None, embeds=None):
