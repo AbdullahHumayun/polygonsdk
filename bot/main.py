@@ -14,7 +14,7 @@ from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 
 from cfg import YOUR_API_KEY
-from cfg_discord import discord_bot_token
+
 
 polygon = AsyncPolygonSDK(YOUR_API_KEY)
 poly_options = PolygonOptionsSDK(YOUR_API_KEY)
@@ -44,4 +44,4 @@ class PersistentViewBot(commands.Bot):
 bot = PersistentViewBot(command_prefix=">>", intents=intents)
 
 bot.load_extensions("bot\cogs")
-bot.run(discord_bot_token)
+#bot.run(discord_bot_token)
