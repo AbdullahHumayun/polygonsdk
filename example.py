@@ -1,6 +1,6 @@
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 import asyncio
-from cfg import date_string, webull_headers
+from cfg import today_str
 sdk = AsyncWebullSDK()
 
 
@@ -35,15 +35,13 @@ async def main():
 
 
 
-    calendar = await sdk.get_earnings_calendar(date_string)
+    calendar = await sdk.get_earnings_calendar(today_str)
     tickers = [i.ticker for i in calendar]
     for i in tickers:
         symbol = i['symbol']
         print(symbol)
 
 
-    recentnews = await sdk.check_recent_news(ticker, webull_headers=webull_headers)
-    print(recentnews)
 
 
     financial_score = await sdk.financial_score(ticker)
