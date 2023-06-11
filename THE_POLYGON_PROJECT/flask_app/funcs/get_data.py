@@ -1,3 +1,7 @@
+import sys
+sys.path.append('C:\\Users\\chuck\\THE_POLYGON_PROJECT')
+
+
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 
 webull = AsyncWebullSDK()
@@ -32,7 +36,7 @@ async def get_webull_data(ticker):
         print(f"Failed to get stock data for {ticker}: {e}")
 
 
-    analysis_data = webull.get_analysis_data(ticker)
+    analysis_data = await webull.get_analysis_data(ticker)
     if analysis_data is None:
         return
 
@@ -46,7 +50,7 @@ async def get_webull_data(ticker):
     underperform = analysis_data.underperform if analysis_data.underperform is not None else "N/A"
 
 
-    short_interest = webull.get_short_interest(ticker)
+    short_interest = await webull.get_short_interest(ticker)
     if short_interest is None:
         return
 
@@ -55,7 +59,7 @@ async def get_webull_data(ticker):
     days_to_cover = short_interest.days_to_cover[0] if short_interest.days_to_cover[0] is not None else "N/A"
     settlement = short_interest.settlement[0] if short_interest.settlement[0] is not None else "N/A"
 
-    institutionHoldings = webull.get_institutional_holdings(ticker)
+    institutionHoldings = await webull.get_institutional_holdings(ticker)
     if institutionHoldings is None:
         return
 
@@ -77,7 +81,7 @@ async def get_webull_data(ticker):
     totalOwnershipRatioOfFloatChange = stats.holding_ratio_change if stats.holding_ratio_change is not None else "N/A"
     totalNumberOfInstitutions = float(stats.institutional_count) if stats.institutional_count is not None else "N/A"
 
-    costDistribution = webull.cost_distribution(ticker)
+    costDistribution = await webull.cost_distribution(ticker)
     if costDistribution is None:
         return None
 
@@ -99,7 +103,7 @@ async def get_webull_data(ticker):
         traders_profiting = None
 
 
-    capitalFlow = webull.capital_flow(ticker)
+    capitalFlow = await webull.capital_flow(ticker)
     if capitalFlow is None:
         return None
 
@@ -139,7 +143,7 @@ async def get_webull_data(ticker):
     newLargeNet = capitalFlow.newlargenet if capitalFlow.newlargenet is not None else "N/A"
     newLargeInRatio = capitalFlow.newlargeinratio if capitalFlow.newlargeinratio is not None else "N/A"
     newLargeOutRatio = capitalFlow.newlargeoutratio if capitalFlow.newlargeoutratio is not None else "N/A"
-    balance_sheet = webull.get_balancesheet(ticker)
+    balance_sheet = await webull.get_balancesheet(ticker)
     if balance_sheet is None:
         return None
 
@@ -188,7 +192,7 @@ async def get_webull_data(ticker):
         return None
 
 
-    financial_statement = webull.get_financial_statement(ticker)
+    financial_statement = await webull.get_financial_statement(ticker)
     if financial_statement is None:
         return None
 
@@ -226,7 +230,7 @@ async def get_webull_data(ticker):
     unusual_expense_income = [i.unusual_expense_income if i.unusual_expense_income is not None else "N/A" for i in financial_statement]
 
 
-    vol_analysis_data = webull.get_webull_vol_analysis_data(ticker)
+    vol_analysis_data = await webull.get_webull_vol_analysis_data(ticker)
 
     buyvol = float(vol_analysis_data.buyVolume) if vol_analysis_data.buyVolume is not None else None
     sellvol = float(vol_analysis_data.sellVolume) if vol_analysis_data.sellVolume is not None else None
@@ -244,15 +248,8 @@ async def get_webull_data(ticker):
 
 
 
-    news_data = webull.get_webull_news(ticker)
 
-    time=news_data[0].news_time
-    url=news_data[0].news_url
-    source=news_data[0].source_name
-    title=news_data[0].title
-
-
-    cash_flow = webull.get_cash_flow(ticker)
+    cash_flow = await webull.get_cash_flow(ticker)
     if cash_flow is None:
         return
 
@@ -439,12 +436,6 @@ async def get_webull_data(ticker):
         }
 
 
-        news_result = {
-            'News Source': source,
-            'News Title': title,
-            'News URL': f'<a href="{url}" target="_blank">{url}</a>',
-            'News Time': time
-        }
 
         stock_data_result = {
             'Symbol': web_symb if web_symb else "N/A",
