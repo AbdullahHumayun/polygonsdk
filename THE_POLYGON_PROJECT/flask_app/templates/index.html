@@ -174,24 +174,16 @@
             font-weight: bold;
         }
     </style>
-    <title>Welcome to FUDSTOP</title>
+    <title>Welcome to POLYGONSDK</title>
 </head>
 <body class="market-theme">
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="/">FUDSTOP</a>
+            <a class="navbar-brand" href="/">POLYGON.IO</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/discord">Discord</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/server-commands">Server Commands</a>
-                    </li>
-                </ul>
             </div>
         </div>
     </nav>
@@ -199,30 +191,17 @@
     <div class="overlay"></div>
     <div class="content">
         <div class="container">
-            <div class="welcome animate__animated animate__fadeInDown">WELCOME TO FUDSTOP</div>
+            <div class="welcome animate__animated animate__fadeInDown">WELCOME TO POLYGON.IO</div>
             <div class="btn-container">
                 <button class="btn animate__animated animate__zoomIn" onclick="showForm()">
                     <i class="fa fa-bar-chart"></i>VIEW STOCK DATA
-                </button>
-
-                <button class="btn discord-btn animate__animated animate__zoomIn" onclick="window.location.href='/discord'">
-                    <i class="fa fa-discord"></i>
-                    <span class="btn-text">DISCORD</span>
-                </button>
-
-                <button class="btn serverdata-btn animate__animated animate__zoomIn" onclick="window.location.href='/server-data'">
-                    <i class="fa fa-serverdata"></i>
-                    <span class="btn-text">VIEW SERVER DATA</span>
-                </button>
-                <button class="btn animate__animated animate__zoomIn" onclick="window.location.href='/server-commands'">
-                    <i class="fa fa-terminal"></i>SERVER COMMANDS
                 </button>
                 <button class="btn animate__animated animate__zoomIn" onclick="window.location.href='/snippets'">
                     <i class="fa fa-terminal"></i>CODE SNIPPETS
                 </button>
             </div>
             <div class="terminal" id="stockForm" style="display: none;">
-                <div class="terminal-text">Enter the ticker:</div>
+                <div class="terminal-text">Enter the ticker (Non-ETFs only for now):</div>
                 <form action="/submit" method="post" class="input-group">
                     <input type="text" id="ticker" name="ticker" required class="form-control">
                     <button type="submit" class="btn btn-info mt-3">Submit</button>
