@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import Flask, render_template, request, jsonify
 
-from funcs.get_data import get_webull_data
+from .funcs.get_data import get_webull_data
 
 
 
@@ -9,6 +9,15 @@ from funcs.get_data import get_webull_data
 app = Flask(__name__)
 
 
+
+
+
+
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 
 @app.route("/submit", methods=["POST", "GET"])
@@ -43,19 +52,14 @@ async def submit_form():
             result_data["Capital Flow"] = market_data[5]
 
         if market_data is not None and market_data[6]:
-            result_data["Cost Distribution"] = market_data[6]
+            result_data["Institutional Ownership"] = market_data[6]
 
         if market_data is not None and market_data[7]:
-            result_data["Institutional Ownership"] = market_data[7]
+            result_data["Analyst Ratings"] = market_data[7]
 
         if market_data is not None and market_data[8]:
-            result_data["Analyst Ratings"] = market_data[8]
+            result_data["Short Interest"] = market_data[8]
 
-        if market_data is not None and market_data[9]:
-            result_data["Short Interest"] = market_data[9]
-
-        if market_data is not None and market_data[10]:
-            result_data["Latest News"] = market_data[10]
 
         if request.is_json:
             return jsonify(result_data.get("Stock Data", {}))
@@ -66,7 +70,13 @@ async def submit_form():
 
 
 @app.route("/stock-data")
-def stock_data():
+async def stock_data():
     ticker = ''
-    data = get_webull_data(ticker)
+    data = await get_webull_data(ticker)
     return jsonify(data)
+
+
+
+
+if __name__ == '__main__':
+    app.run()

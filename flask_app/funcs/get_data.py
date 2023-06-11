@@ -77,26 +77,6 @@ async def get_webull_data(ticker):
     totalOwnershipRatioOfFloatChange = stats.holding_ratio_change if stats.holding_ratio_change is not None else "N/A"
     totalNumberOfInstitutions = float(stats.institutional_count) if stats.institutional_count is not None else "N/A"
 
-    costDistribution = await webull.cost_distribution(ticker)
-    if costDistribution is None:
-        return None
-
-    avgCost = [i.avgCost if i.avgCost is not None else "N/A" for i in costDistribution]
-    sharesInProfit70End = [i.chip70End if i.chip70End is not None else "N/A" for i in costDistribution]
-    sharesInProfit70Ratio = [i.chip70Ratio if i.chip70Ratio is not None else "N/A" for i in costDistribution]
-    sharesInProfit70Start = [i.chip70Start if i.chip70Start is not None else "N/A" for i in costDistribution]
-    sharesInProfit90End = [i.chip90End if i.chip90End is not None else "N/A" for i in costDistribution]
-    sharesInProfit90Ratio = [i.chip90Ratio if i.chip90Ratio is not None else "N/A" for i in costDistribution]
-    sharesInProfit90Start = [i.chip90Start if i.chip90Start is not None else "N/A" for i in costDistribution]
-    Close = [i.close if i.close is not None else "N/A" for i in costDistribution]
-    traders_profiting = [i.closeProfitRatio if i.closeProfitRatio is not None else "N/A" for i in costDistribution]
-    distributions = [i.distributions if i.distributions is not None else "N/A" for i in costDistribution]
-    totalShares = [i.totalShares if i.totalShares is not None else "N/A" for i in costDistribution]
-
-    if traders_profiting is not None:
-        traders_profiting = traders_profiting[0]
-    else:
-        traders_profiting = None
 
 
     capitalFlow = await webull.capital_flow(ticker)
@@ -402,18 +382,7 @@ async def get_webull_data(ticker):
             'Retail Outflow Ratio': retailOutRatio if retailOutRatio else "N/A",
         }
 
-        cost_distribution_result = {
-            'Average Cost': avgCost[0] if avgCost else "N/A",
-            'Close': Close[0] if Close else "N/A",
-            'Shares Profiting 70% End': sharesInProfit70End[0] if sharesInProfit70End else "N/A",
-            'Shares Profiting 70% Ratio': sharesInProfit70Ratio[0] if sharesInProfit70Ratio else "N/A",
-            'Shares Profiting 70% Start': sharesInProfit70Start[0] if sharesInProfit70Start else "N/A",
-            'Shares Profiting 90% End': sharesInProfit90End[0] if sharesInProfit90End else "N/A",
-            'Shares Profiting 90% Ratio': sharesInProfit90Ratio[0] if sharesInProfit90Ratio else "N/A",
-            'Shares Profiting 90% End': sharesInProfit90Start[0] if sharesInProfit90Start else "N/A",
-            'Percent of Traders in Profit': traders_profiting[0] if traders_profiting else "N/A",
-            'Total Shares': total_shares[0] if total_shares else "N/A",
-        }
+
 
         institutional_ownership_result = {
             'Decreased Numer of Shares': decreaseChange if decreaseChange else "N/A",
@@ -472,8 +441,8 @@ async def get_webull_data(ticker):
         }
 
         return (stock_data_result, vol_analysis_results,financial_statement_result, cashflow_result, balance_sheet_result, 
-                capital_flow_result, cost_distribution_result, institutional_ownership_result, analyst_result,
-                short_interest_result, news_result)
+                capital_flow_result, institutional_ownership_result, analyst_result,
+                short_interest_result)
     except Exception as e:
         print(f"An error occurred while retrieving Webull data: {str(e)}")
         return None
