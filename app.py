@@ -20,6 +20,11 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/snippets')
+def snippets():
+    return render_template('snippets.html')
+
+
 @app.route("/submit", methods=["POST", "GET"])
 async def submit_form():
     if request.method == "POST":
