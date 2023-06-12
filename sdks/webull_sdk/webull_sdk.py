@@ -1,3 +1,17 @@
+from pathlib import Path
+import sys
+
+# Get the absolute path of the current file
+current_file_path = Path(__file__).resolve()
+
+# Get the absolute path of the 'cfg' module
+cfg_module_path = current_file_path.parent.parent / 'cfg'
+
+# Add the module path to sys.path
+sys.path.append(str(cfg_module_path))
+
+
+
 import aiohttp
 from .derivative_query import QueryDerivatives
 from typing import List, Optional
@@ -19,7 +33,7 @@ from datetime import datetime, timedelta, timezone
 from .financial_statement import FinancialStatement, CashFlow, BalanceSheet
 from .news import NewsItem
 from .shortinterest import ShortInterest
-from ...cfg import today_str, thirty_days_ago_str
+from cfg import today_str, thirty_days_ago_str
 from .institutional_holdings import InstitutionHolding
 now = datetime.now()
 ninety_days_from_now = now + timedelta(days=90)
