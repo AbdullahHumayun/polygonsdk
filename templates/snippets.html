@@ -91,13 +91,12 @@
         <div class="snippet-dropdown">
             <select id="snippet-select" onchange="displayCodeSnippet()">
                 <option value="">Select a snippet...</option>
-                <option value="Get All Stock Snapshots">Get All Stock Snapshots</option>
-                <option value="Get All Indices Snapshots">Get All Indices Snapshots</option>
+                <option value="Get all Stock Snapshots">Get all Stock Snapshots</option>
                 <option value="Get All Crypto Snapshots">Get All Crypto Snapshots</option>
-                <option value="Get All Option Snapshots">Get all Option Snapshots</option>
-                <option value="Get All Forex Snapshots">Get All Forex Snapshots</option>
-                <option value="Discord Integration">Discord Integration</option>
+                <option value="Get All Options Snapshots">Get All Options Snapshots</option>
                 <option value="Get All Webull Data">Get All Webull Data</option>
+                <option value="Run All Webull Functions">Run All Webull Functions</option>
+                <option value="Real Time Discord Integration">Real Time Discord Integration</option>
 
             </select>
         </div>
@@ -107,7 +106,7 @@
 
     <script>
         const snippets = {
-"Get All Stock Snapshots":`
+"Get all Stock Snapshots":`
 import asyncio
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from cfg import YOUR_API_KEY
@@ -167,7 +166,7 @@ async def get_all_crypto_data():
 asyncio.run(get_all_crypto_data())`,
 
 
-"Get All Option Snapshots":`
+"Get All Options Snapshots":`
 
 import asyncio
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
@@ -187,28 +186,6 @@ async def get_all_options_data():
 
     print(f"Data has been successfully saved to files/options/all_options_data.csv")
 asyncio.run(get_all_options_data())`,
-
-
-"Get All Forex Snapshots":`
-import asyncio
-import pandas as pd
-from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-from cfg import YOUR_API_KEY
-polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
-
-
-async def get_forex_data():
-
-    forex_snapshots = await polygonsdk.get_all_forex_snapshots()
-    df = pd.DataFrame(vars(forex_snapshots))
-    df.to_csv('files/forex/all_forex_snapshots.csv')
-
-
-    print(f"Data has been successfully saved to files/forex/all_forex_snapshots.csv")
-
-
-
-asyncio.run(get_forex_data())`,
 
 "Get All Webull Data":`
 
@@ -232,10 +209,9 @@ asyncio.run(process_data())`,
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 import asyncio
 from cfg import today_str
-
 sdk = AsyncWebullSDK()
 
-\"\"\"YOU CAN USE DOT NOTATION FOR ALL OF THESE COMMANDS\"\"\"
+
 async def main():
     ticker = "GME"
 
@@ -255,6 +231,9 @@ async def main():
                                                     cash_flow, price)
     print(financial_ratios)
 
+
+
+
     score = await sdk.calculate_score(
     capital_expenditures=cash_flow[0].capital_expenditures, 
     cash_from_financing_activities=cash_flow[0].cash_from_financing_activities,
@@ -264,11 +243,16 @@ async def main():
     net_income=cash_flow[0].net_income)
     print(score)
 
+
+
     calendar = await sdk.get_earnings_calendar(today_str)
     tickers = [i.ticker for i in calendar]
     for i in tickers:
         symbol = i['symbol']
         print(symbol)
+
+
+
 
     financial_score = await sdk.financial_score(ticker)
     print(financial_score)
@@ -279,6 +263,7 @@ async def main():
 
 
     inst = await sdk.get_institutional_holdings(ticker)
+
     print(inst.institution_holding.decrease.holding_count_change)
 
 
@@ -292,141 +277,20 @@ async def main():
 
 
     vol_anal = await sdk.get_webull_vol_analysis_data(ticker)
+
     print(vol_anal.avePrice)
 
 
 asyncio.run(main())`,
 
-"Run Simulated Stock Market":`
+"Real Time Discord Integration":`
+import sys
+import os
 
-from typing import List
-import random
-import asyncio
-from sdks.models.test_events import TestStocksEvent
-import pandas as pd
-
-from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-
-from cfg import YOUR_API_KEY
-
-from asyncio import Queue
-
-
-sdk = AsyncPolygonSDK(YOUR_API_KEY)
-df = pd.read_csv('files/stocks/all_snapshots.csv') #you must first download this file by running the "get_latest_ticker_data.py" file.
-
-
-async def consume(queue: Queue):
-    while True:
-        m = await queue.get()
-        ask = m.last_quote_ask_price
-        close =m.close
-        low=m.low
-        open = m.open
-        high = m.high
-        volume = m.volume
-        prev_volume = m.prev_volume
-        prev_vwap = m.prev_vwap
-        vwap = m.vwap
-        bid = m.last_quote_bid_price
-        conditions = m.last_trade_conditions
-        print(open, high)
-        # Process the event as necessary
-        
-        
-
-async def handle_msg(msgs: List[TestStocksEvent], queue: Queue):
-    for m in msgs:
-
-        
-        await queue.put(m)
-
-async def send_messages(handler, queue):  # pass queue as an argument
-    while True:
-        # Select a random row from the DataFrame
-        index = random.randint(0, len(df) - 1)
-        row = df.iloc[index]
-
-        # Create TestStocksEvent object from row data
-        event = TestStocksEvent.from_row(row)
-
-        # Call the handler with the message
-        await handler([event], queue)
-        await asyncio.sleep(0.01)
-
-async def main():
-    data_queue = Queue() 
-
-    num_workers = 15  # adjust this value based on your requirements
-    sdk_tasks = [
-        consume(data_queue) for _ in range(num_workers)
-    ]
-
-    sdk_tasks.append(asyncio.create_task(send_messages(handle_msg, data_queue)))
-
-    await asyncio.gather(*sdk_tasks)  # include consume_task in gather()
-
-asyncio.run(main())`,
-
-"Run Simulated Options Market":`
-
-from typing import List
-import random
-import asyncio
-from asyncio import Queue
-
-from sdks.helpers.helpers import human_readable
-from sdks.models.test_events import TestOptionsEvent
-import pandas as pd
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 
 
-from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
-from cfg import YOUR_API_KEY
-
-sdk= PolygonOptionsSDK(YOUR_API_KEY)
-
-
-
-df = pd.read_csv('files/options/all_options_data.csv') #you must download this spreadsheet from the "get_latest_options_data.py" file.
-
-
-async def handle_msg(msgs: List[TestOptionsEvent], queue: Queue):
-    for m in msgs:
-
-        await queue.put(m) 
-
-async def send_messages(handler, queue: Queue): 
-    while True:
-        index = random.randint(0, len(df) - 1)
-        row = df.iloc[index]
-        event = TestOptionsEvent.from_row(row)
-        await handler([event], queue) 
-        await asyncio.sleep(0.001) 
-
-async def consume(queue: Queue): 
-    while True:
-        m = await queue.get()
-        #do something
-        print(f"{human_readable(m.ticker)} | ASK: ${m.ask} | BID: ${m.bid} | VOLUME: ${m.day_volume}")
-
-
-
-async def main():
-    data_queue = Queue() 
-
-    num_workers = 15  # adjust this value based on your requirements
-    sdk_tasks = [
-        consume(data_queue) for _ in range(num_workers)
-    ]
-
-    sdk_tasks.append(asyncio.create_task(send_messages(handle_msg, data_queue)))
-
-    await asyncio.gather(*sdk_tasks)  # include consume_task in gather()
-
-asyncio.run(main())`,
-
-"Discord Integration":`
 
 from typing import List
 import random
@@ -557,6 +421,10 @@ async def main():
     await asyncio.gather(*sdk_tasks)  # include consume_task in gather()
 
 asyncio.run(main())`,
+
+
+
+
 
 }
 
