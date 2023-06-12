@@ -52,25 +52,23 @@
             border-radius: 3px;
         }
 
-
-        .snippet-code code {
+        .snippet-code {
             color: #C8C8C8;
+            font-size: 14px;
+            position: relative;
+            animation: matrix-animation 5s infinite;
         }
 
         .snippet-code .keyword {
             color: #FFC66D;
         }
 
-        .snippet-code .function-name {
-            color: #7AA5FF;
+        .snippet-code .comment {
+            color: #94B0C2;
         }
 
         .snippet-code .builtin {
-            color: #9CDCFE;
-        }
-
-        .snippet-code .string {
-            color: #CE9178;
+            color: #7AA5FF;
         }
 
         .copy-icon {
@@ -81,7 +79,9 @@
             color: #c8c8c8;
         }
 
+
     </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -105,18 +105,13 @@
             </select>
         </div>
 
-        <div class="snippet-code" id="snippet-code">
-            <code>
-                <span class="keyword">def</span> <span class="function-name">hello_world</span>():
-                    <span class="builtin">print</span>(<span class="string">"Hello, World!"</span>)
-                
-                <span class="function-name">hello_world</span>()
-            </code>
-        </div>
+        <div class="snippet-code" id="snippet-code"></div>
 
         <i class="fas fa-copy copy-icon" onclick="copyCodeSnippet()"></i>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="static/js/snippets.js"></script>
     <script>
@@ -134,32 +129,32 @@
 
                 if (snippet) {
                     clearInterval(snippetCodeInterval);
-                    snippetCode.innerHTML = `<code>${snippet}</code>`;
-                    animateCodeTyping(snippetCode.querySelector('code'));
+                    snippetCode.innerHTML = ""; // Clear existing code
+
+                    Prism.highlightElement(snippetCode); // Apply syntax highlighting
+
+                    animateCodeTyping(snippetCode, snippet);
                 }
             }
         }
 
-        function animateCodeTyping(element) {
-            const code = element.innerHTML;
+        function animateCodeTyping(element, code) {
             let i = 0;
-            element.innerHTML = '';
+            const lines = code.split('\n');
 
             snippetCodeInterval = setInterval(() => {
-                if (i === code.length) {
+                if (i === lines.length) {
                     clearInterval(snippetCodeInterval);
                     return;
                 }
 
-                if (code.charAt(i) === '<') {
-                    const endIndex = code.indexOf('>', i);
-                    element.innerHTML += code.slice(i, endIndex + 1);
-                    i = endIndex + 1;
-                } else {
-                    element.innerHTML += code.charAt(i);
-                    i++;
-                }
-            }, 50);
+                const line = lines[i];
+                element.innerHTML += Prism.highlight(line, Prism.languages.python, 'python') + '\n';
+                i++;
+
+                // Scroll to the bottom to show newly typed code
+                element.scrollTop = element.scrollHeight;
+            }, 160);
         }
 
         function copyCodeSnippet() {
