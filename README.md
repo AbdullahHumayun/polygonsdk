@@ -1,3 +1,9 @@
+
+
+
+
+A terminal is being built: [polygonsdks](https://polygonsdks.herokuapp.com/)
+
 # Welcome to the Polygon.io toolkit
 
 This is a tool-kit designed for polygon.io users as well as anyone looking to integrate real-time data feeds into their personal Discord servers.

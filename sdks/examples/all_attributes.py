@@ -11,7 +11,7 @@ from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from sdks.fudstop_sdk.fudstop_sdk import fudstopSDK
-from sdks.polygon_sdk.helpers.helpers import human_readable
+from sdks.helpers.helpers import human_readable
 
 from cfg import YOUR_API_KEY, five_days_ago_str, today_str
 
