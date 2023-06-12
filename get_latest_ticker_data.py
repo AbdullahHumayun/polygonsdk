@@ -3,13 +3,10 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import asyncio
 
 import asyncio
-import csv
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from cfg import YOUR_API_KEY
-import pandas as pd
 polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
 
 
