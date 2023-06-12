@@ -5,7 +5,7 @@
     <style>
         body {
             background-color: #000;
-            color: #0f0;
+            color: #c8c8c8;
             font-family: 'Courier New', Courier, monospace;
             display: flex;
             flex-direction: column;
@@ -24,7 +24,7 @@
         }
 
         .terminal {
-            background-color: #000;
+            background-color: #1c1c1c;
             padding: 20px;
             border-radius: 5px;
             width: 1000px; /* Adjust the width as per your preference */
@@ -45,7 +45,7 @@
 
         .snippet-dropdown select {
             background-color: #222;
-            color: #0f0;
+            color: #c8c8c8;
             border: none;
             padding: 5px;
             font-size: 16px;
@@ -53,10 +53,29 @@
         }
 
         .snippet-code {
-            color: #0f0;
             font-size: 14px;
             position: relative;
-            animation: matrix-animation 10s infinite;
+            animation: matrix-animation 5s infinite;
+        }
+
+        .snippet-code code {
+            color: #C8C8C8;
+        }
+
+        .snippet-code .keyword {
+            color: #FFC66D;
+        }
+
+        .snippet-code .function-name {
+            color: #7AA5FF;
+        }
+
+        .snippet-code .builtin {
+            color: #9CDCFE;
+        }
+
+        .snippet-code .string {
+            color: #CE9178;
         }
 
         .copy-icon {
@@ -64,13 +83,26 @@
             top: 10px;
             right: 10px;
             cursor: pointer;
-            color: #0f0;
+            color: #c8c8c8;
         }
 
         @keyframes matrix-animation {
-            0% { opacity: 0.2; }
-            50% { opacity: 0.6; }
-            100% { opacity: 0.2; }
+            0% {
+                opacity: 0.4;
+                transform: translateY(-100%);
+            }
+            25% {
+                opacity: 0.9;
+                transform: translateY(0);
+            }
+            75% {
+                opacity: 0.9;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0.6;
+                transform: translateY(100%);
+            }
         }
     </style>
 </head>
@@ -96,20 +128,22 @@
             </select>
         </div>
 
-        <div class="copy-icon" onclick="copyCodeSnippet()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                <path d="M5 15V9a2 2 0 0 1 2-2h6"/>
-            </svg>
+        <div class="snippet-code" id="snippet-code">
+            <code>
+                <span class="keyword">def</span> <span class="function-name">hello_world</span>():
+                    <span class="builtin">print</span>(<span class="string">"Hello, World!"</span>)
+                
+                <span class="function-name">hello_world</span>()
+            </code>
         </div>
 
-        <pre class="snippet-code" id="snippet-code"></pre>
+        <i class="fas fa-copy copy-icon" onclick="copyCodeSnippet()"></i>
     </div>
 
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="static/js/snippets.js"></script>
     <script>
         let snippetCodeInterval;
-        let snippetCode2Interval;
 
         function displayCodeSnippet() {
             const snippetSelect = document.getElementById("snippet-select");
@@ -122,21 +156,33 @@
                 const snippet = snippets.restApiSnippets[selectedSnippet] || snippets.otherSnippets[selectedSnippet];
 
                 if (snippet) {
-                    snippetCode.innerText = "";
-                    animateCodeTyping(snippetCode, snippet);
+                    clearInterval(snippetCodeInterval);
+                    snippetCode.innerHTML = `<code>${snippet}</code>`;
+                    animateCodeTyping(snippetCode.querySelector('code'));
                 }
             }
         }
 
-        function animateCodeTyping(element, code) {
+        function animateCodeTyping(element) {
+            const code = element.innerHTML;
             let i = 0;
+            element.innerHTML = '';
+
             snippetCodeInterval = setInterval(() => {
-                element.innerHTML += code.charAt(i);
-                i++;
                 if (i === code.length) {
                     clearInterval(snippetCodeInterval);
+                    return;
                 }
-            }, 15);
+
+                if (code.charAt(i) === '<') {
+                    const endIndex = code.indexOf('>', i);
+                    element.innerHTML += code.slice(i, endIndex + 1);
+                    i = endIndex + 1;
+                } else {
+                    element.innerHTML += code.charAt(i);
+                    i++;
+                }
+            }, 50);
         }
 
         function copyCodeSnippet() {
