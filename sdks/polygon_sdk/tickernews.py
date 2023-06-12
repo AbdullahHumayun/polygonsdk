@@ -2,7 +2,7 @@
 
 
 from polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-from cfg import YOUR_API_KEY
+from config import YOUR_API_KEY
 from dataclasses import dataclass
 
 api_key = YOUR_API_KEY
