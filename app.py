@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import Flask, render_template, request, jsonify
 
-from funcs.get_data import get_webull_data
+from .funcs.get_data import get_webull_data
 
 
 
@@ -20,7 +20,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/snippets')
+@app.route("/snippets")
 def snippets():
     return render_template('snippets.html')
 

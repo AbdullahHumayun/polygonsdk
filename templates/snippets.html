@@ -91,20 +91,37 @@
         <div class="snippet-dropdown">
             <select id="snippet-select" onchange="displayCodeSnippet()">
                 <option value="">Select a snippet...</option>
-                {% for snippet_name in snippets.keys() %}
-                    <option value="{{snippet_name}}">{{snippet_name}}</option>
-                {% endfor %}
+                <option value="Slash Command with Embed">Slash Command with Embed</option>
+                <option value="Context Command with Embed">Context Command with Embed</option>
+                <option value="GPT-4 Command">GPT-4 Command</option>
+                <option value="Discord Navigation Commands">Discord Navigation Commands</option>
+                <option value="GPT-4 Discord Integration">GPT-4 Discord Integration</option>
             </select>
         </div>
 
         <div class="snippet-code" id="snippet-code"></div>
-
-        <button id="copy-code-button" onclick="copyCode()">Copy Code</button>
-
-        <div class="output" id="output"></div>
     </div>
 
     <script>
+        const snippets = {
+            "Get all Stock Snapshots":`import asyncio
+            from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+            from cfg import YOUR_API_KEY
+
+            polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
+
+            filename="files/stocks/all_snapshots.csv"
+
+            async def get_all_ticker_data():
+            \"\"\"Gets all snapshots market-wide and saves
+            to CSV for further analysis / testing purposes.\"\"\"
+
+            await polygonsdk.write_snapshots_to_csv()
+
+            print(f"Data has been successfully saved to files/stocks/all_snapshots.csv.")
+            asyncio.run(get_all_ticker_data())`,}
+        
+
 
 
         function displayCodeSnippet() {
@@ -122,13 +139,8 @@
                 }
             }
         }
-        function runCodeAndDisplayOutput(code) {
-            const outputElement = document.getElementById("output");
-            // Here you would call some API that runs the code and retrieves the output.
-            // As a simple example, let's just display a static output message.
-            const output = "This is the example output. - Functionality coming soon!";
-            outputElement.innerText = output;
-        }
+
+
 
         function copyCode() {
             const snippetCode = document.getElementById("snippet-code");
@@ -139,6 +151,19 @@
             document.execCommand("Copy");
             document.body.removeChild(tempTextArea);
             alert("Code copied to clipboard.");
+        }
+    
+        function animateCodeTyping(element, code) {
+            let i = 0;
+            element.innerText = "";
+            const typingInterval = setInterval(() => {
+                if (i >= code.length) {
+                    clearInterval(typingInterval);
+                } else {
+                    element.innerText += code.charAt(i);
+                    i++;
+                }
+            }, 20);
         }
 
         function animateCodeTyping(element, code) {
@@ -156,3 +181,4 @@
     </script>
 </body>
 </html>
+    
