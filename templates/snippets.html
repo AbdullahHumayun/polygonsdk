@@ -105,7 +105,8 @@
 
 
         <div class="restapi-dropdown">
-            <select id="snippet-select" onchange="displayCodeSnippet()">
+            <select id="snippet-select2" onchange="displayCodeSnippet2()">
+                <option value="">Select a REST function...</option>
                 <option value="Latest News">Latest News</option>
             </select>
         </div>
@@ -521,7 +522,23 @@ asyncio.run(news(ticker))`, }
                 }
             }
         }
+        
 
+        function displayCodeSnippet2() {
+            const snippetSelect = document.getElementById("snippet-select2");
+            const snippetCode = document.getElementById("snippet-code");
+            const selectedSnippet = snippetSelect.options[snippetSelect.selectedIndex].text;
+
+            if (selectedSnippet === "") {
+                snippetCode.innerText = "";
+            } else {
+                const snippet = snippets2;
+                if (snippet) {
+                    snippetCode.innerText = snippet;
+                    animateCodeTyping(snippetCode, snippet);
+                }
+            }
+        }
 
 
         function copyCode() {
