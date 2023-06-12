@@ -1,161 +1,147 @@
 window.snippets = {
-  restApiSnippets: {
-    "Get All Stock Snapshots": `
-      import asyncio
-      from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-      from cfg import YOUR_API_KEY
+  polygonSnippets: {
+      "Get All Stock Snapshots": `
+        import asyncio
+        from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+        from cfg import YOUR_API_KEY
 
-      polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
+        polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
 
-      filename = "files/stocks/all_snapshots.csv"
+        filename = "files/stocks/all_snapshots.csv"
 
-      async def get_all_ticker_data():
-          \"\"\"Gets all snapshots market-wide and saves to CSV for further analysis / testing purposes.\"\"\"
+        async def get_all_ticker_data():
+            \"\"\"Gets all snapshots market-wide and saves to CSV for further analysis / testing purposes.\"\"\"
 
-          await polygonsdk.write_snapshots_to_csv()
+            await polygonsdk.write_snapshots_to_csv()
 
-          print(f"Data has been successfully saved to files/stocks/all_snapshots.csv.")
+            print(f"Data has been successfully saved to files/stocks/all_snapshots.csv.")
 
-      asyncio.run(get_all_ticker_data())
-    `,
-    "Get All Crypto Snapshots": `
-      import asyncio
-      import pandas as pd
-      from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-      from cfg import YOUR_API_KEY
+        asyncio.run(get_all_ticker_data())
+      `,
+      "Get All Crypto Snapshots": `
+        import asyncio
+        import pandas as pd
+        from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+        from cfg import YOUR_API_KEY
 
-      polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
+        polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
 
-      async def get_all_crypto_data():
-          \"\"\"Gets all crypto snapshots and saves to CSV for further analysis / testing purposes.\"\"\"
+        async def get_all_crypto_data():
+            \"\"\"Gets all crypto snapshots and saves to CSV for further analysis / testing purposes.\"\"\"
 
-          crypto_snapshots = await polygonsdk.get_all_crypto_snapshots()
-          df = pd.DataFrame(vars(crypto_snapshots))
-          df.to_csv('files/crypto/all_crypto_snapshots.csv')
+            crypto_snapshots = await polygonsdk.get_all_crypto_snapshots()
+            df = pd.DataFrame(vars(crypto_snapshots))
+            df.to_csv('files/crypto/all_crypto_snapshots.csv')
 
-          print(f"Data has been successfully saved to files/crypto/all_crypto_snapshots.csv.")
+            print(f"Data has been successfully saved to files/crypto/all_crypto_snapshots.csv.")
 
-      asyncio.run(get_all_crypto_data())
-    `,
-    "Get All Options Snapshots": `
-      import asyncio
-      from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
-      from cfg import YOUR_API_KEY
+        asyncio.run(get_all_crypto_data())
+      `,
+      "Get All Options Snapshots": `
+        import asyncio
+        from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+        from cfg import YOUR_API_KEY
 
-      polyoptions = PolygonOptionsSDK(YOUR_API_KEY)
+        polyoptions = PolygonOptionsSDK(YOUR_API_KEY)
 
-      async def get_all_options_data():
-          \"\"\"Gets all options snapshots and saves to CSV for further analysis / testing purposes.\"\"\"
+        async def get_all_options_data():
+            \"\"\"Gets all options snapshots and saves to CSV for further analysis / testing purposes.\"\"\"
 
-          contracts = await polyoptions.fetch_all_option_contracts(
-              expiration_date_gte="2023-05-22",  # The expiration will be after today
-              expiration_date_lte="2023-07-01",  # Select your desired date range
-          )
+            contracts = await polyoptions.fetch_all_option_contracts(
+                expiration_date_gte="2023-05-22",  # The expiration will be after today
+                expiration_date_lte="2023-07-01",  # Select your desired date range
+            )
 
-          await polyoptions.get_snapshots(contracts, 'files/options/all_options_data.csv')
+            await polyoptions.get_snapshots(contracts, 'files/options/all_options_data.csv')
 
-          print(f"Data has been successfully saved to files/options/all_options_data.csv.")
+            print(f"Data has been successfully saved to files/options/all_options_data.csv.")
 
-      asyncio.run(get_all_options_data())
-    `,
-    "Get All Indices Snapshots": `
-      import asyncio
+        asyncio.run(get_all_options_data())
+      `,
+      "Get All Indices Snapshots": `
+        import asyncio
 
-      from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-      from cfg import YOUR_API_KEY
+        from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+        from cfg import YOUR_API_KEY
 
-      polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
+        polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
 
-      async def get_all_indices_data():
-          \"\"\"Gets all indices snapshots and saves to CSV for further analysis / testing purposes.\"\"\"
+        async def get_all_indices_data():
+            \"\"\"Gets all indices snapshots and saves to CSV for further analysis / testing purposes.\"\"\"
 
-          await polygonsdk.write_indices_to_csv()
+            await polygonsdk.write_indices_to_csv()
 
-          print(f"Data has been successfully saved to files/indices/all_indices_snapshots.csv.")
+            print(f"Data has been successfully saved to files/indices/all_indices_snapshots.csv.")
 
-      asyncio.run(get_all_indices_data())
-    `,
-    "Get All Forex Snapshots": `
-      import asyncio
-      import pandas as pd
-      from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-      from cfg import YOUR_API_KEY
+        asyncio.run(get_all_indices_data())
+      `,
+      "Get All Forex Snapshots": `
+        import asyncio
+        import pandas as pd
+        from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+        from cfg import YOUR_API_KEY
 
-      polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
+        polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
 
-      async def get_forex_data():
-          \"\"\"Gets all forex snapshots and saves to CSV for further analysis / testing purposes.\"\"\"
+        async def get_forex_data():
+            \"\"\"Gets all forex snapshots and saves to CSV for further analysis / testing purposes.\"\"\"
 
-          forex_snapshots = await polygonsdk.get_all_forex_snapshots()
-          df = pd.DataFrame(vars(forex_snapshots))
-          df.to_csv('files/forex/all_forex_snapshots.csv')
+            forex_snapshots = await polygonsdk.get_all_forex_snapshots()
+            df = pd.DataFrame(vars(forex_snapshots))
+            df.to_csv('files/forex/all_forex_snapshots.csv')
 
-          print(f"Data has been successfully saved to files/forex/all_forex_snapshots.csv.")
+            print(f"Data has been successfully saved to files/forex/all_forex_snapshots.csv.")
 
-      asyncio.run(get_forex_data())
-    `
-  },
-  otherSnippets: {
-    "Get All Webull Data": `
-      import asyncio
-      from examples.webull_data import Webull
+        asyncio.run(get_forex_data())
+      `
+    },
+    discordSnippets: {
 
-      async def process_data():
-          webull = Webull()
-          await webull.fetch_data('AAPL')
+    
 
-      asyncio.run(process_data())
-    `,
-    "Run All Webull Functions": `
-      from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
-      import asyncio
-      from cfg import today_str
+      "Discord Bot - Setup Template": `
 
-      sdk = AsyncWebullSDK()
+      import disnake
+      from disnake.ext import commands
+      from cfg import token #your bot's token
+      # Create a DISNAKE bot instance
+      # Set the intents from the developer portal.
+      bot = commands.Bot(command_prefix="!", intents=disnake.Intents.all())
+      
+      # Event: Bot is ready
+      @bot.event
+      async def on_ready():
+          print(f"Bot is ready! Logged in as {bot.user}")
+      
+      # Command: Ping
+      @bot.command()
+      async def ping(ctx):
+          await ctx.send("Pong!")
+      
+      # Run the bot
+      bot.run(token)`,
 
-      async def main():
-          ticker = "GME"
+      "Make News Embed":`
+      from discord_webhook import DiscordEmbed, AsyncDiscordWebhook
 
-          capital_flow = await sdk.capital_flow(ticker)
-          balance_sheet = await sdk.get_balancesheet(ticker)
-          fin_statement = await sdk.get_financial_statement(ticker)
-          cash_flow = await sdk.get_cash_flow(ticker)
 
-          market_data = await sdk.get_webull_stock_data(ticker)
-          price = market_data.web_stock_close
+      async def make_news_embed(webhook_url, image_url, title, description, name, icon_url, article_url, tickers, home_url, keywords, author):
+          webhook = AsyncDiscordWebhook(webhook_url)
+          embed = DiscordEmbed(title=title, description=f"{description}", url=article_url)
+          embed.add_embed_field(name="Relevant tickers:", value=f"{tickers}", inline=False)
+          embed.add_embed_field(name="News Keywords:", value=f"n{keywords}", inline=True)
+          embed.add_embed_field(name="Publisher:", value=f"{name}")
+          embed.add_embed_field(name=f"Author:", value=f"> **{author}**")
+          embed.set_image(image_url)
+          embed.set_footer(text="Data provided by Polygon.io", icon_url=icon_url)
+          embed.set_author(name=author)
+          embed.set_timestamp()
+          webhook.add_embed(embed)
+          await webhook.execute()
+          `,
+  
 
-          financial_ratios = await sdk.calculate_ratios(
-              balance_sheet, fin_statement, cash_flow, price
-          )
-
-          score = await sdk.calculate_score(
-              capital_expenditures=cash_flow[0].capital_expenditures,
-              cash_from_financing_activities=cash_flow[0].cash_from_financing_activities,
-              cash_from_investing_activities=cash_flow[0].cash_from_investing_activities,
-              cash_from_operating_activities=cash_flow[0].cash_from_operating_activities,
-              net_change_in_cash=cash_flow[0].net_change_in_cash,
-              total_cash_dividends_paid=cash_flow[0].total_cash_dividends_paid,
-              net_income=cash_flow[0].net_income,
-          )
-
-          calendar = await sdk.get_earnings_calendar(today_str)
-          tickers = [i.ticker for i in calendar]
-
-          financial_score = await sdk.financial_score(ticker)
-
-          analysts = await sdk.get_analysis_data(ticker)
-
-          inst = await sdk.get_institutional_holdings(ticker)
-
-          etfs = await sdk.get_etf_categories("commodity")  # Choose between commodity // industry // index // other
-
-          shortint = await sdk.get_short_interest(ticker)
-
-          vol_anal = await sdk.get_webull_vol_analysis_data(ticker)
-
-      asyncio.run(main())
-    `,
-    "Real Time Discord Integration": `
+      "Real Time Discord Integration": `
       import sys
       import os
 
@@ -284,48 +270,139 @@ window.snippets = {
           await asyncio.gather(*sdk_tasks)  # include consume_task in gather()
 
       asyncio.run(main())
-    `,
-    "Latest Ticker News": `
-      import asyncio
-
-      from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-      from cfg import YOUR_API_KEY
-
-      polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
-      ticker = "AAPL"
-
-      async def news(ticker):
-          \"\"\"Retrieve the latest news for a specific ticker and print the details.\"\"\"
-
-          news = await polygonsdk.get_ticker_narrative(ticker)
-          desc = [i.description for i in news]
-          news_keywords = [i.keywords for i in news]
-          mentioned_tickers = [i.tickers for i in news]
-          published = [i.pub_time for i in news]
-          news_url = [i.news_url for i in news]
-          publisher_homepage = [i.homepage_url for i in news]
-          news_image = [i.image_url for i in news]
-          publisher_logo = [i.logo_url for i in news]
-          publisher_name = [i.name for i in news]
-          title = [i.title for i in news]
-
-          print(f"Latest News for {ticker[0]}:")
-          print()
-          print(f"Title: {title[0]}")
-          print()
-          print(f"Description: {desc[0]}")
-          print()
-          print(f"Source URL: {news_url[0]}")
-          print(f"Published: {published[0]}")
-          print(f"Publisher: {publisher_name[0]}")
-          print(f"Publisher Website: {publisher_homepage[0]}")
-          print(f"Publisher Logo: {publisher_logo[0]}")
-          print(f"News Image: {news_image[0]}")
-          print()
-          print(f"News Keywords: {news_keywords[0]}")
-          print(f"Tickers Mentioned: {mentioned_tickers[0]}")
-
-      asyncio.run(news(ticker))
     `
-  }
+    },
+  webullSnippets: {
+    "Get All Webull Data": `
+      import asyncio
+      from examples.webull_data import Webull
+
+      async def process_data():
+          webull = Webull()
+          await webull.fetch_data('AAPL')
+
+      asyncio.run(process_data())
+    `,
+    "Run All Webull Functions": `
+      from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
+      import asyncio
+      from cfg import today_str
+
+      sdk = AsyncWebullSDK()
+
+      async def main():
+          ticker = "GME"
+
+          capital_flow = await sdk.capital_flow(ticker)
+          balance_sheet = await sdk.get_balancesheet(ticker)
+          fin_statement = await sdk.get_financial_statement(ticker)
+          cash_flow = await sdk.get_cash_flow(ticker)
+
+          market_data = await sdk.get_webull_stock_data(ticker)
+          price = market_data.web_stock_close
+
+          financial_ratios = await sdk.calculate_ratios(
+              balance_sheet, fin_statement, cash_flow, price
+          )
+
+          score = await sdk.calculate_score(
+              capital_expenditures=cash_flow[0].capital_expenditures,
+              cash_from_financing_activities=cash_flow[0].cash_from_financing_activities,
+              cash_from_investing_activities=cash_flow[0].cash_from_investing_activities,
+              cash_from_operating_activities=cash_flow[0].cash_from_operating_activities,
+              net_change_in_cash=cash_flow[0].net_change_in_cash,
+              total_cash_dividends_paid=cash_flow[0].total_cash_dividends_paid,
+              net_income=cash_flow[0].net_income,
+          )
+
+          calendar = await sdk.get_earnings_calendar(today_str)
+          tickers = [i.ticker for i in calendar]
+
+          financial_score = await sdk.financial_score(ticker)
+
+          analysts = await sdk.get_analysis_data(ticker)
+
+          inst = await sdk.get_institutional_holdings(ticker)
+
+          etfs = await sdk.get_etf_categories("commodity")  # Choose between commodity // industry // index // other
+
+          shortint = await sdk.get_short_interest(ticker)
+
+          vol_anal = await sdk.get_webull_vol_analysis_data(ticker)
+
+      asyncio.run(main())
+    `,
+  
+    "Latest Ticker News": `
+    import asyncio
+
+    from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+    from cfg import YOUR_API_KEY
+
+    polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
+    ticker = "AAPL"
+
+    async def news(ticker):
+        \"\"\"Retrieve the latest news for a specific ticker and print the details.\"\"\"
+
+        news = await polygonsdk.get_ticker_narrative(ticker)
+        desc = [i.description for i in news]
+        news_keywords = [i.keywords for i in news]
+        mentioned_tickers = [i.tickers for i in news]
+        published = [i.pub_time for i in news]
+        news_url = [i.news_url for i in news]
+        publisher_homepage = [i.homepage_url for i in news]
+        news_image = [i.image_url for i in news]
+        publisher_logo = [i.logo_url for i in news]
+        publisher_name = [i.name for i in news]
+        title = [i.title for i in news]
+
+        print(f"Latest News for {ticker[0]}:")
+        print()
+        print(f"Title: {title[0]}")
+        print()
+        print(f"Description: {desc[0]}")
+        print()
+        print(f"Source URL: {news_url[0]}")
+        print(f"Published: {published[0]}")
+        print(f"Publisher: {publisher_name[0]}")
+        print(f"Publisher Website: {publisher_homepage[0]}")
+        print(f"Publisher Logo: {publisher_logo[0]}")
+        print(f"News Image: {news_image[0]}")
+        print()
+        print(f"News Keywords: {news_keywords[0]}")
+        print(f"Tickers Mentioned: {mentioned_tickers[0]}")
+
+    asyncio.run(news(ticker))
+  `
+  },
+
+  StockMarketHelperFunctions: {
+    "Human Readable Option Symbol": `
+    
+  import re
+  def human_readable(string):
+      try:
+          match = re.search(r'(\\w{1,5})(\\d{2})(\\d{2})(\\d{2})([CP])(\\d+)', string) #looks for the options symbol in O: format
+          underlying_symbol, year, month, day, call_put, strike_price = match.groups()
+      except TypeError:
+          underlying_symbol = "AMC"
+          year = "23"
+          month = "02"
+          day = "17"
+          call_put = "CALL"
+          strike_price = "380000"
+      
+      expiry_date = month + '/' + day + '/' + '20' + year
+      if call_put == 'C':
+          call_put = 'Call'
+      else:
+          call_put = 'Put'
+      strike_price = "\${{:.2f}}".format(float(strike_price)/1000)
+      return "{} {} {} Expiring {}".format(underlying_symbol, strike_price, call_put, expiry_date)
+  `
+},
+
+
 };
+

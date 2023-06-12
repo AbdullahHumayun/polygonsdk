@@ -1,174 +1,111 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <body>
+        <div class="back-button">
+            <a href="/">&lt; Back</a>
+        </div>
     <title>Code Snippet Terminal</title>
+    <link rel="stylesheet" href="static/css/styles.css" />
     <style>
         body {
-            background-color: #000;
-            color: #c8c8c8;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
+            background-color: black;
+            color: green;
+            font-family: "Courier New", Courier, monospace;
         }
 
-        .card {
-            background-color: #222;
-            border-radius: 5px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .terminal {
-            background-color: #1c1c1c;
-            padding: 20px;
-            border-radius: 5px;
-            width: 1000px; /* Adjust the width as per your preference */
-            max-width: 90%; /* Limit the maximum width to 90% of the viewport */
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            white-space: pre;
-            overflow-x: auto;
-            position: relative;
-            border: 1px solid #0f0;
-            box-shadow: 0 0 20px #0f0;
-        }
-
-        .snippet-dropdown {
-            margin-top: 20px;
-        }
-
-        .snippet-dropdown select {
-            background-color: #222;
-            color: #c8c8c8;
-            border: none;
-            padding: 5px;
-            font-size: 16px;
-            border-radius: 3px;
-        }
-
-        .snippet-code {
-            color: #C8C8C8;
-            font-size: 14px;
-            position: relative;
-            animation: matrix-animation 5s infinite;
-        }
-
-        .snippet-code .keyword {
-            color: #FFC66D;
-        }
-
-        .snippet-code .comment {
-            color: #94B0C2;
-        }
-
-        .snippet-code .builtin {
-            color: #7AA5FF;
-        }
-
-        .copy-icon {
+        .back-button {
             position: absolute;
             top: 10px;
-            right: 10px;
-            cursor: pointer;
-            color: #c8c8c8;
+            left: 10px;
         }
-
-
+        
+        .back-button a {
+            text-decoration: none;
+            color: green;
+        }
+        
+        .card {
+            background-color: black;
+            border: 1px solid rgb(0, 66, 128);
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .card h1 {
+            font-size: 24px;
+            margin: 0;
+            padding: 0;
+            color: rgb(1, 56, 1);
+        }
+        
+        .category-dropdown select,
+        .snippet-dropdown select {
+            background-color: black;
+            color: rgb(156, 161, 156);
+            border: 1px solid rgb(132, 5, 250);
+            padding: 5px;
+            font-size: 16px;
+        }
+        
+        .snippet-code {
+            background-color: black;
+            border: 1px solid rgb(102, 0, 128);
+            padding: 10px;
+            margin-top: 10px;
+        }
+        
+        #snippet-code {
+            color: rgb(128, 68, 0);
+            font-size: 16px;
+        }
+        
+        #copy-button {
+            background-color: rgb(4, 82, 102);
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        #copy-button:hover {
+            background-color: black;
+            color: green;
+        }
     </style>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet" />
 </head>
 
 <body>
+    <div class="category-dropdown">
+        <select id="category-select" onchange="filterSnippetsByCategory()">
+            <option value="">Select a category...</option>
+            <option value="polygonSnippets">Polygon.io REST API Snippets</option>
+            <option value="discordSnippets">Discord Snippets</option>
+            <option value="webullSnippets">Webull Snippets</option>
+            <!-- Add more categories here -->
+        </select>
+    </div>
+
     <div class="card">
         <h1>CODE SNIPPETS</h1>
-    </div>
-
-    <div class="terminal">
         <div class="snippet-dropdown">
             <select id="snippet-select" onchange="displayCodeSnippet()">
-                <option value="">Select a snippet...</option>
-                <option value="Get All Stock Snapshots">Get All Stock Snapshots</option>
-                <option value="Get All Crypto Snapshots">Get All Crypto Snapshots</option>
-                <option value="Get All Options Snapshots">Get All Options Snapshots</option>
-                <option value="Get All Indices Snapshots">Get All Indices Snapshots</option>
-                <option value="Get All Forex Snapshots">Get All Forex Snapshots</option>
-                <option value="Get All Webull Data">Get All Webull Data</option>
-                <option value="Run All Webull Functions">Run All Webull Functions</option>
-                <option value="Real Time Discord Integration">Real Time Discord Integration</option>
-                <option value="Latest Ticker News">Latest Ticker News</option>
+                <option value="" selected disabled>Select a snippet for <span id="category-name-placeholder">category</span>...</option>
             </select>
         </div>
-
-        <div class="snippet-code" id="snippet-code"></div>
-
-        <i class="fas fa-copy copy-icon" onclick="copyCodeSnippet()"></i>
+    </div>
+    
+    <div class="terminal">
+        <div class="snippet-code">
+            <pre><code class="language-python" id="snippet-code"></code></pre>
+            <button id="copy-button" onclick="copyCodeSnippet()">Copy</button>
+        </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="static/js/snippets.js"></script>
-    <script>
-        let snippetCodeInterval;
-
-        function displayCodeSnippet() {
-            const snippetSelect = document.getElementById("snippet-select");
-            const snippetCode = document.getElementById("snippet-code");
-            const selectedSnippet = snippetSelect.options[snippetSelect.selectedIndex].text;
-
-            if (selectedSnippet === "") {
-                snippetCode.innerText = "";
-            } else {
-                const snippet = snippets.restApiSnippets[selectedSnippet] || snippets.otherSnippets[selectedSnippet];
-
-                if (snippet) {
-                    clearInterval(snippetCodeInterval);
-                    snippetCode.innerHTML = ""; // Clear existing code
-
-                    Prism.highlightElement(snippetCode); // Apply syntax highlighting
-
-                    animateCodeTyping(snippetCode, snippet);
-                }
-            }
-        }
-
-        function animateCodeTyping(element, code) {
-            let i = 0;
-            const lines = code.split('\n');
-
-            snippetCodeInterval = setInterval(() => {
-                if (i === lines.length) {
-                    clearInterval(snippetCodeInterval);
-                    return;
-                }
-
-                const line = lines[i];
-                element.innerHTML += Prism.highlight(line, Prism.languages.python, 'python') + '\n';
-                i++;
-
-                // Scroll to the bottom to show newly typed code
-                element.scrollTop = element.scrollHeight;
-            }, 160);
-        }
-
-        function copyCodeSnippet() {
-            const snippetCode = document.getElementById("snippet-code");
-            const code = snippetCode.innerText;
-
-            navigator.clipboard.writeText(code)
-                .then(() => {
-                    console.log("Code snippet copied to clipboard!");
-                })
-                .catch((error) => {
-                    console.error("Failed to copy code snippet:", error);
-                });
-        }
-    </script>
+    <script src="static/js/prism.js"></script>
+    <script src="static/js/main.js"></script>
+    <script>filterSnippetsByCategory();</script>
 </body>
 </html>

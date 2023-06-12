@@ -1,29 +1,63 @@
 from flask import Flask
 from flask import Flask, render_template, request, jsonify
-
+from static.py.website_components import components, load_content
 from funcs.get_data import get_webull_data
+from static.py.snippets import helpers, rest_api
 
 
-
-
+import asyncio
 app = Flask(__name__)
 
 
 
 
 
+async def generate_html():
+    await asyncio.sleep(1)  # Simulated loading delay
+    title = 'Dynamic Web Page'
+    css = 'styles.css'
+    js = 'script.js'
+    div_content = '<h1>Welcome to my dynamic web page!</h1><p>Loaded asynchronously.</p>'
 
+    template = str(components)
 
+    html_content = template.format(title=title, css=css, js=js, div_content=div_content)
 
+    # Write the generated HTML content to a file
+    with open('auto.html', 'w') as file:
+        file.write(html_content)
+
+    return html_content
+
+@app.route('/auto')
+async def auto():
+    html_content = await generate_html()
+    return html_content
 @app.route('/')
 def index():
     return render_template('index.html')
 
 
+@app.route("/home")
+def home():
+    return render_template('home.html')
+
 @app.route("/snippets")
 def snippets():
     return render_template('snippets.html')
 
+
+@app.route("/snip")
+def snip():
+    return render_template('snip.html')
+
+@app.route('/test')
+def test():
+    return render_template('test_scripts.html', helpers=helpers, rest_api=rest_api)
+
+@app.route("/dropdowns")
+def dropdowns():
+    return render_template('dropdowns.html')
 
 @app.route("/submit", methods=["POST", "GET"])
 async def submit_form():
