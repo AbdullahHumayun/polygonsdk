@@ -19,7 +19,7 @@ from datetime import datetime, timedelta, timezone
 from .financial_statement import FinancialStatement, CashFlow, BalanceSheet
 from .news import NewsItem
 from .shortinterest import ShortInterest
-from cfg import today_str, thirty_days_ago_str
+from ...cfg import today_str, thirty_days_ago_str
 from .institutional_holdings import InstitutionHolding
 now = datetime.now()
 ninety_days_from_now = now + timedelta(days=90)
