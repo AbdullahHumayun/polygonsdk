@@ -7,10 +7,9 @@ from typing import List
 import random
 import asyncio
 from asyncio import Queue
-from datetime import datetime
-from dataclasses import asdict
+
 from sdks.helpers.helpers import human_readable
-from sdks.models.test_events import TestOptionsEvent, option_condition_dict, OPTIONS_EXCHANGES
+from sdks.models.test_events import TestOptionsEvent
 import pandas as pd
 
 

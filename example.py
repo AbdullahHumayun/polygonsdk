@@ -24,13 +24,21 @@ async def main():
     price = market_data.web_stock_close
     print(market_data.avg_10d_vol)
 
-    financial_ratios=    await sdk.calculate_ratios(balance_sheet, fin_statement, cash_flow, price)
+    financial_ratios=    await sdk.calculate_ratios(balance_sheet, 
+                                                    fin_statement, 
+                                                    cash_flow, price)
     print(financial_ratios)
 
 
 
 
-    score = await sdk.calculate_score(capital_expenditures=cash_flow[0].capital_expenditures, cash_from_financing_activities=cash_flow[0].cash_from_financing_activities,cash_from_investing_activities=cash_flow[0].cash_from_investing_activities,cash_from_operating_activities=cash_flow[0].cash_from_operating_activities,net_change_in_cash=cash_flow[0].net_change_in_cash,total_cash_dividends_paid=cash_flow[0].total_cash_dividends_paid, net_income=cash_flow[0].net_income)
+    score = await sdk.calculate_score(
+    capital_expenditures=cash_flow[0].capital_expenditures, 
+    cash_from_financing_activities=cash_flow[0].cash_from_financing_activities,
+    cash_from_investing_activities=cash_flow[0].cash_from_investing_activities,
+    cash_from_operating_activities=cash_flow[0].cash_from_operating_activities,
+    net_change_in_cash=cash_flow[0].net_change_in_cash,total_cash_dividends_paid=cash_flow[0].total_cash_dividends_paid, 
+    net_income=cash_flow[0].net_income)
     print(score)
 
 
@@ -57,12 +65,10 @@ async def main():
     print(inst.institution_holding.decrease.holding_count_change)
 
 
-    etfs = await sdk.get_etf_categories("commodity")
+    etfs = await sdk.get_etf_categories("commodity") 
+    #choose between commodity // industry // index // other
     print(etfs[0].asset_type)
 
-
-   # news_for_real = await sdk.get_recent_news_for_tickers(ticker, webull_headers=webull_headers)
-    #print(news_for_real[0]['news_url'])
 
     shortint = await sdk.get_short_interest(ticker)
     print(shortint.avg_volume)

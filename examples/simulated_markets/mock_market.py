@@ -11,8 +11,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 from typing import List
 import random
 import asyncio
-from datetime import datetime
-from sdks.models.test_events import TestStocksEvent, EQUITY_TRADE_CONDITIONS
+from sdks.models.test_events import TestStocksEvent
 import pandas as pd
 
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK

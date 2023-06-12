@@ -2,7 +2,6 @@ from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 import asyncio
 from cfg import YOUR_API_KEY
 import pandas as pd
-import requests
 poly = AsyncPolygonSDK(YOUR_API_KEY)
 import aiohttp
 async def main():
@@ -21,7 +20,7 @@ async def main():
             if response.status == 200:
                 data = await response.json()
                 print(data)
-                entity_public_float = data['facts']['dei']["EntityPublicFloat"]]
+                entity_public_float = data['facts']['dei']["EntityPublicFloat"]
                 float_units = entity_public_float['units']
                 USD = float_units['USD']
 
