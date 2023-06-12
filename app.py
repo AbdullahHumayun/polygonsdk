@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import Flask, render_template, request, jsonify
 
-from flask_app.funcs.get_data import get_webull_data
+from funcs.get_data import get_webull_data
 
 
 
