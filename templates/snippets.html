@@ -112,6 +112,7 @@
         </div>
 
         <div class="snippet-code" id="snippet-code"></div>
+        <div class="snippet-code2" id="snippet-code2"></div>
     </div>
 
     <script>
@@ -450,7 +451,7 @@ asyncio.run(main())`,
 
 }
 
-const snippets2 = {
+        const snippets2 = {
 
 "Latest Ticker News":`
 import asyncio
@@ -526,7 +527,7 @@ asyncio.run(news(ticker))`, }
 
         function displayCodeSnippet2() {
             const snippetSelect = document.getElementById("snippet-select2");
-            const snippetCode = document.getElementById("snippet-code");
+            const snippetCode = document.getElementById("snippet-code2");
             const selectedSnippet = snippetSelect.options[snippetSelect.selectedIndex].text;
 
             if (selectedSnippet === "") {
