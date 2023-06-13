@@ -6,3 +6,6 @@ my_hooks.py
 test.py
 my_mock.py
 mydata/
+Procfile
+runtime.txt
+static

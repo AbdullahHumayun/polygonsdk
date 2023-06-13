@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 
 import asyncio
 import pandas as pd
-from .sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+from ..sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from cfg import YOUR_API_KEY
 polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
 
