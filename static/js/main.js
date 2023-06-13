@@ -48,6 +48,14 @@ function displayCodeSnippet() {
         } else if (window.snippets && window.snippets.webullSnippets && window.snippets.webullSnippets.hasOwnProperty(selectedSnippet)) {
             snippet = window.snippets.webullSnippets[selectedSnippet];
         }
+        else if (window.snippets && window.snippets.StockMarketHelperFunctions && window.snippets.StockMarketHelperFunctions.hasOwnProperty(selectedSnippet)) {
+            snippet = window.snippets.StockMarketHelperFunctions[selectedSnippet];
+        }
+
+        else if (window.snippets && window.snippets.generalHelperFunctions && window.snippets.generalHelperFunctions.hasOwnProperty(selectedSnippet)) {
+            snippet = window.snippets.generalHelperFunctions[selectedSnippet];
+        }
+
 
         if (snippet) {
             clearInterval(snippetCodeInterval);

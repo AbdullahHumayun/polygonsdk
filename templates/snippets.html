@@ -23,6 +23,7 @@
         .back-button a {
             text-decoration: none;
             color: rgb(36, 216, 36);
+            font-size: 25
         }
 
         .card {
@@ -45,7 +46,7 @@
             color: rgb(156, 161, 156);
             border: 1px solid rgb(132, 5, 250);
             padding: 5px;
-            font-size: 16px;
+            font-size: 18px;
         }
 
         .snippet-code {
@@ -53,12 +54,13 @@
             border: 1px solid rgb(102, 0, 128);
             padding: 10px;
             margin-top: 10px;
+            font-size: 18px;
         }
 
         #snippet-code {
             color: rgb(190, 102, 2);
             font-size: 16px;
-            animation: typing 0.1s steps(40) infinite alternate;
+            animation: typing 0.001s steps(80) infinite alternate;
         }
 
         #copy-button {
@@ -93,6 +95,9 @@
             <option value="polygonSnippets">Polygon.io REST API Snippets</option>
             <option value="discordSnippets">Discord Snippets</option>
             <option value="webullSnippets">Webull Snippets</option>
+            <option value="StockMarketHelperFunctions">Stock Market Helper Functions</option>
+            <option value="generalHelperFunctions">General Helper Functions</option>
+            
             <!-- Add more categories here -->
         </select>
     </div>
@@ -114,6 +119,7 @@
     </div>
 
     <script src="static/js/snippets.js"></script>
+    
     <script src="static/js/prism.js"></script>
     <script src="static/js/main.js"></script>
     <script>filterSnippetsByCategory();</script>

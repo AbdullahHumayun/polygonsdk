@@ -93,8 +93,77 @@ window.snippets = {
             print(f"Data has been successfully saved to files/forex/all_forex_snapshots.csv.")
 
         asyncio.run(get_forex_data())
-      `
-    },
+      `,
+
+      "Polygon Ticker Logo": `
+      from urllib.parse import unquote
+      from cfg import YOUR_API_KEY
+      import aiohttp
+
+      async def get_polygon_logo(symbol):
+          url = f'https://api.polygon.io/v3/reference/tickers/{symbol}?apiKey={YOUR_API_KEY}'
+          async with aiohttp.ClientSession() as session:
+              async with session.get(url) as response:
+                  data = await response.json()
+                  
+                  if 'results' not in data:
+                      # No results found
+                      return None
+                  
+                  results = data['results']
+                  branding = results.get('branding')
+
+                  if branding and 'icon_url' in branding:
+                      encoded_url = branding['icon_url']
+                      decoded_url = unquote(encoded_url)
+                      url_with_api_key = f"{decoded_url}?apiKey={YOUR_API_KEY}"
+                      return url_with_api_key
+            
+            `
+          },
+
+        "Latest Ticker News": `
+        import asyncio
+    
+        from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+        from cfg import YOUR_API_KEY
+    
+        polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
+        ticker = "AAPL"
+    
+        async def news(ticker):
+            \"\"\"Retrieve the latest news for a specific ticker and print the details.\"\"\"
+    
+            news = await polygonsdk.get_ticker_narrative(ticker)
+            desc = [i.description for i in news]
+            news_keywords = [i.keywords for i in news]
+            mentioned_tickers = [i.tickers for i in news]
+            published = [i.pub_time for i in news]
+            news_url = [i.news_url for i in news]
+            publisher_homepage = [i.homepage_url for i in news]
+            news_image = [i.image_url for i in news]
+            publisher_logo = [i.logo_url for i in news]
+            publisher_name = [i.name for i in news]
+            title = [i.title for i in news]
+    
+            print(f"Latest News for {ticker[0]}:")
+            print()
+            print(f"Title: {title[0]}")
+            print()
+            print(f"Description: {desc[0]}")
+            print()
+            print(f"Source URL: {news_url[0]}")
+            print(f"Published: {published[0]}")
+            print(f"Publisher: {publisher_name[0]}")
+            print(f"Publisher Website: {publisher_homepage[0]}")
+            print(f"Publisher Logo: {publisher_logo[0]}")
+            print(f"News Image: {news_image[0]}")
+            print()
+            print(f"News Keywords: {news_keywords[0]}")
+            print(f"Tickers Mentioned: {mentioned_tickers[0]}")
+    
+        asyncio.run(news(ticker))
+      `,
     discordSnippets: {
 
     
@@ -331,57 +400,14 @@ window.snippets = {
           vol_anal = await sdk.get_webull_vol_analysis_data(ticker)
 
       asyncio.run(main())
-    `,
-  
-    "Latest Ticker News": `
-    import asyncio
-
-    from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-    from cfg import YOUR_API_KEY
-
-    polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)
-    ticker = "AAPL"
-
-    async def news(ticker):
-        \"\"\"Retrieve the latest news for a specific ticker and print the details.\"\"\"
-
-        news = await polygonsdk.get_ticker_narrative(ticker)
-        desc = [i.description for i in news]
-        news_keywords = [i.keywords for i in news]
-        mentioned_tickers = [i.tickers for i in news]
-        published = [i.pub_time for i in news]
-        news_url = [i.news_url for i in news]
-        publisher_homepage = [i.homepage_url for i in news]
-        news_image = [i.image_url for i in news]
-        publisher_logo = [i.logo_url for i in news]
-        publisher_name = [i.name for i in news]
-        title = [i.title for i in news]
-
-        print(f"Latest News for {ticker[0]}:")
-        print()
-        print(f"Title: {title[0]}")
-        print()
-        print(f"Description: {desc[0]}")
-        print()
-        print(f"Source URL: {news_url[0]}")
-        print(f"Published: {published[0]}")
-        print(f"Publisher: {publisher_name[0]}")
-        print(f"Publisher Website: {publisher_homepage[0]}")
-        print(f"Publisher Logo: {publisher_logo[0]}")
-        print(f"News Image: {news_image[0]}")
-        print()
-        print(f"News Keywords: {news_keywords[0]}")
-        print(f"Tickers Mentioned: {mentioned_tickers[0]}")
-
-    asyncio.run(news(ticker))
-  `
-  },
+    `},
 
   StockMarketHelperFunctions: {
     "Human Readable Option Symbol": `
     
   import re
   def human_readable(string):
+      \\"""Takes an option symbol and converts to a human readable format"""\\
       try:
           match = re.search(r'(\\w{1,5})(\\d{2})(\\d{2})(\\d{2})([CP])(\\d+)', string) #looks for the options symbol in O: format
           underlying_symbol, year, month, day, call_put, strike_price = match.groups()
@@ -400,9 +426,344 @@ window.snippets = {
           call_put = 'Put'
       strike_price = "\${{:.2f}}".format(float(strike_price)/1000)
       return "{} {} {} Expiring {}".format(underlying_symbol, strike_price, call_put, expiry_date)
+  `,
+
+  "Original Form":` 
+  import re
+  def original_form(human_readable_list):
+      \\"""Takes a human readable option symbol and converts back to original form."""\\
+      match = re.search(r'^(\w{1,5}) \$(\d+\.\d{2}) (Call|Put) Expiring (\d{2})/(\d{2})/(\d{4})$', human_readable_list)
+      underlying_symbol, strike_price, call_put, month,day,year = match.groups()
+      strike_price = str(int(float(strike_price) * 1000)).zfill(8)
+      year = year[-2:]
+      call_put = 'C' if call_put == 'Call' else 'P'
+      expiry_date = year[-2:] + month + day
+      options_symbol = f"{underlying_symbol}{expiry_date}{call_put}{strike_price}"
+      return options_symbol
+  
   `
 },
+generalHelperFunctions: { 
+"Calculate Sum":`
+  def calculate_sum(a, b):
+      """
+      Calculates the sum of two numbers.
+  
+      Args:
+          a (number): The first number.
+          b (number): The second number.
+  
+      Returns:
+          number: The sum of the two numbers.
+      """
+      return a + b`,
+  
+"Generate Random Number":`
+  def generate_random_number(min, max):
+      """
+      Generates a random number within a given range.
+  
+      Args:
+          min (number): The minimum value of the range.
+          max (number): The maximum value of the range.
+  
+      Returns:
+          number: A random number within the specified range.
+      """
+      import random
+      return random.randint(min, max)`,
+  "Capitalize String": `
+  
+  
+  def capitalize_string(string):
+      """
+      Capitalizes the first letter of a string.
+  
+      Args:
+          string (str): The input string.
+  
+      Returns:
+          str: The input string with the first letter capitalized.
+      """
+      return string.capitalize()`,
 
+  "Reverse String": `
+  
+
+  def reverse_string(string):
+      """
+      Reverses a given string.
+  
+      Args:
+          string (str): The input string.
+  
+      Returns:
+          str: The reversed string.
+      """
+      return string[::-1]`,
+
+  "Format Date": `
+  
+
+  def format_date(date, format="%Y-%m-%d"):
+      """
+      Formats a date object into a string in the specified format.
+  
+      Args:
+          date (datetime.date): The input date object.
+          format (str, optional): The format string. Defaults to "%Y-%m-%d".
+  
+      Returns:
+          str: The formatted date string.
+      """
+      return date.strftime(format)`,
+
+  "Get File Extension":`
+
+  def get_file_extension(file_name):
+      """
+      Retrieves the extension of a given file.
+  
+      Args:
+          file_name (str): The name of the file.
+  
+      Returns:
+          str: The file extension.
+      """
+      import os
+      return os.path.splitext(file_name)[1][1:]`,
+
+  "Is Palindrome":`
+  
+ 
+  def is_palindrome(string):
+      """
+      Checks if a given string is a palindrome.
+  
+      Args:
+          string (str): The input string.
+  
+      Returns:
+          bool: True if the string is a palindrome, False otherwise.
+      """
+      return string == string[::-1]`,
+
+  "Count Vowels":`
+  
+ 
+  def count_vowels(string):
+      """
+      Counts the number of vowels in a given string.
+  
+      Args:
+          string (str): The input string.
+  
+      Returns:
+          int: The number of vowels in the string.
+      """
+      vowels = "aeiou"
+      return sum(1 for char in string.lower() if char in vowels)`,
+  "Calculate Factorial":`
+
+  def calculate_factorial(n):
+      """
+      Calculates the factorial of a given number.
+  
+      Args:
+          n (int): The input number.
+  
+      Returns:
+          int: The factorial of the number.
+      """
+      if n == 0:
+          return 1
+      else:
+          return n * calculate_factorial(n-1)`,
+
+  "Is Prime Number":`
+  
+
+  def is_prime_number(number):
+      """
+      Checks if a given number is prime.
+  
+      Args:
+          number (int): The input number.
+  
+      Returns:
+          bool: True if the number is prime, False otherwise.
+      """
+      if number <= 1:
+          return False
+      for i in range(2, int(number**0.5) + 1):
+          if number % i == 0:
+              return False
+      return True`,
+
+
+  "Find Least Common Multiple":`
+  
+  
+  def find_lcm(a, b):
+      """
+      Finds the least common multiple (LCM) of two numbers.
+  
+      Args:
+          a (int): The first number.
+          b (int): The second number.
+  
+      Returns:
+          int: The LCM of the two numbers.
+      """
+      def calculate_gcd(x, y):
+          """
+          Calculates the greatest common divisor (GCD) of two numbers.
+          """
+          while y:
+              x, y = y, x % y
+          return x
+  
+      return abs(a * b) // calculate_gcd(a, b)`,
+
+  "Calculate Average":`
+  
+
+  def calculate_average(numbers):
+      """
+      Calculates the average of a list of numbers.
+  
+      Args:
+          numbers (list): The list of numbers.
+  
+      Returns:
+          float: The average of the numbers.
+      """
+      return sum(numbers) / len(numbers)`,
+
+  "Remove Duplicates from List":`
+  
+
+  def remove_duplicates(lst):
+      """
+      Removes duplicate elements from a list while preserving the order.
+  
+      Args:
+          lst (list): The input list.
+  
+      Returns:
+          list: The list with duplicate elements removed.
+      """
+      seen = set()
+      return [x for x in lst if not (x in seen or seen.add(x))]`,
+
+  "Is Anagram":`
+  
+
+  def is_anagram(str1, str2):
+      """
+      Checks if two strings are anagrams of each other.
+  
+      Args:
+          str1 (str): The first string.
+          str2 (str): The second string.
+  
+      Returns:
+          bool: True if the strings are anagrams, False otherwise.
+      """
+      return sorted(str1.lower()) == sorted(str2.lower())`,
+
+  "Find Median Number":`
+  
+
+  def find_median(numbers):
+      """
+      Finds the median of a list of numbers.
+  
+      Args:
+          numbers (list): The list of numbers.
+  
+      Returns:
+          float: The median of the numbers.
+      """
+      sorted_numbers = sorted(numbers)
+      n = len(sorted_numbers)
+      if n % 2 == 0:
+          return (sorted_numbers[n//2 - 1] + sorted_numbers[n//2]) / 2
+      else:
+          return sorted_numbers[n//2]`,
+  
+  "Calculate Power":`
+  def calculate_power(base, exponent):
+      """
+      Calculates the result of raising a base to a specified exponent.
+  
+      Args:
+          base (number): The base number.
+          exponent (number): The exponent.
+  
+      Returns:
+          number: The result of the exponentiation.
+      """
+      return base ** exponent`,
+
+  "Calculate Percentage":`
+  
+
+  def calculate_percentage(value, total):
+      """
+      Calculates the percentage of a value relative to a total.
+  
+      Args:
+          value (number): The value.
+          total (number): The total.
+  
+      Returns:
+          float: The percentage.
+      """
+      return (value / total) * 100`,
+
+  "Find Maximum Value":`
+  
+
+  def find_max(numbers):
+      """
+      Finds the maximum value in a list of numbers.
+  
+      Args:
+          numbers (list): The list of numbers.
+  
+      Returns:
+          number: The maximum value.
+      """
+      return max(numbers)`,
+  
+  "Find Minimum Value":`
+  def find_min(numbers):
+      """
+      Finds the minimum value in a list of numbers.
+  
+      Args:
+          numbers (list): The list of numbers.
+  
+      Returns:
+          number: The minimum value.
+      """
+      return min(numbers)`,
+
+  "Remove Whitespace":`
+  def remove_whitespace(string):
+      """
+      Removes whitespace characters from a string.
+  
+      Args:
+          string (str): The input string.
+  
+      Returns:
+          str: The string without whitespace.
+      """
+      return string.replace(" ", "")`
+
+}
 
 };
 
