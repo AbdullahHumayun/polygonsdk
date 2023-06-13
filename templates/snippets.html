@@ -19,26 +19,26 @@
             top: 10px;
             left: 10px;
         }
-        
+
         .back-button a {
             text-decoration: none;
-            color: green;
+            color: rgb(36, 216, 36);
         }
-        
+
         .card {
             background-color: black;
-            border: 1px solid rgb(0, 66, 128);
+            border: 1px solid rgb(8, 96, 179);
             padding: 10px;
             margin-bottom: 10px;
         }
-        
+
         .card h1 {
             font-size: 24px;
             margin: 0;
             padding: 0;
             color: rgb(1, 56, 1);
         }
-        
+
         .category-dropdown select,
         .snippet-dropdown select {
             background-color: black;
@@ -47,31 +47,41 @@
             padding: 5px;
             font-size: 16px;
         }
-        
+
         .snippet-code {
             background-color: black;
             border: 1px solid rgb(102, 0, 128);
             padding: 10px;
             margin-top: 10px;
         }
-        
+
         #snippet-code {
-            color: rgb(128, 68, 0);
+            color: rgb(190, 102, 2);
             font-size: 16px;
+            animation: typing 0.1s steps(40) infinite alternate;
         }
-        
+
         #copy-button {
-            background-color: rgb(4, 82, 102);
+            background-color: rgb(4, 129, 160);
             color: black;
             border: none;
             padding: 5px 10px;
             font-size: 16px;
             cursor: pointer;
         }
-        
+
         #copy-button:hover {
             background-color: black;
             color: green;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
         }
     </style>
 </head>
