@@ -1,5 +1,5 @@
 Metadata-Version: 2.1
-Name: polygonsdk
+Name: polygon-sdk-client
 Version: 1.0.0
 Summary: Analyze, query, and fetch market data utilizing Polygon.io's suite of services for simulated and real-time market data analysis.
 Home-page: https://github.com/chuckdustin12/polygonsdk/
