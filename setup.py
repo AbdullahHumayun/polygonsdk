@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="polygon-sdk-client",
-    version="1.0.1",
+    name="polygon-sdk",
+    version="1.0.5",
     author="Chuck",
     author_email="chuckdustin12@gmail.com",
     description="Analyze, query, and fetch market data utilizing Polygon.io's suite of services for simulated and real-time market data analysis.",
