@@ -4,7 +4,6 @@ from static.py.website_components import components, load_content
 from funcs.get_data import get_webull_data
 from static.py.snippets import helpers, rest_api
 
-
 import asyncio
 app = Flask(__name__)
 
@@ -45,6 +44,13 @@ def home():
 @app.route("/snippets")
 def snippets():
     return render_template('snippets.html')
+
+
+
+@app.route("/about")
+def about():
+    return render_template('about.html')
+
 
 
 @app.route("/snip")

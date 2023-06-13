@@ -1,0 +1,6 @@
+_discord
+bot
+examples
+funcs
+sdks
+templates
