@@ -12,7 +12,7 @@ YOUR_API_KEY = "YOUR POLYGON API KEY GOES HERE" ##polygon.io APIKEY. If you don'
 YOUR_OPENAI_KEY = "" ##openAI key for integrating chatGPT into discord.
 YOUR_NASDAQ_KEY = "" ##nasdaq datalink key for using the nasdaq functions (iv_percentile)
 YOUR_WEBULL_HEADERS = "" ##headers needed to access the webull functions (news)
-
+YOUR_STOCKSERA_KEY = "YOUR_STOCKSERA_KEY"
 discord_headers = {
     'Authorization': f'YOUR DISCORD AUTH TOKEN HERE',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36', #replace with your user-agent if needed
