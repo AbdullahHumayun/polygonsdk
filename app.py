@@ -2,9 +2,9 @@
 
 from flask import Flask
 from flask import Flask, render_template, request, jsonify
-from .static.py.website_components import components, load_content
-from .funcs.get_data import get_webull_data
-from .static.py.snippets import helpers, rest_api
+from static.py.website_components import components, load_content
+from funcs.get_data import get_webull_data
+from static.py.snippets import helpers, rest_api
 
 import asyncio
 app = Flask(__name__)
