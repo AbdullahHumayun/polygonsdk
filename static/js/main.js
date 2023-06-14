@@ -3,12 +3,13 @@ let snippetCodeInterval;
 function animateCodeTyping(element, code) {
     let i = 0;
     snippetCodeInterval = setInterval(() => {
-        element.innerHTML += code.charAt(i);
+        element.textContent += code.charAt(i);
         i++;
         if (i === code.length) {
             clearInterval(snippetCodeInterval);
         }
-    }, 1); // Decreased interval to 10 milliseconds for faster typing
+        Prism.highlightAll(); // Moved this line here
+    }, 1);
 }
 
 function copyCodeSnippet() {
