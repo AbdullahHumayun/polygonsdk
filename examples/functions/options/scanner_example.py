@@ -2,7 +2,7 @@ import sys
 import os
 
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
 
 from typing import List
 from asyncio import Queue
@@ -12,15 +12,18 @@ import asyncio
 import pandas as pd
 from sdks.helpers.helpers import human_readable
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
-from sdks.models.test_events import TestOptionsEvent, option_condition_dict, OPTIONS_EXCHANGES
+from sdks.models.test_events import TestOptionsEvent
 
-from sdks.helpers.helpers import extract_underlying_symbol
-from sdks.simulated_markets.helpers import write_to_csv
+
+from examples.helpers import write_to_csv
 from cfg import YOUR_API_KEY
 from cachetools import TTLCache
 sdk = PolygonOptionsSDK(YOUR_API_KEY)
 queue = asyncio.Queue()
+
+ # generate get this file automatically runnning "get_all_options_data.py"
 df = pd.read_csv('files/options/all_options_data.csv')
+
 
 async def handle_msg(queue: asyncio.Queue, msgs: List[TestOptionsEvent]):
     tasks = []
@@ -51,14 +54,21 @@ async def send_messages(handler):
         await handler([event])
 
 
-async def process_snapshot(option_symbol: str, underlying_ticker):
+async def process_snapshot(option_symbol: str, underlying_ticker: str) -> None:
+    """
+    Process the snapshot data for an option contract and perform analysis.
+
+    Args:
+        option_symbol: The symbol of the option contract.
+        underlying_ticker: The symbol of the underlying asset.
+    """
+
     # Acquire the semaphore
     async with semaphore:
 
         snapshot = await sdk.get_option_contract_snapshot(underlying_asset=underlying_ticker, option_contract=option_symbol)
+
         # Retrieve the RSI value from the cache
-
-
 
         # Option Symbol Details
         option_symbol = snapshot.option_symbol
@@ -68,11 +78,9 @@ async def process_snapshot(option_symbol: str, underlying_ticker):
         break_even_price = snapshot.break_even_price
 
         # Day Information
- 
         day_change_percent = snapshot.day_change_percent
         day_volume = snapshot.day_volume
         day_vwap = snapshot.day_vwap
-
 
         # Greeks and Volatility
         delta = snapshot.delta
@@ -92,12 +100,13 @@ async def process_snapshot(option_symbol: str, underlying_ticker):
         results = []
 
         print(f"Snapshot Processed for {human_readable(option_symbol)}")
-        # Check if the option is a put with high implied volatility and nearing its break-even price
-        if (implied_volatility is not None 
-            and implied_volatility <= 0.53 
+
+        # Check if the option meets specific criteria for analysis
+        if (implied_volatility is not None
+            and implied_volatility <= 0.53
             and implied_volatility >= 0.22
-            and underlying_price >= 5 
-            and bid >= 0.07 
+            and underlying_price >= 5
+            and bid >= 0.07
             and ask <= 2.00
             and abs(bid - ask) <= 0.03
             and bid_size is not None
@@ -107,24 +116,45 @@ async def process_snapshot(option_symbol: str, underlying_ticker):
             and open_interest is not None
             and day_volume > (open_interest * 2)):
             
- 
-                
-            results.append({"Underlying": underlying_ticker, "Strike Price": strike_price, "Contract Type": contract_type, "Expiration Date": expiration_date, "Day Volume": day_volume, "Day VWAP": day_vwap, "Open Interest": open_interest, "Delta": delta, "Day Change Percent": day_change_percent, "Implied Volatility": implied_volatility, "Underlying Price": underlying_price, "Break Even Price": break_even_price})
+            results.append(
+                {
+                    "Underlying": underlying_ticker,
+                    "Strike Price": strike_price,
+                    "Contract Type": contract_type,
+                    "Expiration Date": expiration_date,
+                    "Day Volume": day_volume,
+                    "Day VWAP": day_vwap,
+                    "Open Interest": open_interest,
+                    "Delta": delta,
+                    "Day Change Percent": day_change_percent,
+                    "Implied Volatility": implied_volatility,
+                    "Underlying Price": underlying_price,
+                    "Break Even Price": break_even_price,
+                }
+            )
 
         # Save the results to a CSV file
         for result in results:
             write_to_csv(result)
 
 
+async def worker(queue: asyncio.Queue) -> None:
+    """
+    Worker function to process messages from the queue.
 
-async def worker(queue: asyncio.Queue):
+    Args:
+        queue: The asyncio queue containing the option symbols and underlying tickers.
+    """
     while True:
         option_symbol, symbol = await queue.get()
         await process_snapshot(option_symbol, symbol)
         queue.task_done()
 
 
-async def main():
+async def main() -> None:
+    """
+    Main function to coordinate the processing of option snapshots using multiple workers.
+    """
     # Create a queue to pass symbols between handle_msg and workers
     queue = asyncio.Queue()
 
@@ -140,8 +170,6 @@ async def main():
 
     # Wait for the worker tasks to finish
     await asyncio.gather(*worker_tasks, return_exceptions=True)
-
-
 
 
 asyncio.run(main())

@@ -120,7 +120,424 @@ window.snippets = {
                       return url_with_api_key
             
             `
-          },
+          ,
+
+        "Generate Option Symbol":`
+        
+        import asyncio
+
+        from cfg import YOUR_API_KEY
+        
+        from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+        
+        polyoptions = PolygonOptionsSDK(YOUR_API_KEY)
+        
+        
+        underlying_symbol = "F"
+        expiration_date = "2023-05-19"
+        option_type = "C"
+        strike_price = 11.5
+        
+        async def get_option_symbol() -> None:
+            """
+            Retrieves the option symbol using the Polygon Options SDK.
+            """
+            option_symbol = await polyoptions.generate_option_symbol(
+                underlying_symbol=underlying_symbol,
+                expiration_date=expiration_date,
+                option_type=option_type,
+                strike_price=strike_price
+            )
+            print(option_symbol)
+        
+        
+        # Run the main function
+        asyncio.run(get_option_symbol())
+        `,
+
+
+        "Get Entire Option Chain":`
+        import asyncio
+        import pandas as pd
+        
+        from cfg import YOUR_API_KEY
+        
+        from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+        from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+        from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
+        
+        
+        webull = AsyncWebullSDK()
+        poly = AsyncPolygonSDK(YOUR_API_KEY)
+        polyoptions = PolygonOptionsSDK(YOUR_API_KEY)
+        
+        
+        ticker = "GME"
+        
+        
+        async def fetch_entire_chain() -> None:
+            """
+            Fetches the entire option chain for a given ticker and saves it to a CSV file.
+            """
+            all_options = await polyoptions.get_option_chain_all(ticker)
+        
+            # Create a DataFrame from the dictionary
+            df = pd.DataFrame([option.to_dict() for option in all_options])
+        
+            # Save the DataFrame to a CSV file
+            df.to_csv(f'files/options/ticker_chains/all_{ticker}_chains.csv', index=False)
+        
+        
+        # Run the main function
+        asyncio.run(fetch_entire_chain())        
+`,
+        "Get Option Quote":`
+        import asyncio
+        from datetime import datetime
+        import pandas as pd
+        
+        from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+        from sdks.helpers.helpers import get_date_string
+        
+        from cfg import YOUR_API_KEY
+        
+        now = datetime.now()
+        sdk = PolygonOptionsSDK(YOUR_API_KEY)
+        
+        async def main():
+            """
+            Main function to retrieve option quotes and save them to a CSV file.
+        
+            The date range for fetching option quotes can be adjusted by modifying the value of 'num_days_ago'.
+            A negative value represents days in the past, and a positive value represents days in the future.
+            For example, 'num_days_ago' = -50 will fetch option quotes from 50 days ago until today.
+            """
+        
+            # Specify the option details
+            underlying_symbol = "SPY"
+            expiration_date = "2023-05-15"
+            option_type = 'C'
+            strike_price = '417'
+        
+            # Generate the option symbol
+            option_symbol = await sdk.generate_option_symbol(underlying_symbol, expiration_date, option_type, strike_price)
+        
+            # Specify the date range for fetching option quotes
+            num_days_ago = get_date_string(-50)
+            today_str = datetime.today().strftime('%Y-%m-%d')
+        
+            option_quote = await sdk.get_option_quote(option_symbol=option_symbol, order="desc", limit=50000, timestamp_lte=today_str, timestamp_gte=num_days_ago)
+        
+            # Create a DataFrame from the option quotes
+            df = pd.DataFrame(option_quote.to_dict())
+        
+        
+            csv_filename = f'files/options/quotes/{option_symbol[2:]}_{num_days_ago.replace("-", "")}.csv'
+            df.to_csv(csv_filename)
+        
+        asyncio.run(main())
+        `,
+
+        "Get Option Trades":`
+        import asyncio
+        import pandas as pd
+        
+        from cfg import YOUR_API_KEY
+        from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+        from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+        
+        polyoptions = PolygonOptionsSDK(YOUR_API_KEY)
+        poly = AsyncPolygonSDK(YOUR_API_KEY)
+        
+        async def get_trades():
+            """
+            Retrieve option trades for a specific option symbol and save them to a CSV file.
+        
+            This function retrieves option trades using the PolygonOptionsSDK and saves the trades
+            to a CSV file for further analysis.
+        
+            Ensure that you have set the appropriate values for the following variables before running the function:
+            - underlying_symbol: The underlying symbol of the option.
+            - expiration_date: The expiration date of the option.
+            - option_type: The type of the option (C for Call, P for Put).
+            - strike_price: The strike price of the option.
+            """
+        
+            underlying_symbol = "F"
+            expiration_date = "2023-05-19"
+            option_type = "C"
+            strike_price = 11.5
+        
+            # Generate the option symbol
+            option_symbol = await polyoptions.generate_option_symbol(underlying_symbol=underlying_symbol,
+                                                                     expiration_date=expiration_date,
+                                                                     option_type=option_type,
+                                                                     strike_price=strike_price)
+            print(option_symbol)  # Symbol used for further analysis below
+        
+            # Retrieve option trades
+            opt_trades = await polyoptions.get_option_trades(symbol=option_symbol, limit=100)
+        
+            # Extract relevant information from option trades
+            condition_name = [i.conditions for i in opt_trades]
+            price = [i.price for i in opt_trades]
+            size = [i.size for i in opt_trades]
+            sip_timestamp = [i.sip_timestamp for i in opt_trades]
+            exchange = [i.exchange for i in opt_trades]
+        
+            # Create a DataFrame from the option trades
+            df = pd.DataFrame({
+                'Condition': condition_name,
+                'Price': price,
+                'Size': size,
+                'Sip Timestamp': sip_timestamp,
+                'Exchange': exchange
+            })
+        
+            # Save the DataFrame to a CSV file
+            csv_filename = f'files/options/trades/{underlying_symbol}{option_type}{strike_price}_trades.csv'
+            df.to_csv(csv_filename)
+        
+           
+        
+        asyncio.run(get_trades())        
+`,
+
+        "Plot Option Aggregates":`
+        
+        import asyncio
+        import pandas as pd
+        import matplotlib.pyplot as plt
+        import mplfinance as mpf
+        from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+        from cfg import YOUR_API_KEY
+        poly = PolygonOptionsSDK(YOUR_API_KEY)
+        
+        
+        underlying_symbol="SPY"
+        expiration_date="2023-05-22"
+        option_type="C"
+        strike_price="400"
+        multiplier=1
+        timespan="hour"
+        from_date="2023-01-01"
+        to_date="2023-05-22"
+        order="desc"
+        limit=100
+        
+        
+        async def main():
+        
+            ticker = await poly.generate_option_symbol(underlying_symbol,expiration_date,option_type,strike_price)
+            print(ticker)
+            aggs = await poly.get_aggregate_bars(ticker, multiplier, timespan, from_date, to_date,adjusted=True, limit=100)
+            print(aggs)
+            close = [i.close for i in aggs]
+            high = [i.close for i in aggs]
+            low = [i.close for i in aggs]
+            open = [i.close for i in aggs]
+            timestamp = [i.close for i in aggs]
+            volume = [i.volume for i in aggs]
+            vwap = [i.vw for i in aggs]
+            num_trades = [i.number_of_trades for i in aggs]
+            
+            data = {
+                'Open': open,
+                'High': high,
+                'Low': low,
+                'Close': close,
+                'Time': timestamp,
+                'Volume': volume
+            }
+            print(data)
+            df = pd.DataFrame(data)
+        
+            # Convert timestamp to datetime and set it as index
+            df['Time'] = pd.to_datetime(df['Time'], unit='ms')
+            df.set_index('Time', inplace=True)
+            df.sort_index(inplace=True)
+            # Rename columns to match mplfinance requirements
+            df.rename(columns={'Open': 'open', 'High': 'high', 'Low': 'low', 'Close': 'close', 'Volume': 'volume'}, inplace=True)
+        
+            # Plot the candlestick chart using mplfinance
+            mpf.plot(df, type='candle', style='mike', title=f'{ticker} - {multiplier} {timespan}', ylabel='Price ($)', volume=True)
+        
+        asyncio.run(main())
+        
+        `,
+
+        "Real Time Options Scanner":`
+        from typing import List
+        from asyncio import Queue
+        import random
+        import csv
+        import asyncio
+        import pandas as pd
+        from sdks.helpers.helpers import human_readable
+        from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+        from sdks.models.test_events import TestOptionsEvent
+        
+        
+        from examples.helpers import write_to_csv
+        from cfg import YOUR_API_KEY
+        from cachetools import TTLCache
+        sdk = PolygonOptionsSDK(YOUR_API_KEY)
+        queue = asyncio.Queue()
+        
+         # generate get this file automatically runnning "get_all_options_data.py"
+        df = pd.read_csv('files/options/all_options_data.csv')
+        
+        
+        async def handle_msg(queue: asyncio.Queue, msgs: List[TestOptionsEvent]):
+            tasks = []
+            for m in msgs:
+                option_symbol = m.ticker
+                underlying_ticker = m.underlying_ticker
+                tasks.append(queue.put((option_symbol, underlying_ticker)))
+                await process_snapshot(option_symbol, underlying_ticker)
+        
+            await asyncio.gather(*[task for task in tasks if task is not None])
+        
+        snapshot_cache = TTLCache(maxsize=2000, ttl=60)
+        # Bounded semaphore to limit concurrent tasks1
+        semaphore = asyncio.BoundedSemaphore(40)
+        async def send_messages(handler):
+            while True:
+                # Select a random row from the DataFrame
+                # Select a random row from the DataFrame
+                index = random.randint(0, len(df) - 1)
+                row = df.iloc[index]
+        
+                # Create TestOptionsEvent object from row data
+                event = TestOptionsEvent.from_row(row)
+        
+                # Print the created TestOptionsEvent object
+        
+        
+                await handler([event])
+        
+        
+        async def process_snapshot(option_symbol: str, underlying_ticker: str) -> None:
+            """
+            Process the snapshot data for an option contract and perform analysis.
+        
+            Args:
+                option_symbol: The symbol of the option contract.
+                underlying_ticker: The symbol of the underlying asset.
+            """
+        
+            # Acquire the semaphore
+            async with semaphore:
+        
+                snapshot = await sdk.get_option_contract_snapshot(underlying_asset=underlying_ticker, option_contract=option_symbol)
+        
+                # Retrieve the RSI value from the cache
+        
+                # Option Symbol Details
+                option_symbol = snapshot.option_symbol
+                strike_price = snapshot.strike_price
+                contract_type = snapshot.contract_type
+                expiration_date = snapshot.expiration_date
+                break_even_price = snapshot.break_even_price
+        
+                # Day Information
+                day_change_percent = snapshot.day_change_percent
+                day_volume = snapshot.day_volume
+                day_vwap = snapshot.day_vwap
+        
+                # Greeks and Volatility
+                delta = snapshot.delta
+                implied_volatility = snapshot.implied_volatility
+                open_interest = snapshot.open_interest
+        
+                # Quote Data
+                ask = snapshot.ask
+                ask_size = snapshot.ask_size
+                bid = snapshot.bid
+                bid_size = snapshot.bid_size
+        
+                # Trade Information
+                conditions = snapshot.conditions
+                underlying_price = snapshot.underlying_price
+        
+                results = []
+        
+                print(f"Snapshot Processed for {human_readable(option_symbol)}")
+        
+                # Check if the option meets specific criteria for analysis
+                if (implied_volatility is not None
+                    and implied_volatility <= 0.53
+                    and implied_volatility >= 0.22
+                    and underlying_price >= 5
+                    and bid >= 0.07
+                    and ask <= 2.00
+                    and abs(bid - ask) <= 0.03
+                    and bid_size is not None
+                    and ask_size is not None
+                    and bid_size > (ask_size * 10)
+                    and day_volume is not None
+                    and open_interest is not None
+                    and day_volume > (open_interest * 2)):
+                    
+                    results.append(
+                        {
+                            "Underlying": underlying_ticker,
+                            "Strike Price": strike_price,
+                            "Contract Type": contract_type,
+                            "Expiration Date": expiration_date,
+                            "Day Volume": day_volume,
+                            "Day VWAP": day_vwap,
+                            "Open Interest": open_interest,
+                            "Delta": delta,
+                            "Day Change Percent": day_change_percent,
+                            "Implied Volatility": implied_volatility,
+                            "Underlying Price": underlying_price,
+                            "Break Even Price": break_even_price,
+                        }
+                    )
+        
+                # Save the results to a CSV file
+                for result in results:
+                    write_to_csv(result)
+        
+        
+        async def worker(queue: asyncio.Queue) -> None:
+            """
+            Worker function to process messages from the queue.
+        
+            Args:
+                queue: The asyncio queue containing the option symbols and underlying tickers.
+            """
+            while True:
+                option_symbol, symbol = await queue.get()
+                await process_snapshot(option_symbol, symbol)
+                queue.task_done()
+        
+        
+        async def main() -> None:
+            """
+            Main function to coordinate the processing of option snapshots using multiple workers.
+            """
+            # Create a queue to pass symbols between handle_msg and workers
+            queue = asyncio.Queue()
+        
+            # Create a fixed number of worker tasks
+            num_workers = 32
+            worker_tasks = [asyncio.create_task(worker(queue)) for _ in range(num_workers)]
+        
+            await send_messages(lambda msgs: handle_msg(queue, msgs))
+        
+            # Cancel the worker tasks
+            for task in worker_tasks:
+                task.cancel()
+        
+            # Wait for the worker tasks to finish
+            await asyncio.gather(*worker_tasks, return_exceptions=True)
+        
+        
+        asyncio.run(main())
+        `,
+        
 
         "Latest Ticker News": `
         import asyncio
@@ -132,7 +549,7 @@ window.snippets = {
         ticker = "AAPL"
     
         async def news(ticker):
-            \"\"\"Retrieve the latest news for a specific ticker and print the details.\"\"\"
+            """Retrieve the latest news for a specific ticker and print the details."""
     
             news = await polygonsdk.get_ticker_narrative(ticker)
             desc = [i.description for i in news]
@@ -163,7 +580,7 @@ window.snippets = {
             print(f"Tickers Mentioned: {mentioned_tickers[0]}")
     
         asyncio.run(news(ticker))
-      `,
+      `,},
     discordSnippets: {
 
     

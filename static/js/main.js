@@ -8,7 +8,7 @@ function animateCodeTyping(element, code) {
         if (i === code.length) {
             clearInterval(snippetCodeInterval);
         }
-    }, 15);
+    }, 1); // Decreased interval to 10 milliseconds for faster typing
 }
 
 function copyCodeSnippet() {

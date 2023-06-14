@@ -9,74 +9,75 @@
     <link rel="stylesheet" href="static/css/styles.css" />
     <style>
         body {
-            background-color: black;
-            color: green;
+            background-color: #1c1c1c;
+            color: #d1d1d1;
             font-family: "Courier New", Courier, monospace;
         }
-
+    
         .back-button {
             position: absolute;
             top: 10px;
             left: 10px;
         }
-
+    
         .back-button a {
             text-decoration: none;
-            color: rgb(36, 216, 36);
-            font-size: 25
+            color: #3498db;
+            font-size: 20px;
         }
-
+    
         .card {
-            background-color: black;
-            border: 1px solid rgb(8, 96, 179);
+            background-color: #222;
+            border: 1px solid #555;
             padding: 10px;
             margin-bottom: 10px;
         }
-
+    
         .card h1 {
-            font-size: 24px;
+            font-size: 20px;
             margin: 0;
             padding: 0;
-            color: rgb(1, 56, 1);
+            color: #3498db;
         }
-
+    
         .category-dropdown select,
         .snippet-dropdown select {
-            background-color: black;
-            color: rgb(156, 161, 156);
-            border: 1px solid rgb(132, 5, 250);
+            background-color: #222;
+            color: #d1d1d1;
+            border: 1px solid #555;
             padding: 5px;
-            font-size: 18px;
+            font-size: 16px;
         }
-
+    
         .snippet-code {
-            background-color: black;
-            border: 1px solid rgb(102, 0, 128);
+            background-color: #111;
+            border: 1px solid #444;
             padding: 10px;
             margin-top: 10px;
-            font-size: 18px;
-        }
-
-        #snippet-code {
-            color: rgb(190, 102, 2);
             font-size: 16px;
-            animation: typing 0.001s steps(80) infinite alternate;
+            color: #d1d1d1;
+            line-height: 1.5;
+            overflow-x: auto;
         }
-
+    
+        #snippet-code {
+            animation: typing 1s steps(60) infinite alternate;
+        }
+    
         #copy-button {
-            background-color: rgb(4, 129, 160);
-            color: black;
+            background-color: #3498db;
+            color: #fff;
             border: none;
             padding: 5px 10px;
             font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-
+    
         #copy-button:hover {
-            background-color: black;
-            color: green;
+            background-color: #2187c6;
         }
-
+    
         @keyframes typing {
             from {
                 width: 0;

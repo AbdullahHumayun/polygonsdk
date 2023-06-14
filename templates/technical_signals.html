@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <title>Dynamic Image Gallery</title>
+  <a href="/" class="back-button">Back</a>
+  <style>
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      color: #4c025f;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+      background-color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+  
+    .back-button {
+      margin-top: 20px;
+    }
+
+    
+    body {
+      background-color: #000000;
+      font-family: Arial, sans-serif;
+    }
+    
+    .gallery-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #000000;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .gallery {
+      position: relative;
+      display: flex;
+      flex-wrap: nowrap;
+      overflow: hidden;
+      justify-content: center;
+      align-items: center;
+      height: 300px;
+    }
+    
+    .gallery img {
+      width: auto;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+    
+    .gallery img:hover {
+      transform:matrix()
+    }
+    
+    .gallery-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 30px;
+      color: #3f06a86b;
+      cursor: pointer;
+      z-index: 1;
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+      border-radius: 50%;
+      transition: background-color 0.3s ease;
+    }
+    
+    .gallery-arrow:hover {
+      background-color: rgb(101, 2, 114);
+    }
+    
+    .gallery-arrow-left {
+      left: 20px;
+    }
+    
+    .gallery-arrow-right {
+      right: 20px;
+    }
+
+    .image-dropdown {
+      margin-top: 20px;
+    }
+
+    .image-dropdown select {
+      font-size: 16px;
+      padding: 8px;
+    }
+
+    .image-title {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Technical Signals Gallery</h1>
+  
+  <div class="gallery-container">
+    <div class="gallery">
+      <img src="static/images/webull/ascending_continuation_triangle.gif" alt="ascending_continuation_triangle">
+      <img src="static/images/webull/ascending_triangle1.gif" alt="ascending_triangle1">
+      <img src="static/images/webull/bearflag.gif" alt="bearflag">
+      <img src="static/images/webull/bearish_pennant.gif" alt="bearish_pennant">
+      <img src="static/images/webull/bollinger_bands2.gif" alt="bollinger_bands2">
+      <img src="static/images/webull/bollinger_bands3.gif" alt="bollinger_bands3">
+      <img src="static/images/webull/bollinger_bands4.gif" alt="bollinger_bands4">
+      <img src="static/images/webull/bottom_triangle_bottom_wedge.gif" alt="bottom_triangle_bottom_wedge">
+      <img src="static/images/webull/bullflag.gif" alt="bullflag">
+      <img src="static/images/webull/bullish_pennant.gif" alt="bullish_pennant">
+      <img src="static/images/webull/bullish_pennant1.gif" alt="bullish_pennant1">
+      <img src="static/images/webull/bullish_rectangle.gif" alt="bullish_rectangle">
+      <img src="static/images/webull/bullish_symmetrical_triangle.gif" alt="bullish_symmetrical_triangle">
+      <img src="static/images/webull/bull_flag.gif" alt="bull_flag">
+      <img src="static/images/webull/cci.gif" alt="cci">
+      <img src="static/images/webull/continuation_diamond_bearish.gif" alt="continuation_diamond_bearish">
+      <img src="static/images/webull/continuation_diamond_bullish.gif" alt="continuation_diamond_bullish">
+      <img src="static/images/webull/continuation_wedge.gif" alt="continuation_wedge">
+      <img src="static/images/webull/continuation_wedge_bullish.gif" alt="continuation_wedge_bullish">
+      <img src="static/images/webull/descending_continuation_triangle.gif" alt="descending_continuation_triangle">
+      <img src="static/images/webull/descending_triangle1.gif" alt="descending_triangle1">
+      <img src="static/images/webull/diamondbottom.gif" alt="diamondbottom">
+      <img src="static/images/webull/diamondtop.gif" alt="diamondtop">
+      <img src="static/images/webull/doublebottom.gif" alt="doublebottom">
+      <img src="static/images/webull/doubletop2gif.gif" alt="doubletop2gif">
+      <img src="static/images/webull/double_bottom.gif" alt="double_bottom">
+      <img src="static/images/webull/double_ma_crossover.gif" alt="double_ma_crossover">
+      <img src="static/images/webull/double_top.gif" alt="double_top">
+      <img src="static/images/webull/downsidebreakout.gif" alt="downsidebreakout">
+      <img src="static/images/webull/engulfing_line_bearish.gif" alt="engulfing_line_bearish">
+      <img src="static/images/webull/engulfing_line_bullish.gif" alt="engulfing_line_bullish">
+      <img src="static/images/webull/exhaustion_bar_bearish.gif" alt="exhaustion_bar_bearish">
+      <img src="static/images/webull/exhaustion_bar_bullish.gif" alt="exhaustion_bar_bullish">
+      <img src="static/images/webull/falling_wedge.gif" alt="falling_wedge">
+      <img src="static/images/webull/fast_stoastics.gif" alt="fast_stoastics">
+      <img src="static/images/webull/FS_Logo_7.gif" alt="FS_Logo_7">
+      <img src="static/images/webull/gapdown.gif" alt="gapdown">
+      <img src="static/images/webull/gapup.gif" alt="gapup">
+      <img src="static/images/webull/gravestone_bearish.gif" alt="gravestone_bearish">
+      <img src="static/images/webull/gravestone_bullish.gif" alt="gravestone_bullish">
+      <img src="static/images/webull/hammer.gif" alt="hammer">
+      <img src="static/images/webull/hanging_man.gif" alt="hanging_man">
+      <img src="static/images/webull/headshouldersbottom.gif" alt="headshouldersbottom">
+      <img src="static/images/webull/headshoulderstop.gif" alt="headshoulderstop">
+      <img src="static/images/webull/head_and_shoulders_bottom.gif" alt="head_and_shoulders_bottom">
+      <img src="static/images/webull/head_shoulders_bottom.gif" alt="head_shoulders_bottom">
+      <img src="static/images/webull/head_shoulders_top.gif" alt="head_shoulders_top">
+      <img src="static/images/webull/insidebar_bearish.gif" alt="insidebar_bearish">
+      <img src="static/images/webull/inside_bar.gif" alt="inside_bar">
+      <img src="static/images/webull/inverted_hammer.gif" alt="inverted_hammer">
+      <img src="static/images/webull/islandbottom.gif" alt="islandbottom">
+      <img src="static/images/webull/islandtop.gif" alt="islandtop">
+      <img src="static/images/webull/key_reversal_bar_bearish.gif" alt="key_reversal_bar_bearish">
+      <img src="static/images/webull/key_reversal_bar_bullish.gif" alt="key_reversal_bar_bullish">
+      <img src="static/images/webull/longterm_kst.gif" alt="longterm_kst">
+      <img src="static/images/webull/macd.gif" alt="macd">
+      <img src="static/images/webull/macd2.gif" alt="macd2">
+      <img src="static/images/webull/macd3.gif" alt="macd3">
+      <img src="static/images/webull/medium_term_kst.gif" alt="medium_term_kst">
+      <img src="static/images/webull/megaphone_bottom.gif" alt="megaphone_bottom">
+      <img src="static/images/webull/megaphone_top.gif" alt="megaphone_top">
+      <img src="static/images/webull/momentum.gif" alt="momentum">
+      <img src="static/images/webull/outsidebar_bullish.gif" alt="outsidebar_bullish">
+      <img src="static/images/webull/outside_bar.gif" alt="outside_bar">
+      <img src="static/images/webull/price_cross_ma.gif" alt="price_cross_ma">
+      <img src="static/images/webull/reversal_pattern.gif" alt="reversal_pattern">
+      <img src="static/images/webull/roundedbottom.gif" alt="roundedbottom">
+      <img src="static/images/webull/roundedtop.gif" alt="roundedtop">
+      <img src="static/images/webull/rounded_bottom.gif" alt="rounded_bottom">
+      <img src="static/images/webull/rounded_top.gif" alt="rounded_top">
+      <img src="static/images/webull/rsigif2.gif" alt="rsigif2">
+      <img src="static/images/webull/shooting_star.gif" alt="shooting_star">
+      <img src="static/images/webull/short_term_kst.gif" alt="short_term_kst">
+      <img src="static/images/webull/slow_stoastic.gif" alt="slow_stoastic">
+      <img src="static/images/webull/symettrical_continuation_triangle_bearish.gif" alt="symettrical_continuation_triangle_bearish">
+      <img src="static/images/webull/symmetrical_continuation_triangle_bullish.gif" alt="symmetrical_continuation_triangle_bullish">
+      <img src="static/images/webull/top_triangle_top_wedge.gif" alt="top_triangle_top_wedge">
+      <img src="static/images/webull/triplebottom.gif" alt="triplebottom">
+      <img src="static/images/webull/triple_ma_crossover.gif" alt="triple_ma_crossover">
+      <img src="static/images/webull/triple_top.gif" alt="triple_top">
+      <img src="static/images/webull/twobar_reversal_bearish.gif" alt="twobar_reversal_bearish">
+      <img src="static/images/webull/twobar_reversal_bullish.gif" alt="twobar_reversal_bullish">
+      <img src="static/images/webull/upsidebreakout.gif" alt="upsidebreakout">
+      <img src="static/images/webull/williams_percentr.gif" alt="williams_percentr">
+    </div>
+    
+    <div class="gallery-arrow gallery-arrow-left">&#10094;</div>
+    <div class="gallery-arrow gallery-arrow-right">&#10095;</div>
+    
+    <div class="image-dropdown">
+      <label for="image-select">Select an image:</label>
+      <select id="image-select">
+        <option value="ascending_continuation_triangle.gif">Ascending Continuation Triangle</option>
+        <option value="ascending_triangle1.gif">Ascending Triangle 1</option>
+        <option value="bearflag.gif">Bear Flag</option>
+        <option value="bearish_pennant.gif">Bearish Pennant</option>
+        <option value="bollinger_bands2.gif">Bollinger Bands 2</option>
+        <option value="bollinger_bands3.gif">Bollinger Bands 3</option>
+        <option value="bollinger_bands4.gif">Bollinger Bands 4</option>
+        <option value="bottom_triangle_bottom_wedge.gif">Bottom Triangle Bottom Wedge</option>
+        <option value="bullflag.gif">Bull Flag</option>
+        <option value="bullish_pennant.gif">Bullish Pennant</option>
+        <option value="bullish_pennant1.gif">Bullish Pennant 1</option>
+        <option value="bullish_rectangle.gif">Bullish Rectangle</option>
+        <option value="bullish_symmetrical_triangle.gif">Bullish Symmetrical Triangle</option>
+        <option value="bull_flag.gif">Bull Flag</option>
+        <option value="cci.gif">CCI</option>
+        <option value="continuation_diamond_bearish.gif">Continuation Diamond Bearish</option>
+        <option value="continuation_diamond_bullish.gif">Continuation Diamond Bullish</option>
+        <option value="continuation_wedge.gif">Continuation Wedge</option>
+        <option value="continuation_wedge_bullish.gif">Continuation Wedge Bullish</option>
+        <option value="descending_continuation_triangle.gif">Descending Continuation Triangle</option>
+        <option value="descending_triangle1.gif">Descending Triangle 1</option>
+        <option value="diamondbottom.gif">Diamond Bottom</option>
+        <option value="diamondtop.gif">Diamond Top</option>
+        <option value="doublebottom.gif">Double Bottom</option>
+        <option value="doubletop2gif.gif">Double Top 2</option>
+        <option value="double_bottom.gif">Double Bottom</option>
+        <option value="double_ma_crossover.gif">Double MA Crossover</option>
+        <option value="double_top.gif">Double Top</option>
+        <option value="downsidebreakout.gif">Downside Breakout</option>
+        <option value="engulfing_line_bearish.gif">Engulfing Line Bearish</option>
+        <option value="engulfing_line_bullish.gif">Engulfing Line Bullish</option>
+        <option value="exhaustion_bar_bearish.gif">Exhaustion Bar Bearish</option>
+        <option value="exhaustion_bar_bullish.gif">Exhaustion Bar Bullish</option>
+        <option value="falling_wedge.gif">Falling Wedge</option>
+        <option value="fast_stoastics.gif">Fast Stochastics</option>
+        <option value="gapdown.gif">Gap Down</option>
+        <option value="gapup.gif">Gap Up</option>
+        <option value="gravestone_bearish.gif">Gravestone Bearish</option>
+        <option value="gravestone_bullish.gif">Gravestone Bullish</option>
+        <option value="hammer.gif">Hammer</option>
+        <option value="hanging_man.gif">Hanging Man</option>
+        <option value="headshouldersbottom.gif">Head and Shoulders Bottom</option>
+        <option value="headshoulderstop.gif">Head and Shoulders Top</option>
+        <option value="head_and_shoulders_bottom.gif">Head and Shoulders Bottom</option>
+        <option value="head_shoulders_bottom.gif">Head and Shoulders Bottom</option>
+        <option value="head_shoulders_top.gif">Head and Shoulders Top</option>
+        <option value="insidebar_bearish.gif">Inside Bar Bearish</option>
+        <option value="inside_bar.gif">Inside Bar</option>
+        <option value="inverted_hammer.gif">Inverted Hammer</option>
+        <option value="islandbottom.gif">Island Bottom</option>
+        <option value="islandtop.gif">Island Top</option>
+        <option value="key_reversal_bar_bearish.gif">Key Reversal Bar Bearish</option>
+        <option value="key_reversal_bar_bullish.gif">Key Reversal Bar Bullish</option>
+        <option value="longterm_kst.gif">Long Term KST</option>
+        <option value="macd.gif">MACD</option>
+        <option value="macd2.gif">MACD 2</option>
+        <option value="macd3.gif">MACD 3</option>
+        <option value="medium_term_kst.gif">Medium Term KST</option>
+        <option value="megaphone_bottom.gif">Megaphone Bottom</option>
+        <option value="megaphone_top.gif">Megaphone Top</option>
+        <option value="momentum.gif">Momentum</option>
+        <option value="outsidebar_bullish.gif">Outside Bar Bullish</option>
+        <option value="outside_bar.gif">Outside Bar</option>
+        <option value="price_cross_ma.gif">Price Cross MA</option>
+        <option value="reversal_pattern.gif">Reversal Pattern</option>
+        <option value="roundedbottom.gif">Rounded Bottom</option>
+        <option value="roundedtop.gif">Rounded Top</option>
+        <option value="rounded_bottom.gif">Rounded Bottom</option>
+        <option value="rounded_top.gif">Rounded Top</option>
+        <option value="rsigif2.gif">RSI GIF 2</option>
+        <option value="shooting_star.gif">Shooting Star</option>
+        <option value="short_term_kst.gif">Short Term KST</option>
+        <option value="slow_stoastic.gif">Slow Stochastics</option>
+        <option value="symettrical_continuation_triangle_bearish.gif">Symmetrical Continuation Triangle Bearish</option>
+        <option value="symmetrical_continuation_triangle_bullish.gif">Symmetrical Continuation Triangle Bullish</option>
+        <option value="top_triangle_top_wedge.gif">Top Triangle Top Wedge</option>
+        <option value="triplebottom.gif">Triple Bottom</option>
+        <option value="triple_ma_crossover.gif">Triple MA Crossover</option>
+        <option value="triple_top.gif">Triple Top</option>
+        <option value="twobar_reversal_bearish.gif">Two Bar Reversal Bearish</option>
+        <option value="twobar_reversal_bullish.gif">Two Bar Reversal Bullish</option>
+        <option value="upsidebreakout.gif">Upside Breakout</option>
+        <option value="williams_percentr.gif">Williams Percent R</option>
+      </select>
+    </div>
+
+
+    <div class="signal-description">
+        <h2>Technical Signal Descriptions</h2>
+        <p class="description" data-index="0"><strong>Ascending Continuation Triangle:</strong> A bullish continuation pattern indicating a temporary pause in an uptrend.</p>
+        <p class="description" data-index="1"><strong>Ascending Triangle 1:</strong> A bullish continuation pattern formed by a horizontal resistance line and a rising support line.</p>
+        <p class="description" data-index="2"><strong>Bear Flag:</strong> A bearish continuation pattern characterized by a downward sloping flagpole followed by a consolidation period.</p>
+        <p class="description" data-index="3"><strong>Bearish Pennant:</strong> A bearish continuation pattern formed by a small symmetrical triangle following a sharp downward move.</p>
+        <p class="description" data-index="4"><strong>Bollinger Bands 2:</strong> A technical indicator showing a range within which the majority of price action occurs.</p>
+        <p class="description" data-index="5"><strong>Bollinger Bands 3:</strong> A technical indicator showing a range within which the majority of price action occurs.</p>
+        <p class="description" data-index="6"><strong>Bollinger Bands 4:</strong> A technical indicator showing a range within which the majority of price action occurs.</p>
+        <p class="description" data-index="7"><strong>Bottom Triangle Bottom Wedge:</strong> A bullish continuation pattern formed by a downward sloping support line and a horizontal resistance line.</p>
+        <p class="description" data-index="8"><strong>Bull Flag:</strong> A bullish continuation pattern characterized by an upward sloping flagpole followed by a consolidation period.</p>
+        <p class="description" data-index="9"><strong>Bullish Pennant:</strong> A bullish continuation pattern formed by a small symmetrical triangle following a sharp upward move.</p>
+        <p class="description" data-index="10"><strong>Bullish Pennant 1:</strong> A bullish continuation pattern formed by a small symmetrical triangle following a sharp upward move.</p>
+        <p class="description" data-index="11"><strong>Bullish Rectangle:</strong> A bullish continuation pattern characterized by a consolidation period within a rectangle-shaped range.</p>
+        <p class="description" data-index="12"><strong>Bullish Symmetrical Triangle:</strong> A bullish continuation pattern formed by converging trendlines without a clear slope.</p>
+        <p class="description" data-index="13"><strong>Bull Flag:</strong> A bullish continuation pattern characterized by an upward sloping flagpole followed by a consolidation period.</p>
+        <p class="description" data-index="14"><strong>CCI:</strong> Commodity Channel Index (CCI) is a momentum-based oscillator used to identify overbought and oversold levels.</p>
+        <p class="description" data-index="15"><strong>Continuation Diamond Bearish:</strong> A bearish continuation pattern formed by a diamond-shaped formation during a downtrend.</p>
+        <p class="description" data-index="16"><strong>Continuation Diamond Bullish:</strong> A bullish continuation pattern formed by a diamond-shaped formation during an uptrend.</p>
+        <p class="description" data-index="17"><strong>Continuation Wedge:</strong> A bullish or bearish continuation pattern characterized by converging trendlines that form a wedge shape.</p>
+        <p class="description" data-index="18"><strong>Continuation Wedge Bullish:</strong> A bullish continuation pattern formed by converging trendlines that form a wedge shape.</p>
+        <p class="description" data-index="19"><strong>Descending Continuation Triangle:</strong> A bearish continuation pattern indicating a temporary pause in a downtrend.</p>
+        <p class="description" data-index="20"><strong>Descending Triangle 1:</strong> A bearish continuation pattern formed by a horizontal support line and a descending resistance line.</p>
+        <p class="description" data-index="21"><strong>Diamond Bottom:</strong> A bullish reversal pattern characterized by a diamond-shaped formation at the bottom of a downtrend.</p>
+        <p class="description" data-index="22"><strong>Diamond Top:</strong> A bearish reversal pattern characterized by a diamond-shaped formation at the top of an uptrend.</p>
+        <p class="description" data-index="23"><strong>Double Bottom:</strong> A bullish reversal pattern formed by two consecutive troughs with a moderate peak in between.</p>
+        <p class="description" data-index="24"><strong>Double Top 2:</strong> A bearish reversal pattern formed by two consecutive peaks with a moderate trough in between.</p>
+        <p class="description" data-index="25"><strong>Double Bottom:</strong> A bullish reversal pattern formed by two consecutive troughs with a moderate peak in between.</p>
+        <p class="description" data-index="26"><strong>Double MA Crossover:</strong> A bullish signal generated when a short-term moving average crosses above a long-term moving average.</p>
+        <p class="description" data-index="27"><strong>Double Top:</strong> A bearish reversal pattern formed by two consecutive peaks with a moderate trough in between.</p>
+        <p class="description" data-index="28"><strong>Downside Breakout:</strong> A bearish signal indicating a price breakout below a key support level.</p>
+        <p class="description" data-index="29"><strong>Engulfing Line Bearish:</strong> A bearish reversal pattern formed when a bearish candlestick engulfs the previous bullish candlestick.</p>
+        <p class="description" data-index="30"><strong>Engulfing Line Bullish:</strong> A bullish reversal pattern formed when a bullish candlestick engulfs the previous bearish candlestick.</p>
+        <p class="description" data-index="31"><strong>Exhaustion Bar Bearish:</strong> A bearish reversal signal indicating a potential end to an uptrend.</p>
+        <p class="description" data-index="32"><strong>Exhaustion Bar Bullish:</strong> A bullish reversal signal indicating a potential end to a downtrend.</p>
+        <p class="description" data-index="33"><strong>Falling Wedge:</strong> A bullish continuation pattern characterized by converging trendlines that slope downward.</p>
+        <p class="description" data-index="34"><strong>Fast Stochastics:</strong> A technical indicator used to measure the current price relative to the recent price range, indicating overbought and oversold levels.</p>
+        <p class="description" data-index="36"><strong>Gap Down:</strong> A bearish signal that occurs when the price of an asset opens lower than its previous day's close.</p>
+        <p class="description" data-index="37"><strong>Gap Up:</strong> A bullish signal that occurs when the price of an asset opens higher than its previous day's close.</p>
+        <p class="description" data-index="38"><strong>Gravestone Bearish:</strong> A bearish reversal pattern characterized by a long upper shadow and no lower shadow.</p>
+        <p class="description" data-index="39"><strong>Gravestone Bullish:</strong> A bullish reversal pattern characterized by a long lower shadow and no upper shadow.</p>
+        <p class="description" data-index="40"><strong>Hammer:</strong> A bullish reversal pattern characterized by a small body and a long lower shadow.</p>
+        <p class="description" data-index="41"><strong>Hanging Man:</strong> A bearish reversal pattern characterized by a small body and a long lower shadow.</p>
+        <p class="description" data-index="42"><strong>Head and Shoulders Bottom:</strong> A bullish reversal pattern formed by a trough (head) with two lower peaks (shoulders) on each side.</p>
+        <p class="description" data-index="43"><strong>Head and Shoulders Top:</strong> A bearish reversal pattern formed by a peak (head) with two higher troughs (shoulders) on each side.</p>
+        <p class="description" data-index="44"><strong>Head and Shoulders Bottom:</strong> A bullish reversal pattern formed by a trough (head) with two lower peaks (shoulders) on each side.</p>
+        <p class="description" data-index="45"><strong>Head and Shoulders Bottom:</strong> A bullish reversal pattern formed by a trough (head) with two lower peaks (shoulders) on each side.</p>
+        <p class="description" data-index="46"><strong>Head and Shoulders Top:</strong> A bearish reversal pattern formed by a peak (head) with two higher troughs (shoulders) on each side.</p>
+        <p class="description" data-index="47"><strong>Inside Bar Bearish:</strong> A bearish reversal pattern formed when the range of a candlestick is completely engulfed by the previous candlestick.</p>
+        <p class="description" data-index="48"><strong>Inside Bar:</strong> A candlestick pattern formed when the range of a candle is completely engulfed by the previous candlestick's range.</p>
+        <p class="description" data-index="49"><strong>Inverted Hammer:</strong> A bullish reversal pattern characterized by a small body and a long upper shadow.</p>
+        <p class="description" data-index="50"><strong>Island Bottom:</strong> A bullish reversal pattern characterized by a gap followed by a consolidation period and another gap in the opposite direction.</p>
+        <p class="description" data-index="51"><strong>Island Top:</strong> A bearish reversal pattern characterized by a gap followed by a consolidation period and another gap in the opposite direction.</p>
+        <p class="description" data-index="52"><strong>Key Reversal Bar Bearish:</strong> A bearish reversal pattern formed by a large bearish candlestick following a series of smaller bullish candlesticks.</p>
+        <p class="description" data-index="53"><strong>Key Reversal Bar Bullish:</strong> A bullish reversal pattern formed by a large bullish candlestick following a series of smaller bearish candlesticks.</p>
+        <p class="description" data-index="54"><strong>Long Term KST:</strong> The KST (Know Sure Thing) indicator calculated over a longer period, used to identify long-term trends.</p>
+        <p class="description" data-index="55"><strong>MACD:</strong> The Moving Average Convergence Divergence (MACD) is a trend-following momentum indicator that shows the relationship between two moving averages of a security's price.</p>
+        <p class="description" data-index="56"><strong>MACD 2:</strong> The Moving Average Convergence Divergence (MACD) is a trend-following momentum indicator that shows the relationship between two moving averages of a security's price.</p>
+        <p class="description" data-index="57"><strong>MACD 3:</strong> The Moving Average Convergence Divergence (MACD) is a trend-following momentum indicator that shows the relationship between two moving averages of a security's price.</p>
+        <p class="description" data-index="58"><strong>Medium Term KST:</strong> The KST (Know Sure Thing) indicator calculated over a medium-term period, used to identify medium-term trends.</p>
+        <p class="description" data-index="59"><strong>Megaphone Bottom:</strong> A bullish reversal pattern characterized by progressively higher highs and lower lows.</p>
+        <p class="description" data-index="60"><strong>Megaphone Top:</strong> A bearish reversal pattern characterized by progressively lower lows and higher highs.</p>
+        <p class="description" data-index="61"><strong>Momentum:</strong> A technical indicator that measures the rate of change of an asset's price.</p>
+        <p class="description" data-index="62"><strong>Outside Bar Bullish:</strong> A bullish reversal pattern formed when the range of a candlestick engulfs the previous candlestick's range.</p>
+        <p class="description" data-index="63"><strong>Outside Bar:</strong> A candlestick pattern formed when the range of a candle engulfs the previous candlestick's range.</p>
+        <p class="description" data-index="64"><strong>Price Cross MA:</strong> A bullish or bearish signal generated when the price of an asset crosses above or below a moving average.</p>
+        <p class="description" data-index="65"><strong>Reversal Pattern:</strong> A chart pattern that indicates a potential reversal in the prevailing trend.</p>
+        <p class="description" data-index="66"><strong>Rounded Bottom:</strong> A bullish reversal pattern characterized by a rounded bottom formation.</p>
+        <p class="description" data-index="67"><strong>Rounded Top:</strong> A bearish reversal pattern characterized by a rounded top formation.</p>
+        <p class="description" data-index="68"><strong>RSI GIF 2:</strong> The Relative Strength Index (RSI) is a momentum oscillator used to measure the speed and change of price movements. GIF 2 refers to the second version of the GIF representation of the RSI indicator.</p>
+        <p class="description" data-index="69"><strong>Shooting Star:</strong> A bearish reversal pattern characterized by a small body and a long upper shadow.</p>
+        <p class="description" data-index="70"><strong>Short Term KST:</strong> The KST (Know Sure Thing) indicator calculated over a short-term period, used to identify short-term trends.</p>
+        <p class="description" data-index="71"><strong>Slow Stochastics:</strong> A technical indicator used to measure the current price relative to the recent price range, indicating overbought and oversold levels.</p>
+        <p class="description" data-index="72"><strong>Symmetrical Continuation Triangle Bearish:</strong> A bearish continuation pattern formed by converging trendlines without a clear slope.</p>
+        <p class="description" data-index="73"><strong>Symmetrical Continuation Triangle Bullish:</strong> A bullish continuation pattern formed by converging trendlines without a clear slope.</p>
+        <p class="description" data-index="74"><strong>Top Triangle Top Wedge:</strong> A bearish continuation pattern formed by an upward sloping resistance line and a horizontal support line.</p>
+        <p class="description" data-index="75"><strong>Triple Bottom:</strong> A bullish reversal pattern formed by three consecutive troughs.</p>
+        <p class="description" data-index="76"><strong>Triple MA Crossover:</strong> A bullish signal generated when a short-term moving average crosses above two long-term moving averages.</p>
+        <p class="description" data-index="77"><strong>Triple Top:</strong> A bearish reversal pattern formed by three consecutive peaks.</p>
+        <p class="description" data-index="78"><strong>Two Bar Reversal Bearish:</strong> A bearish reversal pattern formed by two consecutive bearish candlesticks.</p>
+        <p class="description" data-index="79"><strong>Two Bar Reversal Bullish:</strong> A bullish reversal pattern formed by two consecutive bullish candlesticks.</p>
+        <p class="description" data-index="80"><strong>Upside Breakout:</strong> A bullish signal indicating a price breakout above a key resistance level.</p>
+        <p class="description" data-index="81"><strong>Williams Percent R:</strong> The Williams Percent R is a momentum oscillator that measures overbought and oversold levels in an asset's price.</p>
+      </div>
+      </div>
+
+    <div class="image-title"></div>
+  </div>
+
+  <script>
+    const galleryImages = document.querySelectorAll('.gallery-container img');
+    const imageDropdown = document.querySelector('#image-select');
+    const signalDescriptions = document.querySelectorAll('.description');
+  
+    function showImage(index) {
+      galleryImages.forEach((image, i) => {
+        if (i === index) {
+          image.style.display = 'block';
+        } else {
+          image.style.display = 'none';
+        }
+      });
+    }
+  
+    function showSignalDescription(index) {
+      signalDescriptions.forEach((description, i) => {
+        if (i === index) {
+          description.style.display = 'block';
+        } else {
+          description.style.display = 'none';
+        }
+      });
+    }
+  
+    function selectImage() {
+      const selectedImage = imageDropdown.value;
+      const selectedIndex = Array.from(imageDropdown.options).findIndex(
+        (option) => option.value === selectedImage
+      );
+      showImage(selectedIndex);
+      showSignalDescription(selectedIndex);
+    }
+  
+    imageDropdown.addEventListener('change', selectImage);
+  
+    // Show initial image and description
+    showImage(0);
+    showSignalDescription(0);
+  </script>
+</body>
+</html>
