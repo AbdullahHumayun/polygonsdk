@@ -9,6 +9,27 @@ body {
     height: 100vh;
     margin: 0;
 }
+
+.card {
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.card p {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #888;
+}
+
+
 .carousel {
     perspective: 1000px;
     width: 200px;

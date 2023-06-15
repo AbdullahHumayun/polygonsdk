@@ -184,14 +184,57 @@ selectFunction.addEventListener("change", function() {
       break;
   }
 });
+window.addEventListener('DOMContentLoaded', () => {
+  const commandsContainer = document.getElementById('commands-container');
 
+  // Sample command data
+  const commands = [
+      {
+          name: 'time_and_sales',
+          description: 'Returns real-time time and sales date for 100 ticks.'
+      },
+      {
+          name: 'double_quote',
+          description: 'Choose two stonks and stream their price in real-time for 200 ticks.'
+      },
+      // Add other commands here...
+  ];
 
-window.addEventListener('DOMContentLoaded', (event) => {
-  const carousel = document.querySelector('.carousel');
-  const carouselItemCount = carousel.children.length;
-  const theta = 2 * Math.PI / carouselItemCount;
+  // Function to create a card element
+  function createCard(command) {
+      const card = document.createElement('div');
+      card.className = 'card';
 
-  for (let i = 0; i < carouselItemCount; i++) {
-      carousel.children[i].style.transform = `rotateY(${i * theta}rad) translateZ(300px)`;
+      const name = document.createElement('h3');
+      name.textContent = command.name;
+
+      const description = document.createElement('p');
+      description.textContent = command.description;
+
+      card.appendChild(name);
+      card.appendChild(description);
+
+      return card;
   }
+
+  // Loop through commands and create cards
+  commands.forEach((command) => {
+      const card = createCard(command);
+      commandsContainer.appendChild(card);
+  });
+
+  // Fetch commands from server and update the page
+  fetch('/api/commands')
+      .then((response) => response.json())
+      .then((data) => {
+          // Clear the container
+          commandsContainer.innerHTML = '';
+
+          // Loop through fetched commands and create cards
+          data.forEach((command) => {
+              const card = createCard(command);
+              commandsContainer.appendChild(card);
+          });
+      })
+      .catch((error) => console.error(error));
 });
