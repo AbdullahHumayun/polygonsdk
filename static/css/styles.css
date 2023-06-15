@@ -10,23 +10,31 @@ body {
     margin: 0;
 }
 
-.card {
-    width: 300px;
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #333;
+}
+
+.command-block {
     border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
 }
 
-.card h3 {
-    margin: 0;
-    font-size: 18px;
+.command-btn {
+    padding: 5px 10px;
+    margin-right: 10px;
+    cursor: pointer;
 }
 
-.card p {
-    margin-top: 5px;
-    font-size: 14px;
-    color: #888;
+.command-desc {
+    display: inline-block;
+    vertical-align: middle;
 }
 
 
