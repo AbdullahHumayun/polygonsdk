@@ -186,3 +186,12 @@ selectFunction.addEventListener("change", function() {
 });
 
 
+window.addEventListener('DOMContentLoaded', (event) => {
+  const carousel = document.querySelector('.carousel');
+  const carouselItemCount = carousel.children.length;
+  const theta = 2 * Math.PI / carouselItemCount;
+
+  for (let i = 0; i < carouselItemCount; i++) {
+      carousel.children[i].style.transform = `rotateY(${i * theta}rad) translateZ(300px)`;
+  }
+});

@@ -9,7 +9,36 @@ body {
     height: 100vh;
     margin: 0;
 }
+.carousel {
+    perspective: 1000px;
+    width: 200px;
+    height: 200px;
+    position: relative;
+    margin: 0 auto;
+    transform-style: preserve-3d;
+    animation: rotation 5s infinite linear;
+}
 
+.carousel-item {
+    position: absolute;
+    background: #000;
+    color: #fff;
+    line-height: 200px;
+    text-align: center;
+    font-size: 3em;
+    opacity: 0.9;
+    width: 200px;
+    height: 200px;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(1turn);
+    }
+}
 .card {
     background-color: #000000;
     border-radius: 5px;

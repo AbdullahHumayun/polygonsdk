@@ -1,100 +1,76 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Terminal Interface</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>3D Carousel</title>
     <style>
-        body {
-            background-color: black;
+        .carousel {
+            perspective: 1000px;
+            width: 200px;
+            height: 200px;
+            position: relative;
+            margin: 0 auto;
+            transform-style: preserve-3d;
         }
-        #terminal {
-            color: #00bfa5;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
-            height: 400px;
-            overflow-y: scroll;
-            padding: 10px;
-            background-color: #1c1c1c;
-            border: 2px solid #00bfa5;
-        }
-        .dropdown-menu {
-            background-color: #1c1c1c;
-            border: none;
-        }
-        .dropdown-item {
-            color: #00bfa5;
-        }
-        .matrix-style {
-            font-family: 'Matrix Code NFI', 'Matrix Code NFI Regular', monospace;
-            font-size: 30px;
-            color: #00bfa5;
+
+        .carousel-item {
+            position: absolute;
+            background: #000;
+            color: #fff;
+            line-height: 200px;
             text-align: center;
-            margin-top: 50px;
+            font-size: 3em;
+            opacity: 0.9;
+            width: 200px;
+            height: 200px;
         }
+
+        #prev, #next {
+            position: fixed;
+            top: 50%;
+            font-size: 2em;
+            color: #000;
+            background: #fff;
+            border: none;
+            padding: 10px 20px;
+        }
+
+        #prev { left: 10px; }
+        #next { right: 10px; }
+
     </style>
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-    <script src="static/js/snippets.js"></script>
-    <script src="static/js/prism.js"></script>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="matrix-style">CODE TERMINAL</h1>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 offset-md-2">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="helpersDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Helpers
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="helpersDropdownButton">
-                        {% for name, code in helpers.items() %}
-                            <a class="dropdown-item" href="#" onclick="animateCodeTyping(terminal, '{{ code }}')">{{ name }}</a>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="restApiDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        REST API
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="restApiDropdownButton">
-                        {% for name, code in rest_api.items() %}
-                            <a class="dropdown-item" href="#" onclick="animateCodeTyping(terminal, '{{ code }}')">{{ name }}</a>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <div id="terminal"></div>
-            </div>
-        </div>
+    <div class="carousel" id="carousel">
+        <div class="carousel-item">1</div>
+        <div class="carousel-item">2</div>
+        <div class="carousel-item">3</div>
+        <div class="carousel-item">4</div>
+        <div class="carousel-item">5</div>
     </div>
+    <button id="prev">Prev</button>
+    <button id="next">Next</button>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>
-        const terminal = document.getElementById('terminal');
-        let snippetCodeInterval;
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const carousel = document.querySelector('#carousel');
+            const carouselItemCount = carousel.children.length;
+            const theta = 2 * Math.PI / carouselItemCount;
+            let rotation = 0;
 
-        function animateCodeTyping(element, code) {
-            clearInterval(snippetCodeInterval);
-            element.innerHTML = '';
-            let i = 0;
-            snippetCodeInterval = setInterval(() => {
-                element.innerHTML += code.charAt(i);
-                i++;
-                if (i === code.length) {
-                    clearInterval(snippetCodeInterval);
-                }
-            }, 15);
-        }
+            for (let i = 0; i < carouselItemCount; i++) {
+                carousel.children[i].style.transform = `rotateY(${i * theta}rad) translateZ(300px)`;
+            }
+
+            document.querySelector('#prev').addEventListener('click', () => {
+                rotation -= theta;
+                carousel.style.transform = `translateZ(-300px) rotateY(${rotation}rad)`;
+            });
+
+            document.querySelector('#next').addEventListener('click', () => {
+                rotation += theta;
+                carousel.style.transform = `translateZ(-300px) rotateY(${rotation}rad)`;
+            });
+        });
     </script>
 </body>
 </html>

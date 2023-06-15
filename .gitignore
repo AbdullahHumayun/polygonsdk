@@ -1,4 +1,3 @@
-
 crypto_terminal.py
 __pycache__
 crypto.db
@@ -8,4 +7,3 @@ my_mock.py
 mydata/
 Procfile
 runtime.txt
-static
