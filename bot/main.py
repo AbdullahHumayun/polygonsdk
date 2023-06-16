@@ -5,15 +5,16 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 from menus.pagination import AlertMenus
-
+from cfg import YOUR 
 import disnake
+import stocksera
 from disnake.ext import commands
 intents=disnake.Intents.all()
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 
-from cfg import YOUR_API_KEY
+from cfg import YOUR_API_KEY, YOUR_DISCORD_BOT_TOKEN
 
 
 polygon = AsyncPolygonSDK(YOUR_API_KEY)
@@ -43,5 +44,11 @@ class PersistentViewBot(commands.Bot):
 
 bot = PersistentViewBot(command_prefix=">>", intents=intents)
 
-bot.load_extensions("bot\cogs")
-#bot.run(discord_bot_token)
+
+extensions = ['bot\cogs3', 'bot\cogs2', 'bot\cogs']
+
+for extension in extensions:
+    bot.load_extensions(extension)
+
+
+bot.run(YOUR_DISCORD_BOT_TOKEN)

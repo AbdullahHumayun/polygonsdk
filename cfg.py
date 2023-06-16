@@ -8,17 +8,37 @@ This configuration file contains various settings and variables used in the prog
 from datetime import datetime, timedelta
 
 # API Keys
-YOUR_API_KEY = "YOUR POLYGON API KEY GOES HERE" ##polygon.io APIKEY. If you don't have one - you can sign up here: https://www.polygon.io | Use code FUDSTOP at checkout for an exclusive discount on their real-time APIs.
+YOUR_API_KEY = "YOUR POLYGON API KEY GOES HERE" ##polygon.io APIKEY. If you don't have one - you can sign up here:
+#                                               https://www.polygon.io | Use code FUDSTOP at checkout for an exclusive discount on their real-time APIs.
 YOUR_OPENAI_KEY = "" ##openAI key for integrating chatGPT into discord.
+
 YOUR_NASDAQ_KEY = "" ##nasdaq datalink key for using the nasdaq functions (iv_percentile)
+
 YOUR_WEBULL_HEADERS = "" ##headers needed to access the webull functions (news)
-YOUR_STOCKSERA_KEY = "YOUR_STOCKSERA_KEY"
+
+YOUR_IEX_CLOUD_KEY = "YOUR IEX CLOUD KEY"
+
+YOUR_STOCKSERA_KEY = "ltmvAvmM.eZ8KJlRQJMryI6v5AXjwjSuXKdUPGxhN" #https://stocksera.pythonanywhere.com/accounts/developers/
+
+YOUR_NASDAQ_KEY ="YOUR NASDAQ KEY" #https://data.nasdaq.com/
+
+YOUR_FINNHUB_KEY ="YOUR FINNHUB API KEY" #https://finnhub.io/
+
+YOUR_FMP_KEY = "YOUR FINANCIAL MODELING PREP KEY GOES HERE" #https://site.financialmodelingprep.com/developer/docs/
+
+YOUR_FRED_API_KEY = "YOUR FRED API KEY" #https://fred.stlouisfed.org/docs/api/fred/
+
+YOUR_DISCORD_BOT_TOKEN = "Get from the discord developer portal"
+
 discord_headers = {
     'Authorization': f'YOUR DISCORD AUTH TOKEN HERE',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36', #replace with your user-agent if needed
     'Accept': 'application/json',
     'Content-Type': "application/json"
 }
+
+
+
 
 # Date and Time - import these to easily create date parameters for different functions such as option aggregates, stock aggregates.
 today = datetime.today().date()  # Current date

@@ -7,3 +7,6 @@ my_mock.py
 mydata/
 Procfile
 runtime.txt
+discord_config.py
+fudstop.py
+strat.py
