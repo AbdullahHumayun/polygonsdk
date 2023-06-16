@@ -1,6 +1,6 @@
 import disnake
 from disnake.ext import commands
-
+from cfg import YOUR_DISCORD_BOT_TOKEN
 
 class FUDSTOPMenu(disnake.ui.Select):
     def __init__(self):
@@ -1196,4 +1196,4 @@ class FlowSelect(disnake.ui.Select):
             await interaction.send(f"</flow summary:1004263746170011749>",ephemeral=False)
 
 
-me.run("MTAxNjAwNjI5MzU5ODc2OTIwMg.GztNZZ.5GnsEeZixqJZ2RuzooA_FdnyAVoB3xaNmVnEhs")
+me.run("YOUR_DISCORD_BOT_TOKEN")
