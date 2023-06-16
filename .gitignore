@@ -11,3 +11,5 @@ discord_config.py
 fudstop.py
 strat.py
 app.py
+runtime.txt
+templates
