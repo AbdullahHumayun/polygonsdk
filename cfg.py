@@ -18,7 +18,7 @@ YOUR_WEBULL_HEADERS = "" ##headers needed to access the webull functions (news)
 
 YOUR_IEX_CLOUD_KEY = "YOUR IEX CLOUD KEY"
 
-YOUR_STOCKSERA_KEY = "ltmvAvmM.eZ8KJlRQJMryI6v5AXjwjSuXKdUPGxhN" #https://stocksera.pythonanywhere.com/accounts/developers/
+YOUR_STOCKSERA_KEY = "" #https://stocksera.pythonanywhere.com/accounts/developers/
 
 YOUR_NASDAQ_KEY ="YOUR NASDAQ KEY" #https://data.nasdaq.com/
 
