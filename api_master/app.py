@@ -13,7 +13,7 @@ from sdks.stocksera_sdk.sdk import StockSeraSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from static.py.api_functions import get_top_gainers_data, volume_analysis_endpoint, financial_statement_endpoint,balance_sheet_endpoint, cash_flow_endpoint, balance_sheet_endpoint
 from static.py.api_functions import financial_ratios_endpoint, capital_flow_endpoint, process_data, institutional_holdings_endpoint,short_interest_endpoint
-from static.py.api_functions import analyst_ratings_endpoint, stock_data_endpoint,get_top_gainers_data, earnings_calendar_endpoint
+from static.py.api_functions import analyst_ratings_endpoint, stock_data_endpoint,get_top_gainers_data, earnings_calendar_endpoint, get_fifty_twos_endpoint, top_active_endpoint
 
 import asyncio
 _stocksera = StockSeraSDK()
@@ -23,18 +23,35 @@ asyncio.set_event_loop(loop)
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/api/volume_analysis/<string:ticker>')
+@app.route('/')
+async def index():
+    return render_template('index.html')
+
+
+@app.route('/api/volume_analysis/<string:ticker>', methods=['GET', 'POST'])
 async def volume_analysis(ticker):
     return await volume_analysis_endpoint(ticker)
 @app.route('/ticker_cards')
 def ticker_cards():
     return render_template('ticker_cards.html')
-@app.route('/api/top_gainers')
+@app.route('/api/top_gainers', methods=['GET'])
 async def get_top_gainers_endpoint():
     return await get_top_gainers_data()
+
+
+
+@app.route('/api/top_active', methods=['GET'])
+async def get_top_active_endpoint():
+    return await get_top_gainers_data()
+
+
+@app.route('/api/fifty_twos', methods=['GET'])
+async def get_fifty_twos():
+    return await get_fifty_twos_endpoint()
+
    
 
-@app.route("/snippets")
+@app.route("/snippets", methods=['GET'])
 def snippets():
     return render_template('snippets.html')
 
@@ -43,50 +60,50 @@ def snippets():
 def discord_commands():
     return render_template('discord_commands.html')
 
-@app.route('/api/financial_statement/<string:ticker>')
+@app.route('/api/financial_statement/<string:ticker>', methods=['GET'])
 async def financial_statement(ticker):
     data = await financial_statement_endpoint(ticker=ticker)
     return data
 
 
-@app.route('/api/earnings_calendar')
+@app.route('/api/earnings_calendar', methods=['GET'])
 async def earnings(ticker):
     data = await earnings_calendar_endpoint(ticker=ticker)
     return data
 
 
 
-@app.route('/api/stock_data/<string:ticker>')
+@app.route('/api/stock_data/<string:ticker>', methods=['GET'])
 async def stock_data(ticker):
     data = await stock_data_endpoint(ticker=ticker)
     return data
 
 
-@app.route('/api/institutional_holdings/<string:ticker>')
+@app.route('/api/institutional_holdings/<string:ticker>', methods=['GET'])
 async def institutional_holdings(ticker):
     data = await institutional_holdings_endpoint(ticker=ticker)
     return data
 
 
-@app.route('/api/analyst_ratings/<string:ticker>')
+@app.route('/api/analyst_ratings/<string:ticker>', methods=['GET'])
 async def analyst_ratings(ticker):
     data = await analyst_ratings_endpoint(ticker)
     return data
 
 
-@app.route('/api/short_interest/<string:ticker>')
+@app.route('/api/short_interest/<string:ticker>', methods=['GET'])
 async def short_interest(ticker):
     data = await short_interest_endpoint(ticker=ticker)
     return data
 
 
-@app.route('/api/cash_flow/<string:ticker>')
+@app.route('/api/cash_flow/<string:ticker>', methods=['GET'])
 async def cash_flow(ticker):
 
     return await cash_flow_endpoint(ticker=ticker)
 
 
-@app.route('/api/balance_sheet/<string:ticker>')
+@app.route('/api/balance_sheet/<string:ticker>', methods=['GET'])
 async def balance_sheet(ticker):
     
 
@@ -94,12 +111,12 @@ async def balance_sheet(ticker):
 
 
 
-@app.route('/api/financial_ratios/<string:ticker>')
+@app.route('/api/financial_ratios/<string:ticker>', methods=['GET'])
 async def get_financial_ratios(ticker):
 
     return await(financial_ratios_endpoint(ticker=ticker))
 
-@app.route('/api/capital_flow/<string:ticker>')
+@app.route('/api/capital_flow/<string:ticker>', methods=['GET'])
 async def get_capital_flow(ticker):
     
 

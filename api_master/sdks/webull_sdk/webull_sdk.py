@@ -23,6 +23,7 @@ from .etf_holdings import ETFHoldings
 from .calendar import EarningsCalendar
 from .cost_distribution import CostDistribution
 from .events import Event
+from .top_gainers import Ticker
 import pandas as pd
 from .webull_data import Analysis, WebullStockData, WebullVolAnalysis
 from .top_gainers import GainersData
@@ -93,71 +94,99 @@ class AsyncWebullSDK:
                 results = GainersData(top_gainers)
                 
             return results    
-            
-    async def top_options_chains(self, rank_type):
-        url = f"https://quotes-gw.webullfintech.com/api/wlas/option/rank/list?regionId=6&rankType={rank_type}&pageIndex=1&pageSize=350"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                response = await response.json()
-                data = response.get('data', None)
-                derivatives = [Derivative.from_dict(data.get("derivative", {})) for data in data]
-                values = [Values.from_dict(data.get("values", {})) for data in data]
-                belongticker = [BelongTicker.from_dict(data.get("belongTicker", {})) for data in data]
 
-                self.change = [i.change for i in belongticker]
-                self.changeRatio = [i.changeRatio for i in belongticker]
-                self.close = [i.close for i in belongticker]
-                self.symbol = [i.symbol for i in derivatives]
-                self.fiftyTwoWkHigh = [i.fiftyTwoWkHigh for i in belongticker]
-                self.fiftyTwoWkLow = [i.fiftyTwoWkLow for i in belongticker]
-                self.high = [i.high for i in belongticker]
-                self.low = [i.low for i in belongticker]
-                self.name = [i.name for i in belongticker]
-                self.marketValue = [i.marketValue for i in belongticker]
-                self.vibrateRatio = [i.vibrateRatio for i in belongticker]
-                self.volume = [i.volume for i in belongticker]
-                self.turnoverRate = [i.turnoverRate for i in belongticker]
-                self.disSymbol = [i.disSymbol for i in belongticker]
-                self.option_change = [i.change for i in derivatives]
-                self.option_change_ratio = [i.changeRatio for i in derivatives]
-                self.option_close = [i.close for i in derivatives]
-                self.strike = [i.strikePrice for i in derivatives]
-                self.direction = [i.direction for i in derivatives]
-                self.option_symbol = [i.symbol for i in derivatives]
-                self.underlying_symbol = [i.unSymbol for i in derivatives]
-                self.cycle = [i.cycle for i in derivatives]
-                self.expiry = [i.expireDate for i in derivatives]
-                self.belong_ticker_id = [i.belongTickerId for i in derivatives]
-                self.attributes_dict = {
-                    "change": self.change,
-                    "changeRatio": self.changeRatio,
-                    "close": self.close,
-                    "symbol": self.symbol,
-                    "fiftyTwoWkHigh": self.fiftyTwoWkHigh,
-                    "fiftyTwoWkLow": self.fiftyTwoWkLow,
-                    "high": self.high,
-                    "low": self.low,
-                    "name": self.name,
-                    "marketValue": self.marketValue,
-                    "vibrateRatio": self.vibrateRatio,
-                    "volume": self.volume,
-                    "turnoverRate": self.turnoverRate,
-                    "disSymbol": self.disSymbol,
-                    "option_change": self.option_change,
-                    "option_change_ratio": self.option_change_ratio,
-                    "option_close": self.option_close,
-                    "strike": self.strike,
-                    "direction": self.direction,
-                    "option_symbol": self.option_symbol,
-                    "underlying_symbol": self.underlying_symbol,
-                    "cycle": self.cycle,
-                    "expiry": self.expiry,
-                    "belong_ticker_id": self.belong_ticker_id}
 
-                self.df = pd.DataFrame(self.attributes_dict)
+    async def fifty_two_high_and_lows(self):
+        """Returns tickers near low/high or new low/high on the year."""
+        rank_types = ['nearLow', 'nearHigh', 'newLow', 'newHigh']
+        tickers = []
+        for rank_type in rank_types:
+            url=f"https://quotes-gw.webullfintech.com/api/wlas/ranking/52weeks?regionId=6&rankType={rank_type}&pageIndex=1&pageSize=350"
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as response:
+                    datas = await response.json()
+                    data = datas['data']
+                    tickers += [i['ticker'] if 'ticker' in i else None for i in data]
+        return Ticker(tickers)
+    async def top_active_stocks(self):
+        """Get the most active tickers by relative volume, turnover, range, and volume"""
+        rank_types = ['rvol10d', 'volume', 'turnover', 'range']
+        tickers = []
+        for rank_type in rank_types:
+            url = f"https://quotes-gw.webullfintech.com/api/wlas/ranking/topActive?regionId=6&rankType={rank_type}&pageIndex=1&pageSize=350"
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as response:
+                    datas = await response.json()
+                    data = datas['data']
+                    tickers += [i['ticker'] if 'ticker' in i else None for i in data]
+        return Ticker(tickers)
+    async def top_options_chains(self):
+        rank_types = ['volume', 'position', 'turnover', 'posIncrease', 'posDecrease', 'impVol']
+        tickers = []
+        for rank_type in rank_types:
+            url = f"https://quotes-gw.webullfintech.com/api/wlas/option/rank/list?regionId=6&rankType={rank_type}&pageIndex=1&pageSize=350"
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as response:
+                    response = await response.json()
+                    data = response.get('data', None)
+                    derivatives = [Derivative.from_dict(data.get("derivative", {})) for data in data]
+                    values = [Values.from_dict(data.get("values", {})) for data in data]
+                    belongticker = [BelongTicker.from_dict(data.get("belongTicker", {})) for data in data]
 
-                return self.df, derivatives
-            
+                    self.change = [i.change for i in belongticker]
+                    self.changeRatio = [i.changeRatio for i in belongticker]
+                    self.close = [i.close for i in belongticker]
+                    self.symbol = [i.symbol for i in derivatives]
+                    self.fiftyTwoWkHigh = [i.fiftyTwoWkHigh for i in belongticker]
+                    self.fiftyTwoWkLow = [i.fiftyTwoWkLow for i in belongticker]
+                    self.high = [i.high for i in belongticker]
+                    self.low = [i.low for i in belongticker]
+                    self.name = [i.name for i in belongticker]
+                    self.marketValue = [i.marketValue for i in belongticker]
+                    self.vibrateRatio = [i.vibrateRatio for i in belongticker]
+                    self.volume = [i.volume for i in belongticker]
+                    self.turnoverRate = [i.turnoverRate for i in belongticker]
+                    self.disSymbol = [i.disSymbol for i in belongticker]
+                    self.option_change = [i.change for i in derivatives]
+                    self.option_change_ratio = [i.changeRatio for i in derivatives]
+                    self.option_close = [i.close for i in derivatives]
+                    self.strike = [i.strikePrice for i in derivatives]
+                    self.direction = [i.direction for i in derivatives]
+                    self.option_symbol = [i.symbol for i in derivatives]
+                    self.underlying_symbol = [i.unSymbol for i in derivatives]
+                    self.cycle = [i.cycle for i in derivatives]
+                    self.expiry = [i.expireDate for i in derivatives]
+                    self.belong_ticker_id = [i.belongTickerId for i in derivatives]
+                    self.attributes_dict = {
+                        "change": self.change,
+                        "changeRatio": self.changeRatio,
+                        "close": self.close,
+                        "symbol": self.symbol,
+                        "fiftyTwoWkHigh": self.fiftyTwoWkHigh,
+                        "fiftyTwoWkLow": self.fiftyTwoWkLow,
+                        "high": self.high,
+                        "low": self.low,
+                        "name": self.name,
+                        "marketValue": self.marketValue,
+                        "vibrateRatio": self.vibrateRatio,
+                        "volume": self.volume,
+                        "turnoverRate": self.turnoverRate,
+                        "disSymbol": self.disSymbol,
+                        "option_change": self.option_change,
+                        "option_change_ratio": self.option_change_ratio,
+                        "option_close": self.option_close,
+                        "strike": self.strike,
+                        "direction": self.direction,
+                        "option_symbol": self.option_symbol,
+                        "underlying_symbol": self.underlying_symbol,
+                        "cycle": self.cycle,
+                        "expiry": self.expiry,
+                        "belong_ticker_id": self.belong_ticker_id}
+
+                    self.df = pd.DataFrame(self.attributes_dict)
+
+        return self.df, derivatives
+                
 
     async def top_options_tickers(self, rank_type):
         """Rank Types: totalVolume / totalPosition / """

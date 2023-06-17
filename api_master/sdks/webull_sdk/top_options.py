@@ -8,7 +8,6 @@ import requests
 @dataclass
 class TickerValues:
 
-    ticker: dict = None
     change: str = None
     position: str = None
     positionCallPutRatio: str = None
@@ -18,8 +17,7 @@ class TickerValues:
     volumeCallPutRatio: str = None
     changeRatio: float=None
 
-    def __init__(self, ticker: dict=None,change:str=None,position:str=None,positionCallPutRatio:str=None,price:str=None,tickerId:str=None,volume:float=None,volumeCallPutRatio:str=None,changeRatio:str=None):
-        self.ticker = ticker
+    def __init__(self, change:str=None,position:str=None,positionCallPutRatio:str=None,price:str=None,tickerId:str=None,volume:float=None,volumeCallPutRatio:str=None,changeRatio:str=None):
         self.change = change
         self.position = position
         self.positionCallPutRatio = positionCallPutRatio
@@ -34,7 +32,6 @@ class TickerValues:
     @classmethod
     def from_dict(self, data: dict):
         return TickerValues(
-            ticker=data.get(self.ticker),
             change=self.change,
             position=self.position,
             positionCallPutRatio=self.positionCallPutRatio,
@@ -46,7 +43,6 @@ class TickerValues:
         )
 @dataclass
 class Derivative:
-    derivative: dict = None
     tickerId: str = None
     exchangeId: int = None
     regionId: int = None
@@ -69,13 +65,13 @@ class Derivative:
 
     
     
-    def __init__(self, derivative: dict = None, tickerId: str = None, exchangeId: int = None, regionId: int = None, 
+    def __init__(self, tickerId: str = None, exchangeId: int = None, regionId: int = None, 
                  symbol: str = None, unSymbol: str = None, tickerType: int = None, belongTickerId: str = None, 
                  direction: str = None, weekly: str = None, quoteLotSize: int = None, expireDate: str = None, 
                  strikePrice: str = None, price: float = None, close: float = None, change: float = None, 
                  changeRatio: float = None, template: str = None, quoteMultiplier: int = None, cycle: str = None):
         
-        self.derivative = derivative
+   
         self.tickerId = tickerId
         self.exchangeId = exchangeId
         self.regionId = regionId
@@ -99,13 +95,12 @@ class Derivative:
     @classmethod
     def from_dict(cls, data: dict):
         return cls(
-            derivative=data.get('derivative'),
-            tickerId=data.get('tickerId'),
             exchangeId=data.get('exchangeId'),
             regionId=data.get('regionId'),
             symbol=data.get('symbol'),
             unSymbol=data.get('unSymbol'),
             tickerType=data.get('tickerType'),
+            tickerId = data.get('tickerId'),
             belongTickerId=data.get('belongTickerId'),
             direction=data.get('direction'),
             weekly=data.get('weekly'),
@@ -123,8 +118,7 @@ class Derivative:
 
 @dataclass
 class BelongTicker:
-    belongTicker: dict = field(default_factory=dict)
-    tickerId: str = None
+    tickerId: int = None
     exchangeId: int = None
     type: int = None
     secType: int = None
@@ -162,8 +156,7 @@ class BelongTicker:
     pchange: float = None
     pchRatio: float = None
 
-    def __init__(self, belongTicker, tickerId, exchangeId, type, secType, regionId, currencyId, currencyCode, name, symbol, disSymbol, disExchangeCode, exchangeCode, listStatus, template, derivativeSupport, tradeTime, faTradeTime, status, close, change, changeRatio, marketValue, volume, turnoverRate, regionName, regionIsoCode, peTtm, preClose, fiftyTwoWkHigh, fiftyTwoWkLow, open, high, low, vibrateRatio, pprice, pchange, pchRatio):
-        self.belongTicker = belongTicker
+    def __init__(self, tickerId, exchangeId, type, secType, regionId, currencyId, currencyCode, name, symbol, disSymbol, disExchangeCode, exchangeCode, listStatus, template, derivativeSupport, tradeTime, faTradeTime, status, close, change, changeRatio, marketValue, volume, turnoverRate, regionName, regionIsoCode, peTtm, preClose, fiftyTwoWkHigh, fiftyTwoWkLow, open, high, low, vibrateRatio, pprice, pchange, pchRatio):
         self.tickerId = tickerId
         self.exchangeId = exchangeId
         self.type = type
@@ -204,7 +197,6 @@ class BelongTicker:
     @classmethod
     def from_dict(cls, data: dict):
         return cls(
-            belongTicker=data.get('belongTicker', {}),
             tickerId=data.get('tickerId'),
             exchangeId=data.get('exchangeId'),
             type=data.get('type'),
@@ -246,7 +238,6 @@ class BelongTicker:
 
 @dataclass
 class Values:
-    tickerId: str = None
     exchangeId: str = None
     regionId: int = None
     symbol: str = None
@@ -269,7 +260,6 @@ class Values:
     @classmethod
     def from_dict(cls, data: dict):
         return cls(
-            tickerId=data.get('tickerId'),
             exchangeId=data.get('exchangeId'),
             regionId=data.get('regionId'),
             symbol=data.get('symbol'),

@@ -646,6 +646,97 @@ async def get_top_gainers_data():
 
             return data_dict
         
+async def get_fifty_twos_endpoint():
+    data = await webull.fifty_two_high_and_lows()
+
+    data_dict = {
+        'tickerId': data.tickerId,
+        'exchangeId': data.exchangeId,
+        'type': data.type,
+        'secType': data.secType,
+        'regionId': data.regionId,
+        'currencyId': data.currencyId,
+        'currencyCode': data.currencyCode,
+        'name': data.name,
+        'symbol': data.symbol,
+        'disSymbol': data.disSymbol,
+        'disExchangeCode': data.disExchangeCode,
+        'exchangeCode': data.exchangeCode,
+        'listStatus': data.listStatus,
+        'template': data.template,
+        'derivativeSupport': data.derivativeSupport,
+        'isPTP': data.isPTP,
+        'tradeTime': data.tradeTime,
+        'faTradeTime': data.faTradeTime,
+        'status': data.status,
+        'close': data.close,
+        'change': data.change,
+        'changeRatio': data.changeRatio,
+        'marketValue': data.marketValue,
+        'volume': data.volume,
+        'regionName': data.regionName,
+        'regionIsoCode': data.regionIsoCode,
+        'peTtm': data.peTtm,
+        'preClose': data.preClose,
+        'fiftyTwoWkHigh': data.fiftyTwoWkHigh,
+        'fiftyTwoWkLow': data.fiftyTwoWkLow,
+        'open': data.open,
+        'high': data.high,
+        'low': data.low,
+        'vibrateRatio': data.vibrateRatio,
+        'pchange': data.pchange,
+        'pchRatio': data.pchRatio,
+        'pprice': data.pprice
+    }
+
+    return data_dict
+
+async def top_active_endpoint():
+    data = await webull.top_active_stocks()
+
+    data_dict = {
+        'tickerId': data.tickerId,
+        'exchangeId': data.exchangeId,
+        'type': data.type,
+        'secType': data.secType,
+        'regionId': data.regionId,
+        'currencyId': data.currencyId,
+        'currencyCode': data.currencyCode,
+        'name': data.name,
+        'symbol': data.symbol,
+        'disSymbol': data.disSymbol,
+        'disExchangeCode': data.disExchangeCode,
+        'exchangeCode': data.exchangeCode,
+        'listStatus': data.listStatus,
+        'template': data.template,
+        'derivativeSupport': data.derivativeSupport,
+        'isPTP': data.isPTP,
+        'tradeTime': data.tradeTime,
+        'faTradeTime': data.faTradeTime,
+        'status': data.status,
+        'close': data.close,
+        'change': data.change,
+        'changeRatio': data.changeRatio,
+        'marketValue': data.marketValue,
+        'volume': data.volume,
+        'regionName': data.regionName,
+        'regionIsoCode': data.regionIsoCode,
+        'peTtm': data.peTtm,
+        'preClose': data.preClose,
+        'fiftyTwoWkHigh': data.fiftyTwoWkHigh,
+        'fiftyTwoWkLow': data.fiftyTwoWkLow,
+        'open': data.open,
+        'high': data.high,
+        'low': data.low,
+        'vibrateRatio': data.vibrateRatio,
+        'pchange': data.pchange,
+        'pchRatio': data.pchRatio,
+        'pprice': data.pprice
+    }
+
+    return data_dict
+
+
 
 async def process_data():
     webull = Webull()
