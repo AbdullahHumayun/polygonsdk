@@ -5,9 +5,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 from menus.pagination import AlertMenus
-from cfg import YOUR 
+
 import disnake
-import stocksera
+
 from disnake.ext import commands
 intents=disnake.Intents.all()
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK

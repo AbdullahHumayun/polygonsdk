@@ -13,7 +13,6 @@ import requests
 
 from cfg import YOUR_NASDAQ_KEY, YOUR_STOCKSERA_KEY, YOUR_FINNHUB_KEY
 from time import sleep
-
 import finnhub
 
 

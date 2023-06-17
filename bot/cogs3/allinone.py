@@ -1,4 +1,4 @@
-import requests
+
 import disnake
 from disnake.ext import commands
 from autocomp import tickerlist_autocomp
@@ -9,6 +9,7 @@ from views.uiviews.financialselects import FinancialSelect
 from views.uiviews.ftds import FTDStocksDropdown
 from views.uiviews.lowfloat import LowFloatDropdown
 from views.uiviews.quote import Quote
+
 class AllInOne(commands.Cog):
     def __init__(self, bot):
         self.bot=bot
