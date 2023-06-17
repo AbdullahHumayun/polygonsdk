@@ -134,7 +134,7 @@ class Fed(commands.Cog):
         query = query.lower()
         await inter.response.defer(with_message=True, ephemeral=True)
         try:
-            fred = Fred(api_key=YOUR_FRED_API_KEY)
+            fred = Fred.Fred.__fetch_data(api_key=YOUR_FRED_API_KEY)
             data = fred.search(f"{query}")
             id = data['id']
             start = data['realtime_start']
