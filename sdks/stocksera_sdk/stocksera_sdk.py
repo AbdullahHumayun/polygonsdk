@@ -3,15 +3,11 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 import stocksera
-try:
-    from cfg import YOUR_STOCKSERA_KEY
-    from cfg import today_str
-    from cfg import thirty_days_from_now_str
-except ImportError:
-    from myconfig import YOUR_STOCKSERA_KEY
 
-    from myconfig import today_str
-    from myconfig import thirty_days_from_now_str
+from cfg import YOUR_STOCKSERA_KEY
+from cfg import today_str
+from cfg import thirty_days_from_now_str
+
 
 from .borrowed import BorrowedShares
 from .treasury import TreausryBalance
