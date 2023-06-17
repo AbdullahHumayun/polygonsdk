@@ -28,7 +28,7 @@ async def index():
     return render_template('index.html')
 
 
-@app.route('/api/volume_analysis/<string:ticker>', methods=['GET', 'POST'])
+@app.route('/api/volume_analysis/<string:ticker>', methods=['GET'])
 async def volume_analysis(ticker):
     return await volume_analysis_endpoint(ticker)
 @app.route('/ticker_cards')
@@ -42,12 +42,14 @@ async def get_top_gainers_endpoint():
 
 @app.route('/api/top_active', methods=['GET'])
 async def get_top_active_endpoint():
-    return await get_top_gainers_data()
+    top_active = await webull.top_active_stocks()
+    return top_active
 
 
-@app.route('/api/fifty_twos', methods=['GET'])
-async def get_fifty_twos():
-    return await get_fifty_twos_endpoint()
+@app.route('/api/fifty_twos')
+async def get_fifty_twos_endpoint():
+    fifty_twos = await webull.fifty_two_high_and_lows()
+    return fifty_twos
 
    
 
@@ -60,50 +62,50 @@ def snippets():
 def discord_commands():
     return render_template('discord_commands.html')
 
-@app.route('/api/financial_statement/<string:ticker>', methods=['GET'])
+@app.route('/api/financial_statement/<string:ticker>')
 async def financial_statement(ticker):
     data = await financial_statement_endpoint(ticker=ticker)
     return data
 
 
-@app.route('/api/earnings_calendar', methods=['GET'])
+@app.route('/api/earnings_calendar')
 async def earnings(ticker):
     data = await earnings_calendar_endpoint(ticker=ticker)
     return data
 
 
 
-@app.route('/api/stock_data/<string:ticker>', methods=['GET'])
+@app.route('/api/stock_data/<string:ticker>')
 async def stock_data(ticker):
     data = await stock_data_endpoint(ticker=ticker)
     return data
 
 
-@app.route('/api/institutional_holdings/<string:ticker>', methods=['GET'])
+@app.route('/api/institutional_holdings/<string:ticker>')
 async def institutional_holdings(ticker):
     data = await institutional_holdings_endpoint(ticker=ticker)
     return data
 
 
-@app.route('/api/analyst_ratings/<string:ticker>', methods=['GET'])
+@app.route('/api/analyst_ratings/<string:ticker>')
 async def analyst_ratings(ticker):
     data = await analyst_ratings_endpoint(ticker)
     return data
 
 
-@app.route('/api/short_interest/<string:ticker>', methods=['GET'])
+@app.route('/api/short_interest/<string:ticker>')
 async def short_interest(ticker):
     data = await short_interest_endpoint(ticker=ticker)
     return data
 
 
-@app.route('/api/cash_flow/<string:ticker>', methods=['GET'])
+@app.route('/api/cash_flow/<string:ticker>')
 async def cash_flow(ticker):
 
     return await cash_flow_endpoint(ticker=ticker)
 
 
-@app.route('/api/balance_sheet/<string:ticker>', methods=['GET'])
+@app.route('/api/balance_sheet/<string:ticker>')
 async def balance_sheet(ticker):
     
 
@@ -111,12 +113,12 @@ async def balance_sheet(ticker):
 
 
 
-@app.route('/api/financial_ratios/<string:ticker>', methods=['GET'])
+@app.route('/api/financial_ratios/<string:ticker>')
 async def get_financial_ratios(ticker):
 
     return await(financial_ratios_endpoint(ticker=ticker))
 
-@app.route('/api/capital_flow/<string:ticker>', methods=['GET'])
+@app.route('/api/capital_flow/<string:ticker>')
 async def get_capital_flow(ticker):
     
 

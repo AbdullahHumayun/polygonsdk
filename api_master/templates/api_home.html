@@ -160,9 +160,7 @@
         <p>Top Lists: <strong>{{ ticker }}</strong></p>
     
         <div class="button-container">
-            <button id="top-gainers-button" type="button"><span>Top Gainers</span></button>
-            <button id="most-active-button" type="button"><span>Most Active Tickers</span></button>
-            <button id="fifty-two-button" type="button"><span>52week High / Lows</span></button>
+            <button id="top-gainers-button" type="button"><span>Get Top Gainers Data</span></button>
         </div>
 
         
@@ -179,17 +177,8 @@
         });
     var topGainersButton = document.getElementById("top-gainers-button");
     var earningsButton = document.getElementById("earnings-button")
-    var mostActiveButton = document.getElementById("most-active-button")
     topGainersButton.addEventListener("click", function() {
         window.location.href = '/api/top_gainers';
-    });
-
-    mostActiveButton.addEventListener("click", function() {
-        window.location.href = '/api/top_active';
-    });
-
-    fiftyTwosButton.addEventListener("click", function() {
-        window.location.href = '/api/fifty_twos';
     });
 
     earningsButton.addEventListener("click", function() {
