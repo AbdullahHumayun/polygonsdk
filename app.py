@@ -106,7 +106,7 @@ async def get_capital_flow(ticker):
 @app.route('/<ticker>')
 def view(ticker):
     # Call the API endpoint to get the data
-    response = requests.get(f"http://localhost:5000/api/{ticker}")
+    response = requests.get(f"https://polygonsdks.herokuapp.com/api/{ticker}")
 
     if response.status_code == 200:
         data = response.json()

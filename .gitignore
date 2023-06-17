@@ -6,12 +6,11 @@ test.py
 my_mock.py
 mydata/
 dist/
-api_master.egg-info/
+lib/
 build/
+api_master.egg-info/
 discord_config.py
 fudstop.py
 strat.py
-
-
 myconfig.py
 oldapp.py
