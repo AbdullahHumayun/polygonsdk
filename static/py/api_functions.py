@@ -1,6 +1,7 @@
 import requests
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from examples.webull_data import Webull
+from cfg import thirty_days_from_now_str
 import aiohttp
 webull = AsyncWebullSDK()
 
@@ -35,6 +36,27 @@ async def get_filtered_contracts(api_key, output):
     async with aiohttp.ClientSession() as session:
         return await fetch(session, url)
 
+
+async def earnings_calendar_endpoint(ticker):
+    earnings_calendar = await webull.get_earnings_calendar(date_str=thirty_days_from_now_str)
+    
+    earnings_data = {
+        "earning_release_id": earnings_calendar[0].earning_release_id,
+        "eps": earnings_calendar[0].eps,
+        "eps_estimate": earnings_calendar[0].eps_estimate,
+        "is_live": earnings_calendar[0].is_live,
+        "last_release_date": earnings_calendar[0].last_release_date,
+        "publish_status": earnings_calendar[0].publish_status,
+        "qualifier": earnings_calendar[0].qualifier,
+        "quarter": earnings_calendar[0].quarter,
+        "release_date": earnings_calendar[0].release_date,
+        "region_id": earnings_calendar[0].region_id,
+        "year": earnings_calendar[0].year,
+        "ticker": earnings_calendar[0].ticker,
+        "ticker_id": earnings_calendar[0].ticker_id
+    }
+    
+    return earnings_data
 
 async def stock_data_endpoint(ticker):
     stock_data = await webull.get_webull_stock_data(ticker)

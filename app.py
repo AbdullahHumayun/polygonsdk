@@ -13,7 +13,7 @@ from sdks.stocksera_sdk.sdk import StockSeraSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from static.py.api_functions import get_top_gainers_data, volume_analysis_endpoint, financial_statement_endpoint,balance_sheet_endpoint, cash_flow_endpoint, balance_sheet_endpoint
 from static.py.api_functions import financial_ratios_endpoint, capital_flow_endpoint, process_data, institutional_holdings_endpoint,short_interest_endpoint
-from static.py.api_functions import analyst_ratings_endpoint, stock_data_endpoint, get_filtered_contracts,get_near_the_money_symbols,get_price_data,get_top_gainers_data
+from static.py.api_functions import analyst_ratings_endpoint, stock_data_endpoint,get_top_gainers_data, earnings_calendar_endpoint
 
 import asyncio
 _stocksera = StockSeraSDK()
@@ -47,6 +47,13 @@ def discord_commands():
 async def financial_statement(ticker):
     data = await financial_statement_endpoint(ticker=ticker)
     return data
+
+
+@app.route('/api/earnings_calendar')
+async def earnings(ticker):
+    data = await earnings_calendar_endpoint(ticker=ticker)
+    return data
+
 
 
 @app.route('/api/stock_data/<string:ticker>')
