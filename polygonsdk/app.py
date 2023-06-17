@@ -27,7 +27,6 @@ _stocksera = StockseraSDK()
 webull = AsyncWebullSDK()
 
 app = Flask(__name__)
-api = Api(app)
 
 
 
