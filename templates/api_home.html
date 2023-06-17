@@ -115,15 +115,20 @@
             <h1>Welcome!</h1>
         </div>
     <body>
+
         <p>Please select an API endpoint for the ticker: <strong>{{ ticker }}</strong></p>
     
         <div class="button-container">
+            <button id="stock-data-button" type="button"><span>Stock Data</span></button>
             <button id="volume-analysis-button" type="button"><span>Volume Analysis</span></button>
             <button id="capital-flow-button" type="button"><span>Capital Flow</span></button>
             <button id="top-gainers-button" type="button"><span>Get Top Gainers Data</span></button>
             <button id="balance-sheet-button" type="button"><span>Get Company Balance Sheet</span></button>
             <button id="cash-flow-button" type="button"><span>Get Company Cash Flow</span></button>
             <button id="financial-statement-button" type="button"><span>Get Company Financial Statement</span></button>
+            <button id="short-interest-button" type="button"><span>Short Interest</span></button>
+            <button id="institutional-holdings-button" type="button"><span>Institutional Holdings</span></button>
+            <button id="analyst-rating-button" type="button"><span>Analyst Ratings</span></button>
         </div>
     
         <p id="loading" class="loading" style="display: none;">Loading...</p>
@@ -143,8 +148,10 @@
         var balanceSheetButton = document.getElementById("balance-sheet-button");
         var cashFlowButton = document.getElementById("cash-flow-button");
         var financialStatementButton = document.getElementById("financial-statement-button");
-    
-
+        var shortInterestButton = document.getElementById("short-interest-button")
+        var institutionalButton = document.getElementById("institutional-holdings-button")
+        var analystRatingsButton = document.getElementById("analyst-rating-button")
+        var stockDataButton = document.getElementById("stock-data-button")
         volumeAnalysisButton.addEventListener("click", function() {
             redirectToAPIEndpointWithInput('/api/volume_analysis');
         });
@@ -163,6 +170,22 @@
 
         financialStatementButton.addEventListener("click", function() {
             redirectToAPIEndpointWithInput('/api/financial_statement');
+        });
+
+        shortInterestButton.addEventListener("click", function() {
+            redirectToAPIEndpointWithInput('/api/short_interest');
+        });
+
+        institutionalButton.addEventListener("click", function() {
+            redirectToAPIEndpointWithInput('/api/institutional_holdings');
+        });
+
+        analystRatingsButton.addEventListener("click", function() {
+            redirectToAPIEndpointWithInput('/api/analyst_ratings');
+        });
+
+        stockDataButton.addEventListener("click", function() {
+            redirectToAPIEndpointWithInput('/api/stock_data');
         });
 
         

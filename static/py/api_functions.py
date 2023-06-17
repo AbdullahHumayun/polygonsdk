@@ -1,9 +1,181 @@
 import requests
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from examples.webull_data import Webull
-
+import aiohttp
 webull = AsyncWebullSDK()
 
+
+
+async def fetch(session, url):
+    async with session.get(url) as response:
+        return await response.json()
+
+async def get_price_data(api_key,tickers: str):
+    if tickers.startswith('SPX'):
+        ticker = "I:SPX"
+        type = "v3/snapshot/indices/I:SPX"
+        url = f"https://api.polygon.io/v3/snapshot/indices?ticker.any_of=I:SPX&apiKey={api_key}"
+        async with aiohttp.ClientSession() as session:
+            return await fetch(session, url)
+    else:
+        type = "v2/snapshot/locale/us/markets/stocks/tickers"
+        url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={tickers}&apiKey={api_key}"
+        print(url)
+        async with aiohttp.ClientSession() as session:
+            return await fetch(session, url)
+
+async def get_near_the_money_symbols(ticker,api_key, lower_strike, upper_strike, today_str):
+
+    url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte={today_str}&limit=250&apiKey={api_key}"
+    async with aiohttp.ClientSession() as session:
+        return await fetch(session, url)
+
+async def get_filtered_contracts(api_key, output):
+    url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={output}&apiKey={api_key}"
+    async with aiohttp.ClientSession() as session:
+        return await fetch(session, url)
+
+
+async def stock_data_endpoint(ticker):
+    stock_data = await webull.get_webull_stock_data(ticker)
+    if stock_data:
+        avg_10d_vol = stock_data.avg_10d_vol
+        avg_vol3m = stock_data.avg_vol3m
+        estimated_earnings = stock_data.estimated_earnings
+        fifty_high = stock_data.fifty_high
+        fifty_low = stock_data.fifty_low
+        last_earnings = stock_data.last_earnings
+        outstanding_shares = stock_data.outstanding_shares
+        web_change_ratio = round(float(stock_data.web_change_ratio)*100,2)
+        total_shares = stock_data.total_shares
+        web_exchange = stock_data.web_exchange
+        web_name = stock_data.web_name
+        web_stock_close = stock_data.web_stock_close
+        web_stock_high = stock_data.web_stock_high
+        web_stock_low = stock_data.web_stock_low
+        web_stock_open = stock_data.web_stock_open
+        web_stock_vol = float(stock_data.web_stock_vol)
+        web_symb = stock_data.web_symb
+        web_vibrate_ratio = stock_data.web_vibrate_ratio
+
+        data_dict = {
+            "Average 10 Day Volume": stock_data.avg_10d_vol,
+            "Average Volume 3 Months": stock_data.avg_vol3m,
+            "Estimated Earnings Data": stock_data.estimated_earnings,
+            "Fifty Two Week High": stock_data.fifty_high,
+            "Fifty Two Week Low": stock_data.fifty_low,
+            "Next Earnings": stock_data.last_earnings,
+            "Outstanding Shares": stock_data.outstanding_shares,
+            "Web Change Ratio": round(float(stock_data.web_change_ratio) * 100, 2),
+            "Total Shares": stock_data.total_shares,
+            "Exchange": stock_data.web_exchange,
+            "Company Name": stock_data.web_name,
+            "Stock Close": stock_data.web_stock_close,
+            "Stock High": stock_data.web_stock_high,
+            "Stock Low": stock_data.web_stock_low,
+            "Stock Open": stock_data.web_stock_open,
+            "Stock Volume": float(stock_data.web_stock_vol),
+            "Symbol": stock_data.web_symb,
+            "Vibrate Ratio": stock_data.web_vibrate_ratio
+        }
+
+        return data_dict
+
+
+
+async def analyst_ratings_endpoint(ticker):
+    analysis_data = await webull.get_analysis_data(ticker)
+    if analysis_data is None:
+        return
+
+    buy = analysis_data.buy if analysis_data.buy is not None else "N/A"
+    hold = analysis_data.hold if analysis_data.hold is not None else "N/A"
+    overall_rating = analysis_data.rating if analysis_data.rating is not None else "N/A"
+    suggestion = analysis_data.rating_suggestion if analysis_data.rating_suggestion is not None else "N/A"
+    rating_totals = analysis_data.rating_totals if analysis_data.rating_totals is not None else "N/A"
+    sell = analysis_data.sell if analysis_data.sell is not None else "N/A"
+    strongbuy = analysis_data.strongbuy if analysis_data.strongbuy is not None else "N/A"
+    underperform = analysis_data.underperform if analysis_data.underperform is not None else "N/A"
+
+    data_dict = { 
+        'Strong Buy Ratings': strongbuy,
+        'Buy Ratings': buy,
+        'Hold Ratings': hold,
+        'Underperform Rating': underperform,
+        'Sell Rating': sell,
+        'Analyst Count': rating_totals,
+        'Suggestion': suggestion,
+        'Overall Rating': overall_rating
+    }
+
+    return data_dict
+async def institutional_holdings_endpoint(ticker):
+    institutionHoldings = await webull.get_institutional_holdings(ticker)
+    if institutionHoldings is None:
+        return
+
+    decreaseChange = float(institutionHoldings.institution_holding.decrease.holding_count_change) if institutionHoldings.institution_holding.decrease.holding_count_change is not None else "N/A"
+    decreasedShares = float(institutionHoldings.institution_holding.decrease.institutional_count) if institutionHoldings.institution_holding.decrease.institutional_count is not None else "N/A"
+    increaseChange = float(institutionHoldings.institution_holding.increase.holding_count_change) if institutionHoldings.institution_holding.increase.holding_count_change is not None else "N/A"
+    increasedShares = float(institutionHoldings.institution_holding.increase.institutional_count) if institutionHoldings.institution_holding.increase.institutional_count is not None else "N/A"
+    newChange = float(institutionHoldings.institution_holding.new_position.holding_count_change) if institutionHoldings.institution_holding.new_position.holding_count_change is not None else "N/A"
+    newShares = float(institutionHoldings.institution_holding.new_position.institutional_count) if institutionHoldings.institution_holding.new_position.institutional_count is not None else "N/A"
+    soldOutChange = float(institutionHoldings.institution_holding.sold_out.holding_count_change) if institutionHoldings.institution_holding.sold_out.holding_count_change is not None else "N/A"
+    soldOutShares = float(institutionHoldings.institution_holding.sold_out.institutional_count) if institutionHoldings.institution_holding.sold_out.institutional_count is not None else "N/A"
+    net_shares_changed = soldOutChange + newChange + increaseChange + decreaseChange
+    net_institution_change = newShares + soldOutShares + increasedShares + decreasedShares
+
+    stats = institutionHoldings.institution_holding.stat
+    totalHeldShares = stats.holding_count if stats.holding_count is not None else "N/A"
+    totalHeldSharesChange = stats.holding_count_change if stats.holding_count_change is not None else "N/A"
+    totalOwnershipRatioOfFloat = stats.holding_ratio if stats.holding_ratio is not None else "N/A"
+    totalOwnershipRatioOfFloatChange = stats.holding_ratio_change if stats.holding_ratio_change is not None else "N/A"
+    totalNumberOfInstitutions = float(stats.institutional_count) if stats.institutional_count is not None else "N/A"
+
+    data_dict = {
+        'decreaseChange': float(institutionHoldings.institution_holding.decrease.holding_count_change) if institutionHoldings.institution_holding.decrease.holding_count_change is not None else "N/A",
+        'decreasedShares': float(institutionHoldings.institution_holding.decrease.institutional_count) if institutionHoldings.institution_holding.decrease.institutional_count is not None else "N/A",
+        'increaseChange': float(institutionHoldings.institution_holding.increase.holding_count_change) if institutionHoldings.institution_holding.increase.holding_count_change is not None else "N/A",
+        'increasedShares': float(institutionHoldings.institution_holding.increase.institutional_count) if institutionHoldings.institution_holding.increase.institutional_count is not None else "N/A",
+        'newChange': float(institutionHoldings.institution_holding.new_position.holding_count_change) if institutionHoldings.institution_holding.new_position.holding_count_change is not None else "N/A",
+        'newShares': float(institutionHoldings.institution_holding.new_position.institutional_count) if institutionHoldings.institution_holding.new_position.institutional_count is not None else "N/A",
+        'soldOutChange': float(institutionHoldings.institution_holding.sold_out.holding_count_change) if institutionHoldings.institution_holding.sold_out.holding_count_change is not None else "N/A",
+        'soldOutShares': float(institutionHoldings.institution_holding.sold_out.institutional_count) if institutionHoldings.institution_holding.sold_out.institutional_count is not None else "N/A"
+    }
+
+    data_dict['net_shares_changed'] = data_dict['soldOutChange'] + data_dict['newChange'] + data_dict['increaseChange'] + data_dict['decreaseChange']
+    data_dict['net_institution_change'] = data_dict['newShares'] + data_dict['soldOutShares'] + data_dict['increasedShares'] + data_dict['decreasedShares']
+
+    stats = institutionHoldings.institution_holding.stat
+    data_dict['totalHeldShares'] = stats.holding_count if stats.holding_count is not None else "N/A"
+    data_dict['totalHeldSharesChange'] = stats.holding_count_change if stats.holding_count_change is not None else "N/A"
+    data_dict['totalOwnershipRatioOfFloat'] = stats.holding_ratio if stats.holding_ratio is not None else "N/A"
+    data_dict['totalOwnershipRatioOfFloatChange'] = stats.holding_ratio_change if stats.holding_ratio_change is not None else "N/A"
+    data_dict['totalNumberOfInstitutions'] = float(stats.institutional_count) if stats.institutional_count is not None else "N/A"
+
+
+    return data_dict
+
+
+async def short_interest_endpoint(ticker):
+    short_interest = await webull.get_short_interest(ticker)
+    if short_interest is None:
+        return
+
+    short_int = f"{float(short_interest.short_int[0]):,}" if short_interest.short_int[0] is not None else "N/A"
+    avg_vol = f"{float(short_interest.avg_volume[0]):,}" if short_interest.avg_volume[0] is not None else "N/A"
+    days_to_cover = short_interest.days_to_cover[0] if short_interest.days_to_cover[0] is not None else "N/A"
+    settlement = short_interest.settlement[0] if short_interest.settlement[0] is not None else "N/A"
+
+
+    data_dict = { 
+        'Short Interest': short_int,
+        'Average Volume': avg_vol,
+        'Days to Cover': days_to_cover,
+        'Settlement Date': settlement
+    }
+
+    return data_dict
 
 async def capital_flow_endpoint(ticker):
     capitalFlow = await webull.capital_flow(ticker)

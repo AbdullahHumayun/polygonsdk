@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IV Skew Monitor</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <h1>IV Skew Monitor</h1>
+    <div id="data-area">
+        <!-- The fetched data will be inserted here -->
+    </div>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</body>
+</html>
+<body>
+    <!-- Hidden input holding the tickers -->
+    <input type="hidden" id="tickers" value="{{ tickers }}">
+
+    <script>
+    $(document).ready(function() {
+        function fetchData() {
+            // Get the tickers from the hidden input
+            var tickers = $("#tickers").val();
+            var url = '/ivs/';
+            if (tickers) {
+                url += tickers;  // Append tickers to the URL if available
+            }
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(data) {
+                    console.log('Returned data:', data);
+                    var tableHtml = '';
+                    for (var i = 0; i < data.length; i++) {
+                        var result = data[i];
+                        tableHtml += '<tr>';
+                        tableHtml += '<td>' + result.name + '</td>';
+                        tableHtml += '<td>' + result.Skew + '</td>';
+                        tableHtml += '<td>' + result.Price + '</td>';
+                        tableHtml += '<td>' + result.IV + '</td>';
+                        tableHtml += '</tr>';
+                    }
+                    $('#data-body').html(tableHtml);  // Update the tbody with the fetched data
+                }
+            });
+        }
+
+        fetchData();  // Fetch initial data on page load
+        setInterval(fetchData, 5000);  // Fetch data every 5 seconds (adjust as needed)
+    });
+    </script>
+    <h1>IV Skew Monitor</h1>
+    <div id="results">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Skew</th>
+                    <th>Price</th>
+                    <th>IV</th>
+                </tr>
+            </thead>
+            <tbody id="data-body">
+                <!-- The fetched data will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

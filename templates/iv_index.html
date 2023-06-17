@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IV Skew Monitor</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <input type="hidden" id="tickers" value="{{ tickers }}">
+    <script>
+        
+        function redirectToAPIEndpointWithInput(url) {
+            Swal.fire({
+                title: 'Enter the ticker',
+                input: 'text',
+                inputAttributes: {
+                    autocapitalize: 'off'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Submit',
+                showLoaderOnConfirm: true,
+                backdrop: `
+                    rgba(0,0,123,0.4)
+                    url("/images/nyan-cat.gif")
+                    left top
+                    no-repeat
+                `,
+                preConfirm: (ticker) => {
+                    return new Promise(function(resolve) {
+                        resolve(ticker);
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url + "/" + result.value;
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome to the IV Skew Monitor</h1>
+    <p>Enter the ticker you want to monitor:</p>
+    <button onclick="redirectToAPIEndpointWithInput('/ivs')">Submit</button>
+</body>
+</html>
