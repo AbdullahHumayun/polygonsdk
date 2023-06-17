@@ -39,6 +39,10 @@ def snippets():
     return render_template('snippets.html')
 
 
+@app.route("/commands", methods=['GET', 'POST'])
+def discord_commands():
+    return render_template('discord_commands.html')
+
 @app.route('/api/financial_statement/<string:ticker>')
 async def financial_statement(ticker):
     data = await financial_statement_endpoint(ticker=ticker)

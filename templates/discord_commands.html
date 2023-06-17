@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            gap: 20px;
+        }
+
+        .welcome-message h1 {
+            margin: 0;
+        }
+
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .button-container button {
+            background: #000;
+            color: #0f0;
+            padding: 10px 20px;
+            border: 2px solid #0f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-container button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #0f0, 0 0 60px #0f0;
+        }
+
+        .button-container button:active {
+            transform: scale(0.95);
+        }
+
+        .button-container button::before {
+            content: '';
+            background: #0f0;
+            position: absolute;
+            left: -50%;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0;
+            transition: all 0.6s ease;
+            transform: skewX(-45deg);
+        }
+
+        .button-container button span {
+            position: relative;
+            z-index: 2;
+        }
+
+        .button-container button:hover::before {
+            left: 0;
+            opacity: .3;
+        }
+        .loading {
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .gallery-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .gallery-image {
+            max-width: 300px;
+            max-height: 300px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gallery-image:hover {
+            transform: scale(1.1);
+        }
+
+        .expanded-image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .expanded-image-container.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .expanded-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="welcome-message">
+            <h1>Welcome!</h1>
+        </div>
+
+        <div class="gallery-container" id="analysis-gallery">
+            <!-- Gallery for ANALYSIS folder -->
+            <h2>ANALYSIS</h2>
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/ANALYSIS/analyst_rating.png" alt="analyst-rating">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/ANALYSIS/finscreener.png" alt="finscreener">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/ANALYSIS/gaps_down.png" alt="gaps-down">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/ANALYSIS/GAPS_UP.png" alt="gaps-up">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/ANALYSIS/overbought_gap.png" alt="overbought-gap">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/ANALYSIS/top_shorts.png" alt="top-shorts">
+        </div>
+
+        <div class="gallery-container" id="learn-gallery">
+            <!-- Gallery for LEARN folder -->
+            <h2>LEARN</h2>
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/calls.png" alt="calls">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/candle_patterns.png" alt="candle-patterns">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/china.png" alt="china">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/core.png" alt="core">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/coveredcalls.png" alt="coveredcalls">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/discord.png" alt="discord">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/etfs.png" alt="etfs">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/filings.png" alt="filings">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/finra.png" alt="finra">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/greeks.png" alt="greeks">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/nsfrratio.png" alt="nsfrratio">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/occ.png" alt="occ">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/options101.png" alt="options101">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/options_strats.png" alt="options-strats">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/LEARN/ta.png" alt="ta">
+        </div>
+
+        <div class="gallery-container" id="navigate-gallery">
+            <!-- Gallery for NAVIGATE folder -->
+            <h2>NAVIGATE</h2>
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/NAVIGATE/channels.png" alt="channels">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/NAVIGATE/forums.png" alt="forums">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/NAVIGATE/threads.png" alt="threads">
+        </div>
+
+        <div class="gallery-container" id="options-gallery">
+            <!-- Gallery for OPTIONS folder -->
+            <h2>OPTIONS</h2>
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/OPTIONS/highest_stats.png" alt="highest-stats">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/OPTIONS/oi_decrease.png" alt="oi-decrease">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/OPTIONS/oi_increase.png" alt="oi-increase">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/OPTIONS/top_iv.png" alt="top-iv">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/OPTIONS/unusual.png" alt="unusual">
+        </div>
+
+        <div class="gallery-container" id="stock-gallery">
+            <!-- Gallery for STOCK folder -->
+            <h2>STOCK</h2>
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/STOCK/capitalflow.png" alt="capital-flow">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/STOCK/image.png" alt="image">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/STOCK/INSIDER_SUMMARY.png" alt="insider-summary">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/STOCK/institutions.png" alt="institutions">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/STOCK/ipo.png" alt="ipo">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/STOCK/market_share.png" alt="market-share">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/STOCK/orderflow.png" alt="orderflow">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/STOCK/short_interest.png" alt="short-interest">
+        </div>
+
+        <div class="gallery-container" id="stream-gallery">
+            <!-- Gallery for STREAM folder -->
+            <h2>STREAM</h2>
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/STREAM/crypto.png" alt="crypto">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/STREAM/DOUBLE_CRYPTO.png" alt="double-crypto">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/STREAM/DOUBLE_QUOTE.png" alt="double-quote">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/STREAM/QUOTE.png" alt="quote">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/STREAM/top_option.png" alt="top-option">
+        </div>
+
+        <div class="gallery-container" id="webull-gallery">
+            <!-- Gallery for WEBULL folder -->
+            <h2>WEBULL</h2>
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/WEBULL/analysis_tools.png" alt="analysis-tools">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/WEBULL/bid_ask_spread.png" alt="bid-ask-spread">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/WEBULL/cost.png" alt="cost">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/WEBULL/GRAPHIC_HELPERS.png" alt="graphic-helpers">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/WEBULL/news.png" alt="news">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/WEBULL/options_setup.png" alt="options-setup">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/WEBULL/option_chain.png" alt="option-chain">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/WEBULL/orders.png" alt="orders">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/WEBULL/paper_trading.png" alt="paper-trading">
+            <img class="gallery-image" src="static/images/FUDSTOP_COMMANDS/WEBULL/quote.png" alt="quote">
+        </div>
+    </div>
+
+    <div id="api-response" style="margin-top: 20px;"></div>
+
+    <div class="expanded-image-container">
+        <img class="expanded-image" src="" alt="expanded-image">
+    </div>
+
+    <script>
+        // Your JavaScript code
+        const galleryContainers = document.querySelectorAll('.gallery-container');
+
+        function activateGalleryContainer(containerId) {
+            galleryContainers.forEach(container => {
+                container.classList.toggle('active', container.id === containerId);
+            });
+        }
+
+        const analysisGallery = document.getElementById('analysis-gallery');
+        const learnGallery = document.getElementById('learn-gallery');
+        const navigateGallery = document.getElementById('navigate-gallery');
+        const optionsGallery = document.getElementById('options-gallery');
+        const stockGallery = document.getElementById('stock-gallery');
+        const streamGallery = document.getElementById('stream-gallery');
+        const webullGallery = document.getElementById('webull-gallery');
+
+        analysisGallery.addEventListener('mouseenter', () => activateGalleryContainer('analysis-gallery'));
+        learnGallery.addEventListener('mouseenter', () => activateGalleryContainer('learn-gallery'));
+        navigateGallery.addEventListener('mouseenter', () => activateGalleryContainer('navigate-gallery'));
+        optionsGallery.addEventListener('mouseenter', () => activateGalleryContainer('options-gallery'));
+        stockGallery.addEventListener('mouseenter', () => activateGalleryContainer('stock-gallery'));
+        streamGallery.addEventListener('mouseenter', () => activateGalleryContainer('stream-gallery'));
+        webullGallery.addEventListener('mouseenter', () => activateGalleryContainer('webull-gallery'));
+    </script>
+</body>
+</html>
