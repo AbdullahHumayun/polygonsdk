@@ -1,0 +1,34 @@
+<!-- top_gainers.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Top Gainers</title>
+    <style>
+        /* Add your desired styling here */
+    </style>
+</head>
+<body>
+    <h1>Top Gainers</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Ticker</th>
+                <th>Change</th>
+                <th>Change Ratio</th>
+                <!-- Add more table headers as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in results %}
+            <tr>
+                <td>{{ item.ticker }}</td>
+                <td>{{ item.change }}</td>
+                <td>{{ item.change_ratio }}</td>
+                <!-- Add more table cells as needed -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

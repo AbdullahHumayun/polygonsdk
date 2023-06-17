@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <body>
+        <div class="back-button">
+            <a href="/">&lt; Back</a>
+        </div>
+    <title>Code Snippet Terminal</title>
+    <link rel="stylesheet" href="static/css/styles.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #1c1c1c;
+            color: #d1d1d1;
+            font-family: "Courier New", Courier, monospace;
+        }
+    
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+    
+        .back-button a {
+            text-decoration: none;
+            color: #3498db;
+            font-size: 20px;
+        }
+    
+        .card {
+            background-color: #222;
+            border: 1px solid #555;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    
+        .card h1 {
+            font-size: 20px;
+            margin: 0;
+            padding: 0;
+            color: #3498db;
+        }
+    
+        .category-dropdown select,
+        .snippet-dropdown select {
+            background-color: #222;
+            color: #d1d1d1;
+            border: 1px solid #555;
+            padding: 5px;
+            font-size: 16px;
+        }
+    
+        .snippet-code {
+            background-color: #111;
+            border: 1px solid #444;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 16px;
+            color: #d1d1d1;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+    
+        #snippet-code {
+            animation: typing 1s steps(60) infinite alternate;
+        }
+    
+        #copy-button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+    
+        #copy-button:hover {
+            background-color: #2187c6;
+        }
+    
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="category-dropdown">
+        <select id="category-select" onchange="filterSnippetsByCategory()">
+            <option value="">Select a category...</option>
+            <option value="polygonSnippets">Polygon.io REST API Snippets</option>
+            <option value="discordSnippets">Discord Snippets</option>
+            <option value="webullSnippets">Webull Snippets</option>
+            <option value="StockMarketHelperFunctions">Stock Market Helper Functions</option>
+            <option value="generalHelperFunctions">General Helper Functions</option>
+            
+            <!-- Add more categories here -->
+        </select>
+    </div>
+
+    <div class="card">
+        <h1>CODE SNIPPETS</h1>
+        <div class="snippet-dropdown">
+            <select id="snippet-select" onchange="displayCodeSnippet()">
+                <option value="" selected disabled>Select a snippet for <span id="category-name-placeholder">category</span>...</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="terminal">
+        <div class="snippet-code">
+            <pre><code class="language-python" id="snippet-code"></code></pre>
+            <button id="copy-button" onclick="copyCodeSnippet()">Copy</button>
+        </div>
+    </div>
+
+    <script src="static/js/snippets.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
+    <script src="static/js/main.js"></script>
+    <script>filterSnippetsByCategory();</script>
+</body>
+</html>

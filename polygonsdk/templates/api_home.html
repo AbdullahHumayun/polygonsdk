@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Home</title>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            gap: 20px;
+        }
+
+        .welcome-message h1 {
+            margin: 0;
+        }
+
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .button-container button {
+            background: #000;
+            color: #0f0;
+            padding: 10px 20px;
+            border: 2px solid #0f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-container button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #0f0, 0 0 60px #0f0;
+        }
+
+        .button-container button:active {
+            transform: scale(0.95);
+        }
+
+        .button-container button::before {
+            content: '';
+            background: #0f0;
+            position: absolute;
+            left: -50%;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0;
+            transition: all 0.6s ease;
+            transform: skewX(-45deg);
+        }
+
+        .button-container button span {
+            position: relative;
+            z-index: 2;
+        }
+
+        .button-container button:hover::before {
+            left: 0;
+            opacity: .3;
+        }
+        .loading {
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+    </style>
+    <div id="api-response" style="margin-top: 20px;">
+    </div>
+    <div class="page-container">
+        <div class="welcome-message">
+            <h1>Welcome!</h1>
+        </div>
+    <body>
+        <p>Please select an API endpoint for the ticker: <strong>{{ ticker }}</strong></p>
+    
+        <div class="button-container">
+            <button id="volume-analysis-button" type="button"><span>Volume Analysis</span></button>
+            <button id="capital-flow-button" type="button"><span>Capital Flow</span></button>
+            <button id="top-gainers-button" type="button"><span>Get Top Gainers Data</span></button>
+            <button id="balance-sheet-button" type="button"><span>Get Company Balance Sheet</span></button>
+            <button id="balance-sheet-button" type="button"><span>Get Company Cash Flow</span></button>
+            <button id="balance-sheet-button" type="button"><span>Get Company Financial Statement</span></button>
+        </div>
+    
+        <p id="loading" class="loading" style="display: none;">Loading...</p>
+    </body>
+    <script>
+    // Your JavaScript code
+
+    var topGainersButton = document.getElementById("top-gainers-button");
+
+    topGainersButton.addEventListener("click", function() {
+        window.location.href = '/api/top_gainers';
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var volumeAnalysisButton = document.getElementById("volume-analysis-button");
+        var capitalFlowButton = document.getElementById("capital-flow-button");
+        var balanceSheetButton = document.getElementById("balance-sheet-button");
+    
+        volumeAnalysisButton.addEventListener("click", function() {
+            redirectToAPIEndpointWithInput('/api/volume_analysis');
+        });
+
+        capitalFlowButton.addEventListener("click", function() {
+            redirectToAPIEndpointWithInput('/api/capital_flow');
+        });
+
+        balanceSheetButton.addEventListener("click", function() {
+            redirectToAPIEndpointWithInput('/api/balance_sheet');
+        });
+
+        cashFlowButton.addEventListener("click", function() {
+            redirectToAPIEndpointWithInput('/api/cash_flow');
+        });
+
+        financialStatementButton.addEventListener("click", function() {
+            redirectToAPIEndpointWithInput('/api/financial_statement');
+        });
+
+
+    });
+
+    var topGainersButton = document.getElementById("top-gainers-button");
+
+    function redirectToAPIEndpointWithInput(url) {
+        Swal.fire({
+            title: 'Enter the ticker',
+            input: 'text',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Submit',
+            showLoaderOnConfirm: true,
+            backdrop: `
+                rgba(0,0,123,0.4)
+                url("/images/nyan-cat.gif")
+                left top
+                no-repeat
+            `,
+            preConfirm: (ticker) => {
+                return new Promise(function(resolve) {
+                    resolve(ticker);
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url + "/" + result.value;
+            }
+        });
+    }
+    </script>
+</body>
+</html>
