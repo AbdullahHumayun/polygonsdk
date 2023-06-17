@@ -1,6 +1,6 @@
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 import asyncio
-from cfg import YOUR_API_KEY
+from api_master.cfg import YOUR_API_KEY
 import pandas as pd
 poly = AsyncPolygonSDK(YOUR_API_KEY)
 import aiohttp

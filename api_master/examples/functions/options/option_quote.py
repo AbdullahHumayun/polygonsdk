@@ -10,7 +10,7 @@ import pandas as pd
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.helpers.helpers import get_date_string
 
-from cfg import YOUR_API_KEY
+from api_master.cfg import YOUR_API_KEY
 
 now = datetime.now()
 sdk = PolygonOptionsSDK(YOUR_API_KEY)

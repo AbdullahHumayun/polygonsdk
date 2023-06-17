@@ -5,7 +5,7 @@ import requests
 from views.learnviews import LeverageDropdown
 from autocomps.autocomp import ticker_autocomp
 import stocksera
-from cfg import YOUR_STOCKSERA_KEY, YOUR_NASDAQ_KEY, YOUR_FINNHUB_KEY, YOUR_IEX_CLOUD_KEY
+from api_master.cfg import YOUR_STOCKSERA_KEY, YOUR_NASDAQ_KEY, YOUR_FINNHUB_KEY, YOUR_IEX_CLOUD_KEY
 from autocomp import tickerlist_autocomp, ticker_autocomp
 from utils.webull_tickers import ticker_list
 from time import sleep

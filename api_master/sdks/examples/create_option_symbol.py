@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import asyncio
 
-from cfg import YOUR_API_KEY
+from api_master.cfg import YOUR_API_KEY
 
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 

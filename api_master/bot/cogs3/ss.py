@@ -6,7 +6,7 @@ import pandas as pd
 import math
 from typing import List
 
-from cfg import today_str, thirty_days_from_now_str, five_days_ago_str
+from api_master.cfg import today_str, thirty_days_from_now_str, five_days_ago_str
 sdk = StockSeraSDK()
 
 

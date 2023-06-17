@@ -2,7 +2,7 @@ import disnake
 from disnake.ext import commands
 from webull import webull
 import stocksera
-from cfg import YOUR_STOCKSERA_KEY
+from api_master.cfg import YOUR_STOCKSERA_KEY
 client = stocksera.Client(api_key=YOUR_STOCKSERA_KEY)
 
 class FinancialSelect(disnake.ui.Select):

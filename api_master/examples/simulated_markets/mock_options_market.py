@@ -15,7 +15,7 @@ import pandas as pd
 
 
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
-from cfg import YOUR_API_KEY
+from api_master.cfg import YOUR_API_KEY
 
 sdk= PolygonOptionsSDK(YOUR_API_KEY)
 

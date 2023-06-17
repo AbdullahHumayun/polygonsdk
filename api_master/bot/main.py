@@ -14,7 +14,7 @@ from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 
-from cfg import YOUR_API_KEY, YOUR_DISCORD_BOT_TOKEN
+from api_master.cfg import YOUR_API_KEY, YOUR_DISCORD_BOT_TOKEN
 
 
 polygon = AsyncPolygonSDK(YOUR_API_KEY)

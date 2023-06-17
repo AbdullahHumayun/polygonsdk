@@ -12,7 +12,7 @@ from _discord.hooks.channel_webhooks import sell,strongbuy,underperform,holdrati
 from _discord.hooks.channel_webhooks import firesale,accumulate,neutzone, aboveavgvolume, belowavgvolume, fiftyhighh,fiftylowh, earningstoday, weekbanana,daybanana,hourbanana, lowfloat
 c = WebSocketClient(YOUR_API_KEY, subscriptions=["T.*"], market= Market.Stocks)
 
-from cfg import today_str, YOUR_API_KEY, five_days_from_now_str
+from api_master.cfg import today_str, YOUR_API_KEY, five_days_from_now_str
 from discord_webhook import AsyncDiscordWebhook, DiscordEmbed
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK, thresholds

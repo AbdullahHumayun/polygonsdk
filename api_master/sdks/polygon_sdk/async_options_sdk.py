@@ -23,7 +23,7 @@ import requests
 from .option_quote import OptionQuote
 from requests.exceptions import HTTPError
 from urllib.parse import urlencode
-from cfg import YOUR_API_KEY
+from api_master.cfg import YOUR_API_KEY
 
 MAX_SIMULTANEOUS_REQUESTS = 50 # adjust based on your needs. Lower = longer time to collect options data.
 

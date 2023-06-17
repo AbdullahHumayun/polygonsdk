@@ -7,7 +7,7 @@ import asyncio
 import pandas as pd
 
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-from cfg import YOUR_API_KEY, today_str
+from api_master.cfg import YOUR_API_KEY, today_str
 
 poly = AsyncPolygonSDK(YOUR_API_KEY)
 ticker = "MSFT"

@@ -1,6 +1,6 @@
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 import asyncio
-from cfg import today_str
+from api_master.cfg import today_str
 sdk = AsyncWebullSDK()
 
 

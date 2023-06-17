@@ -5,7 +5,7 @@ from autocomp import ticker_autocomp
 import finviz
 from datetime import date
 import webull
-from cfg import YOUR_IEX_CLOUD_KEY
+from api_master.cfg import YOUR_IEX_CLOUD_KEY
 intents = disnake.Intents.all()
 bot = commands.Bot( command_prefix="!", intents=intents)
 

@@ -5,7 +5,7 @@ from disnake.ext import commands
 import stocksera
 from autocomp import ticker_autocomp
 from views.learnviews import NotesView
-from cfg import YOUR_FINNHUB_KEY,YOUR_STOCKSERA_KEY, YOUR_FMP_KEY
+from api_master.cfg import YOUR_FINNHUB_KEY,YOUR_STOCKSERA_KEY, YOUR_FMP_KEY
 
 
 client = stocksera.Client(api_key=YOUR_STOCKSERA_KEY)

@@ -1,5 +1,5 @@
 import stocksera
-from cfg import YOUR_STOCKSERA_KEY,today_str, thirty_days_from_now_str
+from api_master.cfg import YOUR_STOCKSERA_KEY,today_str, thirty_days_from_now_str
 
 from .models import JimCramer,JoblessClaims,EarningsCalendar,FTD,LowFloat,House,TradingHalts,Inflation,IPOCalendar,ShortInterest,LatestInsiderTradingSummary,MarketNews,MarketSummary,NewsSentiment,RetailSales,ReverseRepo,SECFillings,Senate,ShortVolume,StockTwits,Subreddit,DailyTreasury,WSBMentions,WSBOptions
 

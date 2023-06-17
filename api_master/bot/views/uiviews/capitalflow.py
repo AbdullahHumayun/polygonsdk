@@ -1,7 +1,7 @@
 import disnake
 import stocksera
 import requests
-from cfg import YOUR_STOCKSERA_KEY
+from api_master.cfg import YOUR_STOCKSERA_KEY
 from utils.webull_tickers import ticker_list
 client = stocksera.Client(api_key=YOUR_STOCKSERA_KEY)
 

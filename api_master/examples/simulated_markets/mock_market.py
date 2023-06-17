@@ -16,7 +16,7 @@ import pandas as pd
 
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 
-from cfg import YOUR_API_KEY
+from api_master.cfg import YOUR_API_KEY
 
 from asyncio import Queue
 

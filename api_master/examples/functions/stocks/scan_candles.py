@@ -6,7 +6,7 @@ import io
 import mplfinance as mpf
 
 sdk = AsyncPolygonSDK(YOUR_API_KEY)
-from cfg import YOUR_API_KEY, today_str
+from api_master.cfg import YOUR_API_KEY, today_str
 
 async def plot_chart(ticker, multiplier, timespan, to_date, from_date, limit):
     aggs = await sdk.get_aggregates(ticker=ticker, multiplier=multiplier, timespan=timespan,from_date=from_date, to_date=today_str, limit=limit)

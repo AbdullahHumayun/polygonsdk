@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
 
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-from cfg import YOUR_API_KEY
+from api_master.cfg import YOUR_API_KEY
 
 import asyncio
 

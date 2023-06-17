@@ -3,7 +3,7 @@ import disnake
 from disnake.ext import commands
 
 import stocksera
-from cfg import YOUR_STOCKSERA_KEY, YOUR_IEX_CLOUD_KEY
+from api_master.cfg import YOUR_STOCKSERA_KEY, YOUR_IEX_CLOUD_KEY
 from time import sleep
 
 client = stocksera.Client(YOUR_STOCKSERA_KEY)

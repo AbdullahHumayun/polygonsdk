@@ -5,7 +5,7 @@ import disnake
 from webull import webull
 from disnake.ext import commands
 import stocksera
-from cfg import YOUR_STOCKSERA_KEY, YOUR_NASDAQ_KEY
+from api_master.cfg import YOUR_STOCKSERA_KEY, YOUR_NASDAQ_KEY
 
 from utils.webull_tickers import ticker_list
 

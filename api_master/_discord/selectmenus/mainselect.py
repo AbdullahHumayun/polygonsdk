@@ -5,7 +5,7 @@ import openai
 from sdks.polygon_sdk.get_all_options import fetch_all_option_contracts
 from tabulate import tabulate
 from urllib.request import url2pathname
-from cfg import today_str, YOUR_OPENAI_KEY, YOUR_API_KEY
+from api_master.cfg import today_str, YOUR_OPENAI_KEY, YOUR_API_KEY
 from datetime import datetime
 from sdks.webull_sdk.webull_sdk import thresholds
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
@@ -23,13 +23,13 @@ import disnake
 from ..views.menus import AlertMenus
 import requests
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
-from cfg import today_str
+from api_master.cfg import today_str
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from datetime import datetime
 import asyncio
 
 today = datetime.today()
-from cfg import YOUR_API_KEY
+from api_master.cfg import YOUR_API_KEY
 from sdks.fudstop_sdk.fudstop_sdk import fudstopSDK
 fudstop = fudstopSDK()
 polygon = AsyncPolygonSDK(YOUR_API_KEY)

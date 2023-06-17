@@ -2,7 +2,7 @@ import disnake
 from disnake.ext import commands
 import requests
 import fredapi as Fred
-from cfg import YOUR_FRED_API_KEY
+from api_master.cfg import YOUR_FRED_API_KEY
 class Fed(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

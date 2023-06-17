@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
 
 
 import requests
-from cfg import discord_headers
+from api_master.cfg import discord_headers
 import requests
 from time import sleep
 import csv

@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 import mplfinance as mpf
 import pandas as pd
 import numpy as np
-from cfg import YOUR_API_KEY, today_str
+from api_master.cfg import YOUR_API_KEY, today_str
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 sdk = AsyncPolygonSDK(YOUR_API_KEY)
 

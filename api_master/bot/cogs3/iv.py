@@ -1,6 +1,6 @@
 import disnake
 from disnake.ext import commands
-from cfg import YOUR_NASDAQ_KEY
+from api_master.cfg import YOUR_NASDAQ_KEY
 from autocomp import ticker_autocomp
 import requests
 

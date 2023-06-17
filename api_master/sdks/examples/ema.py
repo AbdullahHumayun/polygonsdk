@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import asyncio
 
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-from cfg import YOUR_API_KEY
+from api_master.cfg import YOUR_API_KEY
 
 ticker = "BAC"
 polygonsdk = AsyncPolygonSDK(YOUR_API_KEY)

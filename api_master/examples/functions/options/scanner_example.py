@@ -16,7 +16,7 @@ from sdks.models.test_events import TestOptionsEvent
 
 
 from examples.helpers import write_to_csv
-from cfg import YOUR_API_KEY
+from api_master.cfg import YOUR_API_KEY
 from cachetools import TTLCache
 sdk = PolygonOptionsSDK(YOUR_API_KEY)
 queue = asyncio.Queue()
