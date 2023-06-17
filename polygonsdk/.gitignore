@@ -1,0 +1,15 @@
+crypto_terminal.py
+__pycache__
+crypto.db
+my_hooks.py
+test.py
+my_mock.py
+mydata/
+
+discord_config.py
+fudstop.py
+strat.py
+app.py
+templates
+myconfig.py
+oldapp.py

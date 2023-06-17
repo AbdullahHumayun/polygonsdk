@@ -1,0 +1,127 @@
+body {
+    background-color: #000;
+    color: #af8282;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #333;
+}
+
+.command-block {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.command-btn {
+    padding: 5px 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.command-desc {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+.carousel {
+    perspective: 1000px;
+    width: 200px;
+    height: 200px;
+    position: relative;
+    margin: 0 auto;
+    transform-style: preserve-3d;
+    animation: rotation 5s infinite linear;
+}
+
+.carousel-item {
+    position: absolute;
+    background: #000;
+    color: #fff;
+    line-height: 200px;
+    text-align: center;
+    font-size: 3em;
+    opacity: 0.9;
+    width: 200px;
+    height: 200px;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(1turn);
+    }
+}
+.card {
+    background-color: #000000;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.terminal {
+    background-color: #000000;
+    padding: 20px;
+    border-radius: 5px;
+    width: 1000px; /* Adjust the width as per your preference */
+    max-width: 90%; /* Limit the maximum width to 90% of the viewport */
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre;
+    overflow-x: auto;
+    position: relative;
+    border: 1px solid rgb(1, 49, 1);
+    box-shadow: 0 0 20px #0f0;
+}
+
+.snippet-dropdown {
+    margin-top: 20px;
+}
+
+.snippet-dropdown select {
+    background-color: #222;
+    color: #c8c8c8;
+    border: none;
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 3px;
+}
+
+.snippet-code {
+    color: #209233;
+    font-size: 14px;
+    position: relative;
+    animation: matrix-animation 5 infinite;
+}
+
+.copy-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #c8c8c8;
+}
+
+@keyframes matrix-animation {
+    0% { opacity: 0.4; }
+    50% { opacity: 0.9; }
+    100% { opacity: 0.6; }
+}
