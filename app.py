@@ -6,15 +6,11 @@ import asyncio
 import requests
 import aiohttp
 from flask import Flask, render_template, request, jsonify
-try:
-    from funcs.get_data import get_webull_data
-    from sdks.stocksera_sdk.stocksera_sdk import StockseraSDK
-    from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
-except (ImportError, ModuleNotFoundError):
 
-    from .funcs.get_data import get_webull_data
-    from .sdks.webull_sdk.webull_sdk import AsyncWebullSDK
-    from .sdks.stocksera_sdk.stocksera_sdk import StockseraSDK
+from funcs.get_data import get_webull_data
+from sdks.stocksera_sdk.stocksera_sdk import StockseraSDK
+from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
+
 from examples.webull_data import Webull
 
 
