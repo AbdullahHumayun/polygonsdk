@@ -13,7 +13,7 @@ from sdks.stocksera_sdk.sdk import StockSeraSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from static.py.api_functions import get_top_gainers_data, volume_analysis_endpoint, financial_statement_endpoint,balance_sheet_endpoint, cash_flow_endpoint, balance_sheet_endpoint
 from static.py.api_functions import financial_ratios_endpoint, capital_flow_endpoint, process_data, institutional_holdings_endpoint,short_interest_endpoint
-from static.py.api_functions import analyst_ratings_endpoint, stock_data_endpoint,get_top_gainers_data, earnings_calendar_endpoint, get_fifty_twos_endpoint, top_active_endpoint
+from static.py.api_functions import analyst_ratings_endpoint, stock_data_endpoint,get_top_gainers_data, earnings_calendar_endpoint, get_fifty_twos_endpoint
 
 import asyncio
 _stocksera = StockSeraSDK()
@@ -31,6 +31,8 @@ async def index():
 @app.route('/api/volume_analysis/<string:ticker>', methods=['GET'])
 async def volume_analysis(ticker):
     return await volume_analysis_endpoint(ticker)
+
+
 @app.route('/ticker_cards')
 def ticker_cards():
     return render_template('ticker_cards.html')
@@ -40,10 +42,7 @@ async def get_top_gainers_endpoint():
 
 
 
-@app.route('/api/top_active', methods=['GET'])
-async def get_top_active_endpoint():
-    top_active = await webull.top_active_stocks()
-    return top_active
+
 
 
 @app.route('/api/fifty_twos')
@@ -69,8 +68,8 @@ async def financial_statement(ticker):
 
 
 @app.route('/api/earnings_calendar')
-async def earnings(ticker):
-    data = await earnings_calendar_endpoint(ticker=ticker)
+async def earnings():
+    data = await earnings_calendar_endpoint()
     return data
 
 

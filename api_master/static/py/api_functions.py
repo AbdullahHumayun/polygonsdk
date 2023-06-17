@@ -691,7 +691,7 @@ async def get_fifty_twos_endpoint():
 
     return data_dict
 
-async def top_active_endpoint():
+async def top_active():
     data = await webull.top_active_stocks()
 
     data_dict = {

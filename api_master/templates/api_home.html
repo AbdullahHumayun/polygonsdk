@@ -160,7 +160,8 @@
         <p>Top Lists: <strong>{{ ticker }}</strong></p>
     
         <div class="button-container">
-            <button id="top-gainers-button" type="button"><span>Get Top Gainers Data</span></button>
+            <button id="top-gainers-button" type="button"><span>Top Gainers Data</span></button>
+            <button id="top-active-button" type="button"><span>Most Active Tickers</span></button>
         </div>
 
         
@@ -177,12 +178,17 @@
         });
     var topGainersButton = document.getElementById("top-gainers-button");
     var earningsButton = document.getElementById("earnings-button")
+    var topActiveButton = document.getElementById("top-active-button")
     topGainersButton.addEventListener("click", function() {
         window.location.href = '/api/top_gainers';
     });
 
     earningsButton.addEventListener("click", function() {
         window.location.href = '/api/earnings_calendar';
+    });
+
+    topActiveButton.addEventListener("click", function() {
+        window.location.href = '/api/top_active';
     });
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -195,7 +201,7 @@
         var institutionalButton = document.getElementById("institutional-holdings-button")
         var analystRatingsButton = document.getElementById("analyst-rating-button")
         var stockDataButton = document.getElementById("stock-data-button")
-        
+
         volumeAnalysisButton.addEventListener("click", function() {
             redirectToAPIEndpointWithInput('/api/volume_analysis');
         });
