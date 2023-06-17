@@ -10,7 +10,7 @@ try:
     from funcs.get_data import get_webull_data
     from sdks.stocksera_sdk.stocksera_sdk import StockseraSDK
     from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
-except ModuleNotFoundError:
+except (ImportError, ModuleNotFoundError):
 
     from .funcs.get_data import get_webull_data
     from .sdks.webull_sdk.webull_sdk import AsyncWebullSDK

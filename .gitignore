@@ -5,9 +5,9 @@ my_hooks.py
 test.py
 my_mock.py
 mydata/
-dist
-api_master.egg-info
-build
+dist/
+api_master.egg-info/
+build/
 discord_config.py
 fudstop.py
 strat.py
