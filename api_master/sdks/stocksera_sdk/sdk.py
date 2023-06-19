@@ -1,14 +1,18 @@
+
+
+
+
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import stocksera
-import disnake
-import aiohttp
-import asyncio
-from discord_webhook import DiscordEmbed,DiscordWebhook,AsyncDiscordWebhook
 import pandas as pd
-from cfg import today, today_str, thirty_days_from_now_str,five_days_ago, thirty_days_ago_str, two_years_ago_str
+from cfg import today_str, thirty_days_from_now_str,thirty_days_ago_str, two_years_ago_str
 from cfg import YOUR_STOCKSERA_KEY
 from .models import NewsSentiment,Insiders,JimCramer,JoblessClaims,EarningsCalendar,FTD,LowFloat,House,TradingHalts,Inflation,IPOs,ShortInterest,LatestInsiderTradingSummary,MarketNews,MarketSummary,NewsSentiment,RetailSales,ReverseRepo,SECFillings,Senate,ShortVolume,StockTwits,Subreddit,DailyTreasury,WSBMentions,WSBOptions
 
-stock = "AMC"
+
 
 client = stocksera.Client(YOUR_STOCKSERA_KEY)
 

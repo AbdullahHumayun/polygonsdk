@@ -230,15 +230,15 @@ class TradingHalts:
 
 class WSBMentions:
     def __init__(self, data):
-        self.mentions = data.get('mentions')
+        self.mentions = [i['mentions'] if 'mentions' in i else None for i in data]
 
 
 class WSBOptions:
     def __init__(self, data):
-        self.ticker = data.get('ticker')
-        self.calls = data.get('calls')
-        self.puts = data.get('puts')
-        self.ratio = data.get('ratio')
+        self.ticker = [i['ticker'] if 'ticker' in i else None for i in data]
+        self.calls = [i['calls'] if 'calls' in i else None for i in data]
+        self.puts = [i['puts'] if 'puts' in i else None for i in data]
+        self.ratio = [i['ticker'] if 'ticker' in i else None for i in data]
 
 
 class Insiders:
