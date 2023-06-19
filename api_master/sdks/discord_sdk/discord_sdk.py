@@ -3,7 +3,7 @@ import time
 import csv
 import aiohttp
 
-from api_master.cfg import discord_headers
+from cfg import discord_headers
 from .channel_ids import channels  # Dictionary containing channels
 from .searching import Message
 

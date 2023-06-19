@@ -9,7 +9,7 @@ from polygon.websocket.models import WebSocketMessage
 from typing import List
 import asyncio
 
-from api_master.cfg import YOUR_API_KEY
+from cfg import YOUR_API_KEY
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 
 poly = AsyncPolygonSDK(YOUR_API_KEY)

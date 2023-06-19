@@ -17,10 +17,10 @@ from asyncio import Queue
 import asyncio
 import numpy as np
 ##import SDKS, config files
-from api_master.cfg import YOUR_API_KEY, five_days_from_now_str, five_days_ago_str
+from cfg import YOUR_API_KEY, five_days_from_now_str, five_days_ago_str
 from discord_webhook import AsyncDiscordWebhook, DiscordEmbed
 from sdks.polygon_sdk.technical_conditions import check_macd_condition_bearish, check_macd_condition_bullish,check_rsi_condition_bearish,check_rsi_condition_bullish
-from api_master.cfg import today_str
+from cfg import today_str
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK, thresholds
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK

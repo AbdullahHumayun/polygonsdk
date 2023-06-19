@@ -16,3 +16,5 @@ myconfig.py
 oldapp.py
 api_master.egg_info/
 test.py
+.env
+trial.py

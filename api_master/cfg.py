@@ -38,6 +38,27 @@ discord_headers = {
 }
 
 
+import os
+# API Keys
+YOUR_API_KEY = os.environ.get('YOUR_API_KEY') ##polygon.io APIKEY. If you don't have one - you can sign up here:
+#                                               https://www.polygon.io | Use code FUDSTOP at checkout for an exclusive discount on their real-time APIs.
+YOUR_OPENAI_KEY = os.environ.get('YOUR_OPENAI_KEY') ##openAI key for integrating chatGPT into discord.
+YOUR_NASDAQ_KEY = os.environ.get('YOUR_NASDAQ_KEY') ##nasdaq datalink key for using the nasdaq functions (iv_percentile)
+YOUR_WEBULL_HEADERS = os.environ.get('YOUR_WEBULL_HEADERS') ##headers needed to access the webull functions (news)
+YOUR_IEX_CLOUD_KEY = os.environ.get('YOUR_IEX_CLOUD_KEY')
+YOUR_STOCKSERA_KEY = os.environ.get('YOUR_STOCKSERA_KEY') #https://stocksera.pythonanywhere.com/accounts/developers/
+YOUR_FINNHUB_KEY = os.environ.get('YOUR_FINNHUB_KEY') #https://finnhub.io/
+YOUR_FMP_KEY = os.environ.get('YOUR_FMP_KEY') #https://site.financialmodelingprep.com/developer/docs/
+YOUR_FRED_API_KEY = os.environ.get('YOUR_FRED_API_KEY') #https://fred.stlouisfed.org/docs/api/fred/
+YOUR_DISCORD_BOT_TOKEN = os.environ.get('YOUR_DISCORD_BOT_TOKEN')#https://discord.com/developers/docs/intro
+
+discord_headers = {
+    'Authorization': f'{YOUR_DISCORD_BOT_TOKEN}',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36', #replace with your user-agent if needed
+    'Accept': 'application/json',
+    'Content-Type': "application/json"
+}
+
 
 
 # Date and Time - import these to easily create date parameters for different functions such as option aggregates, stock aggregates.
@@ -54,6 +75,8 @@ thirty_days_ago = now - timedelta(days=30)  # Thirty days ago from current date 
 thirty_days_ago_str = thirty_days_ago.strftime("%Y-%m-%d")  # Thirty days ago as string
 thirty_days = now + timedelta(days=30)  # Thirty days ago from current date and time
 thirty_days_from_now_str = thirty_days.strftime("%Y-%m-%d")  # Thirty days ago as string
+two_years_ago = now - timedelta(days=730)  # Thirty days ago from current date and time
+two_years_ago_str = two_years_ago.strftime("%Y-%m-%d")  # Thirty days ago as string
 
 # Hex Colors for discord embeds
 hex_colors = {

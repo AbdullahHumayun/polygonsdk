@@ -10,7 +10,7 @@ import asyncio
 from .option_vol_totals import OptionVolumeTotals
 import pandas as pd
 import aiohttp
-from api_master.cfg import YOUR_NASDAQ_KEY
+from cfg import YOUR_NASDAQ_KEY
 from io import StringIO
 
 import csv

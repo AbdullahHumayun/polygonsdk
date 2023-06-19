@@ -1,7 +1,7 @@
 import requests
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from examples.webull_data import Webull
-from api_master.cfg import thirty_days_from_now_str
+from cfg import thirty_days_from_now_str
 import aiohttp
 webull = AsyncWebullSDK()
 

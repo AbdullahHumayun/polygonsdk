@@ -1,6 +1,6 @@
 import disnake
 from disnake.ext import commands
-from api_master.cfg import YOUR_DISCORD_BOT_TOKEN
+from cfg import YOUR_DISCORD_BOT_TOKEN
 
 class FUDSTOPMenu(disnake.ui.Select):
     def __init__(self):

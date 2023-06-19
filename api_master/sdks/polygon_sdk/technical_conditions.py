@@ -1,5 +1,5 @@
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-from api_master.cfg import YOUR_API_KEY
+from cfg import YOUR_API_KEY
 polygon = AsyncPolygonSDK(YOUR_API_KEY)
 from asyncio import Semaphore
 

@@ -16,7 +16,7 @@ from sdks.models.test_events import TestOptionsEvent, option_condition_dict, OPT
 
 from sdks.helpers.helpers import extract_underlying_symbol
 from sdks.simulated_markets.helpers import write_to_csv
-from api_master.cfg import YOUR_API_KEY
+from cfg import YOUR_API_KEY
 from cachetools import TTLCache
 sdk = PolygonOptionsSDK(YOUR_API_KEY)
 queue = asyncio.Queue()

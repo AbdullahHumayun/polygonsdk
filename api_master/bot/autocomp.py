@@ -23,6 +23,7 @@ def ticker_autocomp(inter,ticker: str):
     file = os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
         "files",
+        "ticks",
         "tickers.csv",
     )
     df = pd.read_csv(file, usecols=col_list)

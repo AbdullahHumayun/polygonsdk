@@ -10,7 +10,7 @@ from polygon.websocket import WebSocketClient
 from typing import List
 import asyncio
 
-from api_master.cfg import YOUR_API_KEY
+from cfg import YOUR_API_KEY
 from sdks.polygon_sdk.mapping_dicts import stock_condition_dict, STOCK_EXCHANGES, TAPES, quote_conditions, indicators
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 

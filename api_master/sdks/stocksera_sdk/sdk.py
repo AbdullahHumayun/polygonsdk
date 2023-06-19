@@ -1,29 +1,40 @@
 import stocksera
-from api_master.cfg import YOUR_STOCKSERA_KEY,today_str, thirty_days_from_now_str
+import disnake
+import aiohttp
+import asyncio
+from discord_webhook import DiscordEmbed,DiscordWebhook,AsyncDiscordWebhook
+import pandas as pd
+from cfg import YOUR_STOCKSERA_KEY, YOUR_OPENAI_KEY, YOUR_DISCORD_BOT_TOKEN, today, today_str, thirty_days_from_now_str,five_days_ago, thirty_days_ago_str, two_years_ago_str
 
-from .models import JimCramer,JoblessClaims,EarningsCalendar,FTD,LowFloat,House,TradingHalts,Inflation,IPOCalendar,ShortInterest,LatestInsiderTradingSummary,MarketNews,MarketSummary,NewsSentiment,RetailSales,ReverseRepo,SECFillings,Senate,ShortVolume,StockTwits,Subreddit,DailyTreasury,WSBMentions,WSBOptions
+from .models import NewsSentiment,Insiders,JimCramer,JoblessClaims,EarningsCalendar,FTD,LowFloat,House,TradingHalts,Inflation,IPOs,ShortInterest,LatestInsiderTradingSummary,MarketNews,MarketSummary,NewsSentiment,RetailSales,ReverseRepo,SECFillings,Senate,ShortVolume,StockTwits,Subreddit,DailyTreasury,WSBMentions,WSBOptions
 
-
+stock = "AMC"
 
 client = stocksera.Client(YOUR_STOCKSERA_KEY)
 
 
-class StockSeraSDK:
+class StockeraSDK:
     def __init__(self):
 
         self.client = client
 
 
     def jim_cramer(self, stock):
-        data = client.jim_cramer(ticker=stock, segment="", call="")
+        data = JimCramer(client.jim_cramer(ticker=stock, segment="", call=""))
         if data:
-            return JimCramer(data)
+            return data
         return None
 
-    def jobless_claims(self):
-        data = client.jobless_claims()
+    def jobless_claims(self, days=100):
+        data = JoblessClaims(client.jobless_claims(days=days))
         if data:
-            return JoblessClaims(data)
+            return data
+        return None
+    
+    def IPO_calendar(self):
+        data = IPOs(client.ipo_calendar())
+        if data:
+            return data
         return None
 
     def earnings_calendar(self, date_from=today_str, date_to=thirty_days_from_now_str):
@@ -33,14 +44,20 @@ class StockSeraSDK:
         else:
             return None
 
-    def ftd(self, from_date=today_str, date_to=thirty_days_from_now_str):
-        data = FTD(client.ftd(date_from=from_date, date_to=date_to))
+    def ftd(self, ticker=str, from_date=today_str, date_to=thirty_days_from_now_str):
+        data = FTD(client.ftd(ticker=ticker, date_from=from_date, date_to=date_to))
         if data:
             return data
         return None
 
     def low_float(self):
-        data = LowFloat(client.low_float)
+        data = LowFloat(client.low_float())
+        if data:
+            return data
+        return []
+
+    def market_news(self):
+        data = MarketNews(client.market_news())
         if data:
             return data
         return []
@@ -52,49 +69,7 @@ class StockSeraSDK:
         return None
 
     def trading_halts(self):
-        data = TradingHalts(client.trading_halts())
-        if data:
-            return data
-        return []
-
-    def inflation(self):
-        data = Inflation(client.inflation())
-        if data:
-            return data
-        return None
-
-    def ipo_calendar(self):
-        data = IPOCalendar(client.ipo_calendar())
-        if data:
-            return data
-        return []
-
-    def short_interest(self):
-        data = ShortInterest(client.short_interest())
-        if data:
-            return data
-        return []
-
-    def latest_insider_trading_summary(self):
-        data = LatestInsiderTradingSummary(client.latest_insider_trading_summary())
-        if data:
-            return data
-        return []
-
-    def market_news(self):
-        data = MarketNews(client.market_news())
-        if data:
-            return data
-        return []
-
-    def market_summary(self, market_type):
-        data = client.market_summary(market_type=market_type)
-        if data:
-            return MarketSummary(data)
-        return None
-
-    def news_sentiment(self, stock):
-        data = NewsSentiment(client.news_sentiment(stock))
+        data = TradingHalts(client.news_sentiment(stock))
         if data:
             return data
         return []
@@ -105,11 +80,32 @@ class StockSeraSDK:
             return data
         return []
 
+    def inflation(self):
+        data = client.inflation()
+        years = list(data.keys())
+
+        all_data = []
+        for year in years:
+            year_data = [year] + [data[year][month] for month in data[year]]
+            all_data.append(year_data)
+
+        df = pd.DataFrame(all_data)
+        month_names = ['Year', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Avg']
+        df.columns = month_names
+        return df
+
     def reverse_repo(self, days):
         data = ReverseRepo(client.reverse_repo(days=days))
         if data:
             return data
         return []
+    
+    def latest_insider_summary(self):
+        data = LatestInsiderTradingSummary(client.latest_insider_trading_summary())
+        if data:
+            return data
+        return []
+
 
     def sec_fillings(self, stock):
         data = SECFillings(client.sec_fillings(stock))
@@ -117,14 +113,23 @@ class StockSeraSDK:
             return data
         return []
 
-    def senate(self, stock):
-        data = client.senate(stock)
-        if data:
-            return Senate(data)
+    ##TODO## -- FIX
+    def senate(self, name=str,ticker=str, date_from=two_years_ago_str, date_to=today_str):
+        data = client.senate(name=name, ticker=ticker, date_from=date_from, date_to=today_str)
+        senate = data['senate']
+        print(senate)
+        if senate:
+            return senate
         return None
 
-    def short_volume(self, stock):
+    def short_volume(self, stock, date_from=thirty_days_ago_str, to_date=today_str):
         data = ShortVolume(client.short_volume(stock))
+        if data:
+            return data
+        return []
+    
+    def short_interest(self):
+        data = ShortInterest(client.short_interest())
         if data:
             return data
         return []
@@ -141,16 +146,16 @@ class StockSeraSDK:
             return data
         return []
 
-    def daily_treasury(self, days):
-        data = client.daily_treasury(days=days)
+    def daily_treasury(self, days=100):
+        data = DailyTreasury(client.daily_treasury(days=days))
         if data:
-            return DailyTreasury(data)
+            return data
         return []
 
     def wsb_mentions(self, stock):
-        data = client.wsb_mentions(stock)
+        data = WSBMentions(client.wsb_mentions(stock))
         if data:
-            return WSBMentions(data)
+            return data
         return None
 
     def wsb_options(self, days):
@@ -158,3 +163,11 @@ class StockSeraSDK:
         if data:
             return data
         return []
+    
+
+    def news_sentiment(self, ticker: str):
+        data = NewsSentiment(client.news_sentiment(ticker))
+        if data:
+            return data
+        return []
+

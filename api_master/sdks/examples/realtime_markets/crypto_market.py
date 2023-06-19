@@ -9,7 +9,7 @@ from polygon.websocket import WebSocketClient, WebSocketMessage, CryptoQuote, Cr
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from cachetools import TTLCache
 
-from api_master.cfg import YOUR_API_KEY
+from cfg import YOUR_API_KEY
 poly = AsyncPolygonSDK(YOUR_API_KEY)
 c = WebSocketClient(subscriptions=["XT.*, XQ.*"], market=Market.Crypto, api_key=YOUR_API_KEY)  # connect to the crypto market and subscribe to trades and quotes
 

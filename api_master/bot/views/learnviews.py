@@ -11,7 +11,7 @@ import requests
 
 
 
-from api_master.cfg import YOUR_NASDAQ_KEY, YOUR_STOCKSERA_KEY, YOUR_FINNHUB_KEY
+from cfg import YOUR_NASDAQ_KEY, YOUR_STOCKSERA_KEY, YOUR_FINNHUB_KEY
 from time import sleep
 import finnhub
 
@@ -9300,7 +9300,7 @@ class CitedView(disnake.ui.View):
 
 import disnake
 from disnake.ext import commands
-from api_master.cfg import YOUR_NASDAQ_KEY
+from cfg import YOUR_NASDAQ_KEY
 from  disnake import ApplicationCommandInteraction
 
 
@@ -16364,7 +16364,7 @@ class FudstopCommandsView(disnake.ui.View):
 
 import disnake
 from disnake.ext import commands
-from api_master.cfg import YOUR_NASDAQ_KEY
+from cfg import YOUR_NASDAQ_KEY
 
 from disnake import ButtonStyle, ApplicationCommandInteraction
 

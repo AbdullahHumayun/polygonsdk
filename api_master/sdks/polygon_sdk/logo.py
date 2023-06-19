@@ -1,6 +1,6 @@
 from urllib.parse import unquote
 import aiohttp
-from api_master.cfg import YOUR_API_KEY
+from cfg import YOUR_API_KEY
 async def get_polygon_logo(symbol):
     url = f'https://api.polygon.io/v3/reference/tickers/{symbol}?apiKey={YOUR_API_KEY}'
     async with aiohttp.ClientSession() as session:

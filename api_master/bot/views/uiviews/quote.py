@@ -1,7 +1,7 @@
 import disnake
 import requests
 from utils.webull_tickers import ticker_list
-from api_master.cfg import YOUR_NASDAQ_KEY
+from cfg import YOUR_NASDAQ_KEY
 
 
 class Quote(disnake.ui.Select):

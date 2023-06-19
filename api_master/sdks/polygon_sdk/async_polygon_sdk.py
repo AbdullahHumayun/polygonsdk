@@ -17,7 +17,7 @@ from .financials import BalanceSheet,IncomeStatement,ComprehensiveIncome,CashFlo
 from .technicals.sma import SimpleMovingAverage
 from .technicals.ema import ExponentialMovingAverage
 import csv
-from api_master.cfg import YOUR_API_KEY
+from cfg import YOUR_API_KEY
 from .news import News
 from datetime import datetime, timedelta
 from .snapshot import StockSnapshot
@@ -26,8 +26,7 @@ from scipy.signal import argrelextrema
 from typing import List, Dict, Any
 from .models import Dividend, Condition
 from .pivot_points import PivotPointData
-from api_master.cfg import YOUR_NASDAQ_KEY
-import requests
+from cfg import YOUR_NASDAQ_KEY
 from .aggregates import AggregatesData
 from .quote import Quote
 import aiohttp

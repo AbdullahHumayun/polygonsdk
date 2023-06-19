@@ -3,7 +3,7 @@ import disnake
 from disnake.ext import commands
 import stocksera
 from uiviews.cmslist import MasterCommand
-from api_master.cfg import YOUR_STOCKSERA_KEY
+from cfg import YOUR_STOCKSERA_KEY
 client = stocksera.Client(api_key=YOUR_STOCKSERA_KEY)
 
 

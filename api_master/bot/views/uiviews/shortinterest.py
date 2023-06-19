@@ -2,7 +2,7 @@ import requests
 from time import sleep
 import disnake
 import stocksera
-from api_master.cfg import YOUR_STOCKSERA_KEY
+from cfg import YOUR_STOCKSERA_KEY
 client = stocksera.Client(api_key=YOUR_STOCKSERA_KEY)
 
 class ShortInt(disnake.ui.Select):

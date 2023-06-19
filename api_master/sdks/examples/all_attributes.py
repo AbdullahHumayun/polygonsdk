@@ -13,7 +13,7 @@ from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from sdks.fudstop_sdk.fudstop_sdk import fudstopSDK
 from sdks.helpers.helpers import human_readable
 
-from api_master.cfg import YOUR_API_KEY, five_days_ago_str, today_str
+from cfg import YOUR_API_KEY, five_days_ago_str, today_str
 
 poly = AsyncPolygonSDK(YOUR_API_KEY)
 webull = AsyncWebullSDK()

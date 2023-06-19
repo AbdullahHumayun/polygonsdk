@@ -6,7 +6,7 @@ from typing import List
 from datetime import datetime
 import asyncio
 today = datetime.today()
-from api_master.cfg import YOUR_API_KEY
+from cfg import YOUR_API_KEY
 polygon = AsyncPolygonSDK(YOUR_API_KEY)
 
 
