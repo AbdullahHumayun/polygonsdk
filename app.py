@@ -8,7 +8,7 @@ import pandas as pd
 import aiohttp
 from flask import Flask, render_template, request, jsonify
 
-from api_master.examples import webull_get_webull_data
+from api_master.examples.webull_webull_data import Webull
 from api_master.sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from static.py.api_functions import get_top_gainers_data, volume_analysis_endpoint, financial_statement_endpoint,balance_sheet_endpoint, cash_flow_endpoint, balance_sheet_endpoint
 from static.py.api_functions import financial_ratios_endpoint, capital_flow_endpoint, process_data, institutional_holdings_endpoint,short_interest_endpoint
@@ -161,7 +161,7 @@ def home():
 @app.route("/api/stock-data/<string:ticker>")
 async def api_stock_data():
     ticker = ''
-    data = await webull_get_webull_data.process_data(ticker)
+    data = await webull.process_data(ticker)
     return jsonify(data)
 
 

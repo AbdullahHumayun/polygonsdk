@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import asyncio
 
-from examples.webull_data import Webull
+from webull_webull_data import Webull
 
 
 import asyncio
