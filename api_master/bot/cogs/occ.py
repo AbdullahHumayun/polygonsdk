@@ -4,6 +4,35 @@ import requests
 
 import datetime
 import pandas as pd
+from _discord.views.menus import AlertMenus
+from sdks.occ_sdk.sdk import occSDK
+
+occ = occSDK()
+
+class PageSelect(disnake.ui.Select):
+    def __init__(self, embeds):
+        options = [
+            disnake.SelectOption(
+                label=f"Page {i+1}",
+                value=f"{i}"
+            ) for i in range(1, 25) 
+        ]
+
+        super().__init__(
+            custom_id="page_selector1",
+            placeholder="Pages 1-25",
+            min_values=1,
+            max_values=1,
+            options=options,
+            row=0
+        )
+        
+        self.embeds = embeds
+
+    async def callback(self, interaction: disnake.Interaction):
+        await interaction.response.edit_message(embed=self.embeds[int(self.values[0])])
+
+
 class OCC(commands.Cog):
     def __init__(self, bot):
         bot = bot
@@ -15,19 +44,38 @@ class OCC(commands.Cog):
 
 
     @occ.sub_command()
-    async def loans(self, inter:disnake.AppCmdInter, date=str):
+    async def stock_loans(self, inter:disnake.AppCmdInter, report_date: str, type=str):
         """Returns the number of new bi-lateral and market loans + totals."""
-        r = requests.get(url="https://marketdata.theocc.com/mdapi/stock-loan?report_date=2022-11-23&report_type=daily").json()
-        entity=r['entity']
-        res = entity["stockLoanResults"]
-        new = res[0]["newMarketLoanCount"]
-        total = res[0]["totalMarketLoanVal"]
-        newbi = res[0]["newBilateralLoanCount"]
-        totalbi=res[0]["totalBilateralLoanVal"]
-        em = disnake.Embed(title="OCC Loans - Market Loans",description=f"```py\nNew Loan Count: {new} | Loan totals: ${total:,}```")
-        em.add_field(name=f"OCC Loans - BI-Lateral", value=f"```py\nNew BILateral Count: {newbi} | BILateral totals: ${totalbi:,}```")
-        await inter.response.send_message(embed=em)
+        await inter.response.defer()
+        stock_loan_data = occ.stock_loans(report_date=report_date, type=type)
+        df = pd.DataFrame(vars(stock_loan_data))
+        df.to_csv('files/occ/stock_loans/stock_loans.csv')
+        embeds = []
+        for i,row in df.iterrows():
+            
+            business_date = row['businessDate']
+            newMarketLoanCount = float(row['newMarketLoanCount'])
+            totalMarketLoanVal = float(row['totalMarketLoanVal'])
+            newBilateralLoanCount = float(row['newBilateralLoanCount'])
+            totalBilateralLoanVal = float(row['totalBilateralLoanVal'])
+            embed = disnake.Embed(title=f"Market Loans - OCC", description=f"```py\nYou are viewing Bilateral and market loan data from the Options Clearing Corporation. Bilateral settlement is when there are two parties involved outside of central clearing.```", color=disnake.Colour.dark_blue(), url=f"https://www.theocc.com")
+            embed.add_field(name=f"Business Date:", value=f"```py\n{business_date}```", inline=False)
+            embed.add_field(name=f"Market Loans", value=f"> New Count: **{newMarketLoanCount:,}**\n> Total Value: **${totalMarketLoanVal:,}**")
+            embed.add_field(name=f"Market Loans", value=f"> New Count: **{newBilateralLoanCount:,}**\n> Total Value: **${totalBilateralLoanVal:,}**")
+            embeds.append(embed)
 
+        select = PageSelect(embeds[:25])
+
+
+        view = AlertMenus(embeds).add_item(select)
+        button = disnake.ui.Button(style=disnake.ButtonStyle.blurple, emoji="🔻", label=f"Download", row=4)
+        button.callback = lambda interaction: interaction.response.send_message(file=disnake.File('files/occ/stock_loans/stock_loans.csv'))
+
+        
+        view.add_item(button)
+  
+
+        await inter.edit_original_message(embed=embeds[0], view=view)
 
     @occ.sub_command()
     async def totals(self, inter: disnake.AppCmdInter):
@@ -494,6 +542,7 @@ class OCC(commands.Cog):
     @occ.sub_command()
     async def top_index(self, inter:disnake.AppCmdInter):
         """Displays the top 20 traded options on the day."""
+        await inter.response.defer()
         r = requests.get(url="https://cdn.optionseducation.org/rest/customtableitem.customtable.OICTradeAlertIndex?hash=768f0347138583e335d6cdd28ce2a0af459043c40808567ce4321d4c77604e03&format=json").json()
         cc = r["customtableitem_customtable_OICTradeAlertIndexes"]
         co = cc[0]['customtable_OICTradeAlertINDEX']
@@ -864,7 +913,7 @@ class OCC(commands.Cog):
 
         view.add_item(button)
         view.add_item(select)
-        await inter.response.send_message(view=view)
+        await inter.edit_original_message(view=view)
 
 
 

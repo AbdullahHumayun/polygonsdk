@@ -14,7 +14,7 @@ from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 
-from api_master.cfg import YOUR_API_KEY, YOUR_DISCORD_BOT_TOKEN
+from cfg import YOUR_API_KEY, YOUR_DISCORD_BOT_TOKEN
 
 
 polygon = AsyncPolygonSDK(YOUR_API_KEY)
@@ -45,10 +45,15 @@ class PersistentViewBot(commands.Bot):
 bot = PersistentViewBot(command_prefix=">>", intents=intents)
 
 
-extensions = ['bot\cogs3', 'bot\cogs2', 'bot\cogs']
+extensions = []
+cogs_directory = os.path.join(os.path.dirname(__file__), 'cogs')
+
+for filename in os.listdir(cogs_directory):
+    if filename.endswith('.py'):
+        extension_name = filename[:-3]  # Remove the .py extension
+        extensions.append(f'cogs.{extension_name}')
 
 for extension in extensions:
-    bot.load_extensions(extension)
-
+    bot.load_extension(f'bot.{extension}')
 
 bot.run(YOUR_DISCORD_BOT_TOKEN)
