@@ -41,18 +41,18 @@ class FTD:
 class House:
     def __init__(self, data):
         house = data['house']
-        self.trans_date = [i['Transaction Date'] if 'Transaction Date' in i else None for i in house]
-        self.owner = [i['Owner'] if 'Owner' in i else None for i in house]
-        self.ticker = [i['Ticker'] if 'Ticker' in i else None for i in house]
-        self.asset_desc = [i['Asset Description'] if 'Asset Description' in i else None for i in house]
-        self.asset_type = [i['Asset Type'] if 'Asset Type' in i else None for i in house]
-        self.type = [i['Type'] if 'Type' in i else None for i in house]
-        self.amount = [i['Amount'] if 'Amount' in i else None for i in house]
-        self.rep = [i['Representative'] if 'Representative' in i else None for i in house]
-        self.link = [i['Link'] if 'Link' in i else None for i in house]
-        self.disclosure_date = [i['Disclosure Date'] if 'Disclosure Date' in i else None for i in house]
-        self.district=[i['District'] if 'District' in i else None for i in house]
-        self.capital_gains_over_200k = [i['Cap Gains Over 200USD'] if 'Cap Gains Over 200USD' in i else None for i in house]
+        self.trans_date = [i['Transaction Date'] if i['Transaction Date'] in i else None for i in house]
+        self.owner = [i['Owner'] if i['Owner'] in i else None for i in house]
+        self.ticker = [i['Ticker'] if i['Ticker'] in i else None for i in house]
+        self.asset_desc = [i['Asset Description'] if i['Asset Description'] in i else None for i in house]
+        self.asset_type = [i['Asset Type'] if i['Asset Type'] in i else None for i in house]
+        self.type = [i['Type'] if i['Type'] in i else None for i in house]
+        self.amount = [i['Amount'] if i['Amount'] in i else None for i in house]
+        self.rep = [i['Representative'] if i['Representative'] in i else None for i in house]
+        self.link = [i['Link'] if i['Link'] in i else None for i in house]
+        self.disclosure_date = [i['Disclosure Date'] if i['Disclosure Date'] in i else None for i in house]
+        self.district=[i['District'] if i['District'] in i else None for i in house]
+        self.capital_gains_over_200k = [i['Cap Gains Over 200USD'] if i['Cap Gains Over 200USD'] in i else None for i in house]
 
 
 class Inflation:
@@ -64,54 +64,54 @@ class Inflation:
 
 class IPOs:
     def __init__(self, data):
-        self.date = [i['Date'] if 'Date' is not None else None for i in data]
-        self.exchange = [i['Exchange'] if 'Exchange' is not None else None for i in data]
-        self.expected_price = [i['Expected Price'] if 'Expected Price' is not None else None for i in data]
-        self.mkt_cap = [i['Mkt Cap'] if 'Mkt Cap' is not None else None for i in data]
-        self.name = [i['Name'] if 'Name' is not None else None for i in data]
-        self.number_shares = [i['Number Shares'] if 'Number Shares' is not None else None for i in data]
-        self.status = [i['Status'] if 'Status' is not None else None for i in data]
-        self.symbol = [i['Symbol'] if 'Symbol' is not None else None for i in data]
+        self.date = [i['Date'] if i['Date'] is not None else None for i in data]
+        self.exchange = [i['Exchange'] if i['Exchange'] is not None else None for i in data]
+        self.expected_price = [i['Expected Price'] if i['Expected Price'] is not None else None for i in data]
+        self.mkt_cap = [i['Mkt Cap'] if i['Mkt Cap'] is not None else None for i in data]
+        self.name = [i['Name'] if i['Name'] is not None else None for i in data]
+        self.number_shares = [i['Number Shares'] if i['Number Shares'] is not None else None for i in data]
+        self.status = [i['Status'] if i['Status'] is not None else None for i in data]
+        self.symbol = [i['Symbol'] if i['Symbol'] is not None else None for i in data]
 
 
 class JimCramer:
     def __init__(self, data):
-        self.ticker = [i['Ticker'] if 'Ticker' in i else None for i in data]
-        self.date = [i['Date'] if 'Date' in i else None for i in data]
-        self.segment = [i['Segment'] if 'Segment' in i else None for i in data]
-        self.call = [i['Call'] if 'Call' in i else None for i in data]
-        self.price = [i['Price'] if 'Price' in i else None for i in data]
+        self.ticker = [i['Ticker'] if i['Ticker'] is not None else None for i in data]
+        self.date = [i['Date'] if i['Date'] is not None else None for i in data]
+        self.segment = [i['Segment'] if i['Segment'] is not None else None for i in data]
+        self.call = [i['Call'] if i['Call'] is not None else None for i in data]
+        self.price = [i['Price'] if i['Price'] is not None else None for i in data]
 
 
 class JoblessClaims:
     def __init__(self, data):
-        self.date = [i['Date'] if 'Date' in i else None for i in data]
-        self.number = [i['Number'] if 'Number' in i else None for i in data]
-        self.percent_change = [i['Percent Change'] if 'Percent Change' in i else None for i in data]
+        self.date = [i['Date'] if i['Date'] is not None else None for i in data]
+        self.number = [i['Number'] if i['Number'] is not None else None for i in data]
+        self.percent_change = [i['Percent Change'] if i['Percent Change'] is not None else None for i in data]
 
 
 
 class LowFloat:
     def __init__(self, data):
-        self.Rank = [i['Rank'] if 'Rank' in i else None for i in data]
-        self.ticker= [i['ticker'] if 'ticker' in i else None for i in data]
-        self.company_name= [i['company_name'] if 'company_name' in i else None for i in data]
-        self.exchange= [i['exchange'] if 'exchange' in i else None for i in data]
-        self.previous_close= [i['previous_close'] if 'previous_close' in i else None for i in data]
-        self.one_day_change= [i['one_day_change'] if 'one_day_change' in i else None for i in data]
-        self.floating_shares= [i['floating_shares'] if 'floating_shares' in i else None for i in data]
-        self.outstanding_shares= [i['outstanding_shares'] if 'outstanding_shares' in i else None for i in data]
-        self.short_int= [i['short_int'] if 'short_int' in i else None for i in data]
-        self.market_cap= [i['market_cap'] if 'market_cap' in i else None for i in data]
-        self.industry= [i['industry'] if 'industry' in i else None for i in data]
+        self.Rank = [i['Rank'] if i['Rank'] is not None else None for i in data]
+        self.ticker= [i['ticker'] if i['ticker'] is not None else None for i in data]
+        self.company_name= [i['company_name'] if i['company_name'] is not None else None for i in data]
+        self.exchange= [i['exchange'] if i['exchange'] is not None else None for i in data]
+        self.previous_close= [i['previous_close'] if i['previous_close'] is not None else None for i in data]
+        self.one_day_change= [i['one_day_change'] if i['one_day_change'] is not None else None for i in data]
+        self.floating_shares= [i['floating_shares'] if i['floating_shares'] is not None else None for i in data]
+        self.outstanding_shares= [i['outstanding_shares'] if i['outstanding_shares'] is not None else None for i in data]
+        self.short_int= [i['short_int'] if i['short_int'] is not None else None for i in data]
+        self.market_cap= [i['market_cap'] if i['market_cap'] is not None else None for i in data]
+        self.industry= [i['industry'] if i['industry'] is not None else None for i in data]
 
 
 class LatestInsiderTradingSummary:
     def __init__(self, data):
-        self.ticker = [i['Ticker'] if 'Ticker' in i else None for i in data]
-        self.amount = [i['Amount'] if 'Amount' in i else None for i in data]
-        self.market_cap =[i['Market Cap'] if 'Market Cap' in i else None for i in data]
-        self.percent_of_market_cap = [i['% of Mkt Cap'] if '% of Mkt Cap' in i else None for i in data]
+        self.ticker = [i['Ticker'] if i['Ticker'] is not None else None for i in data]
+        self.amount = [i['Amount'] if i['Amount'] is not None else None for i in data]
+        self.market_cap =[i['Market Cap'] if i['Market Cap'] is not None else None for i in data]
+        self.percent_of_market_cap = [i['% of Mkt Cap'] if i['% of Mkt Cap'] is not None else None for i in data]
 
 
 class MarketNews:
@@ -130,68 +130,68 @@ class MarketSummary:
 
 class NewsSentiment:
     def __init__(self, data):
-        self.Date = [i['Date'] if 'Date' in i else None for i in data]
-        self.Title = [i['Title'] if 'Title' in i else None for i in data]
-        self.Link = [i['Link'] if 'Link' in i else None for i in data]
-        self.Sentiment = [i['Sentiment'] if 'Sentiment' in i else None for i in data]
+        self.Date = [i['Date'] if i['Date'] is not None else None for i in data]
+        self.Title = [i['Title'] if i['Title'] is not None else None for i in data]
+        self.Link = [i['Link'] if i['Link'] is not None else None for i in data]
+        self.Sentiment = [i['Sentiment'] if i['Sentiment'] is not None else None for i in data]
 
 class RetailSales:
     def __init__(self, data):
-        self.date = [i['Date'] if 'Date' in i else None for i in data]
-        self.amount = [i['Amount'] if 'Amount' in i else None for i in data]
-        self.percent_change = [i['Percent Change'] if 'Percent Change' in i else None for i in data]
-        self.monthly_avg_cases = [i['monthly_avg_cases'] if 'monthly_avg_cases' in i else None for i in data]
+        self.date = [i['Date'] if i['Date'] is not None else None for i in data]
+        self.amount = [i['Amount'] if i['Amount'] is not None else None for i in data]
+        self.percent_change = [i['Percent Change'] if i['Percent Change'] is not None else None for i in data]
+        self.monthly_avg_cases = [i['monthly_avg_cases'] if i['monthly_avg_cases'] is not None else None for i in data]
 
 
 class ReverseRepo:
     def __init__(self, data):
-        self.date = [i['Date'] if 'Date' in i else None for i in data]
-        self.amount = [i['Amount'] if 'Amount' in i else None for i in data]
-        self.num_parties = [i['Num Parties'] if 'Num Parties' in i else None for i in data]
-        self.average = [i['Average'] if 'Average' in i else None for i in data]
-        self.moving_average = [i['Moving Average'] if 'Moving Average' in i else None for i in data]
+        self.date = [i['Date'] if i['Date'] is not None else None for i in data]
+        self.amount = [i['Amount'] if i['Amount'] is not None else None for i in data]
+        self.num_parties = [i['Num Parties'] if i['Num Parties'] is not None else None for i in data]
+        self.average = [i['Average'] if i['Average'] is not None else None for i in data]
+        self.moving_average = [i['Moving Average'] if i['Moving Average'] is not None else None for i in data]
 
 
 class SECFillings:
     def __init__(self, data):
         self.Filling = [i['Filling'] if i['Filling'] is not None else None for i in data]
         self.Description = [i['Description'] if i['Description'] is not None else None for i in data]
-        self.FillingDate = [i['Filling Date'] if 'Filling Date' in i else None for i in data]
-        self.report_url = [i['report_url'] if 'report_url' in i else None for i in data]
-        self.filing_url = [i['filing_url'] if 'filing_url' in i else None for i in data]
+        self.FillingDate = [i['Filling Date'] if i['Filling Date'] is not None else None for i in data]
+        self.report_url = [i['report_url'] if i['report_url'] is not None else None for i in data]
+        self.filing_url = [i['filing_url'] if i['filing_url'] is not None else None for i in data]
 
 
 class Senate:
 
     def __init__(self, data):
         self.TransactionDate = [data.get('Transaction Date') for i in data]
-        self.Owner = [data.get('Owner') if 'Owner' in i else None for i in data]
-        self.Ticker = [i['Ticker'] if 'Ticker' in i else None for i in data]
-        self.AssetDescription = [i['Asset Description'] if 'Asset Description' in i else None for i in data]
-        self.AssetType = [data.get('Asset Type') if 'Asset Type' in i else None for i in data]
-        self.Type = [data.get('Type') if 'Type' in i else None for i in data]
-        self.Amount = [data.get('Amount') if 'Amount' in i else None for i in data]
-        self.Senator = [data.get('Senator') if 'Senator' in i else None for i in data]
-        self.Link = [data.get('Link') if 'Link' in i else None for i in data]
-        self.DisclosureDate = [data.get('Disclosure Date') if 'Disclosure Date' in i else None for i in data]
+        self.Owner = [data.get('Owner') if i['Owner'] is not None else None for i in data]
+        self.Ticker = [i['Ticker'] if i['Ticker'] is not None else None for i in data]
+        self.AssetDescription = [i['Asset Description'] if i['Asset Description'] is not None else None for i in data]
+        self.AssetType = [data.get('Asset Type') if i['Asset Type'] is not None else None for i in data]
+        self.Type = [data.get('Type') if i['Type'] is not None else None for i in data]
+        self.Amount = [data.get('Amount') if i['Amount'] is not None else None for i in data]
+        self.Senator = [data.get('Senator') if i['Senator'] is not None else None for i in data]
+        self.Link = [data.get('Link') if i['Link'] is not None else None for i in data]
+        self.DisclosureDate = [data.get('Disclosure Date') if i['Disclosure Date'] is not None else None for i in data]
 
 
 class ShortInterest:
     def __init__(self, data):
 
         
-        self.Rank = [i['Rank'] if 'Rank' in i else None for i in data]
-        self.Ticker= [i['Ticker'] if 'Ticker' in i else None for i in data]
-        self.Date=[i['Date'] if 'Date' in i else None for i in data]
-        self.ShortInterest= [i['Short Interest'] if 'Short Interest' in i else None for i in data]
-        self.AverageVolume= [i['Average Volume'] if 'Average Volume' in i else None for i in data]
-        self.DaysToCover= [i['Days To Cover'] if 'Days To Cover' in i else None for i in data]
-        self.FloatShort= [i['% Float Short'] if '% Float Short' in i else None for i in data]
+        self.Rank = [i['Rank'] if i['Rank'] is not None else None for i in data]
+        self.Ticker= [i['Ticker'] if i['Ticker'] is not None else None for i in data]
+        self.Date=[i['Date'] if i['Date'] is not None else None for i in data]
+        self.ShortInterest= [i['Short Interest'] if i['Short Interest'] is not None else None for i in data]
+        self.AverageVolume= [i['Average Volume'] if i['Average Volume'] is not None else None for i in data]
+        self.DaysToCover= [i['Days To Cover'] if i['Days To Cover'] is not None else None for i in data]
+        self.FloatShort= [i['% Float Short'] if i['% Float Short'] is not None else None for i in data]
 
 
 class ShortVolume:
     def __init__(self, data):
-        self.date = [i['Date'] if 'Date' in i else None for i in data]
+        self.date = [i['Date'] if i['Date'] is not None else None for i in data]
         self.short_vol = [i.get('Short Vol', None) for i in data]
         self.short_exempt_vol = [i.get('Short Exempt Vol', None) for i in data]
         self.total_vol = [i.get('Total Vol', None) for i in data]
@@ -202,19 +202,19 @@ class ShortVolume:
 class StockTwits:
     def __init__(self, data):
         self.rank = [i['rank'] if i['rank'] is not None else None for i in data]
-        self.watchlist = [i['watchlist'] if 'watchlist' in i else None for i in data]
-        self.date_updated = [i['date_updated'] if 'date_updated' in i else None for i in data]
+        self.watchlist = [i['watchlist'] if i['watchlist'] is not None else None for i in data]
+        self.date_updated = [i['date_updated'] if i['date_updated'] is not None else None for i in data]
 
 
 class Subreddit:
     def __init__(self, data):
-        self.Date = [i['Date'] if 'Date' in i else None for i in data]
-        self.subreddit = [i['subreddit'] if 'subreddit' in i else None for i in data]
-        self.Redditors = [i['Redditors'] if 'Redditors' in i else None for i in data]
-        self.Active = [i['Active'] if 'Active' in i else None for i in data]
-        self.percActive = [i['% Active'] if '% Active' in i else None for i in data]
-        self.percGrowth = [i['% Growth'] if '% Growth' in i else None for i in data]
-        self.percPriceChange = [i['% Price Change'] if '% Price Change' in i else None for i in data]
+        self.Date = [i['Date'] if i['Date'] is not None else None for i in data]
+        self.subreddit = [i['subreddit'] if i['subreddit'] is not None else None for i in data]
+        self.Redditors = [i['Redditors'] if i['Redditors'] is not None else None for i in data]
+        self.Active = [i['Active'] if i['Active'] is not None else None for i in data]
+        self.percActive = [i['% Active'] if i['% Active'] is not None else None for i in data]
+        self.percGrowth = [i['% Growth'] if i['% Growth'] is not None else None for i in data]
+        self.percPriceChange = [i['% Price Change'] if i['% Price Change'] is not None else None for i in data]
 
 
 class TradingHalts:
@@ -230,28 +230,28 @@ class TradingHalts:
 
 class WSBMentions:
     def __init__(self, data):
-        self.mentions = [i['mentions'] if 'mentions' in i else None for i in data]
+        self.mentions = [i['mentions'] if i['mentions'] is not None else None for i in data]
 
 
 class WSBOptions:
     def __init__(self, data):
-        self.ticker = [i['ticker'] if 'ticker' in i else None for i in data]
-        self.calls = [i['calls'] if 'calls' in i else None for i in data]
-        self.puts = [i['puts'] if 'puts' in i else None for i in data]
-        self.ratio = [i['ticker'] if 'ticker' in i else None for i in data]
+        self.ticker = [i['Ticker'] if i['Ticker'] is not None else None for i in data]
+        self.calls = [i['Calls'] if i['Calls'] is not None else None for i in data]
+        self.puts = [i['Puts'] if i['Puts'] is not None else None for i in data]
+        self.ratio = [i['Ratio'] if i['Ratio'] is not None else None for i in data]
 
 
 class Insiders:
     def __init__(self, data):
 
 
-        self.Ticker = [i['Ticker'] if 'Ticker' in i else None for i in data]
-        self.Name = [i['Name'] if 'Name' in i else None for i in data]
-        self.Relationship = [i['Relationship'] if 'Relationship' in i else None for i in data]
-        self.Date = [i['Date'] if 'Date' in i else None for i in data]
-        self.Transaction = [i['Transaction'] if 'Transaction' in i else None for i in data]
-        self.Cost = [i['Cost'] if 'Cost' in i else None for i in data]
-        self.Shares = [i['Shares'] if 'Shares' in i else None for i in data]
-        self.Value = [i['Value ($)'] if 'Value ($)' in i else None for i in data]
-        self.SharesTotal= [i['#Shares Total'] if '#Shares Total' in i else None for i in data]
-        self.DateFilled= [i['Date Filled'] if 'Date Filled' in i else None for i in data]
+        self.Ticker = [i['Ticker'] if i['Ticker'] is not None else None for i in data]
+        self.Name = [i['Name'] if i['Name'] is not None else None for i in data]
+        self.Relationship = [i['Relationship'] if i['Relationship'] is not None else None for i in data]
+        self.Date = [i['Date'] if i['Date'] is not None else None for i in data]
+        self.Transaction = [i['Transaction'] if i['Transaction'] is not None else None for i in data]
+        self.Cost = [i['Cost'] if i['Cost'] is not None else None for i in data]
+        self.Shares = [i['Shares'] if i['Shares'] is not None else None for i in data]
+        self.Value = [i['Value ($)'] if i['Value ($)'] is not None else None for i in data]
+        self.SharesTotal= [i['#Shares Total'] if i['#Shares Total'] is not None else None for i in data]
+        self.DateFilled= [i['Date Filled'] if i['Date Filled'] is not None else None for i in data]

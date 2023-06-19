@@ -48,8 +48,9 @@ class StockeraSDK:
         else:
             return None
 
-    def ftd(self, ticker=str, from_date=today_str, date_to=thirty_days_from_now_str):
-        data = FTD(client.ftd(ticker=ticker, date_from=from_date, date_to=date_to))
+    def ftd(self, ticker:str="", date_from=two_years_ago_str, date_to=today_str):
+        data = FTD(client.ftd(ticker=ticker, date_from=date_from, date_to=date_to))
+        
         if data:
             return data
         return None
@@ -73,7 +74,7 @@ class StockeraSDK:
         return None
 
     def trading_halts(self):
-        data = TradingHalts(client.news_sentiment(stock))
+        data = TradingHalts(client.trading_halts())
         if data:
             return data
         return []

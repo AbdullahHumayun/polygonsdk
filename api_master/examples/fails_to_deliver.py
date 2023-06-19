@@ -10,7 +10,7 @@ from sdks.stocksera_sdk.sdk import StockeraSDK
 sdk = StockeraSDK()
 
 
-ftds = sdk.ftd(ticker="AAPL", from_date=two_years_ago_str, date_to=today_str)
+ftds = sdk.ftd(ticker="AAPL", date_from=two_years_ago_str, date_to=today_str)
 
 
 ftd_amount = ftds.amount_ftd[0]
