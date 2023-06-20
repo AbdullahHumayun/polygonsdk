@@ -41,7 +41,9 @@ function displayCodeSnippet() {
         snippetCode.innerText = "";
     } else {
         let snippet = "";
-
+        
+        if (window.snippets && window.snippets.apiMasterSnippets && window.snippets.apiMasterSnippets.hasOwnProperty(selectedSnippet)) 
+            snippet = window.snippets.apiMasterSnippets[selectedSnippet];
         if (window.snippets && window.snippets.polygonSnippets && window.snippets.polygonSnippets.hasOwnProperty(selectedSnippet)) {
             snippet = window.snippets.polygonSnippets[selectedSnippet];
         } else if (window.snippets && window.snippets.discordSnippets && window.snippets.discordSnippets.hasOwnProperty(selectedSnippet)) {

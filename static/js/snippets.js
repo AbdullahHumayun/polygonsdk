@@ -1215,7 +1215,264 @@ generalHelperFunctions: {
     
     `,
 
+    "Webull - Balance Sheet":`
+    from api_master.examples.webull_balance_sheet import balance_sheet
+
+    import asyncio
     
+    
+    #run one ticker
+    ticker="TSLA"
+    async def main():
+    
+        await balance_sheet(ticker=ticker)
+    
+    
+    
+    asyncio.run(main())
+    
+    
+    #run multiple tickers
+    tickers = ["TSLA","AMD","GME","AMC","WMT"]
+    
+    async def multi_main():
+    
+        for ticker in tickers:
+            await balance_sheet(ticker)
+    
+    
+    asyncio.run(multi_main())`,
+
+    "Webull - Financial Statement":`
+    from api_master.examples.webull_financial_statement import financial_statement
+
+    import asyncio
+    
+    
+    #run one ticker
+    ticker="AMZN"
+    async def main():
+    
+        await financial_statement(ticker=ticker)
+    
+    
+    
+    asyncio.run(main())
+    
+    
+    #run multiple tickers
+    tickers = ["TSLA","AMD","GME","AMC","WMT"]
+    
+    async def multi_main():
+    
+        for ticker in tickers:
+            await financial_statement(ticker)
+    
+    
+    asyncio.run(multi_main())
+    
+    `,
+
+    "Webull - Cash Flow":` 
+    from api_master.examples.webull_cash_flow import cash_flow
+
+    import asyncio
+
+
+    #run one ticker
+    ticker="AMD"
+    async def main():
+
+        await cash_flow(ticker=ticker)
+
+
+
+    asyncio.run(main())
+
+
+    #run multiple tickers
+    tickers = ["TSLA","AMD","GME","AMC","WMT"]
+
+    async def multi_main():
+
+        for ticker in tickers:
+            await cash_flow(ticker)
+
+
+    asyncio.run(multi_main())
+    
+    `,
+    "Webull - Short Interest":`
+    
+    from api_master.examples.webull_short_interest import short_interest
+
+    import asyncio
+    
+    
+    #run one ticker
+    ticker="AMD"
+    async def main():
+    
+        await short_interest(ticker=ticker)
+    
+    
+    
+    asyncio.run(main())
+    
+    
+    #run multiple tickers
+    tickers = ["TSLA","AMD","GME","AMC","WMT"]
+    
+    async def multi_main():
+    
+        for ticker in tickers:
+            await short_interest(ticker)
+    
+    
+    asyncio.run(multi_main())
+
+    `,
+
+    "Webull - Institutional Ownership": `
+    
+    from api_master.examples.webull_institutions import institutional_ownership
+
+    import asyncio
+
+
+    #run one ticker
+    ticker="AMD"
+    async def main():
+
+        await institutional_ownership(ticker=ticker)
+
+
+
+    asyncio.run(main())
+
+
+    #run multiple tickers
+    tickers = ["TSLA","AMD","GME","AMC","WMT"]
+
+    async def multi_main():
+
+        for ticker in tickers:
+            await institutional_ownership(ticker)
+
+
+    asyncio.run(multi_main())
+    
+    `,
+
+    "Webull - Stock Data": `
+    from api_master.examples.webull_stock_data import stock_data
+
+    import asyncio
+    
+    
+    #run one ticker
+    ticker="AMD"
+    async def main():
+    
+        await stock_data(ticker=ticker)
+    
+    
+    
+    asyncio.run(main())
+    
+    
+    #run multiple tickers
+    tickers = ["TSLA","AMD","GME","AMC","WMT"]
+    
+    async def multi_main():
+    
+        for ticker in tickers:
+            await stock_data(ticker)
+    
+    
+    asyncio.run(multi_main())
+    
+    `,
+
+    "Webull - Cost Distribution": `
+    from api_master.examples.webull_cost_distribution import cost_distribution
+
+    import asyncio
+    
+    
+    #run one ticker
+    ticker="AMD"
+    async def main():
+    
+        await cost_distribution(ticker=ticker)
+    
+    
+    
+    asyncio.run(main())
+    
+    
+    #run multiple tickers
+    tickers = ["TSLA","AMD","GME","AMC","WMT"]
+    
+    async def multi_main():
+    
+        for ticker in tickers:
+            await cost_distribution(ticker)
+    
+    
+    asyncio.run(multi_main())
+    
+    `,
+
+    "Webull - Volume Analysis": `
+    
+    from api_master.examples.webull_volume_analysis import volume_analysis
+
+    import asyncio
+
+
+    #run one ticker
+    ticker="AMD"
+    async def main():
+
+        await volume_analysis(ticker=ticker)
+
+
+
+    asyncio.run(main())
+
+
+    #run multiple tickers
+    tickers = ["TSLA","AMD","GME","AMC","WMT"]
+
+    async def multi_main():
+
+        for ticker in tickers:
+            await volume_analysis(ticker)
+
+
+    asyncio.run(multi_main())
+    
+`,
+    "Webull - Earnings Calendar": `
+    
+    from api_master.examples.webull_earnings_calendar import earnings_calendar
+
+    import asyncio
+    
+    
+    #run one ticker
+    
+    async def main():
+    
+        await earnings_calendar(date="2023-07-30")
+    
+    
+    
+    asyncio.run(main())
+    `
+
+
 
 
 }
