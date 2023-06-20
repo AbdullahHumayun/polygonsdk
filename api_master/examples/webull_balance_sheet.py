@@ -11,10 +11,9 @@ from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 
 sdk = AsyncWebullSDK()
 
-async def main():
+async def balance_sheet(ticker="AAPL"):
     
 
-    ticker = "AAPL"
 
     #financials - balance sheet
     balance_sheet = await sdk.get_balancesheet(ticker)
@@ -115,4 +114,4 @@ async def main():
     # Save the DataFrame to a CSV file
     df.to_csv(filename, index=False)
 
-asyncio.run(main())
+asyncio.run(balance_sheet(ticker="AAPL"))

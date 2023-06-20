@@ -14,7 +14,7 @@ from cfg import today_str
 sdk = AsyncWebullSDK()
 
 
-async def main():
+async def earnings_calendar(date=today_str):
 
 
 
@@ -135,4 +135,4 @@ async def main():
     df = pd.DataFrame(data)
     df.to_csv('files/earnings/earnings_calendar.csv')
 
-asyncio.run(main())
+asyncio.run(earnings_calendar(date=today_str))

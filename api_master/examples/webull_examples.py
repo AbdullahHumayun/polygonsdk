@@ -10,8 +10,8 @@ sdk = AsyncWebullSDK()
 
 
 
-async def main():
-    ticker = "GME"
+async def run_examples(ticker="GME"):
+
 
     capital_flow = await sdk.capital_flow(ticker) #good
    # print(capital_flow.largein)
@@ -79,4 +79,4 @@ async def main():
     print(vol_anal.avePrice)
 
 
-asyncio.run(main())
+asyncio.run(run_examples(ticker="GME"))

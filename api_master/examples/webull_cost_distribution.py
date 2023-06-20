@@ -12,8 +12,8 @@ from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 sdk = AsyncWebullSDK()
 
 
-async def main():
-    ticker = "MSFT"
+async def cost_distribution(ticker=str):
+    ticker = "AMC"
 
     #access the function
     cost_dist = await sdk.cost_distribution(ticker)
@@ -52,4 +52,4 @@ async def main():
     print("totalShares:", total_shares)
     print("avgCost:", avg_cost)
 
-asyncio.run(main())
+asyncio.run(cost_distribution(ticker="AMC"))

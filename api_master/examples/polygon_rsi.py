@@ -19,3 +19,4 @@ async def get_rsi(ticker, timespan, from_date, to_date, limit):
     await sdk.get_rsi(symbol=ticker,timespan=timespan,from_date=from_date, to_date=to_date,limit=limit)
     print(get_rsi)
     return 
+

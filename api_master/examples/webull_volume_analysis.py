@@ -11,9 +11,8 @@ from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 sdk = AsyncWebullSDK()
 
 
-async def main():
+async def volume_analysis(ticker="AMZN"):
 
-    ticker = "AMZN"
 
     volume_analysis = await sdk.get_webull_vol_analysis_data(ticker)
     buyvol = float(volume_analysis.buyVolume)
@@ -29,4 +28,4 @@ async def main():
     print(f"Avg Price: ${avgprice}")
 
 
-asyncio.run(main())
+asyncio.run(volume_analysis(ticker="AMZN"))

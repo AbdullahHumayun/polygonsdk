@@ -14,8 +14,8 @@ sdk = AsyncWebullSDK()
 
 
 
-async def main():
-    ticker="NVDA"
+async def analyst_ratings(ticker="NVDA"):
+
 
     #access the function
     analyst_ratings = await sdk.get_analysis_data(ticker)
@@ -41,4 +41,4 @@ async def main():
     print("strongbuy:", strongbuy)
     print("underperform:", underperform)
 
-asyncio.run(main())
+asyncio.run(analyst_ratings())

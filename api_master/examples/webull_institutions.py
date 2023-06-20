@@ -12,9 +12,7 @@ from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 sdk = AsyncWebullSDK()
 
 
-async def main():
-
-    ticker = "META"
+async def institutional_ownership(ticker="META"):
 
 
     #institutional holdings data
@@ -50,4 +48,4 @@ async def main():
     print("total_institutions:", total_institutions)
 
 
-asyncio.run(main())
+asyncio.run(institutional_ownership(ticker="META"))

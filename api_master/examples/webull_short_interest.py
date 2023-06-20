@@ -12,9 +12,8 @@ from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 sdk = AsyncWebullSDK()
 
 
-async def main():
-    ticker = "AMC"
-            
+async def short_interest(ticker="AMC"):
+
 
 
     #short interest data - latest
@@ -48,4 +47,4 @@ async def main():
     filename= f'files/short_interest/{ticker}_short_interest.csv'
 
     df.to_csv(filename)
-asyncio.run(main())
+asyncio.run(short_interest(ticker="AMC"))

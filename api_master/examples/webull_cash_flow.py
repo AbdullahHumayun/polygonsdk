@@ -11,9 +11,8 @@ from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 
 sdk = AsyncWebullSDK()
 
-async def main():
-    
-    ticker = "AMD"
+async def cash_flow(ticker="AMD"):
+
 
     #cash flow - company financials#
     cash_flow = await sdk.get_cash_flow(ticker)
@@ -78,4 +77,4 @@ async def main():
 
 
 
-asyncio.run(main())
+asyncio.run(cash_flow(ticker="AMD"))

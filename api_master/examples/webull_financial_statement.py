@@ -14,9 +14,9 @@ from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 sdk = AsyncWebullSDK()
 
 
-async def main():
+async def financial_statement(ticker="META"):
 
-    ticker = "META"
+
 
     #financials - cash statement
     fin_statement=await sdk.get_financial_statement(ticker)
@@ -98,4 +98,4 @@ async def main():
     df.to_csv(filename, index=False)
 
 
-asyncio.run(main())
+asyncio.run(financial_statement(ticker="META"))
