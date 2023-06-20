@@ -41,6 +41,8 @@ thirty_days = now + timedelta(days=30)  # Thirty days ago from current date and 
 thirty_days_from_now_str = thirty_days.strftime("%Y-%m-%d")  # Thirty days ago as string
 two_years_ago = now - timedelta(days=730)  # Thirty days ago from current date and time
 two_years_ago_str = two_years_ago.strftime("%Y-%m-%d")  # Thirty days ago as string
+two_years_from_now = now + timedelta(days=730)  # Thirty days ago from current date and time
+two_years_from_now_str = two_years_ago.strftime("%Y-%m-%d")  # Thirty days ago as string
 
 # Hex Colors for discord embeds
 hex_colors = {

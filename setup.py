@@ -5,7 +5,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='api_master',
-    version='1.3',
+    version='1.4',
     author='Chuck Dustin',
     author_email='chuckdustin12@gmail.com',
     description='Utilize several market-data APIs in production-ready format for real-time and simulated market analysis.',
@@ -19,3 +19,4 @@ setup(
     ],
     keywords='trading, stocks, options, crypto, forex, indices, discord',
 )
+

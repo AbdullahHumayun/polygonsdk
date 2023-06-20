@@ -1178,9 +1178,16 @@ generalHelperFunctions: {
       Returns:
           str: The string without whitespace.
       """
-      return string.replace(" ", "")`
+      return string.replace(" ", "")`,
 
-}
+
+
+},
+    apiMasterSnippets = { 
+    "Nasdaq - BigMac":` 
+    
+    
+    `
 
 };
 
