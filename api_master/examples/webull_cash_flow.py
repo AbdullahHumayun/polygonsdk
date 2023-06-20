@@ -68,11 +68,20 @@ async def cash_flow(ticker="AMD"):
     # Convert the list of dictionaries to a DataFrame
     df = pd.DataFrame(data)
 
+    # Define the directory path
+    directory = 'files/financials/cash_flow/'
+
+    # Create the directory if it doesn't exist
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
     # Define the file path
-    filename = f'files/financials/cash_flow/{ticker}_cash_flow.csv'
+    filename = f'{directory}{ticker}_cash_flow.csv'
 
     # Save the DataFrame to a CSV file
     df.to_csv(filename, index=False)
+
+
 
 
 

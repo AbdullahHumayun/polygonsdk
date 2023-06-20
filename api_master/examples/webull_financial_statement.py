@@ -91,8 +91,15 @@ async def financial_statement(ticker="META"):
     # Convert the list of dictionaries to a DataFrame
     df = pd.DataFrame(data)
 
+    # Define the directory path
+    directory = 'files/financials/financial_statement/'
+
+    # Create the directory if it doesn't exist
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
     # Define the file path
-    filename = f'files/financials/financial_statement/{ticker}financial_statement.csv'
+    filename = f'{directory}{ticker}_financial_statement.csv'
 
     # Save the DataFrame to a CSV file
     df.to_csv(filename, index=False)

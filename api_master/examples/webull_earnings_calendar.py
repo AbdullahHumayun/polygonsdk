@@ -131,8 +131,17 @@ async def earnings_calendar(date=today_str):
         'pe_ttm': pe_ttm
     }
 
+    # Define the directory path
+    directory = 'files/earnings/'
+
+    # Create the directory if it doesn't exist
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    # Define the file path
+    filename = f'{directory}earnings_calendar.csv'
     # Creating a DataFrame
     df = pd.DataFrame(data)
-    df.to_csv('files/earnings/earnings_calendar.csv')
+    df.to_csv(filename)
 
 asyncio.run(earnings_calendar(date=today_str))

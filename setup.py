@@ -5,7 +5,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='api_master',
-    version='1.7',
+    version='1.8',
     author='Chuck Dustin',
     author_email='chuckdustin12@gmail.com',
     description='Utilize several market-data APIs in production-ready format for real-time and simulated market analysis.',

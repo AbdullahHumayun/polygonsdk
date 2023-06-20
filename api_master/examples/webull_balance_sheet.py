@@ -107,9 +107,15 @@ async def balance_sheet(ticker="AAPL"):
 
     # Convert the list of dictionaries to a DataFrame
     df = pd.DataFrame(data)
+    # Define the directory path
+    directory = 'files/financials/balance_sheet/'
+
+    # Create the directory if it doesn't exist
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
     # Define the file path
-    filename = f'files/financials/balance_sheet/{ticker}_balance_sheet.csv'
+    filename = f'{directory}{ticker}_cash_flow.csv'
 
     # Save the DataFrame to a CSV file
     df.to_csv(filename, index=False)

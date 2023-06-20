@@ -44,7 +44,15 @@ async def short_interest(ticker="AMC"):
 
     df = pd.DataFrame(data_dict)
 
-    filename= f'files/short_interest/{ticker}_short_interest.csv'
+    # Define the directory path
+    directory = 'files/short_interest/'
+
+    # Create the directory if it doesn't exist
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    # Define the file path
+    filename = f'{directory}{ticker}_shortinterest.csv'
 
     df.to_csv(filename)
 asyncio.run(short_interest(ticker="AMC"))

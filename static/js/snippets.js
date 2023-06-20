@@ -1183,11 +1183,43 @@ generalHelperFunctions: {
 
 
 },
-    apiMasterSnippets = { 
-    "Nasdaq - BigMac":` 
-    
-    
-    `
+    apiMasterSnippets: { 
+    "Webull - Analyst Ratings":` 
 
-};
+    from api_master.examples.webull_analyst_ratings import analyst_ratings
+
+    import asyncio
+    
+    
+    #run one ticker
+    ticker="NVDA"
+    async def main():
+    
+        await analyst_ratings(ticker=ticker)
+    
+    
+    
+    asyncio.run(main())
+    
+    
+    #run multiple tickers
+    tickers = ["NVDA","AMD","GME","AMC","WMT"]
+    
+    async def multi_main():
+    
+        for ticker in tickers:
+            await analyst_ratings(ticker)
+    
+    
+    asyncio.run(multi_main())
+    
+    `,
+
+    
+
+
+}
+
+
+}
 
