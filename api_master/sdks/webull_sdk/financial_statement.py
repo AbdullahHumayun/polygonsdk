@@ -34,10 +34,51 @@ class FinancialStatement:
         self.operating_profit = data.get("operatingProfit", None)
         self.earning_after_tax = data.get("earningAfterTax", None)
         self.earning_before_tax = data.get("earningBeforeTax", None)
+        
+    def to_dict(self):
+        return {
+            'quoteId': self.quote_id,
+            'type': self.type,
+            'fiscalYear': self.fiscal_year,
+            'fiscalPeriod': self.fiscal_period,
+            'endDate': self.end_date,
+            'currencyId': self.currency_id,
+            'publishDate': self.publish_date,
+            'totalRevenue': self.total_revenue,
+            'revenue': self.revenue,
+            'costofRevenueTotal': self.cost_of_revenue_total,
+            'grossProfit': self.gross_profit,
+            'operatingExpense': self.operating_expense,
+            'sellGenAdminExpenses': self.sell_gen_admin_expenses,
+            'depreciationAndAmortization': self.depreciation_and_amortization,
+            'interExpseIncNetOper': self.inter_expse_inc_net_oper,
+            'unusualExpenseIncome': self.unusual_expense_income,
+            'operatingIncome': self.operating_income,
+            'interIncExpseNetNonOper': self.inter_inc_expse_net_non_oper,
+            'netIncomeBeforeTax': self.net_income_before_tax,
+            'incomeTax': self.income_tax,
+            'netIncomeAfterTax': self.net_income_after_tax,
+            'netIncomeBeforeExtra': self.net_income_before_extra,
+            'totalExtraordinaryItems': self.total_extraordinary_items,
+            'netIncome': self.net_income,
+            'incomeAvaitoComExclExtraOrd': self.income_avaito_com_excl_extra_ord,
+            'incomeAvaitoComInclExtraOrd': self.income_avaito_com_incl_extra_ord,
+            'dilutedNetIncome': self.diluted_net_income,
+            'dilutedWeightedAverageShares': self.diluted_weighted_average_shares,
+            'dilutedEPSExclExtraItems': self.diluted_eps_excl_extra_items,
+            'dilutedEPSInclExtraItems': self.diluted_eps_incl_extra_items,
+            'dilutedNormalizedEPS': self.diluted_normalized_eps,
+            'operatingProfit': self.operating_profit,
+            'earningAfterTax': self.earning_after_tax,
+            'earningBeforeTax': self.earning_before_tax
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(data)
 
     def __repr__(self):
         return f'<FinancialStatement quote_id={self.quote_id} fiscal_year={self.fiscal_year} fiscal_period={self.fiscal_period}>'
-    
 
 
 class CashFlow:
@@ -65,9 +106,40 @@ class CashFlow:
       self.issuance_retirement_of_debt_net=data.get("issuanceRetirementofDebtNet", None)
       self.foreign_exchange_effects=data.get("foreignExchangeEffects", None)
       self.net_change_in_cash=data.get("netChangeinCash", None)
+
+    def to_dict(self):
+        return {
+            'quoteId': self.quoteid,
+            'type': self.type,
+            'fiscalYear': self.fiscal_year,
+            'fiscalPeriod': self.fiscal_period,
+            'endDate': self.end_date,
+            'currencyId': self.currency_id,
+            'publishDate': self.publish_date,
+            'cashfromOperatingActivities': self.cash_from_operating_activities,
+            'netIncome': self.net_income,
+            'depreciationAndAmortization': self.depreciation_and_amortization,
+            'deferredTaxes': self.deferred_taxes,
+            'nonCashItems': self.non_cash_items,
+            'changesinWorkingCapital': self.changes_in_working_capital,
+            'cashfromInvestingActivities': self.cash_from_investing_activities,
+            'capitalExpenditures': self.capital_expenditures,
+            'otherInvestingCashFlowItemsTotal': self.other_investing_cashflow_items_total,
+            'cashfromFinancingActivities': self.cash_from_financing_activities,
+            'financingCashFlowItems': self.financing_cashflow_items,
+            'totalCashDividendsPaid': self.total_cash_dividends_paid,
+            'issuanceRetirementofStockNet': self.issuance_retirement_of_stock_net,
+            'issuanceRetirementofDebtNet': self.issuance_retirement_of_debt_net,
+            'foreignExchangeEffects': self.foreign_exchange_effects,
+            'netChangeinCash': self.net_change_in_cash
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(data)
+
     def __repr__(self):
         return f'<CashFlow quote_id={self.quoteid} fiscal_year={self.fiscal_year} fiscal_period={self.fiscal_period}>'
-    
 
 
 
@@ -117,6 +189,55 @@ class BalanceSheet:
         self.totalLiabilitiesShareholdersEquity = data.get('totalLiabilitiesShareholdersEquity')
         self.totalCommonSharesOutstanding = data.get('totalCommonSharesOutstanding')
 
+
+    def to_dict(self):
+        return {
+            'quoteId': self.quoteId,
+            'type': self.type,
+            'fiscalYear': self.fiscalYear,
+            'fiscalPeriod': self.fiscalPeriod,
+            'endDate': self.endDate,
+            'currencyId': self.currencyId,
+            'publishDate': self.publishDate,
+            'totalAssets': self.totalAssets,
+            'totalCurrentAssets': self.totalCurrentAssets,
+            'cashAndShortTermInvest': self.cashAndShortTermInvest,
+            'cashEquivalents': self.cashEquivalents,
+            'shortTermInvestments': self.shortTermInvestments,
+            'totalReceivablesNet': self.totalReceivablesNet,
+            'accountsReceTradeNet': self.accountsReceTradeNet,
+            'totalInventory': self.totalInventory,
+            'prepaidExpenses': self.prepaidExpenses,
+            'otherCurrentAssetsTotal': self.otherCurrentAssetsTotal,
+            'totalNonCurrentAssets': self.totalNonCurrentAssets,
+            'ppeTotalNet': self.ppeTotalNet,
+            'ppeTotalGross': self.ppeTotalGross,
+            'accumulatedDepreciationTotal': self.accumulatedDepreciationTotal,
+            'otherLongTermAssetsTotal': self.otherLongTermAssetsTotal,
+            'totalLiabilities': self.totalLiabilities,
+            'totalCurrentLiabilities': self.totalCurrentLiabilities,
+            'accountsPayable': self.accountsPayable,
+            'accruedExpenses': self.accruedExpenses,
+            'notesPayableShortTermDebt': self.notesPayableShortTermDebt,
+            'currentPortofLTDebtCapitalLeases': self.currentPortofLTDebtCapitalLeases,
+            'totalNonCurrentLiabilities': self.totalNonCurrentLiabilities,
+            'totalLongTermDebt': self.totalLongTermDebt,
+            'longTermDebt': self.longTermDebt,
+            'totalDebt': self.totalDebt,
+            'otherLiabilitiesTotal': self.otherLiabilitiesTotal,
+            'totalEquity': self.totalEquity,
+            'totalStockhodersEquity': self.totalStockhodersEquity,
+            'commonStock': self.commonStock,
+            'additionalPaidInCapital': self.additionalPaidInCapital,
+            'retainedEarnings': self.retainedEarnings,
+            'otherEquityTotal': self.otherEquityTotal,
+            'totalLiabilitiesShareholdersEquity': self.totalLiabilitiesShareholdersEquity,
+            'totalCommonSharesOutstanding': self.totalCommonSharesOutstanding
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(data)
 
 class Forecast:
     def __init__(self, data):

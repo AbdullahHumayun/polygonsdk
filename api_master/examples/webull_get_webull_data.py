@@ -11,6 +11,8 @@ from webull_webull_data import Webull
 import asyncio
 import pprint
 
+
+#gets all webull data across all functions
 async def process_data():
     webull = Webull()
     await webull.fetch_data('AAPL')
