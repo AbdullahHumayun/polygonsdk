@@ -82,7 +82,7 @@ class TimeSeriesData:
         self.asofdate = [i['asofdate'] if 'asofdate' in i else None for i in timeseries]
         self.keyid = [i['keyid'] if 'keyid' in i else None for i in timeseries]
         self.value = [i['value'] if 'value' in i  else None for i in timeseries]
-            
+
         self.dict = { 
             'As of Date': self.asofdate,
             'Key ID': self.keyid,
@@ -106,3 +106,65 @@ class AsOfDates:
         self.df = pd.DataFrame(self.dict)
 
 
+
+class SecuredReferenceRates:
+    def __init__(self, refrates):
+
+        self.effectiveDate = [i['effectiveDate'] if i['effectiveDate'] is not None else None for i in refrates]
+        self.rate_type= [i['type'] if i['type'] is not None else None for i in refrates]
+        self.average30day= [i['average30day'] if 'average30day' in i else None for i in refrates]
+        self.average90day= [i['average90day'] if 'average90day' in i else None for i in refrates]
+        self.average180day= [i['average180day'] if 'average180day' in i else None for i in refrates]
+        self.index= [i['index'] if 'index' in i else None for i in refrates]
+        self.revisionIndicator= [i['revisionIndicator'] if i['revisionIndicator'] is not None else None for i in refrates]
+
+
+        self.data_dict = { 
+
+            'Effective Date': self.effectiveDate,
+            'Rate Type': self.rate_type,
+            'Average 30 Day': self.average30day,
+            'Average 90 Day': self.average90day,
+            'Average 180 Day': self.average180day,
+            'Index': self.index,
+            'Revision Indicator': self.revisionIndicator
+        }
+
+
+        self.df = pd.DataFrame(self.data_dict)
+
+
+class UnsecuredReferenceRates:
+    def __init__(self, refrates):
+        self.effectiveDate = [i['effectiveDate'] if i['effectiveDate'] is not None else None for i in refrates]
+        self.rate_type= [i['type'] if i['type'] is not None else None for i in refrates]
+        self.percent = [i["percent"] if 'percent' in i else None for i in refrates]
+        self.percentPercentile1 = [i["percentPercentile1"] if "percentPercentile1" else None for i in refrates]
+        self.percentPercentile25 = [i["percentPercentile25"] if "percentPercentile25" in i  else None for i in refrates]
+        self.percentPercentile75 = [i["percentPercentile75"] if "percentPercentile75" in i  else None for i in refrates]
+        self.percentPercentile99 = [i["percentPercentile99"] if "percentPercentile99" in i  else None for i in refrates]
+        self.revisionIndicator= [i['revisionIndicator'] if 'revisionIndicator' in i else None for i in refrates]
+        self.TargetRateFrom = [i["targetRateFrom"] if "targetRateFrom" in i  else None for i in refrates]
+        self.TargetRateTo = [i["targetRateTo"] if "targetRateTo" in i else None for i in refrates]
+        self.VolumeInBillions = [i["volumeInBillions"] if i["volumeInBillions"]  else None for i in refrates]
+        self.FootNoteID = [i["footnoteId"] if "footnoteId" in i else None for i in refrates]
+
+
+  # Create the dictionary containing all attributes
+        self.dict = {
+            "effectiveDate": self.effectiveDate,
+            "rate_type": self.rate_type,
+            "percent": self.percent,
+            "percentPercentile1": self.percentPercentile1,
+            "percentPercentile25": self.percentPercentile25,
+            "percentPercentile75": self.percentPercentile75,
+            "percentPercentile99": self.percentPercentile99,
+            "revisionIndicator": self.revisionIndicator,
+            "TargetRateFrom": self.TargetRateFrom,
+            "TargetRateTo": self.TargetRateTo,
+            "VolumeInBillions": self.VolumeInBillions,
+            "FootNoteID": self.FootNoteID
+        }
+
+
+        self.df = pd.DataFrame(self.dict)

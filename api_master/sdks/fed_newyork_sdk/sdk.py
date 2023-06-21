@@ -6,9 +6,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 import requests
 from cfg import today_str
 
-
+import json
 import pandas as pd
-from models import AuctionResult, FXSwaps, TimeSeries, AsOfDates, TimeSeriesData
+from models import AuctionResult, FXSwaps, TimeSeries, AsOfDates, TimeSeriesData, SecuredReferenceRates, UnsecuredReferenceRates
 
 session = requests.session()
 
@@ -136,24 +136,34 @@ class FedNewyork:
         else:
             return None
     
+    def secured_rates(self):
+        """Returns all unsecured central bank rates globally.
+        
+        Arguments:
+        >>> rate_type: secured or unsecured
+        """
+        r = session.get(f"https://markets.newyorkfed.org/api/rates/secured/all/latest.json").json()
+        refrates = r['refRates']
+
+        if refrates is not None:
+            data = SecuredReferenceRates(refrates)
+            return data
+        else:
+            return None
+        
+    def unsecured_rates(self):
+        """Returns all unsecured central bank rates globally.
+        
+        Arguments:
+        >>> rate_type: secured or unsecured
+        """
+        r = session.get(f"https://markets.newyorkfed.org/api/rates/unsecured/all/latest.json").json()
+        refrates = r['refRates']
+
+        if refrates is not None:
+            data = UnsecuredReferenceRates(refrates)
+            return data
+        else:
+            return None
 
 
-sdk = FedNewyork()
-
-
-timeseries= sdk.get_timeseries()
-
-keys =[]
-
-for i,row in timeseries.df.iterrows():
-    key = row['Key ID']
-
-    keys.append(key)
-  
-dfs = []
-for key in keys:
-    x = sdk.get_timeseries_data(key)
-    df = x.dict
-    dfs.append(dfs)
-
-print(dfs)
