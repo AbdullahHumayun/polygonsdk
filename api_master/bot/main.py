@@ -14,9 +14,9 @@ from tabulate import tabulate
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
-from trial import find_lowest_iv,get_near_the_money2,get_price_data,get_near_the_money
+from testing import get_near_the_money_options,get_price_data,find_lowest_iv
 
-from 
+
 
 from cfg import YOUR_API_KEY, YOUR_DISCORD_BOT_TOKEN
 
@@ -53,12 +53,14 @@ redfire="<a:_:1043589715145805934>"
 @bot.slash_command()
 async def iv_tv(inter: disnake.AppCmdInter, ticker= str):  # default ticker to SPX if not provided
     await inter.response.defer()
+    counter = 0
     while True:
+        counter = counter + 1
         price = await get_price_data(ticker=ticker)
         lower_strike = 0.98 * price
         upper_strike = 1.02 * price
 
-        atm_options = await get_near_the_money(ticker, lower_strike=lower_strike, upper_strike=upper_strike, today_str="2023-06-20")
+        atm_options = await get_near_the_money_options(ticker, lower_strike=lower_strike, upper_strike=upper_strike)
         print(atm_options)
         redfire = "🔥"  # Red flame emoji
         greenfire = "🟢"  # Green flame emoji
@@ -67,30 +69,37 @@ async def iv_tv(inter: disnake.AppCmdInter, ticker= str):  # default ticker to S
         table = []
 
         for k in low_iv_data:
-            for i in range(25):
+            for i in range(100):
                 try:
                     strike = k[i]['strike']
                     expiry = k[i]['expiry']
-                    name = k[i]['expiry']
+                    name = k[i]['name']
                     iv = k[i]['iv']
-                    change = k[i]['percent_change']
-                    volume = k[i]['volume']
-                    oi = k[i]['oi']
-                    mid = k[i]['mid']
+                    vol = float(k[i]['volume'])
+                    #change = k[i]['percent_change']
+                    #volume = k[i]['volume']
+                    #oi = k[i]['oi']
+                    #mid = k[i]['mid']
                     skew = redfire if strike < price else greenfire
 
-                    row = [expiry[5::1], f"${price}", skew, f"${strike}", f"{round(float(iv)*100, 4)}", f"${mid}", f"{volume}"]
-                    table.append(row)
+                    if 'call' in name:
+
+                        row = [expiry, f"${price}", skew, f"${strike}", f"{round(float(iv)*100, 6)}", f"{vol:,}"]
+                        table.append(row)
                 except IndexError:
                     continue
 
-                table_formatted = tabulate(table, headers=['Expiry', 'Price', 'Skew', 'Low Strike', 'IV', 'Mid', 'Volume'], tablefmt='fancy')
+        table_formatted = tabulate(table, headers=['Expiry', 'Price', 'Skew', 'Low Strike', 'IV', 'Vol'], tablefmt='fancy')
 
-                embed = disnake.Embed(title=f"{ticker} IV TV")
-                embed.add_field(name="Color:", value="```A 🔥 is a put skew for that expiration. A 🟢  is a call skew for that expiration.```")
-                embed.set_footer(text=f'Viewing Skews for {ticker}', icon_url=await polygon.get_polygon_logo(ticker))
-                embed.description = f"`{table_formatted}`"
-                await inter.edit_original_message(embed=embed)
+        embed = disnake.Embed(title=f"{ticker} IV TV", description=f"> <a:_:1043215847038144572>")
+        embed.add_field(name="Emojis:", value="```🔥: Put Skew\n🟢 : Call Skew\n```", inline=False)
+        embed.set_footer(text=f'{counter} Viewing Skews for {ticker}', icon_url=await polygon.get_polygon_logo(ticker))
+        embed.description = f"`{table_formatted}`"
+        await inter.edit_original_message(embed=embed)
+        if counter == 100:
+            await inter.send(f"> RUN AGAIN! </iv tv:1120580297717719121>")
+            break
+
 
 
 

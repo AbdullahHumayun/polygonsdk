@@ -5,12 +5,8 @@ import os
 package_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(package_dir)
 
-import disnake
-from disnake.ext import commands
-import json
-import typing
-from typing import List, Dict
-from typing import List
+
+
 import pandas as pd
 
 

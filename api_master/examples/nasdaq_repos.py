@@ -1,4 +1,4 @@
-"""DOWNLOADS INFLATION DATA"""
+"""DOWNLOADS REPO DATA"""
 import sys
 import os
 

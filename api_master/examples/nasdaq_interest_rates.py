@@ -1,4 +1,4 @@
-"""DOWNLOADS INCOME EXPENDITURE DATA"""
+"""DOWNLOADS INTEREST RATE DATA"""
 import sys
 import os
 

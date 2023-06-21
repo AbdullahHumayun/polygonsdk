@@ -1,0 +1,11 @@
+,auctionStatus,operationId,operationDate,operationType,operationDirection,method,releaseTime,closeTime,classType,note,totalSubmittedOrigFace,totalAcceptedOrigFace,totalSubmittedCurrFace,totalAcceptedCurrFace,totalAmtSubmittedPar,totalAmtAcceptedPar,settlementDate,lastUpdated
+0,Results,OR 052523 1,2023-05-25,Outright Specified Pool Sale,S,Multiple Price,14:00,14:30,C,,826000000,86855765,660871704.35,69281814.82335432,,,2023-07-20,2023-05-25 14:31:38
+1,Results,OR 051823 1,2023-05-18,Outright Specified Pool Sale,S,Multiple Price,14:00,14:30,A,,856000000,79752289,746697183.86,69087959.84748809,,,2023-06-13,2023-05-18 14:31:05
+2,Results,SW 051023 1,2023-05-10,Coupon Swap,,,,,,,,,,,,15000000,,2023-05-10 16:54:44
+3,Results,OR 041123 1,2023-04-11,Outright TBA Purchase,P,Multiple Price,11:30,11:50,C,,,,,,475000000,59000000,2023-05-18,2023-04-11 11:50:57
+4,Results,OR 040423 1,2023-04-04,Outright TBA Purchase,P,Multiple Price,11:30,11:50,B,,,,,,376000000,26000000,2023-05-16,2023-04-04 11:50:47
+5,Results,OR 031623 1,2023-03-16,Outright TBA Purchase,P,Multiple Price,11:30,11:50,A,,,,,,663000000,65000000,2023-04-13,2023-03-16 11:50:45
+6,Results,RL 030723 1,2023-03-07,Dollar Roll,,,,,,,,,,,,15000000,,2023-03-07 16:09:19
+7,Results,OR 020823 1,2023-02-08,Outright TBA Purchase,P,Multiple Price,11:30,11:50,C,,,,,,674000000,52000000,2023-03-21,2023-02-08 11:51:11
+8,Results,OR 020223 1,2023-02-02,Outright TBA Purchase,P,Multiple Price,11:30,11:50,B,,,,,,254000000,23000000,2023-03-16,2023-02-02 11:50:42
+9,Results,OR 012523 1,2023-01-25,Outright TBA Purchase,P,Multiple Price,11:30,11:50,A,,,,,,812000000,75000000,2023-02-13,2023-01-25 11:51:05

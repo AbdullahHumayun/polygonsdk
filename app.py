@@ -27,7 +27,7 @@ async def index():
     return render_template('index.html')
 
 
-@app.route('/api/volume_analysis/<string:ticker>', methods=['GET'])
+@app.route('/api/volume_analysis/<string:ticker>', methods=['GET', 'POST'])
 async def volume_analysis(ticker):
     return await volume_analysis_endpoint(ticker)
 
@@ -44,7 +44,7 @@ async def get_top_gainers_endpoint():
 
 
 
-@app.route('/api/fifty_twos')
+@app.route('/api/fifty_twos', methods=['GET', 'POST'])
 async def get_fifty_twos_endpoint():
     fifty_twos = await webull.fifty_two_high_and_lows()
     return fifty_twos
@@ -60,50 +60,50 @@ def snippets():
 def discord_commands():
     return render_template('discord_commands.html')
 
-@app.route('/api/financial_statement/<string:ticker>')
+@app.route('/api/financial_statement/<string:ticker>', methods=['GET', 'POST'])
 async def financial_statement(ticker):
     data = await financial_statement_endpoint(ticker=ticker)
     return data
 
 
-@app.route('/api/earnings_calendar')
+@app.route('/api/earnings_calendar', methods=['GET', 'POST'])
 async def earnings():
     data = await earnings_calendar_endpoint()
     return data
 
 
 
-@app.route('/api/stock_data/<string:ticker>')
+@app.route('/api/stock_data/<string:ticker>', methods=['GET', 'POST'])
 async def stock_data(ticker):
     data = await stock_data_endpoint(ticker=ticker)
     return data
 
 
-@app.route('/api/institutional_holdings/<string:ticker>')
+@app.route('/api/institutional_holdings/<string:ticker>', methods=['GET', 'POST'])
 async def institutional_holdings(ticker):
     data = await institutional_holdings_endpoint(ticker=ticker)
     return data
 
 
-@app.route('/api/analyst_ratings/<string:ticker>')
+@app.route('/api/analyst_ratings/<string:ticker>', methods=['GET', 'POST'])
 async def analyst_ratings(ticker):
     data = await analyst_ratings_endpoint(ticker)
     return data
 
 
-@app.route('/api/short_interest/<string:ticker>')
+@app.route('/api/short_interest/<string:ticker>', methods=['GET', 'POST'])
 async def short_interest(ticker):
     data = await short_interest_endpoint(ticker=ticker)
     return data
 
 
-@app.route('/api/cash_flow/<string:ticker>')
+@app.route('/api/cash_flow/<string:ticker>', methods=['GET', 'POST'])
 async def cash_flow(ticker):
 
     return await cash_flow_endpoint(ticker=ticker)
 
 
-@app.route('/api/balance_sheet/<string:ticker>')
+@app.route('/api/balance_sheet/<string:ticker>', methods=['GET', 'POST'])
 async def balance_sheet(ticker):
     
 
@@ -111,31 +111,22 @@ async def balance_sheet(ticker):
 
 
 
-@app.route('/api/financial_ratios/<string:ticker>')
+@app.route('/api/financial_ratios/<string:ticker>', methods=['GET', 'POST'])
 async def get_financial_ratios(ticker):
 
     return await(financial_ratios_endpoint(ticker=ticker))
 
-@app.route('/api/capital_flow/<string:ticker>')
+@app.route('/api/capital_flow/<string:ticker>', methods=['GET', 'POST'])
 async def get_capital_flow(ticker):
     
 
     return await(capital_flow_endpoint(ticker))
 
-@app.route('/<ticker>')
-def view(ticker):
-    # Call the API endpoint to get the data
-    response = requests.get(f"https://polygonsdks.herokuapp.com/api/{ticker}")
-
-    if response.status_code == 200:
-        data = response.json()
-        return render_template('view.html', **data)
-    else:
-        return render_template('error.html', error="Failed to fetch data")
 
 
 
-@app.route('/api/fetch_data', methods=['GET'])
+
+@app.route('/api/fetch_data', methods=['GET', 'POST'])
 async def fetch_data():
     result = await process_data()
     return jsonify(result)
@@ -151,17 +142,17 @@ def apihome():
 
 
 
-@app.route("/signals")
+@app.route("/signals", methods=['GET'])
 def home():
     return render_template('technical_signals.html')
 
 
 
 
-@app.route("/api/stock-data/<string:ticker>")
+@app.route("/api/stock-data/<string:ticker>", methods=['GET', 'POST'])
 async def api_stock_data():
     ticker = ''
-    data = await webull.process_data(ticker)
+    data = await Webull(ticker=ticker).process_data(ticker)
     return jsonify(data)
 
 
