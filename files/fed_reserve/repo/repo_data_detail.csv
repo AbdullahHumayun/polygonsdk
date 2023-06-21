@@ -1,0 +1,4 @@
+,securityType,amtSubmitted,amtAccepted,minimumBidRate,percentHighRate,percentLowRate,percentStopOutRate,percentWeightedAverageRat
+0,Treasury,1000000,1000000,5.25,5.25,5.25,5.25,
+1,Agency,0,0,5.25,,,,
+2,Mortgage-Backed,1000000,1000000,5.25,5.25,5.25,5.25,

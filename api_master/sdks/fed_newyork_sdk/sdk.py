@@ -6,10 +6,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 import requests
 from cfg import today_str
 
-import json
-import pandas as pd
-from models import AuctionResult, FXSwaps, TimeSeries, AsOfDates, TimeSeriesData, SecuredReferenceRates, UnsecuredReferenceRates
 
+import pandas as pd
+from .models import AuctionResult, FXSwaps, TimeSeries, AsOfDates, TimeSeriesData, SecuredReferenceRates, RepoOperations, SecuritiesLending
 session = requests.session()
 
 
@@ -136,13 +135,13 @@ class FedNewyork:
         else:
             return None
     
-    def secured_rates(self):
+    def reference_rates(self, type):
         """Returns all unsecured central bank rates globally.
         
         Arguments:
         >>> rate_type: secured or unsecured
         """
-        r = session.get(f"https://markets.newyorkfed.org/api/rates/secured/all/latest.json").json()
+        r = session.get(f"https://markets.newyorkfed.org/api/rates/{type}/all/latest.json").json()
         refrates = r['refRates']
 
         if refrates is not None:
@@ -151,19 +150,87 @@ class FedNewyork:
         else:
             return None
         
-    def unsecured_rates(self):
-        """Returns all unsecured central bank rates globally.
-        
-        Arguments:
-        >>> rate_type: secured or unsecured
-        """
-        r = session.get(f"https://markets.newyorkfed.org/api/rates/unsecured/all/latest.json").json()
-        refrates = r['refRates']
 
+        
+
+    def rates_search(self, start_date="2023-01-01", end_date=today_str):
+        """Search reference rates between a given time range."""
+        r = session.get(self.base_url + f"rates/all/search.json?startDate={start_date}&endDate={end_date}").json()
+        refrates = r['refRates']
         if refrates is not None:
-            data = UnsecuredReferenceRates(refrates)
+            data = SecuredReferenceRates(refrates)
             return data
         else:
             return None
+        
+
+    def repo_operations_search(self, start_date="2023-01-01", end_date=today_str):
+        """Search by date for repo operations out of the FED."""
+
+        r = session.get(f"https://markets.newyorkfed.org/api/rp/results/search.json?startDate={start_date}&endDate={end_date}&securityType=mb").json()
+        repo = r['repo']
+        operations = repo['operations']
+        if operations is not None:
+            data = RepoOperations(operations)
+            return data
+        else:
+            return None
+        
+
+    def repo_latest(self):
+        """Get the latest repo operations from the FED's discount window."""
+
+        r = session.get("https://markets.newyorkfed.org/api/rp/all/all/results/latest.json").json()
+
+        repo = r['repo']
+        operations = repo['operations']
+        if operations is not None:
+            data = RepoOperations(operations)
+
+            return data
+        else:
+            return None
+        
+
+    def repo_propositions(self):
+        """Check all repo & reverse repo operations out of the FED."""
+        propositions = session.get("https://markets.newyorkfed.org/api/rp/reverserepo/propositions/search.json").json()
+
+        repo = propositions['repo']
+        operations = repo['operations']
+        data = []
+        for operation in operations:
+            operation_id = operation['operationId']
+            operation_date = operation['operationDate']
+            operation_type = operation['operationType']
+            note = operation['note']
+            total_amt_accepted = operation['totalAmtAccepted']
+            
+            data.append({
+                'Operation ID': operation_id,
+                'Operation Date': operation_date,
+                'Operation Type': operation_type,
+                'Note': note,
+                'Total Amount Accepted': total_amt_accepted
+            })
+
+        df = pd.DataFrame(data)
+        return df
+
+
+    def securities_lending_search(self, start_date="2023-01-01", end_date=today_str):
+        """Search securities lending operations out of the FED."""
+        sec_lending = session.get(f"https://markets.newyorkfed.org/api/seclending/all/results/summary/search.json?startDate={start_date}&endDate={end_date}").json()
+
+        seclending = sec_lending['seclending']
+        operations = seclending['operations']
+        if operations is not None:
+            data = SecuritiesLending(operations)
+            return data
+        else:
+            return None
+                
+
+fed = FedNewyork()
 
 
