@@ -658,7 +658,7 @@ class PolygonOptionsSDK:
         print(url)
         async with aiohttp.ClientSession() as session:
             all_ticker = []  # to hold all the option symbols
-            
+            all_urls=[]
             while url:
                 async with session.get(url) as resp:
                     if resp.status != 200:
@@ -672,7 +672,7 @@ class PolygonOptionsSDK:
                     url = data.get('next_url')  # get the next page URL
                     if url and YOUR_API_KEY not in url:
                         url += f"&apiKey={YOUR_API_KEY}"  # append the API key to the URL
-
+                        all_urls.extend(url)
             return all_ticker
         
 
