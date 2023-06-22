@@ -382,7 +382,7 @@ async def process_webull_data(symbol: str):
 
                     if result['score'] is not None and result['score'] > 11:
                     
-                        fin_scoregood = AsyncDiscordWebhook("https://discord.com/api/webhooks/1099711217628622858/5eqhKyCnNySog9CY1YqXvmOU_MWX4UB7fVWmOrDHHjTmhZjXGyi9yynMkt6L2CeYTOMR")
+                        fin_scoregood = AsyncDiscordWebhook("YOUR WEBHOOK URL")
                         description = '\n'.join(output_list)
                         fin_scoreembed = DiscordEmbed(title=f"Earnings Soon! with Score", description=description, color="00FF00")
                         fin_scoreembed.set_thumbnail(logo)
@@ -395,7 +395,7 @@ async def process_webull_data(symbol: str):
                         fin_scoregood.add_embed(fin_scoreembed)
                         await fin_scoregood.execute()
                     if result['score'] is not None and result['score'] < 6:
-                        badfin_scorebad = AsyncDiscordWebhook("https://discord.com/api/webhooks/1099714824704897024/Nv6hIaapicfCL2qh7fXGnplvC6rHITD5jjJxXfK9kAHt5pBOqSofcgQtSKwsFHaVvSPM")
+                        badfin_scorebad = AsyncDiscordWebhook("YOUR WEBHOOK URL")
                         baddescription = '\n'.join(output_list)
                         badfin_scoreembed = DiscordEmbed(title=f"Earnings Soon! with Score", description=baddescription, color="FF0000")
                         badfin_scoreembed.set_thumbnail(logo)

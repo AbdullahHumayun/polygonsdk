@@ -1383,7 +1383,7 @@ definitions=[
 
 
 # while True:
-#     webhook_urls = ["https://discord.com/api/webhooks/1058658724304125962/aQb9s8X4d3jJ8WjxWaD2FNvFSc2phSRm5HGcwmIMzsrM4GODtDWk-xvFd4yp-zdiQzoU","https://discord.com/api/webhooks/1058658412101115924/Bu8gOc5WSVnhm6L5I-Aq2E8AMrsan9CqPNT2jZ3nO-0OAjtehw1apyM1JqsmsVxLJo3l","https://discord.com/api/webhooks/1058652103708512377/Kp-HHOdpUUFCRJlkHctdfFjCZTPYqk3c4AML4FeiJTn1r9WdmpcyHIGwaRSMBrI5OPBt","https://discord.com/api/webhooks/1058651390941077514/0EGmNugQpkB9JmLrCk7Tc5K_3b_vbgVA6jun7ei2Go6ZVdE3kbKsiiOwJxh8S3hUkwep"]
+#     webhook_urls =
 
 #     for url in webhook_urls:
 #         webhook = DiscordWebhook(url=url, content=".")
@@ -1394,7 +1394,7 @@ definitions=[
 
 
 # while True:
-#     webhook_urls = ["https://discord.com/api/webhooks/1023079968126799933/J2SgJV5EBGw2_UUUZ2LowC_XH_HJbyBvTWbaUTYAXof7u9dFXN7OCXl2U0FJ8GqqQVHC","https://discord.com/api/webhooks/1022628500777222154/LyS2awyptL8uUyaZqbdoMizcDoG1Pt2N6sNrK9z0CYSo1wapda8JLLHIqTb7dQtKph8L","https://discord.com/api/webhooks/1023080587617120306/S4dCIEYRu8MqhOjXs-WAbcGlwnr1NLNtU-3ga24c1av6JsvC2QwwG5Z36-DPyvYLXqs3","https://discord.com/api/webhooks/1022628099050963005/9v-KJbnkg7vVllH6t3A7QanV7dbeaz6hMq9XytO2Xx1gyZniMSOCeMevmuBQDnmuuoBr"]
+#     webhook_urls = 
 #     webhook = DiscordWebhook(url=webhook_urls, content=f"```py\n Webull Tips! Access the full list via: ```</graphics:1034981343794311198>\n{random.choice(list(pics_group))}")
 #     response = webhook.execute()
 #     sleep(600)

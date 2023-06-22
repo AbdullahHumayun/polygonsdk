@@ -175,7 +175,7 @@ async def process_analyst_ratings(symbol: str):
         >>> strongbuy: Stocks with an overall analyst rating of STRONGBUY or BUY will be sent to the corresponding webhook.
         >>> buy: Stocks with an overall analyst rating of BUY will be sent to the corresponding webhook.
         >>> hold: Stocks with an overall analyst rating of HOLD will be sent to the corresponding webhook.
-        >>> underperform: Stocks with an overall analyst rating of UNDERPERFORM will be sent to the corresponding webhook.
+        >>> underperform: Stocks with an overall analyst rating of UNDERPERFORM will be sent to the corresponding .
         >>> sell: Stocks with an overall analyst rating of SELL will be sent to the corresponding webhook.
     
     Parameters:
@@ -560,7 +560,7 @@ async def process_webull_data(symbol: str):
                         fin_scoregood.add_embed(fin_scoreembed)
                         await fin_scoregood.execute()
                     if result['score'] is not None and result['score'] < 6:
-                        fin_scorebad = AsyncDiscordWebhook("YOUR WEBHOOK_URL")
+                        fin_scorebad = AsyncDiscord("YOUR WEBHOOK_URL")
                         description = '\n'.join(output_list)
                         fin_scoreembed = DiscordEmbed(title=f"Earnings Soon! with Score", description=description, color="FF0000")
                         fin_scoreembed.set_thumbnail(logo)

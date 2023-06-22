@@ -1834,7 +1834,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔎Top Stories❗📰", style=disnake.ButtonStyle.gray)
     async def topstories( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔎topstories❗📰", url="https://discord.com/channels/888488311927242753/944732422120038410", color=disnake.Colour.random())
+        embed= disnake.Embed(title="🔎topstories❗📰", color=disnake.Colour.random())
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -1842,7 +1842,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔎Trade Ideas❗📰", style=disnake.ButtonStyle.gray)
     async def tradeideas( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔎trade-ideas❗📰", url="https://discord.com/channels/888488311927242753/944732309196791818", color=disnake.Colour.random())
+        embed= disnake.Embed(title="🔎trade-ideas❗📰", color=disnake.Colour.random())
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -1851,7 +1851,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔎Options❗📰", style=disnake.ButtonStyle.gray)
     async def options( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔎Options❗📰", url="https://discord.com/channels/888488311927242753/975047476916658207", color=disnake.Colour.random())
+        embed= disnake.Embed(title="🔎Options❗📰", color=disnake.Colour.random())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -1860,7 +1860,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔎Industry Specific❗📰", style=disnake.ButtonStyle.gray)
     async def industrynews( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔎Industry Specific❗📰", url="https://discord.com/channels/888488311927242753/944396298709266502", color=disnake.Colour.random())
+        embed= disnake.Embed(title="🔎Industry Specific❗📰",  color=disnake.Colour.random())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -1869,7 +1869,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔎Penny Stocks❗📰", style=disnake.ButtonStyle.gray)
     async def pennynews( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔎Penny Stocks❗📰", url="https://discord.com/channels/888488311927242753/975047628058394645", color=disnake.Colour.random())
+        embed= disnake.Embed(title="🔎Penny Stocks❗📰", color=disnake.Colour.random())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -1878,7 +1878,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔍Small Caps❗📰", style=disnake.ButtonStyle.gray)
     async def smallcapnews( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔍Small Caps❗📰",url="https://discord.com/channels/888488311927242753/944731458419978270", color=disnake.Colour.random())
+        embed= disnake.Embed(title="🔍Small Caps❗📰",color=disnake.Colour.random())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -1887,7 +1887,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔍Emerging Market ETFs📰⭐⭐", style=disnake.ButtonStyle.gray)
     async def emetfs( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔍Emerging Market ETFs📰", description="🔎52week-lows❗ Posts a daily message with tickers that hit their 52 week lows. \n **THIS CAN BE VERY HELPFUL FOR FINDING PLAYS.** ", url="https://discord.com/channels/888488311927242753/975049044189663332", color=disnake.Colour.dark_red())
+        embed= disnake.Embed(title="🔍Emerging Market ETFs📰", description="🔎52week-lows❗ Posts a daily message with tickers that hit their 52 week lows. \n **THIS CAN BE VERY HELPFUL FOR FINDING PLAYS.** ", color=disnake.Colour.dark_red())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -1896,7 +1896,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="📰❗Technology News❗📰", style=disnake.ButtonStyle.gray)
     async def technews( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔎Technology News❗📰", url="https://discord.com/channels/888488311927242753/975047252118749204", color=disnake.Colour.dark_gold())
+        embed= disnake.Embed(title="🔎Technology News❗📰", color=disnake.Colour.dark_gold())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -1906,7 +1906,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🌟The Federal Reserve and EuroZone News📰", style=disnake.ButtonStyle.gray)
     async def fednews( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🌟The Federal Reserve and EuroZone News📰", url= "https://discord.com/channels/888488311927242753/944395511752949801", color=disnake.Colour.dark_green())
+        embed= disnake.Embed(title="🌟The Federal Reserve and EuroZone News📰", color=disnake.Colour.dark_green())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -1916,7 +1916,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="Futures News🕐", style=disnake.ButtonStyle.gray)
     async def futures( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="Futures News🕐", url="https://discord.com/channels/888488311927242753/975051343414833252", color=disnake.Colour.dark_blue())
+        embed= disnake.Embed(title="Futures News🕐",color=disnake.Colour.dark_blue())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -1926,7 +1926,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔎Economic News❗📰", style=disnake.ButtonStyle.gray)
     async def economicnews( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔎Economic News❗📰", url="https://discord.com/channels/888488311927242753/944394979638399016", color=disnake.Colour.dark_blue())
+        embed= disnake.Embed(title="🔎Economic News❗📰",color=disnake.Colour.dark_blue())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -2362,7 +2362,7 @@ class RealNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🎯Bullseye Alerts", style=disnake.ButtonStyle.gray)
     async def bullseyes( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🎯Bullseye Alerts", url="https://discord.com/channels/888488311927242753/982014437802266704", color=disnake.Colour.random())
+        embed= disnake.Embed(title="🎯Bullseye Alerts",color=disnake.Colour.random())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading")
@@ -2372,7 +2372,7 @@ class RealNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="👀Analyst Upgrades / Downgrades", style=disnake.ButtonStyle.gray)
     async def analystupgrade( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="👀Analyst Upgrades / Downgrades", url= "https://discord.com/channels/888488311927242753/982014742900117564", color=disnake.Colour.random())
+        embed= disnake.Embed(title="👀Analyst Upgrades / Downgrades",color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading")
@@ -2382,7 +2382,7 @@ class RealNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="👀Social Spike Alerts", style=disnake.ButtonStyle.gray)
     async def socialspikealerts( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="Social Spike Alerts", url="https://discord.com/channels/888488311927242753/982015465561935872", color=disnake.Colour.random())
+        embed= disnake.Embed(title="Social Spike Alerts",  color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading")
@@ -2391,7 +2391,7 @@ class RealNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="👀Intraday Crypto Ideas", style=disnake.ButtonStyle.gray)
     async def intradaycryptalerts( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="👀Intraday Crypto Ideas", url="https://discord.com/channels/888488311927242753/982012398967857162",color=disnake.Colour.random())
+        embed= disnake.Embed(title="👀Intraday Crypto Ideas", color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading")
@@ -2401,7 +2401,7 @@ class RealNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="👀Options Flow Alerts", style=disnake.ButtonStyle.gray)
     async def optflowalerts( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="👀Options Flow Alerts", url="https://discord.com/channels/888488311927242753/982013707808833577", color=disnake.Colour.random())
+        embed= disnake.Embed(title="👀Options Flow Alerts",color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading")
@@ -2411,7 +2411,7 @@ class RealNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="👀Insider Trading Alerts", style=disnake.ButtonStyle.gray)
     async def insideralerts( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="👀Insider Trading Alerts", url="https://discord.com/channels/888488311927242753/982013616565936158", color=disnake.Colour.random())
+        embed= disnake.Embed(title="👀Insider Trading Alerts", color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading")
@@ -2421,7 +2421,7 @@ class RealNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🤯Scalping Opportunities", style=disnake.ButtonStyle.gray)
     async def scalpalerts( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🤯Scalping Opportunities", url="https://discord.com/channels/888488311927242753/982013293650669628", color=disnake.Colour.random())
+        embed= disnake.Embed(title="🤯Scalping Opportunities", color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading")
@@ -2431,7 +2431,7 @@ class RealNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="👀Option Sweep Alerts", style=disnake.ButtonStyle.gray)
     async def optalerts( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="👀Option Sweep Alerts", url="https://discord.com/channels/888488311927242753/982012167924613140", color=disnake.Colour.random())
+        embed= disnake.Embed(title="👀Option Sweep Alerts",color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading")
@@ -2518,7 +2518,7 @@ class RSSNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="Federal Reserve🔊", style=disnake.ButtonStyle.blurple)
     async def fedrss( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="Federal Reserve🔊", description="```py\nRecieve important updates out of the Fed AS they happen. Stay up to date with several releavnt topics.```", url="https://discord.com/channels/888488311927242753/985591253037121596", color=disnake.Colour.random())
+        embed= disnake.Embed(title="Federal Reserve🔊", description="```py\nRecieve important updates out of the Fed AS they happen. Stay up to date with several releavnt topics.```", color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -2527,7 +2527,7 @@ class RSSNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="SEC Filings🔊", style=disnake.ButtonStyle.blurple)
     async def secfilings( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="SEC Filings🔊", description="```py\nRecieve SEC Filings as soon as they are scheduled to be published for Public Inspection. Stay ahead of the rest!```", url="https://discord.com/channels/888488311927242753/985590757702385795", color=disnake.Colour.random())
+        embed= disnake.Embed(title="SEC Filings🔊", description="```py\nRecieve SEC Filings as soon as they are scheduled to be published for Public Inspection. Stay ahead of the rest!```", color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -2536,7 +2536,7 @@ class RSSNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="FINRA Filings🔊", style=disnake.ButtonStyle.blurple)
     async def finrafilings( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="FINRA Filings🔊", description="```py\nFINRA Notifications sent straight to your desktop/SMS as soon as they are published.```", url="https://discord.com/channels/888488311927242753/986041022524030996", color=disnake.Colour.random())
+        embed= disnake.Embed(title="FINRA Filings🔊", description="```py\nFINRA Notifications sent straight to your desktop/SMS as soon as they are published.```",color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -2545,7 +2545,7 @@ class RSSNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="28day Treasury Bonds🔊", style=disnake.ButtonStyle.red)
     async def treasurybonds( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="28day Treasury Bonds🔊", description="```py\nReceive Important updates out of the US treasury related to 28 day bonds.```", url="https://discord.com/channels/888488311927242753/985591164742819860", color=disnake.Colour.random())
+        embed= disnake.Embed(title="28day Treasury Bonds🔊", description="```py\nReceive Important updates out of the US treasury related to 28 day bonds.```", color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -2554,7 +2554,7 @@ class RSSNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="Important Memos - Options Clearing Corporation🔊", style=disnake.ButtonStyle.red)
     async def memos( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="Important Memos - Options Clearing Corporation🔊", description="```py\nImportant MEMOs out of the Options Clearing Corporation```", url="https://discord.com/channels/888488311927242753/991454231083106354", color=disnake.Colour.random())
+        embed= disnake.Embed(title="Important Memos - Options Clearing Corporation🔊", description="```py\nImportant MEMOs out of the Options Clearing Corporation```",color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -2563,7 +2563,7 @@ class RSSNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="FINRA Investor Alerts🔊", style=disnake.ButtonStyle.red)
     async def investoralerts( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="FINRA Investor Alerts🔊", description="```py\nFINRA Investor Alerts - Feeds Sent Straight to you via SMS (phone) or desktop notification (PC)```", url="https://discord.com/channels/888488311927242753/985592266431291443", color=disnake.Colour.random())
+        embed= disnake.Embed(title="FINRA Investor Alerts🔊", description="```py\nFINRA Investor Alerts - Feeds Sent Straight to you via SMS (phone) or desktop notification (PC)```",color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16385,7 +16385,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔎Top Stories❗📰", style=disnake.ButtonStyle.gray)
     async def topstories( self,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔎topstories❗📰", url="https://discord.com/channels/888488311927242753/944732422120038410", color=disnake.Colour.random())
+        embed= disnake.Embed(title="🔎topstories❗📰", color=disnake.Colour.random())
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -16393,7 +16393,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔎Trade Ideas❗📰", style=disnake.ButtonStyle.gray)
     async def tradeideas( self,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔎trade-ideas❗📰", url="https://discord.com/channels/888488311927242753/944732309196791818", color=disnake.Colour.random())
+        embed= disnake.Embed(title="🔎trade-ideas❗📰", color=disnake.Colour.random())
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -16402,7 +16402,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔎Options❗📰", style=disnake.ButtonStyle.gray)
     async def options( self,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔎Options❗📰", url="https://discord.com/channels/888488311927242753/975047476916658207", color=disnake.Colour.random())
+        embed= disnake.Embed(title="🔎Options❗📰",  color=disnake.Colour.random())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -16411,7 +16411,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔎Industry Specific❗📰", style=disnake.ButtonStyle.gray)
     async def industrynews( self,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔎Industry Specific❗📰", url="https://discord.com/channels/888488311927242753/944396298709266502", color=disnake.Colour.random())
+        embed= disnake.Embed(title="🔎Industry Specific❗📰", color=disnake.Colour.random())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -16420,7 +16420,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔎Penny Stocks❗📰", style=disnake.ButtonStyle.gray)
     async def pennynews( self,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔎Penny Stocks❗📰", url="https://discord.com/channels/888488311927242753/975047628058394645", color=disnake.Colour.random())
+        embed= disnake.Embed(title="🔎Penny Stocks❗📰", color=disnake.Colour.random())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -16429,7 +16429,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔍Small Caps❗📰", style=disnake.ButtonStyle.gray)
     async def smallcapnews( self,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔍Small Caps❗📰",url="https://discord.com/channels/888488311927242753/944731458419978270", color=disnake.Colour.random())
+        embed= disnake.Embed(title="🔍Small Caps❗📰", color=disnake.Colour.random())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -16438,7 +16438,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔍Emerging Market ETFs📰⭐⭐", style=disnake.ButtonStyle.gray)
     async def emetfs( self,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔍Emerging Market ETFs📰", description="🔎52week-lows❗ Posts a daily message with tickers that hit their 52 week lows. \n **THIS CAN BE VERY HELPFUL FOR FINDING PLAYS.** ", url="https://discord.com/channels/888488311927242753/975049044189663332", color=disnake.Colour.dark_red())
+        embed= disnake.Embed(title="🔍Emerging Market ETFs📰", description="🔎52week-lows❗ Posts a daily message with tickers that hit their 52 week lows. \n **THIS CAN BE VERY HELPFUL FOR FINDING PLAYS.** ", color=disnake.Colour.dark_red())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -16447,7 +16447,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="📰❗Technology News❗📰", style=disnake.ButtonStyle.gray)
     async def technews( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔎Technology News❗📰", url="https://discord.com/channels/888488311927242753/975047252118749204", color=disnake.Colour.dark_gold())
+        embed= disnake.Embed(title="🔎Technology News❗📰",color=disnake.Colour.dark_gold())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16457,7 +16457,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🌟The Federal Reserve and EuroZone News📰", style=disnake.ButtonStyle.gray)
     async def fednews( self,button, interaction: disnake.AppCommandInter):
-        embed= disnake.Embed(title="🌟The Federal Reserve and EuroZone News📰", url= "https://discord.com/channels/888488311927242753/944395511752949801", color=disnake.Colour.dark_green())
+        embed= disnake.Embed(title="🌟The Federal Reserve and EuroZone News📰", color=disnake.Colour.dark_green())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16467,7 +16467,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="Futures News🕐", style=disnake.ButtonStyle.gray)
     async def futures( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="Futures News🕐", url="https://discord.com/channels/888488311927242753/975051343414833252", color=disnake.Colour.dark_blue())
+        embed= disnake.Embed(title="Futures News🕐",color=disnake.Colour.dark_blue())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16477,7 +16477,7 @@ class NewsNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="🔎Economic News❗📰", style=disnake.ButtonStyle.gray)
     async def economicnews( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="🔎Economic News❗📰", url="https://discord.com/channels/888488311927242753/944394979638399016", color=disnake.Colour.dark_blue())
+        embed= disnake.Embed(title="🔎Economic News❗📰", color=disnake.Colour.dark_blue())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -16560,7 +16560,7 @@ class RSSNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="Federal Reserve🔊", style=disnake.ButtonStyle.blurple)
     async def fedrss( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="Federal Reserve🔊", description="```py\nRecieve important updates out of the Fed AS they happen. Stay up to date with several releavnt topics.```", url="https://discord.com/channels/888488311927242753/985591253037121596", color=disnake.Colour.random())
+        embed= disnake.Embed(title="Federal Reserve🔊", description="```py\nRecieve important updates out of the Fed AS they happen. Stay up to date with several releavnt topics.```",  color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16569,7 +16569,7 @@ class RSSNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="SEC Filings🔊", style=disnake.ButtonStyle.blurple)
     async def secfilings( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="SEC Filings🔊", description="```py\nRecieve SEC Filings as soon as they are scheduled to be published for Public Inspection. Stay ahead of the rest!```", url="https://discord.com/channels/888488311927242753/985590757702385795", color=disnake.Colour.random())
+        embed= disnake.Embed(title="SEC Filings🔊", description="```py\nRecieve SEC Filings as soon as they are scheduled to be published for Public Inspection. Stay ahead of the rest!```",  color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16578,7 +16578,7 @@ class RSSNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="FINRA Filings🔊", style=disnake.ButtonStyle.blurple)
     async def finrafilings( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="FINRA Filings🔊", description="```py\nFINRA Notifications sent straight to your desktop/SMS as soon as they are published.```", url="https://discord.com/channels/888488311927242753/986041022524030996", color=disnake.Colour.random())
+        embed= disnake.Embed(title="FINRA Filings🔊", description="```py\nFINRA Notifications sent straight to your desktop/SMS as soon as they are published.```", color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16587,7 +16587,7 @@ class RSSNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="28day Treasury Bonds🔊", style=disnake.ButtonStyle.red)
     async def treasurybonds( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="28day Treasury Bonds🔊", description="```py\nReceive Important updates out of the US treasury related to 28 day bonds.```", url="https://discord.com/channels/888488311927242753/985591164742819860", color=disnake.Colour.random())
+        embed= disnake.Embed(title="28day Treasury Bonds🔊", description="```py\nReceive Important updates out of the US treasury related to 28 day bonds.```",  color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16596,7 +16596,7 @@ class RSSNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="Important Memos - Options Clearing Corporation🔊", style=disnake.ButtonStyle.red)
     async def memos( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="Important Memos - Options Clearing Corporation🔊", description="```py\nImportant MEMOs out of the Options Clearing Corporation```", url="https://discord.com/channels/888488311927242753/991454231083106354", color=disnake.Colour.random())
+        embed= disnake.Embed(title="Important Memos - Options Clearing Corporation🔊", description="```py\nImportant MEMOs out of the Options Clearing Corporation```",  color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16605,7 +16605,7 @@ class RSSNotifView(disnake.ui.View):
 
     @disnake.ui.button(label="FINRA Investor Alerts🔊", style=disnake.ButtonStyle.red)
     async def investoralerts( self,button: disnake.ui.Button,interaction: disnake.ApplicationCommandInteraction ):
-        embed= disnake.Embed(title="FINRA Investor Alerts🔊", description="```py\nFINRA Investor Alerts - Feeds Sent Straight to you via SMS (phone) or desktop notification (PC)```", url="https://discord.com/channels/888488311927242753/985592266431291443", color=disnake.Colour.random())
+        embed= disnake.Embed(title="FINRA Investor Alerts🔊", description="```py\nFINRA Investor Alerts - Feeds Sent Straight to you via SMS (phone) or desktop notification (PC)```",color=disnake.Colour.random())
         embed.add_field(name="-", value="```py\n🔔Click the link to setup notifications for this topic.```")
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
