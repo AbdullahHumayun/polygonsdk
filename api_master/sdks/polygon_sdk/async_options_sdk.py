@@ -674,3 +674,102 @@ class PolygonOptionsSDK:
                         url += f"&apiKey={YOUR_API_KEY}"  # append the API key to the URL
 
             return all_ticker
+        
+
+    async def find_lowest_iv(self, output):
+            final_dicts_call = []
+            final_dicts_put = []
+
+            async with aiohttp.ClientSession() as session:
+                for url in output:
+                    async with session.get(url) as filtered_resp:
+                        if filtered_resp.status != 200:
+                            print(f"Error")
+                            continue
+                        else:
+                            response = await filtered_resp.json()
+
+                            if response is None:
+                                print(f"Bad output: {output}")
+                                continue
+
+                            filtered_results = response['results'] if 'results' in response else None
+                            if filtered_results is not None:
+                                call_data = []
+                                put_data = []
+                                for result in filtered_results:
+                                    contract_type = result.get('details').get('contract_type')
+                                    if contract_type == 'call':
+                                        call_data.append(result)
+                                    elif contract_type == 'put':
+                                        put_data.append(result)
+                                    else:
+                                        continue
+
+                                call_symbols = [i.get('ticker', None) for i in call_data]
+                                call_ivs = [i.get('implied_volatility', None) for i in call_data]
+                                call_strikes = [i.get('details').get('strike_price', None) for i in call_data]
+                                call_expiry = [i.get('details').get('expiration_date', None) for i in call_data]
+                                call_name = [i.get('name', None) for i in call_data]
+                                put_symbols = [i.get('ticker', None) for i in put_data]
+                                put_ivs = [i.get('implied_volatility', None) for i in put_data]
+                                put_strikes = [i.get('details').get('strike_price', None) for i in put_data]
+                                put_expiry = [i.get('details').get('expiration_date', None) for i in put_data]
+                                put_name = [i.get('name', None) for i in put_data]
+
+
+                                call_volume = [i.get('session').get('volume', None) for i in call_data]
+                                put_volume = [i.get('session').get('volume', None) for i in put_data]
+
+                                call_dict = {
+                                    'Symbol': call_symbols,
+                                    'Name': call_name,
+                                    'Strike': call_strikes,
+                                    'Expiry': call_expiry,
+                                    'IV': call_ivs,
+                                    'Volume': call_volume,
+                                }
+
+                                put_dict = {
+                                    'Symbol': put_symbols,
+                                    'Name': put_name,
+                                    'Strike': put_strikes,
+                                    'Expiry': put_expiry,
+                                    'IV': put_ivs,
+                                    'Volume': put_volume
+                                }
+
+                                call_df = pd.DataFrame(call_dict).sort_values('IV').dropna(how="any")
+                                put_df = pd.DataFrame(put_dict).sort_values('IV').dropna(how="any")
+                                call_df.to_csv('iv_monitor_calls.csv', index=False)
+                                put_df.to_csv('iv_monitor_puts.csv', index=False)
+
+                                def get_lowest_iv(group):
+                                    return group.sort_values('IV').iloc[0]
+
+                                grouped_call_df = call_df.groupby('Expiry').apply(get_lowest_iv)
+                                grouped_put_df = put_df.groupby('Expiry').apply(get_lowest_iv)
+
+                                for index, row in grouped_call_df.iterrows():
+                                    current_dict = {
+                                        'symbol': row['Symbol'],
+                                        'name': row['Name'],
+                                        'strike': row['Strike'],
+                                        'expiry': index,  # level 0 index is 'Expiry'
+                                        'iv': row['IV'],
+                                        'volume': row['Volume']
+                                    }
+                                    final_dicts_call.append(current_dict)
+
+                                for index, row in grouped_put_df.iterrows():
+                                    current_dict = {
+                                        'symbol': row['Symbol'],
+                                        'name': row['Name'],
+                                        'strike': row['Strike'],
+                                        'expiry': index,  # level 0 index is 'Expiry'
+                                        'iv': row['IV'],
+                                        'volume': row['Volume']
+                                    }
+                                    final_dicts_put.append(current_dict)
+
+            return final_dicts_call, final_dicts_put
