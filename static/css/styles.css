@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Fira+Code');
 body {
     background-color: #000000;
     color: #af8282;
@@ -19,7 +20,7 @@ h1 {
 }
 
 .command-block {
-    border: 1px solid #ccc;
+    border: 1px solid #101010;
     padding: 15px;
     margin: 15px 0;
     border-radius: 8px;
@@ -69,22 +70,21 @@ h1 {
     }
 }
 .card {
-    background-color: #000000;
+    background-color: #060303;
     border-radius: 5px;
-    padding: 20px;
+    padding: 16px;
     margin-bottom: 20px;
     text-align: center;
 }
 
 .terminal {
-    background-color: #000000;
     padding: 20px;
     border-radius: 5px;
     width: 1000px; /* Adjust the width as per your preference */
     max-width: 90%; /* Limit the maximum width to 90% of the viewport */
     font-family: 'Courier New', Courier, monospace;
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 12px;
+    line-height: 1;
     white-space: pre;
     overflow-x: auto;
     position: relative;
@@ -98,7 +98,7 @@ h1 {
 
 .snippet-dropdown select {
     background-color: #222;
-    color: #000000;
+    color: #775c5c;
     border: none;
     padding: 5px;
     font-size: 16px;
@@ -107,11 +107,13 @@ h1 {
 
 .snippet-code {
     color: #209233;
-    font-size: 14px;
+    font-size: 10px;
     position: relative;
     animation: matrix-animation 5 infinite;
 }
-
+#snippet-code {
+    animation: typing 1s steps(60) infinite alternate;
+}
 .copy-icon {
     position: absolute;
     top: 10px;

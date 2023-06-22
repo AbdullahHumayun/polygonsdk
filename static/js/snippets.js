@@ -27,11 +27,9 @@ window.snippets = {
     
     async def polygon_quickstart(ticker="GME"): #for polygon, polygon_options, webull functions
     
-    
         ##polygon##
     
         company_info = await polygon.company_info("GME")
-    
     
         #accessing the attributes for functions works the same throughout this project
         cik = company_info.cik
@@ -75,10 +73,7 @@ window.snippets = {
     
     asyncio.run(polygon_quickstart(ticker="GME"))
     
-    
-    
     #webull##
-    
     
     async def webull_quickstart(ticker="GME"):
         ##webull##
@@ -99,26 +94,16 @@ window.snippets = {
     
     asyncio.run(webull_quickstart(ticker="GME"))
     
-    
-    
     ## stocksera ##
     
-    
     inflation = stocksera.inflation()
-    
     print(inflation)
-    
-    
     
     ## nasdaq ##
     bicmac = nasdaq.bigmac()
     
-    
-    
     ## fed ##
     mbs_operations = fed.agency_mbs_search(start_date="2023-01-01", end_date=today_str)
-    
-    
     auctionStatus = mbs_operations.auctionStatus
     classType = mbs_operations.classType
     closeTime = mbs_operations.closeTime
@@ -295,11 +280,9 @@ window.snippets = {
         import asyncio
 
         from cfg import YOUR_API_KEY
-        
         from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
-        
+    
         polyoptions = PolygonOptionsSDK(YOUR_API_KEY)
-        
         
         underlying_symbol = "F"
         expiration_date = "2023-05-19"
@@ -493,7 +476,6 @@ window.snippets = {
         order="desc"
         limit=100
         
-        
         async def main():
         
             ticker = await poly.generate_option_symbol(underlying_symbol,expiration_date,option_type,strike_price)
@@ -533,7 +515,6 @@ window.snippets = {
         asyncio.run(main())
         
         `,
-
         "Real Time Options Scanner":`
         from typing import List
         from asyncio import Queue

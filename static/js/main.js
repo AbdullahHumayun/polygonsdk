@@ -41,7 +41,8 @@ function displayCodeSnippet() {
         snippetCode.innerText = "";
     } else {
         let snippet = "";
-        
+        if (window.snippets && window.snippets.QUICKSTART && window.snippets.QUICKSTART.hasOwnProperty(selectedSnippet)) 
+            snippet = window.snippets.QUICKSTART[selectedSnippet];
         if (window.snippets && window.snippets.apiMasterSnippets && window.snippets.apiMasterSnippets.hasOwnProperty(selectedSnippet)) 
             snippet = window.snippets.apiMasterSnippets[selectedSnippet];
         if (window.snippets && window.snippets.polygonSnippets && window.snippets.polygonSnippets.hasOwnProperty(selectedSnippet)) {
