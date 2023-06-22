@@ -2,7 +2,7 @@ from disnake.ext import commands
 import disnake
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from cfg import YOUR_API_KEY
-
+from testing import get_near_the_money_options,get_price_data,find_lowest_iv
 from tabulate import tabulate
 
 
@@ -31,16 +31,15 @@ class IV(commands.Cog):
         counter = 0
         while True:
             counter = counter + 1
-            price = await self.polygon.get_price(ticker=ticker)
+            price = round(await get_price_data(ticker=ticker),2)
             lower_strike = 0.98 * price
             upper_strike = 1.02 * price
 
-            atm_options = await self.polygon.get_near_the_money_options(ticker, lower_strike=lower_strike, upper_strike=upper_strike)
-            print(atm_options)
+            atm_options = await get_near_the_money_options(ticker, lower_strike=lower_strike, upper_strike=upper_strike)
             redfire = "🔥"  # Red flame emoji
             greenfire = "🟢"  # Green flame emoji
 
-            low_iv_data = await self.polygon.find_lowest_iv(atm_options)
+            low_iv_data = await find_lowest_iv(atm_options)
             table = []
 
             for k in low_iv_data:

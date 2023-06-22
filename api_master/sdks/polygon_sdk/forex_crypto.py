@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 from typing import Dict, Any
+import pandas as pd
+
 
 @dataclass
 class ForexSnapshot:
@@ -124,5 +126,37 @@ class CryptoSnapshot:
         self.prev_volume = [i['v'] if i['v'] is not None else None for i in prev_day_data]
         self.prev_vwap = [i['vw'] if i['vw'] is not None else None for i in prev_day_data]
 
+
+        self.data_dict = {
+            'ticker': self.ticker,
+            'change': self.change,
+            'change_percent': self.change_percent,
+            'day_open': self.day_open,
+            'day_high': self.day_high,
+            'day_low': self.day_low,
+            'day_close': self.day_close,
+            'day_volume': self.day_volume,
+            'day_vwap': self.day_vwap,
+            'last_trade_conditions': self.last_trade_conditions,
+            'last_trade_id': self.last_trade_id,
+            'last_trade_price': self.last_trade_price,
+            'last_trade_size': self.last_trade_size,
+            'last_trade_exchange': self.last_trade_exchange,
+            'last_trade_timestamp': self.last_trade_timestamp,
+            'min_open': self.min_open,
+            'min_high': self.min_high,
+            'min_low': self.min_low,
+            'min_close': self.min_close,
+            'min_volume': self.min_volume,
+            'prev_open': self.prev_open,
+            'prev_high': self.prev_high,
+            'prev_low': self.prev_low,
+            'prev_close': self.prev_close,
+            'prev_volume': self.prev_volume,
+            'prev_vwap': self.prev_vwap
+        }
+
+
+        self.as_dataframe = pd.DataFrame(self.data_dict)
     def to_dict(self) -> Dict[str, Any]:
         return {slot: getattr(self, slot) for slot in self.__slots__}

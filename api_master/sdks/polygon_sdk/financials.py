@@ -1,6 +1,16 @@
-
+import pandas as pd
 class BalanceSheet:
+    """
+    Class representing balance sheet data.
+    """
+
     def __init__(self, financials):
+        """
+        Initialize a BalanceSheet object with financials data.
+
+        Args:
+            financials (list): List of financial data containing balance sheet information.
+        """
 
         self.balance_sheet = [i['balance_sheet'] for i in financials if i is not None and i.get('balance_sheet') is not None]
 
@@ -52,9 +62,35 @@ class BalanceSheet:
         self.current_liabilities_value =[i['value'] if i['value'] is not None else 0 for i in current_liabilities]
 
 
+        self.balance_sheet_data = {
+        "liabilities_and_equity_value": self.liabilities_and_equity_value,
+        "fixed_assets_value": self.fixed_assets_value,
+        "other_than_fixed_noncurrent_assets_value": self.other_than_fixed_noncurrent_assets_value,
+        "equity_attributable_to_noncontrolling_interest_value": self.equity_attributable_to_noncontrolling_interest_value,
+        "equity_attributable_to_parent_value": self.equity_attributable_to_parent_value,
+        "assets_value": self.assets_value,
+        "noncurrent_assets_value": self.noncurrent_assets_value,
+        "current_assets_value": self.current_assets_value,
+        "equity_value": self.equity_value,
+        "liabilities_value": self.liabilities_value,
+        "noncurrent_liabilities_value": self.noncurrent_liabilities_value,
+        "current_liabilities_value": self.current_liabilities_value
+             }
+        
 
+        self.as_dataframe = pd.DataFrame(self.balance_sheet_data)
 class CashFlow:
+    """
+    Class representing cash flow statement data.
+    """
+
     def __init__(self, financials):
+        """
+        Initialize a CashFlow object with financials data.
+
+        Args:
+            financials (list): List of financial data containing cash flow statement information.
+        """
                 
 
 
@@ -97,9 +133,31 @@ class CashFlow:
         net_cash_flow_from_investing_activities_continuing=[i['net_cash_flow_from_investing_activities_continuing'] for i in self.cash_flow if 'net_cash_flow_from_investing_activities_continuing' in i]
         self.net_cash_flow_from_investing_activities_continuing_value=[i['value'] if i['value'] is not None else 0 for i in net_cash_flow_from_investing_activities_continuing]
 
+        self.cash_flow_data = {
+            "net_cash_flow_from_investing_activities_value": self.net_cash_flow_from_investing_activities_value,
+            "net_cash_flow_continuing_value": self.net_cash_flow_continuing_value,
+            "exchange_gains_losses_value": self.exchange_gains_losses_value,
+            "net_cash_flow_value": self.net_cash_flow,
+            "net_cash_flow_from_operating_activities_value": self.net_cash_flow_from_operating_activities_value,
+            "net_cash_flow_from_financing_activities_continuing_value": self.net_cash_flow_from_financing_activities_continuing_value,
+            "net_cash_flow_from_operating_activities_continuing_value": self.net_cash_flow_from_operating_activities_continuing_value,
+            "net_cash_flow_from_financing_activities_value": self.net_cash_flow_from_financing_activities_value,
+            "net_cash_flow_from_investing_activities_continuing_value": self.net_cash_flow_from_investing_activities_continuing_value
+        }
 
+        self.as_dataframe = pd.DataFrame(self.cash_flow_data)
 class IncomeStatement:
+    """
+    Class representing income statement data.
+    """
+
     def __init__(self, financials):
+        """
+        Initialize an IncomeStatement object with financials data.
+
+        Args:
+            financials (list): List of financial data containing income statement information.
+        """
 
         self.income = [i['income_statement'] for i in financials if i is not None and i.get('income_statement') is not None]
 
@@ -200,9 +258,46 @@ class IncomeStatement:
         interest_income_expense_after_provision_for_losses =[i['interest_income_expense_after_provision_for_losses'] for i in self.income if 'interest_income_expense_after_provision_for_losses' in i]
         self.interest_income_expense_after_provision_for_losses_value = [i['value'] if i['value'] is not None else 0 for i in interest_income_expense_after_provision_for_losses]
 
+        self.income_statement_data = {
+            "income_tax_expense_benefit_deferred_value": self.income_tax_expense_benefit_deferred_value,
+            "preferred_stock_dividends_and_other_adjustments_value": self.preferred_stock_dividends_and_other_adjustments_value,
+            "net_income_loss_value": self.net_income_loss_value,
+            "costs_and_expenses_value": self.costs_and_expenses_value,
+            "cost_of_revenue_value": self.cost_of_revenue_value,
+            "income_loss_from_continuing_operations_before_tax_value": self.income_loss_from_continuing_operations_before_tax_value,
+            "net_income_loss_attributable_to_noncontrolling_interest_value": self.net_income_loss_attributable_to_noncontrolling_interest_value,
+            "operating_income_loss_value": self.operating_income_loss_value,
+            "income_loss_from_continuing_operations_after_tax_value": self.income_loss_from_continuing_operations_after_tax_value,
+            "income_loss_from_discontinued_operations_net_of_tax_value": self.income_loss_from_discontinued_operations_net_of_tax_value,
+            "income_tax_expense_benefit_current_value": self.income_tax_expense_benefit_current_value,
+            "benefits_costs_expenses_value": self.benefits_costs_expenses_value,
+            "interest_income_expense_operating_net_value": self.interest_income_expense_operating_net_value,
+            "net_income_loss_attributable_to_parent_value": self.net_income_loss_attributable_to_parent_value,
+            "gross_profit_value": self.gross_profit_value,
+            "revenues_value": self.revenues_value,
+            "diluted_earnings_per_share_value": self.diluted_earnings_per_share_value,
+            "operating_expenses_value": self.operating_expenses_value,
+            "participating_securities_distributed_and_undistributed_earnings_loss_basic_value": self.participating_securities_distributed_and_undistributed_earnings_loss_basic_value,
+            "basic_earnings_per_share_value": self.basic_earnings_per_share_value,
+            "net_income_loss_available_to_common_stockholders_basic_value": self.net_income_loss_available_to_common_stockholders_basic_value,
+            "provision_for_loan_lease_and_other_losses_value": self.provision_for_loan_lease_and_other_losses_value,
+            "income_tax_expense_benefit_deferred_value": self.income_tax_expense_benefit_deferred_value,
+            "interest_income_expense_after_provision_for_losses_value": self.interest_income_expense_after_provision_for_losses_value
+        }
 
+        self.as_dataframe = pd.DataFrame(self.income_statement_data)
 class ComprehensiveIncome:
+    """
+    Class representing comprehensive income data.
+    """
+
     def __init__(self, financials):
+        """
+        Initialize a ComprehensiveIncome object with financials data.
+
+        Args:
+            financials (list): List of financial data containing comprehensive income information.
+        """
         self.comp_income = [i['comprehensive_income'] for i in financials if i is not None and i.get('comprehensive_income') is not None]
 
 
@@ -217,3 +312,15 @@ class ComprehensiveIncome:
 
         other_comprehensive_income_loss=[i['other_comprehensive_income_loss'] for i in self.comp_income if 'other_comprehensive_income_loss' in i]
         self.other_comprehensive_income_loss_value = [i['value'] if i['value'] is not None else 0 for i in other_comprehensive_income_loss]
+
+        self.comprehensive_income_data = {
+        "comprehensive_income_loss_attributable_to_noncontrolling_interest_value": self.comprehensive_income_loss_attributable_to_noncontrolling_interest_value,
+        "comprehensive_income_loss_attributable_to_parent_value": self.comprehensive_income_loss_attributable_to_parent_value,
+        "comprehensive_income_loss_value": self.comprehensive_income_loss_value,
+        "other_comprehensive_income_loss_value": self.other_comprehensive_income_loss_value
+        }
+
+        self.as_dataframe = pd.DataFrame(self.comprehensive_income_data)
+
+
+

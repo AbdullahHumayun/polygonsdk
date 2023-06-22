@@ -1208,7 +1208,7 @@ class AsyncPolygonSDK:
                     return value
 
 
-    async def get_near_the_money_options(self, ticker: str, lower_strike, upper_strike, date: str = "2023-07-30"):
+    async def get_near_the_money_options(self, ticker: str, lower_strike, upper_strike, date: str = "2027-12-30"):
         if ticker.startswith('SPX'):
             ticker = ticker.replace(f"{ticker}", f"I:{ticker}")
             initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte=2023-09-30&limit=250&apiKey={YOUR_API_KEY}"
@@ -1334,8 +1334,8 @@ class AsyncPolygonSDK:
                             put_name = [i.get('name', None) for i in put_data]
 
 
-                            call_volume = [i.get('session').get('volume') for i in call_data]
-                            put_volume = [i.get('session').get('volume') for i in put_data]
+                            call_volume = [i.get('session').get('volume', None) for i in call_data]
+                            put_volume = [i.get('session').get('volume', None) for i in put_data]
 
                             call_dict = {
                                 'Symbol': call_symbols,

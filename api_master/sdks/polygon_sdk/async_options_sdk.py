@@ -23,7 +23,7 @@ import requests
 from .option_quote import OptionQuote
 from requests.exceptions import HTTPError
 from urllib.parse import urlencode
-from cfg import YOUR_API_KEY
+from cfg import YOUR_API_KEY, thirty_days_from_now_str
 
 MAX_SIMULTANEOUS_REQUESTS = 50 # adjust based on your needs. Lower = longer time to collect options data.
 
@@ -649,3 +649,28 @@ class PolygonOptionsSDK:
         sorted_df = df.sort_values(by='vega', ascending=False)
         top_options = sorted_df.head(top_n)
         return top_options
+
+
+
+    async def get_near_the_money_works(self, ticker, lower_strike, upper_strike, today_str):
+
+        url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte={thirty_days_from_now_str}&limit=250&apiKey={YOUR_API_KEY}"
+        print(url)
+        async with aiohttp.ClientSession() as session:
+            all_ticker = []  # to hold all the option symbols
+            
+            while url:
+                async with session.get(url) as resp:
+                    if resp.status != 200:
+                        return
+                    data = await resp.json()
+                    results = data['results'] if data['results'] is not None else None
+                    details = [i['details'] if i['details'] is not None else None for i in results]
+                    ticker = [i.get('ticker', None) for i in details]
+                    all_ticker.extend(ticker)
+                    
+                    url = data.get('next_url')  # get the next page URL
+                    if url and YOUR_API_KEY not in url:
+                        url += f"&apiKey={YOUR_API_KEY}"  # append the API key to the URL
+
+            return all_ticker

@@ -1,3 +1,5 @@
+import pandas as pd
+
 class CompanyInfo:
     def __init__(self, results):
         self.cik = results.get("cik", None)
@@ -18,3 +20,6 @@ class CompanyInfo:
         self.sic_code = results.get("sic_code", None)
         self.sic_description = results.get("sic_description", None)
         self.ticker = results.get("ticker", None)
+
+
+     

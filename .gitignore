@@ -9,10 +9,12 @@ dist/
 lib/
 build/
 api_master.egg-info/
+bot/cogs/
 discord_config.py
 fudstop.py
 strat.py
 myconfig.py
+api_master/bot/cogs/
 oldapp.py
 api_master.egg_info/
 test.py

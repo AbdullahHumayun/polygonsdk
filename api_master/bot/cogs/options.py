@@ -3,6 +3,13 @@ import disnake
 from disnake.ext import commands
 from time import sleep
 from requests.auth import HTTPBasicAuth
+import time
+import pandas as pd
+from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+
+from cfg import YOUR_API_KEY
+polygon_options = PolygonOptionsSDK(YOUR_API_KEY)
+
 
 class Options(commands.Cog):
     def __init__(self, bot):
@@ -12,6 +19,21 @@ class Options(commands.Cog):
     @commands.slash_command()
     async def options(self, inter):
         pass
+
+
+    @options.sub_command()
+    async def fetch_entire_chain(ctx: disnake.AppCommandInter, tickers: str):
+        await ctx.response.defer()
+        for ticker in tickers:
+            all_options = await polygon_options.get_option_chain_all(ticker)
+            df = all_options[0].df
+            df.to_csv(f'files/options/ticker_chains/all_{ticker}_chains.csv', index=False)
+            await ctx.send(file=disnake.File(f'files/options/ticker_chains/all_{ticker}_chains.csv'))
+
+
+
+
+        
 
 
     @options.sub_command()

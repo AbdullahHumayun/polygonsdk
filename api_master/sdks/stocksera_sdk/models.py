@@ -1,3 +1,5 @@
+import pandas as pd
+
 class DailyTreasury:
     def __init__(self, data):
         self.date = [i.get('Date') if i.get('Date') is not None else None for i in data]
@@ -6,6 +8,17 @@ class DailyTreasury:
         self.amount_change = [i.get('Amount Change') if i.get('Amount Change') is not None else None for i in data]
         self.percent_change = [i.get('Percent Change') if i.get('Percent Change') is not None else None for i in data]
         self.moving_avg = [i.get('Moving Avg') if i.get('Moving Avg') is not None else None for i in data]
+
+        self.data_dict = {
+                'Date': self.date,
+                'Close Balance': self.close_balance,
+                'Open Balance': self.open_balance,
+                'Amount Change': self.amount_change,
+                'Percent Change': self.percent_change,
+                'Moving Avg': self.moving_avg
+            }
+        self.as_dataframe = pd.DataFrame(self.data_dict)
+        
 
 
 class EarningsCalendar:
@@ -22,6 +35,21 @@ class EarningsCalendar:
         self.mkt_cap = [i['mkt_cap'] if i['mkt_cap'] is not None else None for i in data]
 
 
+        self.data_dict = {
+            'date': self.date,
+            'hour': self.hour,
+            'ticker': self.ticker,
+            'eps_est': self.eps_est,
+            'eps_act': self.eps_act,
+            'revenue_est': self.revenue_est,
+            'revenue_act': self.revenue_act,
+            'year': self.year,
+            'quarter': self.quarter,
+            'mkt_cap': self.mkt_cap
+             }
+        self.as_dataframe = pd.DataFrame(self.data_dict)
+
+
 class FTD:
     def __init__(self, data):
         print(data)
@@ -31,12 +59,21 @@ class FTD:
         except KeyError:
             self.ticker = "N/A"
         self.price = [i['Price'] if i['Price'] is not None else None for i in data]
-        self.amount_ftd = [i['Failure to Deliver'] if i['Failure to Deliver'] is not None else None for i in data]
+        self.amount_ftd = [i['Failure to Deliver'] if 'Failure to Deliver' in i else None for i in data]
 
         self.t35_date = [i['T+35 Date'] if i['T+35 Date'] is not None else None for i in data]
-        self.dollar_cost = [i['Amount (FTD x $)'] if i['Amount (FTD x $)'] is not None else None for i in data]
+        self.dollar_cost = [i['Amount (FTD x $)'] if 'Amount (FTD x $)' in i else None for i in data]
 
+        self.data_dict = {
+            'Date': self.date,
+            'Ticker': self.ticker,
+            'Price': self.price,
+            'Failure to Deliver': self.amount_ftd,
+            'T+35 Date': self.t35_date,
+            'Amount (FTD x $)': self.dollar_cost
+        }
 
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 
 class House:
     def __init__(self, data):
@@ -61,6 +98,14 @@ class Inflation:
         self.value = data.get('value')
         self.shares_total = data.get('shares_total')
 
+        self.data_dict = { 
+
+            'Shares': self.shares,
+            'Value': self.value,
+            'Shares Total': self.shares_total
+        }
+
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 
 class IPOs:
     def __init__(self, data):
@@ -74,6 +119,18 @@ class IPOs:
         self.symbol = [i['Symbol'] if i['Symbol'] is not None else None for i in data]
 
 
+        self.data_dict = {
+            'Date': self.date,
+            'Exchange': self.exchange,
+            'Expected Price': self.expected_price,
+            'Mkt Cap': self.mkt_cap,
+            'Name': self.name,
+            'Number Shares': self.number_shares,
+            'Status': self.status,
+            'Symbol': self.symbol
+        }
+
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 class JimCramer:
     def __init__(self, data):
         self.ticker = [i['Ticker'] if i['Ticker'] is not None else None for i in data]
@@ -82,6 +139,16 @@ class JimCramer:
         self.call = [i['Call'] if i['Call'] is not None else None for i in data]
         self.price = [i['Price'] if i['Price'] is not None else None for i in data]
 
+        self.data_dict = {
+            'Ticker': self.ticker,
+            'Date': self.date,
+            'Segment': self.segment,
+            'Call': self.call,
+            'Price': self.price
+        }
+
+
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 
 class JoblessClaims:
     def __init__(self, data):
@@ -90,6 +157,13 @@ class JoblessClaims:
         self.percent_change = [i['Percent Change'] if i['Percent Change'] is not None else None for i in data]
 
 
+        self.data_dict = {
+            'Date': self.date,
+            'Number': self.number,
+            'Percent Change': self.percent_change
+        }
+
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 
 class LowFloat:
     def __init__(self, data):
@@ -104,7 +178,21 @@ class LowFloat:
         self.short_int= [i['short_int'] if i['short_int'] is not None else None for i in data]
         self.market_cap= [i['market_cap'] if i['market_cap'] is not None else None for i in data]
         self.industry= [i['industry'] if i['industry'] is not None else None for i in data]
-
+        self.data_dict = {
+            'Rank': self.Rank,
+            'ticker': self.ticker,
+            'company_name': self.company_name,
+            'exchange': self.exchange,
+            'previous_close': self.previous_close,
+            'one_day_change': self.one_day_change,
+            'floating_shares': self.floating_shares,
+            'outstanding_shares': self.outstanding_shares,
+            'short_int': self.short_int,
+            'market_cap': self.market_cap,
+            'industry': self.industry
+            }
+        
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 
 class LatestInsiderTradingSummary:
     def __init__(self, data):
@@ -112,7 +200,14 @@ class LatestInsiderTradingSummary:
         self.amount = [i['Amount'] if i['Amount'] is not None else None for i in data]
         self.market_cap =[i['Market Cap'] if i['Market Cap'] is not None else None for i in data]
         self.percent_of_market_cap = [i['% of Mkt Cap'] if i['% of Mkt Cap'] is not None else None for i in data]
+        self.data_dict = {
+            'Ticker': self.ticker,
+            'Amount': self.amount,
+            'Market Cap': self.market_cap,
+            '% of Mkt Cap': self.percent_of_market_cap
+        }
 
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 
 class MarketNews:
     def __init__(self, data):
@@ -121,7 +216,15 @@ class MarketNews:
         self.Source = [i['Source'] if i['Source'] is not None else None for i in data]
         self.URL = [i['URL'] if i['URL'] is not None else None for i in data]
         self.Section = [i['Section'] if i['Section'] is not None else None for i in data]
+        self.data_dict = {
+            'Date': self.Date,
+            'Title': self.Title,
+            'Source': self.Source,
+            'URL': self.URL,
+            'Section': self.Section
+        }
 
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 
 class MarketSummary:
     def __init__(self, data):
@@ -142,6 +245,14 @@ class RetailSales:
         self.percent_change = [i['Percent Change'] if i['Percent Change'] is not None else None for i in data]
         self.monthly_avg_cases = [i['monthly_avg_cases'] if i['monthly_avg_cases'] is not None else None for i in data]
 
+        self.data_dict = {
+            'Date': self.date,
+            'Amount': self.amount,
+            'Percent Change': self.percent_change,
+            'monthly_avg_cases': self.monthly_avg_cases
+        }
+
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 
 class ReverseRepo:
     def __init__(self, data):
@@ -150,7 +261,15 @@ class ReverseRepo:
         self.num_parties = [i['Num Parties'] if i['Num Parties'] is not None else None for i in data]
         self.average = [i['Average'] if i['Average'] is not None else None for i in data]
         self.moving_average = [i['Moving Average'] if i['Moving Average'] is not None else None for i in data]
+        self.data_dict = {
+            'Date': self.date,
+            'Amount': self.amount,
+            'Num Parties': self.num_parties,
+            'Average': self.average,
+            'Moving Average': self.moving_average
+        }
 
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 
 class SECFillings:
     def __init__(self, data):
@@ -160,7 +279,15 @@ class SECFillings:
         self.report_url = [i['report_url'] if i['report_url'] is not None else None for i in data]
         self.filing_url = [i['filing_url'] if i['filing_url'] is not None else None for i in data]
 
+        self.data_dict = {
+            'Filling': self.Filling,
+            'Description': self.Description,
+            'Filling Date': self.FillingDate,
+            'report_url': self.report_url,
+            'filing_url': self.filing_url
+        }
 
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 class Senate:
 
     def __init__(self, data):
@@ -188,6 +315,17 @@ class ShortInterest:
         self.DaysToCover= [i['Days To Cover'] if i['Days To Cover'] is not None else None for i in data]
         self.FloatShort= [i['% Float Short'] if i['% Float Short'] is not None else None for i in data]
 
+        self.data_dict = {
+            'Rank': self.Rank,
+            'Ticker': self.Ticker,
+            'Date': self.Date,
+            'Short Interest': self.ShortInterest,
+            'Average Volume': self.AverageVolume,
+            'Days To Cover': self.DaysToCover,
+            '% Float Short': self.FloatShort
+        }
+
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 
 class ShortVolume:
     def __init__(self, data):
@@ -196,7 +334,15 @@ class ShortVolume:
         self.short_exempt_vol = [i.get('Short Exempt Vol', None) for i in data]
         self.total_vol = [i.get('Total Vol', None) for i in data]
         self.percent_shorted = [i.get('% Shorted', None) for i in data]
+        self.data_dict = {
+            'Date': self.date,
+            'Short Vol': self.short_vol,
+            'Short Exempt Vol': self.short_exempt_vol,
+            'Total Vol': self.total_vol,
+            '% Shorted': self.percent_shorted
+        }
 
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 
 
 class StockTwits:
@@ -205,6 +351,16 @@ class StockTwits:
         self.watchlist = [i['watchlist'] if i['watchlist'] is not None else None for i in data]
         self.date_updated = [i['date_updated'] if i['date_updated'] is not None else None for i in data]
 
+
+        self.data_dict = { 
+
+            'Rank': self.rank,
+            'Watchlists': self.watchlist,
+            'Date Updated': self.date_updated
+        }
+
+
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 
 class Subreddit:
     def __init__(self, data):
@@ -217,6 +373,17 @@ class Subreddit:
         self.percPriceChange = [i['% Price Change'] if i['% Price Change'] is not None else None for i in data]
 
 
+        self.data_dict = {
+            'Date': self.Date,
+            'subreddit': self.subreddit,
+            'Redditors': self.Redditors,
+            'Active': self.Active,
+            '% Active': self.percActive,
+            '% Growth': self.percGrowth,
+            '% Price Change': self.percPriceChange
+        }
+
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 class TradingHalts:
     def __init__(self, data):
         self.halt_date = data.get('halt_date')
@@ -227,7 +394,17 @@ class TradingHalts:
         self.resume_date = data.get('resume_date')
         self.resume_time = data.get('resume_time')
 
+        self.data_dict = {
+            'halt_date': self.halt_date,
+            'halt_time': self.halt_time,
+            'ticker': self.ticker,
+            'exchange': self.exchange,
+            'reason': self.reason,
+            'resume_date': self.resume_date,
+            'resume_time': self.resume_time
+        }
 
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 class WSBMentions:
     def __init__(self, data):
         self.mentions = [i['mentions'] if i['mentions'] is not None else None for i in data]
@@ -240,7 +417,14 @@ class WSBOptions:
         self.puts = [i['Puts'] if i['Puts'] is not None else None for i in data]
         self.ratio = [i['Ratio'] if i['Ratio'] is not None else None for i in data]
 
+        self.data_dict = {
+            'Ticker': self.ticker,
+            'Calls': self.calls,
+            'Puts': self.puts,
+            'Ratio': self.ratio
+        }
 
+        self.as_dataframe = pd.DataFrame(self.data_dict)
 class Insiders:
     def __init__(self, data):
 
@@ -255,3 +439,20 @@ class Insiders:
         self.Value = [i['Value ($)'] if i['Value ($)'] is not None else None for i in data]
         self.SharesTotal= [i['#Shares Total'] if i['#Shares Total'] is not None else None for i in data]
         self.DateFilled= [i['Date Filled'] if i['Date Filled'] is not None else None for i in data]
+
+
+
+        self.data_dict = {
+            'Ticker': self.Ticker,
+            'Name': self.Name,
+            'Relationship': self.Relationship,
+            'Date': self.Date,
+            'Transaction': self.Transaction,
+            'Cost': self.Cost,
+            'Shares': self.Shares,
+            'Value ($)': self.Value,
+            '#Shares Total': self.SharesTotal,
+            'Date Filled': self.DateFilled
+        }
+
+        self.as_dataframe = pd.DataFrame(self.data_dict)

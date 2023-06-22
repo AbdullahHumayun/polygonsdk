@@ -1,5 +1,18 @@
+import pandas as pd
+
+
 class DailyOpenClose:
+    """
+    Class representing daily open and close data for a symbol.
+    """
+
     def __init__(self, response_data):
+        """
+        Initialize a DailyOpenClose object with response data.
+
+        Args:
+            response_data (dict): Response data containing open and close information.
+        """
         self.after_hours = response_data.get("afterHours")
         self.close = response_data.get("close")
         self.date = response_data.get("from")
@@ -11,6 +24,22 @@ class DailyOpenClose:
         self.symbol = response_data.get("symbol")
         self.volume = response_data.get("volume")
 
+
+    
+        self.data_dict = {
+            "after_hours": self.after_hours,
+            "close": self.close,
+            "date": self.date,
+            "high": self.high,
+            "low": self.low,
+            "open": self.open,
+            "pre_market": self.pre_market,
+            "status": self.status,
+            "symbol": self.symbol,
+            "volume": self.volume
+        }
+
+        self.df = pd.DataFrame(self.data_dict)
     def __str__(self):
         return f"DailyOpenClose({self.symbol}, {self.date})"
 
