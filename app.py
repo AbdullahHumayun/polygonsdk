@@ -31,6 +31,10 @@ async def index():
 async def volume_analysis(ticker):
     return await volume_analysis_endpoint(ticker)
 
+@app.route('/ball', methods=['GET', 'POST'])
+async def ball():
+    return render_template('bouncy_ball.html')
+
 
 @app.route('/ticker_cards')
 def ticker_cards():

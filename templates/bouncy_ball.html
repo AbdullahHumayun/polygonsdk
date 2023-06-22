@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Floating Ball</title>
+<style>
+#ball {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 50px;
+height: 50px;
+background-color: red;
+border-radius: 50%;
+cursor: pointer;
+animation: floatAnimation 5s infinite alternate;
+}
+
+@keyframes floatAnimation {
+0% {
+transform: translate(-50%, -50%);
+}
+50% {
+transform: translate(-50%, -200px);
+}
+100% {
+transform: translate(-50%, -50%);
+}
+}
+
+#ball.bouncing {
+animation: bounceAnimation 0.3s linear;
+}
+
+@keyframes bounceAnimation {
+0% {
+transform: translate(-50%, -50%);
+}
+50% {
+transform: translate(-50%, -100px);
+}
+100% {
+transform: translate(-50%, -50%);
+}
+}
+
+</style>
+</head>
+<body>
+<div id="ball"></div>
+
+<script>
+const ball = document.getElementById("ball");
+
+ball.addEventListener("click", () => {
+ball.classList.add("bouncing");
+setTimeout(() => {
+ball.classList.remove("bouncing");
+}, 300);
+});
+</script>
+</body>
+</html>
