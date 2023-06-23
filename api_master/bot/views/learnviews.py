@@ -15,7 +15,8 @@ from disnake import ApplicationCommandInteraction
 import requests
 from urllib.request import urlopen
 from urllib.parse import urlencode
-from cfg import YOUR_NASDAQ_KEY, YOUR_STOCKSERA_KEY, YOUR_FINNHUB_KEY
+from cfg import YOUR_STOCKSERA_KEY, YOUR_FINNHUB_KEY
+from cfg import YOUR_NASDAQ_KEY as nasdaq
 from time import sleep
 import finnhub
 import certifi
@@ -17944,15 +17945,6 @@ class LeverageDropdown(disnake.ui.Select):
                 await interaction.send("```py\nDrop-down is for display! Use another command.```")
 
 
-
-import disnake
-import app
-import requests
-from _discord import emojis
-from cfg import YOUR_NASDAQ_KEY as nasdaq
-from matplotlib import pyplot as plt
-import pandas as pd
-from app import dataembeds
 class DataMenu(disnake.ui.Select):
     def __init__(self):
         super().__init__( 
@@ -32593,10 +32585,6 @@ class UltimateCryptoPage1(disnake.ui.View):
 
 
 
-
-import disnake
-import _discord.emojis as e
-
 class RepoDataEmbed(disnake.Embed):
     def __init__(self):
         super().__init__( 
@@ -32673,12 +32661,6 @@ class HKEXDataEmbed(disnake.Embed):
 
 
 
-import disnake
-import requests
-import app
-from _discord import emojis
-import stocksera
-from cfg import YOUR_STOCKSERA_KEY
 client = stocksera.Client(api_key=YOUR_STOCKSERA_KEY)
 class LosersViewStart(disnake.ui.View):
     def __init__(self):
@@ -35779,11 +35761,6 @@ class GainersViewStart(disnake.ui.View):
 
 
 
-import disnake
-from _discord import emojis
-import app
-
-
 
 
 class WebullCmdDrop(disnake.ui.Select):
@@ -38684,9 +38661,7 @@ class OFRDataViewStart(disnake.ui.View):
 #     async def callback(self, interaction:disnake.MessageCommandInteraction):
 
 
-import disnake
-import app
-from _discord import emojis
+
 class RepoCitedDrop2(disnake.ui.Select):
     def __init__(self):
         super().__init__(

@@ -29,7 +29,7 @@ from views.learnviews import DTCCViewStart,NYSEViewStart, CBOEViewStart, OFRData
 from views.learnviews import TopOIDownViewStart,TopOIUpViewStart,TopIVViewStart,TopOIViewStart,TopVolumeViewStart,TotalTurnoverViewStart,TotalOIViewStart,TotalVolumeViewStart
 from views.learnviews import FedDataStart,FINRADataStart,BlockchainDataStart,InflationDataStart,EconomicDataStart,TreasuryDataStart,HKEXDataStart,MMFDataStart,RepoDataStart
 from views.learnviews import StockPage1,StockPage2,StockPage3,StockPage4,StockPage5, AppStart, ToolsViewStart
-from views.learnviews import SpyETF,SpyETF2,SpyETF3,SpyETF4,SpyETF5,SpyETF6, OFRViewStart, RepoCitedViewStart,CriteriaView,CommandsStart,PermaFTDViewStart
+from views.learnviews import OFRViewStart, RepoCitedViewStart,CriteriaView,CommandsStart,PermaFTDViewStart
 from views.learnviews import AvoidView
 
 
@@ -118,12 +118,6 @@ class PersistentViewBot(commands.Bot):
             self.add_view(DataViewStart())
             self.add_view(InflationDataStart())
             self.add_view(BlockchainDataStart())
-            self.add_view(SpyETF())
-            self.add_view(SpyETF2())
-            self.add_view(SpyETF3())
-            self.add_view(SpyETF4())
-            self.add_view(SpyETF5())
-            self.add_view(SpyETF6())
             self.add_view(HKEXDataStart())
             self.add_view(FINRADataStart())
             self.add_view(MMFDataStart())
