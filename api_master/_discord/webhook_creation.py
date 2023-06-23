@@ -96,7 +96,7 @@ channels_dict = {
     saves them all to a CSV file for later use with the real-time websocket streaming.
 """
 
-
+YOUR_GUILD_ID = 000000
 
 
 def create_channels_and_webhooks(categories, channels_dict, guild_id):

@@ -1378,6 +1378,21 @@ definitions=[
 
 
 
+master_ofr = {"10-Year Treasury Constant Maturity Rate":"TYLD-TCMR-10Yr-A",
+"1-Month Treasury Constant Maturity Rate":"TYLD-TCMR-1Mo-A",
+"1-Year Treasury Constant Maturity Rate":"TYLD-TCMR-1Yr-A",
+"20-Year Treasury Constant Maturity Rate":"TYLD-TCMR-20Yr-A",
+"2-Month Treasury Constant Maturity Rate":"TYLD-TCMR-2Mo-A",
+"2-Year Treasury Constant Maturity Rate":"TYLD-TCMR-2Yr-A",
+"30-Year Treasury Constant Maturity Rate":"TYLD-TCMR-30Yr-A",
+"3-Month Treasury Constant Maturity Rate":"TYLD-TCMR-3Mo-A",
+"3-Year Treasury Constant Maturity Rate":"TYLD-TCMR-3Yr-A",
+"5-Year Treasury Constant Maturity Rate":"TYLD-TCMR-5Yr-A",
+"6-Month Treasury Constant Maturity Rate":"TYLD-TCMR-6Mo-A",
+"7-Year Treasury Constant Maturity Rate":"TYLD-TCMR-7Yr-A",
+}
+
+
 #UNCOMMENT TO LOOP RANDOM MESSAGES TO YOUR SERVER
 
 
@@ -1398,3 +1413,6 @@ definitions=[
 #     webhook = DiscordWebhook(url=webhook_urls, content=f"```py\n Webull Tips! Access the full list via: ```</graphics:1034981343794311198>\n{random.choice(list(pics_group))}")
 #     response = webhook.execute()
 #     sleep(600)
+
+
+

@@ -15,7 +15,7 @@ from .technicals.rsi import RSI
 from .technicals.macd import MACDData
 from .financials import BalanceSheet,IncomeStatement,ComprehensiveIncome,CashFlow
 from .technicals.sma import SimpleMovingAverage
-from .technicals.ema import ExponentialMovingAverage
+from _discord import emojis
 import csv
 from cfg import YOUR_API_KEY
 from .news import News

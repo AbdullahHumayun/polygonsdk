@@ -29,7 +29,7 @@ class Discord(commands.Cog):
         "📰 News Commands"])):
         """💦Returns a list of bots with
         commands that can be used in the server."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True)
         if category == "📈 Stock Commands":
             await inter.edit_original_message("```py\n📈/stock commands are used to view important data metrics. Utilizes high-quality data from CBOE, iexcloud, and NASDAQ Datalink as well as Webull.\n\nClick a command below to have it automatically loaded in your command box. Make sure to use ALL CAPS if typing in a ticker.``` </stock capitalflow:1029251181987500134> | </stock orderflow:1029251181987500134> | </stock liquidity:1029251181987500134> | </stock criminals:1029251181987500134> \n\n </stock leverage:1029251181987500134> | </stock company_brief:1029251181987500134> | </stock insider_summary:1029251181987500134> | </stock institutions:1029251181987500134>",view=FudstopCommandsView())
         elif category == "💦 Stream Commands":
@@ -50,7 +50,7 @@ class Discord(commands.Cog):
     @discord.sub_command()
     async def notes(self, inter:disnake.ApplicationCommandInteraction):
         """⚙️Shortcut to the FUDSTOP Notes section in /fudstop"""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True)
         embed = disnake.Embed(title="Important NOTES", color=disnake.Colour.random())
         embed.set_footer(text="Implemented by FUDSTOP Trading")
         await inter.edit_original_message(embed=embed, view=NotesView())
@@ -58,7 +58,7 @@ class Discord(commands.Cog):
     @discord.sub_command()
     async def define(self, inter:disnake.AppCmdInter, term: str=commands.Param(autocomplete=definitions_autocomp)):
         """⚙️Start typing and learn what your heart desires"""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True)
         link = definitions[term]
         emb = disnake.Embed(title=f"Market Glossary - {term}", description=f"{link}", color=disnake.Colour.random())
         emb.set_footer(text="Implemented by FUDSTOP Trading")
@@ -70,7 +70,7 @@ class Discord(commands.Cog):
     @discord.sub_command()
     async def tools(self, inter: disnake.AppCmdInter, tools: str = commands.Param(autocomplete=tools_autocomp)):
         """⚙️Shortcut to the FUDSTOP Tools Menu"""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True)
         embed = disnake.Embed(title ="FUDSTOP Application Online🟢", color = disnake.Colour.random())
         embed.set_thumbnail(
             url="https://static.wixstatic.com/media/3235bb_fedadfcf38994349b7fa98fbf3f6f372~mv2.gif")
@@ -89,7 +89,7 @@ class Discord(commands.Cog):
     async def data(self, inter: disnake.AppCmdInter,
     data: str = commands.Param(autocomplete=data_autocomp)):
         """⚙️Shortcut to the FUDSTOP Data Menu"""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True)
         embed = disnake.Embed(title ="FUDSTOP Application Online🟢", color = disnake.Colour.random())
         embed.set_thumbnail(
         url="https://static.wixstatic.com/media/3235bb_fedadfcf38994349b7fa98fbf3f6f372~mv2.gif")
@@ -150,13 +150,13 @@ class Discord(commands.Cog):
     async def help_me(self,inter:disnake.AppCmdInter):
         """⚙️Quick shortcut to the help menu for discord."""
         await inter.response.defer(with_message=True,ephemeral=True)
-        await inter.edit_original_response(view=HelperView(), ephemeral=True)
+        await inter.edit_original_response(view=HelperView())
 
 
     @discord.sub_command(name="avatar", guild_ids=[888488311927242753])  # optional
     async def user_avatar(self, inter: disnake.ApplicationCommandInteraction, user: disnake.User):
         """⚙️Get a closer look at our friends in discord!"""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True)
         emb = disnake.Embed(title=f"{user}'s avatar")
         emb.set_image(url=user.display_avatar.url)
         emb.set_footer(text="Implemented by FUDSTOP Trading")

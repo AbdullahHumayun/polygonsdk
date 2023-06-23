@@ -31,9 +31,9 @@ class Position:
 
 # Replace the following line with your actual Webull headers
 webull_headers = {'Authorization': 'YOUR_AUTHORIZATION_TOKEN'}
-
+your_account_id = "YOUR ACCOUNT ID"
 # Fetch account data and extract positions
-r2 = requests.get("https://act.webullfintech.com/webull-paper-center/api/paper/1/acc/11086026", headers=webull_headers).json()
+r2 = requests.get(f"https://act.webullfintech.com/webull-paper-center/api/paper/1/acc/{your_account_id}", headers=webull_headers).json()
 positions_data = r2['positions'] if 'positions' in r2 else None
 if positions_data is not None:
 # Convert the positions data into a list of Position objects

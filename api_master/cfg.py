@@ -21,7 +21,7 @@ YOUR_FINNHUB_KEY = os.environ.get('YOUR_FINNHUB_KEY') #https://finnhub.io/
 YOUR_FMP_KEY = os.environ.get('YOUR_FMP_KEY') #https://site.financialmodelingprep.com/developer/docs/
 YOUR_FRED_API_KEY = os.environ.get('YOUR_FRED_API_KEY') #https://fred.stlouisfed.org/docs/api/fred/
 YOUR_DISCORD_BOT_TOKEN = os.environ.get('YOUR_DISCORD_BOT_TOKEN')#https://discord.com/developers/docs/intro
-
+YOUR_RAPIDAPI_KEY = os.environ.get('YOUR_RAPIDAPI_KEY')
 
 
 

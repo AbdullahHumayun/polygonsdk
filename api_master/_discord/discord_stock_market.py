@@ -17,9 +17,9 @@ from asyncio import Queue
 import asyncio
 import numpy as np
 ##import SDKS, config files
-from cfg import YOUR_API_KEY, five_days_from_now_str, five_days_ago_str
+from cfg import YOUR_API_KEY, five_days_from_now_str
 from discord_webhook import AsyncDiscordWebhook, DiscordEmbed
-from sdks.polygon_sdk.technical_conditions import check_macd_condition_bearish, check_macd_condition_bullish,check_rsi_condition_bearish,check_rsi_condition_bullish
+from sdks.polygon_sdk.technical_conditions import check_macd_condition_bullish,check_rsi_condition_bullish
 from cfg import today_str
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK, thresholds
@@ -560,7 +560,7 @@ async def process_webull_data(symbol: str):
                         fin_scoregood.add_embed(fin_scoreembed)
                         await fin_scoregood.execute()
                     if result['score'] is not None and result['score'] < 6:
-                        fin_scorebad = AsyncDiscord("YOUR WEBHOOK_URL")
+                        fin_scorebad = AsyncDiscordWebhook("YOUR WEBHOOK_URL")
                         description = '\n'.join(output_list)
                         fin_scoreembed = DiscordEmbed(title=f"Earnings Soon! with Score", description=description, color="FF0000")
                         fin_scoreembed.set_thumbnail(logo)

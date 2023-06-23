@@ -72,3 +72,28 @@ class AlertMenus(disnake.ui.View):
                 self.next_page.disabled = True
 
             await interaction.response.edit_message(embed=embed, view=self)
+
+
+
+class PageSelect(disnake.ui.Select):
+    def __init__(self, embeds):
+        options = [
+            disnake.SelectOption(
+                label=f"Page {i+1}",
+                value=f"{i}"
+            ) for i in range(len(embeds))
+        ]
+
+        super().__init__(
+            custom_id="page_selector1",
+            placeholder="Pages 1-25",
+            min_values=1,
+            max_values=1,
+            options=options,
+            row=0
+        )
+        
+        self.embeds = embeds
+
+    async def callback(self, interaction: disnake.Interaction):
+        await interaction.response.edit_message(embed=self.embeds[int(self.values[0])])

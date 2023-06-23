@@ -65,7 +65,7 @@ class Economy(commands.Cog):
     @economy.sub_command()
     async def retail_repo(inter: disnake.AppCmdInter):
         """🪙Current amount of Retail funds in the repo market."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True)
         r = requests.get(url=f"https://cloud.iexapis.com/stable/data-points/market/WRMFSL?token={YOUR_IEX_CLOUD_KEY}")
         em = disnake.Embed(title=f"Current Retail money funds returned as billions of dollars, seasonally adjusted", color=disnake.Colour.random())
         em.set_footer(text="Source: The Federal Reserve Bank of New York", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Seal_of_the_United_States_Federal_Reserve_System.svg/150px-Seal_of_the_United_States_Federal_Reserve_System.svg.png")
@@ -78,7 +78,7 @@ class Economy(commands.Cog):
     @economy.sub_command()
     async def house_trades(inter:disnake.AppCmdInter):
         """🪙Returns the 25 most recent House Trades"""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True)
         df = client.house()
         house = df['house'][0:19]
         items = "\n\n".join(f"Date: {i['Transaction Date']} Owner: {i['Owner']} Ticker:{i['Ticker']} Type: {i['Type']} Amt: {i['Amount']} Rep: {i['Representative']}\n Link:{i['Link']}" for i in house)
@@ -89,7 +89,7 @@ class Economy(commands.Cog):
     @economy.sub_command()
     async def inflation(inter:disnake.AppCmdInter):
         """🪙Returns historic inflation with average per year back to 2007."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True)
         df = client.inflation()
         year2022 = df['2022']
         jan2022 = year2022['Jan']
@@ -196,7 +196,7 @@ class Economy(commands.Cog):
     @economy.sub_command()
     async def reverserepo(inter:disnake.AppCmdInter):
         """🪙Returns the last 10 days of REPO with a moving average."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True)
         repo = client.reverse_repo(days=10)
         date = [i['Date'] for i in repo]
         amount =[i['Amount'] for i in repo]

@@ -18,6 +18,7 @@ api_master/bot/cogs/
 oldapp.py
 api_master.egg_info/
 test.py
+dump.txt
 .env
 trial.py
 testing.py

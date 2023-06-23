@@ -20,6 +20,7 @@ from .capitalflow import CapitalFlow
 import aiohttp
 from dateutil import parser
 from .etf_holdings import ETFHoldings
+from _discord import emojis
 from .calendar import EarningsCalendar
 from .cost_distribution import CostDistribution
 from .events import Event

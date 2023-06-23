@@ -1,5 +1,3 @@
-import pandas as pd
-
 class CompanyInfo:
     def __init__(self, results):
         self.cik = results.get("cik", None)
