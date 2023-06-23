@@ -37485,49 +37485,49 @@ class DTCCViewStart(disnake.ui.View):
 
         self.add_item(DTCCDrop())
     
-    @disnake.ui.button(style=disnake.ButtonStyle.red,emojis=f"{emojis.dtcc}", custom_id="dtcc1button1",disabled=True,row=0)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.red,emoji=f"{emojis.dtcc}", custom_id="dtcc1button1",disabled=True,row=0)#datachart
     async def dtcc1button1(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         embed = disnake.Embed(title=f"{emojis.ln}{emojis.ly}{emojis.ls}{emojis.le}", description=f"```py\nView the drop-downs for useful links and tools as well as informative education.```")
 
         await inter.response.edit_message(view=self, embed=embed)
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="dtcc1button2",row=0,disabled=True)#1
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="dtcc1button2",row=0,disabled=True)#1
     async def dtcc1button2(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.sec}", custom_id="dtcc1button3",row=0,disabled=False)#2
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.sec}", custom_id="dtcc1button3",row=0,disabled=False)#2
     async def menu(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed=ToolsViewStart().embed)
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="dtcc1button4",row=0,disabled=True)#3
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="dtcc1button4",row=0,disabled=True)#3
     async def dtcc1button4(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.finrawhite}", custom_id="dtcc1button5",disabled=False, row=0)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.finrawhite}", custom_id="dtcc1button5",disabled=False, row=0)#datachart
     async def dtcc1button5(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed=ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="dtcc1button6",row=1,disabled=True)#4
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="dtcc1button6",row=1,disabled=True)#4
     async def dtcc1button6(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.nyse}", custom_id="dtcc1button7",disabled=False,row=1)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.nyse}", custom_id="dtcc1button7",disabled=False,row=1)#datachart
     async def dtcc1button7(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         embed = disnake.Embed(title=f"{emojis.ln}{emojis.ly}{emojis.ls}{emojis.le}", description=f"```py\nView the drop-downs for useful links and tools as well as informative education.```")
         await inter.response.edit_message(view=NYSEViewStart(), embed = embed)
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="dtcc1button8", disabled=True,row=1)#arrowup
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="dtcc1button8", disabled=True,row=1)#arrowup
     async def dtcc1button8(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.fed}", custom_id="dtcc1button9",disabled=False,row=1)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.fed}", custom_id="dtcc1button9",disabled=False,row=1)#datachart
     async def dtcc1button9(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="dtcc1button10",row=1,disabled=True)#5
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="dtcc1button10",row=1,disabled=True)#5
     async def dtcc1button10(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -37535,19 +37535,19 @@ class DTCCViewStart(disnake.ui.View):
     async def dtcc1button11(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.movingchart}", custom_id="dtcc1button12", disabled=True,row=3) #arrowleft
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.movingchart}", custom_id="dtcc1button12", disabled=True,row=3) #arrowleft
     async def dtcc1button12(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.confirmed}", custom_id="dtcc1button13",row=3)#fudstop core
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.confirmed}", custom_id="dtcc1button13",row=3)#fudstop core
     async def dtcc1button13(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         
 
         await inter.response.edit_message(view=LitStart(), embed=ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.movingchart}", custom_id="dtcc1button14", disabled=True,row=3)#arrowright
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.movingchart}", custom_id="dtcc1button14", disabled=True,row=3)#arrowright
     async def dtcc1button14(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -37555,26 +37555,26 @@ class DTCCViewStart(disnake.ui.View):
     async def dtcc1button15(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lt}", custom_id="dtcc1button16",row=4,disabled=True)#8
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lt}", custom_id="dtcc1button16",row=4,disabled=True)#8
     async def dtcc1button16(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lo}", custom_id="dtcc1button17",disabled=True,row=4)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lo}", custom_id="dtcc1button17",disabled=True,row=4)#datachart
     async def dtcc1button17(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lo}", custom_id="dtcc1button18",disabled=True,row=4)#arrowdown
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lo}", custom_id="dtcc1button18",disabled=True,row=4)#arrowdown
     async def dtcc1button18(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.ll}", custom_id="dtcc1button19",disabled=True,row=4)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.ll}", custom_id="dtcc1button19",disabled=True,row=4)#datachart
     async def dtcc1button19(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.ls}", custom_id="dtcc1button20",row=4,disabled=True)#9
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.ls}", custom_id="dtcc1button20",row=4,disabled=True)#9
     async def dtcc1button20(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 class DTCCDrop(disnake.ui.Select):
@@ -37585,18 +37585,18 @@ class DTCCDrop(disnake.ui.Select):
             max_values=1,
             custom_id="dtccdrop",
             options = [ 
-                disnake.SelectOption(emojis=f"{emojis.dtcc}",value=1,label="DTCC Important Notices.",description="Use below listing to find important notices posted starting on September 1st, 2020."),
-                disnake.SelectOption(emojis=f"{emojis.dtcc}",value=2, label="DTCC Rule Filings",description="Use this link to check on any recent DTCC SEC Filings."),
-                disnake.SelectOption(emojis=f"{emojis.dtcc}",value=3, label="DTCC Press Room",description="DTCC Important News and Press Releases"),
-                disnake.SelectOption(emojis=f"{emojis.dtcc}",value=4, label="DTCC Podcasts", description="Listen to important podcasts from the industry."),
-                disnake.SelectOption(emojis=f"{emojis.dtcc}",value=5, label="Repo Economics and Settlement Venues", description="Discussion of central clearing of U.S. Treasury (UST) repos."),
-                disnake.SelectOption(emojis=f"{emojis.dtcc}",value=6,label="DTCC Subsidararies", description="View the companies DTCC owns or controls."),
-                disnake.SelectOption(emojis=f"{emojis.dtcc}",value=7, label="FICC", description="DTCC is the parent of FICC. Learn about them here."),
-                disnake.SelectOption(emojis=f"{emojis.dtcc}",value=8, label="NSCC", description="DTCC is the parent of NSCC. Learn more about NSCC here."),
-                disnake.SelectOption(emojis=f"{emojis.dtcc}",value=9,  label="DTCC Deriv/Serve", description="DTCC is the parent of DERIV/SERV. Learn more here."),
-                disnake.SelectOption(emojis=f"{emojis.dtcc}",value=10, label="DTCC Operational Arrangements", description="Learn about the control DTCC has over assets."),
-                disnake.SelectOption(emojis=f"{emojis.dtcc}", value=11, label="DTCC RSS Feeds", description="Never miss an important update again by subscribing to DTCC rss feeds."),
-                disnake.SelectOption(emojis=f"{emojis.dtcc}", value=12, label="DTCC - Settlement By Numbers", description="Learn about T+1 and T+0 settlement.")
+                disnake.SelectOption(emoji=f"{emojis.dtcc}",value=1,label="DTCC Important Notices.",description="Use below listing to find important notices posted starting on September 1st, 2020."),
+                disnake.SelectOption(emoji=f"{emojis.dtcc}",value=2, label="DTCC Rule Filings",description="Use this link to check on any recent DTCC SEC Filings."),
+                disnake.SelectOption(emoji=f"{emojis.dtcc}",value=3, label="DTCC Press Room",description="DTCC Important News and Press Releases"),
+                disnake.SelectOption(emoji=f"{emojis.dtcc}",value=4, label="DTCC Podcasts", description="Listen to important podcasts from the industry."),
+                disnake.SelectOption(emoji=f"{emojis.dtcc}",value=5, label="Repo Economics and Settlement Venues", description="Discussion of central clearing of U.S. Treasury (UST) repos."),
+                disnake.SelectOption(emoji=f"{emojis.dtcc}",value=6,label="DTCC Subsidararies", description="View the companies DTCC owns or controls."),
+                disnake.SelectOption(emoji=f"{emojis.dtcc}",value=7, label="FICC", description="DTCC is the parent of FICC. Learn about them here."),
+                disnake.SelectOption(emoji=f"{emojis.dtcc}",value=8, label="NSCC", description="DTCC is the parent of NSCC. Learn more about NSCC here."),
+                disnake.SelectOption(emoji=f"{emojis.dtcc}",value=9,  label="DTCC Deriv/Serve", description="DTCC is the parent of DERIV/SERV. Learn more here."),
+                disnake.SelectOption(emoji=f"{emojis.dtcc}",value=10, label="DTCC Operational Arrangements", description="Learn about the control DTCC has over assets."),
+                disnake.SelectOption(emoji=f"{emojis.dtcc}", value=11, label="DTCC RSS Feeds", description="Never miss an important update again by subscribing to DTCC rss feeds."),
+                disnake.SelectOption(emoji=f"{emojis.dtcc}", value=12, label="DTCC - Settlement By Numbers", description="Learn about T+1 and T+0 settlement.")
 
             ]
         )
@@ -37642,50 +37642,50 @@ class DTCCViewStart(disnake.ui.View):
 
         self.add_item(DTCCDrop())
     
-    @disnake.ui.button(style=disnake.ButtonStyle.red,emojis=f"{emojis.dtcc}", custom_id="dtcc1button1",disabled=True,row=0)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.red,emoji=f"{emojis.dtcc}", custom_id="dtcc1button1",disabled=True,row=0)#datachart
     async def dtcc1button1(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         embed = disnake.Embed(title=f"{emojis.ln}{emojis.ly}{emojis.ls}{emojis.le}", description=f"```py\nView the drop-downs for useful links and tools as well as informative education.```")
 
 
         await inter.response.edit_message(view=DTCCViewStart(), embed=embed)
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="dtcc1button2",row=0,disabled=True)#1
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="dtcc1button2",row=0,disabled=True)#1
     async def dtcc1button2(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.sec}", custom_id="dtcc1button3",row=0,disabled=False)#2
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.sec}", custom_id="dtcc1button3",row=0,disabled=False)#2
     async def menu(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed=ToolsViewStart().embed)
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="dtcc1button4",row=0,disabled=True)#3
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="dtcc1button4",row=0,disabled=True)#3
     async def dtcc1button4(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.finrawhite}", custom_id="dtcc1button5",disabled=False, row=0)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.finrawhite}", custom_id="dtcc1button5",disabled=False, row=0)#datachart
     async def dtcc1button5(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed=ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="dtcc1button6",row=1,disabled=True)#4
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="dtcc1button6",row=1,disabled=True)#4
     async def dtcc1button6(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.nyse}", custom_id="dtcc1button7",disabled=False,row=1)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.nyse}", custom_id="dtcc1button7",disabled=False,row=1)#datachart
     async def dtcc1button7(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         embed = disnake.Embed(title=f"{emojis.ln}{emojis.ly}{emojis.ls}{emojis.le}", description=f"```py\nView the drop-downs for useful links and tools as well as informative education.```")
         await inter.response.edit_message(view=NYSEViewStart(), embed = embed)
 
-    @disnake.ui.button(style=disnake.ButtonStyle.blurple, emojis=f"{emojis.confirmed}", custom_id="dtcc1button8", disabled=True,row=1)#arrowup
+    @disnake.ui.button(style=disnake.ButtonStyle.blurple, emoji=f"{emojis.confirmed}", custom_id="dtcc1button8", disabled=True,row=1)#arrowup
     async def dtcc1button8(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.fed}", custom_id="dtcc1button9",disabled=False,row=1)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.fed}", custom_id="dtcc1button9",disabled=False,row=1)#datachart
     async def dtcc1button9(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="dtcc1button10",row=1,disabled=True)#5
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="dtcc1button10",row=1,disabled=True)#5
     async def dtcc1button10(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -37693,19 +37693,19 @@ class DTCCViewStart(disnake.ui.View):
     async def dtcc1button11(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.movingchart}", custom_id="dtcc1button12", disabled=True,row=3) #arrowleft
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.movingchart}", custom_id="dtcc1button12", disabled=True,row=3) #arrowleft
     async def dtcc1button12(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.stock}", custom_id="dtcc1button13",row=3)#fudstop core
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.stock}", custom_id="dtcc1button13",row=3)#fudstop core
     async def dtcc1button13(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         
 
         await inter.response.edit_message(view=OFRDataViewStart())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.movingchart}", custom_id="dtcc1button14", disabled=True,row=3)#arrowright
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.movingchart}", custom_id="dtcc1button14", disabled=True,row=3)#arrowright
     async def dtcc1button14(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -37713,26 +37713,26 @@ class DTCCViewStart(disnake.ui.View):
     async def dtcc1button15(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=CBOEViewStart())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lt}", custom_id="dtcc1button16",row=4,disabled=True)#8
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lt}", custom_id="dtcc1button16",row=4,disabled=True)#8
     async def dtcc1button16(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lo}", custom_id="dtcc1button17",disabled=True,row=4)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lo}", custom_id="dtcc1button17",disabled=True,row=4)#datachart
     async def dtcc1button17(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lo}", custom_id="dtcc1button18",disabled=True,row=4)#arrowdown
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lo}", custom_id="dtcc1button18",disabled=True,row=4)#arrowdown
     async def dtcc1button18(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.ll}", custom_id="dtcc1button19",disabled=True,row=4)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.ll}", custom_id="dtcc1button19",disabled=True,row=4)#datachart
     async def dtcc1button19(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.ls}", custom_id="dtcc1button20",row=4,disabled=True)#9
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.ls}", custom_id="dtcc1button20",row=4,disabled=True)#9
     async def dtcc1button20(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -37746,26 +37746,26 @@ class NYSEDrop(disnake.ui.Select):
             max_values=1,
             custom_id="nysedrop",
             options = [ 
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=1,label="Newsletter",description="Sign up for the NYSE newsletter to never miss important events."),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=2,label="NYSE Closing Auction",description="Internalization effect throughout imbalance period"),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=3,label="NYSE Closing Auction",description="Liquidity momentum around rebalances"),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=4,label="NYSE Weekly Strategy Update",description="https://www.linkedin.com/feed/update/urn:li:activity:6999126035501891584"),                
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=5,label="Enhancing ETF Market Quality",description="An analysis on the NYSE's Liquidity Program for ETFs"),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=6,label="Focus on Climate",description="NYSE Research study on the industry shift towards climate."),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=7,label="Uneven Liquidity",description="Uneven Liquidity and unused tools in the US Financial Markets."),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=8,label="Early Opportunities",description="Post-opening auction fill behaviors and opportunities."),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=9,label="Retail Liquidity Program",description="A deep dive into this program."),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=10,label="NYSE Symbol Mapping",description="Symbol mapping for the NYSE parent exchange."),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=11,label="NYSEArca Symbol Mapping",description="Symbol mapping for the NYSEARCA exchange."),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=12,label="NYSEAmer Symbol Mapping",description="Symbol mapping for the NYSEAMER exchange."),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=13,label="NYSEArca Options Symbols",description="NYSEArca Option Symbol Mapping."),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=14,label="ArcaAmex Symbol Mapping",description="ArcaAmex Options Symbol Mapping."),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=15,label="Global OTC Mapping",description="Global symbol mapping from the Over the Counter Market."),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=16,label="Consolidated Short Interest",description="NYSE Group Market-wide consolidated short-interest."),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=17,label="NYSE Group LULD Circuitbreakers",description="The NYSE Limit-up Limit-down market circuitbreakers."),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=18,label="NYSE SSR Rule List",description="View tickers that are on the SSR list - or dropped 10% or more."),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=19,label="Short Data",description="NYSE Short Data"),
-                disnake.SelectOption(emojis=f"{emojis.nyse}",value=20,label="NYSE CTS Summary Files",description="View the NYSE CTS Summary files."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=1,label="Newsletter",description="Sign up for the NYSE newsletter to never miss important events."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=2,label="NYSE Closing Auction",description="Internalization effect throughout imbalance period"),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=3,label="NYSE Closing Auction",description="Liquidity momentum around rebalances"),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=4,label="NYSE Weekly Strategy Update",description="https://www.linkedin.com/feed/update/urn:li:activity:6999126035501891584"),                
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=5,label="Enhancing ETF Market Quality",description="An analysis on the NYSE's Liquidity Program for ETFs"),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=6,label="Focus on Climate",description="NYSE Research study on the industry shift towards climate."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=7,label="Uneven Liquidity",description="Uneven Liquidity and unused tools in the US Financial Markets."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=8,label="Early Opportunities",description="Post-opening auction fill behaviors and opportunities."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=9,label="Retail Liquidity Program",description="A deep dive into this program."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=10,label="NYSE Symbol Mapping",description="Symbol mapping for the NYSE parent exchange."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=11,label="NYSEArca Symbol Mapping",description="Symbol mapping for the NYSEARCA exchange."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=12,label="NYSEAmer Symbol Mapping",description="Symbol mapping for the NYSEAMER exchange."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=13,label="NYSEArca Options Symbols",description="NYSEArca Option Symbol Mapping."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=14,label="ArcaAmex Symbol Mapping",description="ArcaAmex Options Symbol Mapping."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=15,label="Global OTC Mapping",description="Global symbol mapping from the Over the Counter Market."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=16,label="Consolidated Short Interest",description="NYSE Group Market-wide consolidated short-interest."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=17,label="NYSE Group LULD Circuitbreakers",description="The NYSE Limit-up Limit-down market circuitbreakers."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=18,label="NYSE SSR Rule List",description="View tickers that are on the SSR list - or dropped 10% or more."),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=19,label="Short Data",description="NYSE Short Data"),
+                disnake.SelectOption(emoji=f"{emojis.nyse}",value=20,label="NYSE CTS Summary Files",description="View the NYSE CTS Summary files."),
 
                 ]
             )
@@ -37824,48 +37824,48 @@ class NYSEViewStart(disnake.ui.View):
 
         self.add_item(NYSEDrop())
     
-    @disnake.ui.button(style=disnake.ButtonStyle.green,emojis=f"{emojis.dtcc}", custom_id="nyse1button1",disabled=False,row=0)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green,emoji=f"{emojis.dtcc}", custom_id="nyse1button1",disabled=False,row=0)#datachart
     async def nyse1button1(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 
 
         await inter.response.edit_message(view=DTCCViewStart(), embed=ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="nyse1button2",row=0,disabled=True)#1
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="nyse1button2",row=0,disabled=True)#1
     async def nyse1button2(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.sec}", custom_id="nyse1button3",row=0,disabled=True)#2
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.sec}", custom_id="nyse1button3",row=0,disabled=True)#2
     async def menu(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed=ToolsViewStart().embed)
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="nyse1button4",row=0,disabled=True)#3
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="nyse1button4",row=0,disabled=True)#3
     async def nyse1button4(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.finrawhite}", custom_id="nyse1button5",disabled=True, row=0)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.finrawhite}", custom_id="nyse1button5",disabled=True, row=0)#datachart
     async def nyse1button5(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed=ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="nyse1button6",row=1,disabled=True)#4
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="nyse1button6",row=1,disabled=True)#4
     async def nyse1button6(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.red, emojis=f"{emojis.nyse}", custom_id="nyse1button7",disabled=True,row=1)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.red, emoji=f"{emojis.nyse}", custom_id="nyse1button7",disabled=True,row=1)#datachart
     async def nyse1button7(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.confirmed}", custom_id="nyse1button8", disabled=False,row=1)#arrowup
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.confirmed}", custom_id="nyse1button8", disabled=False,row=1)#arrowup
     async def nyse1button8(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.fed}", custom_id="nyse1button9",disabled=False,row=1)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.fed}", custom_id="nyse1button9",disabled=False,row=1)#datachart
     async def nyse1button9(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="nyse1button10",row=1,disabled=True)#5
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="nyse1button10",row=1,disabled=True)#5
     async def nyse1button10(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -37873,19 +37873,19 @@ class NYSEViewStart(disnake.ui.View):
     async def nyse1button11(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.movingchart}", custom_id="nyse1button12", disabled=True,row=3) #arrowleft
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.movingchart}", custom_id="nyse1button12", disabled=True,row=3) #arrowleft
     async def nyse1button12(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.stock}", custom_id="nyse1button13",row=3)#fudstop core
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.stock}", custom_id="nyse1button13",row=3)#fudstop core
     async def nyse1button13(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         
 
         await inter.response.edit_message(view=LitStart(), embed=ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.movingchart}", custom_id="nyse1button14", disabled=True,row=3)#arrowright
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.movingchart}", custom_id="nyse1button14", disabled=True,row=3)#arrowright
     async def nyse1button14(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -37893,26 +37893,26 @@ class NYSEViewStart(disnake.ui.View):
     async def nyse1button15(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=CBOEViewStart())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lt}", custom_id="nyse1button16",row=4,disabled=True)#8
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lt}", custom_id="nyse1button16",row=4,disabled=True)#8
     async def nyse1button16(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lo}", custom_id="nyse1button17",disabled=True,row=4)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lo}", custom_id="nyse1button17",disabled=True,row=4)#datachart
     async def nyse1button17(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lo}", custom_id="nyse1button18",disabled=True,row=4)#arrowdown
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lo}", custom_id="nyse1button18",disabled=True,row=4)#arrowdown
     async def nyse1button18(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.ll}", custom_id="nyse1button19",disabled=True,row=4)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.ll}", custom_id="nyse1button19",disabled=True,row=4)#datachart
     async def nyse1button19(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.ls}", custom_id="nyse1button20",row=4,disabled=True)#9
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.ls}", custom_id="nyse1button20",row=4,disabled=True)#9
     async def dtcc1button20(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -37927,30 +37927,30 @@ class CBOEDrop(disnake.ui.Select):
             max_values=1,
             custom_id="cboedddrop",
             options = [ 
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=1,label="CBOE Events",description="Register for CBOE events for educational content."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=2,label="Options Calculator",description="Use this tool to help price options / guage profit."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=3,label="Market Share Graph",description="Compare matched volume between the 16 lit and unlit exchanges"),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=4,label="BZX Volume Data",description="Volume for the CBOE BZX Exchange."),                
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=5,label="BYX Volume Data",description="Volume for the CBOE BYX Exchange."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=6,label="EDGX Volume Data",description="Volume for the CBOE EDGX Exchange."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=7,label="EDGA Volume Data",description="Volume for the CBOE EDGA Exchange."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=8,label="CBOE Market Marker Opportunities",description="Missed Liquidity, Exhausted Liquidity, Routed Liquidity."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=9,label="CBOE BZX Market Marker Opp. Download",description="Download the CBOE Market Maker report data for BZX."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=10,label="CBOE BYX  Market Marker Opp. Download",description="Download the CBOE Market Maker report data for BZX."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=11,label="CBOE EDGA Market Marker Opp. Download",description="Download the CBOE Market Maker report data for BZX."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=12,label="CBOE EDGX Market Marker Opp. Download",description="Download the CBOE Market Maker report data for BZX."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=13,label="BZX Price Improvement Data",description="View price improvement data download from CBOE BZX."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=14,label="BYX Price Improvement Data",description="View price improvement data download from CBOE BYX."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=15,label="EDGA Price Improvement Data",description="View price improvement data download from CBOE EDGA."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=16,label="EDGX Price Improvement Data",description="View price improvement data download from CBOE EDGX."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=17,label="BZX Daily Short Sale Reports.",description="Downloadable short volume data."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=18,label="BYX Daily Short Sale Reports.",description="Downloadable short volume data."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=19,label="EDGA Daily Short Sale Reports.",description="Downloadable short volume data."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=20,label="EDGX Daily Short Sale Reports.",description="Downloadable short volume data."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=21,label="CBOE Short Interest Reports",description="View downloadable short interest reports from CBOE."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=22,label="CBOE Options Institute",description="Learn about options with CBOE education."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=23,label="Trade Optimizer",description="Get help setting up option strategies with this tool."),
-                disnake.SelectOption(emojis=f"{emojis.tradertools}",value=24,label="CBOE Options Glossary",description="Get up to speed with options terms."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=1,label="CBOE Events",description="Register for CBOE events for educational content."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=2,label="Options Calculator",description="Use this tool to help price options / guage profit."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=3,label="Market Share Graph",description="Compare matched volume between the 16 lit and unlit exchanges"),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=4,label="BZX Volume Data",description="Volume for the CBOE BZX Exchange."),                
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=5,label="BYX Volume Data",description="Volume for the CBOE BYX Exchange."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=6,label="EDGX Volume Data",description="Volume for the CBOE EDGX Exchange."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=7,label="EDGA Volume Data",description="Volume for the CBOE EDGA Exchange."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=8,label="CBOE Market Marker Opportunities",description="Missed Liquidity, Exhausted Liquidity, Routed Liquidity."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=9,label="CBOE BZX Market Marker Opp. Download",description="Download the CBOE Market Maker report data for BZX."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=10,label="CBOE BYX  Market Marker Opp. Download",description="Download the CBOE Market Maker report data for BZX."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=11,label="CBOE EDGA Market Marker Opp. Download",description="Download the CBOE Market Maker report data for BZX."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=12,label="CBOE EDGX Market Marker Opp. Download",description="Download the CBOE Market Maker report data for BZX."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=13,label="BZX Price Improvement Data",description="View price improvement data download from CBOE BZX."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=14,label="BYX Price Improvement Data",description="View price improvement data download from CBOE BYX."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=15,label="EDGA Price Improvement Data",description="View price improvement data download from CBOE EDGA."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=16,label="EDGX Price Improvement Data",description="View price improvement data download from CBOE EDGX."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=17,label="BZX Daily Short Sale Reports.",description="Downloadable short volume data."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=18,label="BYX Daily Short Sale Reports.",description="Downloadable short volume data."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=19,label="EDGA Daily Short Sale Reports.",description="Downloadable short volume data."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=20,label="EDGX Daily Short Sale Reports.",description="Downloadable short volume data."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=21,label="CBOE Short Interest Reports",description="View downloadable short interest reports from CBOE."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=22,label="CBOE Options Institute",description="Learn about options with CBOE education."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=23,label="Trade Optimizer",description="Get help setting up option strategies with this tool."),
+                disnake.SelectOption(emoji=f"{emojis.tradertools}",value=24,label="CBOE Options Glossary",description="Get up to speed with options terms."),
 
 
                 ]
@@ -38017,48 +38017,48 @@ class CBOEViewStart(disnake.ui.View):
 
         self.add_item(CBOEDrop())
     
-    @disnake.ui.button(style=disnake.ButtonStyle.green,emojis=f"{emojis.dtcc}", custom_id="cboe1button1",disabled=False,row=0)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green,emoji=f"{emojis.dtcc}", custom_id="cboe1button1",disabled=False,row=0)#datachart
     async def cboe1button1(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 
 
         await inter.response.edit_message(view=DTCCViewStart())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="cboe1button2",row=0,disabled=True)#1
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="cboe1button2",row=0,disabled=True)#1
     async def cboe1button2(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.sec}", custom_id="cboe1button3",row=0,disabled=False)#2
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.sec}", custom_id="cboe1button3",row=0,disabled=False)#2
     async def menu(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed=ToolsViewStart().embed)
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="cboe1button4",row=0,disabled=True)#3
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="cboe1button4",row=0,disabled=True)#3
     async def cboe1button4(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.finrawhite}", custom_id="cboe1button5",disabled=False, row=0)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.finrawhite}", custom_id="cboe1button5",disabled=False, row=0)#datachart
     async def cboe1button5(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed=ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="cboe1button6",row=1,disabled=True)#4
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="cboe1button6",row=1,disabled=True)#4
     async def cboe1button6(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.nyse}", custom_id="cboe1button7",disabled=False,row=1)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.nyse}", custom_id="cboe1button7",disabled=False,row=1)#datachart
     async def cboe1button7(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=NYSEViewStart())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="cboe1button8", disabled=True,row=1)#arrowup
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="cboe1button8", disabled=True,row=1)#arrowup
     async def cboe1button8(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.fed}", custom_id="cboe1button9",disabled=False,row=1)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.fed}", custom_id="cboe1button9",disabled=False,row=1)#datachart
     async def cboe1button9(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="cboe1button10",row=1,disabled=True)#5
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="cboe1button10",row=1,disabled=True)#5
     async def cboe1button10(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -38066,19 +38066,19 @@ class CBOEViewStart(disnake.ui.View):
     async def cboe1button11(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.movingchart}", custom_id="cboe1button12", disabled=True,row=3) #arrowleft
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.movingchart}", custom_id="cboe1button12", disabled=True,row=3) #arrowleft
     async def cboe1button12(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.confirmed}", custom_id="cboe1button13",row=3)#fudstop core
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.confirmed}", custom_id="cboe1button13",row=3)#fudstop core
     async def cboe1button13(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         
 
         await inter.response.edit_message(view=LitStart(), embed=ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.movingchart}", custom_id="cboe1button14", disabled=True,row=3)#arrowright
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.movingchart}", custom_id="cboe1button14", disabled=True,row=3)#arrowright
     async def cboe1button14(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -38086,26 +38086,26 @@ class CBOEViewStart(disnake.ui.View):
     async def cboe1button15(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lt}", custom_id="cboe1button16",row=4,disabled=True)#8
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lt}", custom_id="cboe1button16",row=4,disabled=True)#8
     async def cboe1button16(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lo}", custom_id="cboe1button17",disabled=True,row=4)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lo}", custom_id="cboe1button17",disabled=True,row=4)#datachart
     async def cboe1button17(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lo}", custom_id="cboe1button18",disabled=True,row=4)#arrowdown
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lo}", custom_id="cboe1button18",disabled=True,row=4)#arrowdown
     async def cboe1button18(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.ll}", custom_id="cboe1button19",disabled=True,row=4)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.ll}", custom_id="cboe1button19",disabled=True,row=4)#datachart
     async def cboe1button19(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.ls}", custom_id="cboe1button20",row=4,disabled=True)#9
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.ls}", custom_id="cboe1button20",row=4,disabled=True)#9
     async def cboe1button20(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -38120,23 +38120,23 @@ class OFRDrop(disnake.ui.Select):
             max_values=1,
             custom_id="ofrdrop",
             options = [ 
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=2,label="Subscribe to Newsletter",description="Recieve important updates and publications via email."),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=1,label="Press Releases",description="Recieve important press releases from the OFR"),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=3,label="Working Papers",description="Office of Financial Research working papers library."),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=4,label="Financial Instrument Release Database",description="The FIRD provides the terms for five asset classes: Equity, Debt, Option, Warrant, and Future."),                
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=5,label="LEI Identifier",description="Legal Entity Identifier by Country."),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=6,label="Interagency Data Inventory",description="The inventory may be used for identifying data gaps."),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=7,label="LIBOR Alternatives",description="Pilot project to explore how to collect data about bilateral repo agreements."),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=8,label="Data Quality in Swap Repositories",description="The OFR and the CFTC want to promote the use of data standards in swap data"),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=9,label="Congressional Testimony",description="Congressional Testimony out of the OFR."),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=10,label="The Office of Financial Research Blog"),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=11,label="Bank Systemic Risk Monitor",description="A collection of key measures for monitoring systemic risks posed by the largest banks"),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=12,label="Financial Stress Index",description="A daily market-based snapshot of stress in global financial markets"),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=13,label="Financial Vulnerability Monitor",description="his Financial System Vulnerabilities Monitor has been discontinued as of January 2021."),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=14,label="Short Term Funding Monitor",description="Short-term funding markets are the core of liquidity."),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=15,label="US Money Market Fund Monitor",description="Designed to track the investment portfolios of money market funds by funds' asset type"),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=16,label="Financial Markets Monitor",description="The Financial Markets Monitor is a review of themes and developments in financial markets. "),
-                disnake.SelectOption(emojis=f"{emojis.stock}",value=17,label="Repo Market Data Release"),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=2,label="Subscribe to Newsletter",description="Recieve important updates and publications via email."),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=1,label="Press Releases",description="Recieve important press releases from the OFR"),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=3,label="Working Papers",description="Office of Financial Research working papers library."),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=4,label="Financial Instrument Release Database",description="The FIRD provides the terms for five asset classes: Equity, Debt, Option, Warrant, and Future."),                
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=5,label="LEI Identifier",description="Legal Entity Identifier by Country."),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=6,label="Interagency Data Inventory",description="The inventory may be used for identifying data gaps."),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=7,label="LIBOR Alternatives",description="Pilot project to explore how to collect data about bilateral repo agreements."),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=8,label="Data Quality in Swap Repositories",description="The OFR and the CFTC want to promote the use of data standards in swap data"),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=9,label="Congressional Testimony",description="Congressional Testimony out of the OFR."),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=10,label="The Office of Financial Research Blog"),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=11,label="Bank Systemic Risk Monitor",description="A collection of key measures for monitoring systemic risks posed by the largest banks"),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=12,label="Financial Stress Index",description="A daily market-based snapshot of stress in global financial markets"),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=13,label="Financial Vulnerability Monitor",description="his Financial System Vulnerabilities Monitor has been discontinued as of January 2021."),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=14,label="Short Term Funding Monitor",description="Short-term funding markets are the core of liquidity."),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=15,label="US Money Market Fund Monitor",description="Designed to track the investment portfolios of money market funds by funds' asset type"),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=16,label="Financial Markets Monitor",description="The Financial Markets Monitor is a review of themes and developments in financial markets. "),
+                disnake.SelectOption(emoji=f"{emojis.stock}",value=17,label="Repo Market Data Release"),
 
 
                 ]
@@ -38188,48 +38188,48 @@ class OFRDataViewStart(disnake.ui.View):
 
         self.add_item(OFRDrop())
     
-    @disnake.ui.button(style=disnake.ButtonStyle.green,emojis=f"{emojis.dtcc}", custom_id="dtcc1button1",disabled=True,row=0)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green,emoji=f"{emojis.dtcc}", custom_id="dtcc1button1",disabled=True,row=0)#datachart
     async def dtcc1button1(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 
 
         await inter.response.edit_message(view=DTCCViewStart, embed=ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="dtcc1button2",row=0,disabled=True)#1
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="dtcc1button2",row=0,disabled=True)#1
     async def dtcc1button2(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.blurple, emojis=f"{emojis.sec}", custom_id="dtcc1button3",row=0,disabled=True)#2
+    @disnake.ui.button(style=disnake.ButtonStyle.blurple, emoji=f"{emojis.sec}", custom_id="dtcc1button3",row=0,disabled=True)#2
     async def menu(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=None)
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="dtcc1button4",row=0,disabled=True)#3
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="dtcc1button4",row=0,disabled=True)#3
     async def dtcc1button4(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.finrawhite}", custom_id="dtcc1button5",disabled=False, row=0)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.finrawhite}", custom_id="dtcc1button5",disabled=False, row=0)#datachart
     async def dtcc1button5(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=ToolsViewStart(), embed=ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="dtcc1button6",row=1,disabled=True)#4
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="dtcc1button6",row=1,disabled=True)#4
     async def dtcc1button6(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.nyse}", custom_id="dtcc1button7",disabled=False,row=1)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.nyse}", custom_id="dtcc1button7",disabled=False,row=1)#datachart
     async def dtcc1button7(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=NYSEViewStart())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.blurple, emojis=f"{emojis.confirmed}", custom_id="dtcc1button8", disabled=False,row=1)#arrowup
+    @disnake.ui.button(style=disnake.ButtonStyle.blurple, emoji=f"{emojis.confirmed}", custom_id="dtcc1button8", disabled=False,row=1)#arrowup
     async def dtcc1button8(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emojis=f"{emojis.fed}", custom_id="dtcc1button9",disabled=False,row=1)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.fed}", custom_id="dtcc1button9",disabled=False,row=1)#datachart
     async def dtcc1button9(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.uptrend}", custom_id="dtcc1button10",row=1,disabled=True)#5
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.uptrend}", custom_id="dtcc1button10",row=1,disabled=True)#5
     async def dtcc1button10(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -38237,19 +38237,19 @@ class OFRDataViewStart(disnake.ui.View):
     async def dtcc1button11(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=None)
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.movingchart}", custom_id="dtcc1button12", disabled=True,row=3) #arrowleft
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.movingchart}", custom_id="dtcc1button12", disabled=True,row=3) #arrowleft
     async def dtcc1button12(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.red, emojis=f"{emojis.stock}", custom_id="dtcc1button13",row=3)#fudstop core
+    @disnake.ui.button(style=disnake.ButtonStyle.red, emoji=f"{emojis.stock}", custom_id="dtcc1button13",row=3)#fudstop core
     async def dtcc1button13(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         
 
         await inter.response.edit_message(view=OFRDataViewStart())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.movingchart}", custom_id="dtcc1button14", disabled=True,row=3)#arrowright
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.movingchart}", custom_id="dtcc1button14", disabled=True,row=3)#arrowright
     async def dtcc1button14(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -38257,26 +38257,26 @@ class OFRDataViewStart(disnake.ui.View):
     async def dtcc1button15(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=CBOEViewStart())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lt}", custom_id="dtcc1button16",row=4,disabled=True)#8
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lt}", custom_id="dtcc1button16",row=4,disabled=True)#8
     async def dtcc1button16(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lo}", custom_id="dtcc1button17",disabled=True,row=4)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lo}", custom_id="dtcc1button17",disabled=True,row=4)#datachart
     async def dtcc1button17(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.lo}", custom_id="dtcc1button18",disabled=True,row=4)#arrowdown
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.lo}", custom_id="dtcc1button18",disabled=True,row=4)#arrowdown
     async def dtcc1button18(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.ll}", custom_id="dtcc1button19",disabled=True,row=4)#datachart
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.ll}", custom_id="dtcc1button19",disabled=True,row=4)#datachart
     async def dtcc1button19(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.grey, emojis=f"{emojis.ls}", custom_id="dtcc1button20",row=4,disabled=True)#9
+    @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=f"{emojis.ls}", custom_id="dtcc1button20",row=4,disabled=True)#9
     async def dtcc1button20(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -38290,30 +38290,30 @@ class OFRDataViewStart(disnake.ui.View):
 #             max_values=1,
 #             custom_id="dtccdrop",
 #             options = [ 
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=1,label="Newsletter",description="Sign up for the NYSE newsletter to never miss important events."),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=2,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=3,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=4,label="",description=""),                
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=5,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=6,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=7,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=8,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=9,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=10,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=11,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=12,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=13,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=14,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=15,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=16,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=17,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=18,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=19,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=20,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=21,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=22,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=23,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=24,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=1,label="Newsletter",description="Sign up for the NYSE newsletter to never miss important events."),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=2,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=3,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=4,label="",description=""),                
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=5,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=6,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=7,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=8,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=9,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=10,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=11,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=12,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=13,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=14,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=15,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=16,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=17,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=18,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=19,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=20,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=21,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=22,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=23,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=24,label="",description=""),
 
 
 #                 ]
@@ -38380,48 +38380,48 @@ class OFRDataViewStart(disnake.ui.View):
 
 #         self.add_item(DTCCDrop())
     
-#     @disnake.ui.button(style=disnake.ButtonStyle.red,emoji=emojis=f"{emojis.dtcc}", custom_id="dtcc1button1",disabled=True,row=0)#datachart
+#     @disnake.ui.button(style=disnake.ButtonStyle.red,emoji=emoji=f"{emojis.dtcc}", custom_id="dtcc1button1",disabled=True,row=0)#datachart
 #     async def dtcc1button1(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 
 
 #         await inter.response.edit_message(view=self, embed=ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.uptrend}", custom_id="dtcc1button2",row=0,disabled=True)#1
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.uptrend}", custom_id="dtcc1button2",row=0,disabled=True)#1
 #     async def dtcc1button2(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emojis=f"{emojis.sec}", custom_id="dtcc1button3",row=0,disabled=False)#2
+#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emoji=f"{emojis.sec}", custom_id="dtcc1button3",row=0,disabled=False)#2
 #     async def menu(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=ToolsViewStart(), embed=ToolsViewStart().embed)
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.uptrend}", custom_id="dtcc1button4",row=0,disabled=True)#3
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.uptrend}", custom_id="dtcc1button4",row=0,disabled=True)#3
 #     async def dtcc1button4(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emojis=f"{emojis.finrawhite}", custom_id="dtcc1button5",disabled=False, row=0)#datachart
+#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emoji=f"{emojis.finrawhite}", custom_id="dtcc1button5",disabled=False, row=0)#datachart
 #     async def dtcc1button5(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=ToolsViewStart(), embed=ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.uptrend}", custom_id="dtcc1button6",row=1,disabled=True)#4
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.uptrend}", custom_id="dtcc1button6",row=1,disabled=True)#4
 #     async def dtcc1button6(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emojis=f"{emojis.nyse}", custom_id="dtcc1button7",disabled=False,row=1)#datachart
+#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emoji=f"{emojis.nyse}", custom_id="dtcc1button7",disabled=False,row=1)#datachart
 #     async def dtcc1button7(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.uptrend}", custom_id="dtcc1button8", disabled=True,row=1)#arrowup
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.uptrend}", custom_id="dtcc1button8", disabled=True,row=1)#arrowup
 #     async def dtcc1button8(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emojis=f"{emojis.fed}", custom_id="dtcc1button9",disabled=False,row=1)#datachart
+#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emoji=f"{emojis.fed}", custom_id="dtcc1button9",disabled=False,row=1)#datachart
 #     async def dtcc1button9(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.uptrend}", custom_id="dtcc1button10",row=1,disabled=True)#5
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.uptrend}", custom_id="dtcc1button10",row=1,disabled=True)#5
 #     async def dtcc1button10(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -38429,19 +38429,19 @@ class OFRDataViewStart(disnake.ui.View):
 #     async def dtcc1button11(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=ToolsViewStart(), embed = ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.movingchart}", custom_id="dtcc1button12", disabled=True,row=3) #arrowleft
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.movingchart}", custom_id="dtcc1button12", disabled=True,row=3) #arrowleft
 #     async def dtcc1button12(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.blurple, emoji=emojis=f"{emojis.confirmed}", custom_id="dtcc1button13",row=3)#fudstop core
+#     @disnake.ui.button(style=disnake.ButtonStyle.blurple, emoji=emoji=f"{emojis.confirmed}", custom_id="dtcc1button13",row=3)#fudstop core
 #     async def dtcc1button13(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         
 
 #         await inter.response.edit_message(view=LitStart(), embed=ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.movingchart}", custom_id="dtcc1button14", disabled=True,row=3)#arrowright
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.movingchart}", custom_id="dtcc1button14", disabled=True,row=3)#arrowright
 #     async def dtcc1button14(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -38449,26 +38449,26 @@ class OFRDataViewStart(disnake.ui.View):
 #     async def dtcc1button15(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=ToolsViewStart(), embed = ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.lt}", custom_id="dtcc1button16",row=4,disabled=True)#8
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.lt}", custom_id="dtcc1button16",row=4,disabled=True)#8
 #     async def dtcc1button16(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.lo}", custom_id="dtcc1button17",disabled=True,row=4)#datachart
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.lo}", custom_id="dtcc1button17",disabled=True,row=4)#datachart
 #     async def dtcc1button17(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.lo}", custom_id="dtcc1button18",disabled=True,row=4)#arrowdown
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.lo}", custom_id="dtcc1button18",disabled=True,row=4)#arrowdown
 #     async def dtcc1button18(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.ll}", custom_id="dtcc1button19",disabled=True,row=4)#datachart
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.ll}", custom_id="dtcc1button19",disabled=True,row=4)#datachart
 #     async def dtcc1button19(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.ls}", custom_id="dtcc1button20",row=4,disabled=True)#9
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.ls}", custom_id="dtcc1button20",row=4,disabled=True)#9
 #     async def dtcc1button20(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -38483,31 +38483,31 @@ class OFRDataViewStart(disnake.ui.View):
 #             max_values=1,
 #             custom_id="dtccdrop",
 #             options = [ 
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=1,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=2,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=3,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=4,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=5,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=6,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=7,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=8,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=9,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=10,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=11,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=12,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=13,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=14,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=15,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=16,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=17,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=1,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=2,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=3,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=4,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=5,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=6,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=7,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=8,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=9,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=10,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=11,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=12,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=13,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=14,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=15,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=16,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=17,label="",description=""),
 
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=18,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=19,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=20,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=21,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=22,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=23,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=24,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=18,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=19,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=20,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=21,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=22,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=23,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=24,label="",description=""),
 
 
 #                 ]
@@ -38525,48 +38525,48 @@ class OFRDataViewStart(disnake.ui.View):
 
 #         self.add_item(DTCCDrop())
     
-#     @disnake.ui.button(style=disnake.ButtonStyle.red,emoji=emojis=f"{emojis.dtcc}", custom_id="dtcc1button1",disabled=True,row=0)#datachart
+#     @disnake.ui.button(style=disnake.ButtonStyle.red,emoji=emoji=f"{emojis.dtcc}", custom_id="dtcc1button1",disabled=True,row=0)#datachart
 #     async def dtcc1button1(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 
 
 #         await inter.response.edit_message(view=self, embed=ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.uptrend}", custom_id="dtcc1button2",row=0,disabled=True)#1
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.uptrend}", custom_id="dtcc1button2",row=0,disabled=True)#1
 #     async def dtcc1button2(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emojis=f"{emojis.sec}", custom_id="dtcc1button3",row=0,disabled=False)#2
+#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emoji=f"{emojis.sec}", custom_id="dtcc1button3",row=0,disabled=False)#2
 #     async def menu(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=ToolsViewStart(), embed=ToolsViewStart().embed)
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.uptrend}", custom_id="dtcc1button4",row=0,disabled=True)#3
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.uptrend}", custom_id="dtcc1button4",row=0,disabled=True)#3
 #     async def dtcc1button4(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emojis=f"{emojis.finrawhite}", custom_id="dtcc1button5",disabled=False, row=0)#datachart
+#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emoji=f"{emojis.finrawhite}", custom_id="dtcc1button5",disabled=False, row=0)#datachart
 #     async def dtcc1button5(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=ToolsViewStart(), embed=ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.uptrend}", custom_id="dtcc1button6",row=1,disabled=True)#4
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.uptrend}", custom_id="dtcc1button6",row=1,disabled=True)#4
 #     async def dtcc1button6(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emojis=f"{emojis.nyse}", custom_id="dtcc1button7",disabled=False,row=1)#datachart
+#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emoji=f"{emojis.nyse}", custom_id="dtcc1button7",disabled=False,row=1)#datachart
 #     async def dtcc1button7(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.uptrend}", custom_id="dtcc1button8", disabled=True,row=1)#arrowup
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.uptrend}", custom_id="dtcc1button8", disabled=True,row=1)#arrowup
 #     async def dtcc1button8(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emojis=f"{emojis.fed}", custom_id="dtcc1button9",disabled=False,row=1)#datachart
+#     @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=emoji=f"{emojis.fed}", custom_id="dtcc1button9",disabled=False,row=1)#datachart
 #     async def dtcc1button9(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.uptrend}", custom_id="dtcc1button10",row=1,disabled=True)#5
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.uptrend}", custom_id="dtcc1button10",row=1,disabled=True)#5
 #     async def dtcc1button10(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -38574,19 +38574,19 @@ class OFRDataViewStart(disnake.ui.View):
 #     async def dtcc1button11(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=ToolsViewStart(), embed = ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.movingchart}", custom_id="dtcc1button12", disabled=True,row=3) #arrowleft
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.movingchart}", custom_id="dtcc1button12", disabled=True,row=3) #arrowleft
 #     async def dtcc1button12(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.blurple, emoji=emojis=f"{emojis.confirmed}", custom_id="dtcc1button13",row=3)#fudstop core
+#     @disnake.ui.button(style=disnake.ButtonStyle.blurple, emoji=emoji=f"{emojis.confirmed}", custom_id="dtcc1button13",row=3)#fudstop core
 #     async def dtcc1button13(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
         
 
 #         await inter.response.edit_message(view=LitStart(), embed=ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.movingchart}", custom_id="dtcc1button14", disabled=True,row=3)#arrowright
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.movingchart}", custom_id="dtcc1button14", disabled=True,row=3)#arrowright
 #     async def dtcc1button14(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -38594,26 +38594,26 @@ class OFRDataViewStart(disnake.ui.View):
 #     async def dtcc1button15(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=ToolsViewStart(), embed = ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.lt}", custom_id="dtcc1button16",row=4,disabled=True)#8
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.lt}", custom_id="dtcc1button16",row=4,disabled=True)#8
 #     async def dtcc1button16(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.lo}", custom_id="dtcc1button17",disabled=True,row=4)#datachart
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.lo}", custom_id="dtcc1button17",disabled=True,row=4)#datachart
 #     async def dtcc1button17(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.lo}", custom_id="dtcc1button18",disabled=True,row=4)#arrowdown
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.lo}", custom_id="dtcc1button18",disabled=True,row=4)#arrowdown
 #     async def dtcc1button18(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.ll}", custom_id="dtcc1button19",disabled=True,row=4)#datachart
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.ll}", custom_id="dtcc1button19",disabled=True,row=4)#datachart
 #     async def dtcc1button19(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
 
-#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emojis=f"{emojis.ls}", custom_id="dtcc1button20",row=4,disabled=True)#9
+#     @disnake.ui.button(style=disnake.ButtonStyle.grey, emoji=emoji=f"{emojis.ls}", custom_id="dtcc1button20",row=4,disabled=True)#9
 #     async def dtcc1button20(self, button: disnake.ui.Button, inter: disnake.AppCmdInter):
 #         await inter.response.edit_message(view=LitStart(), embed = ToolsEmbed())
 
@@ -38628,31 +38628,31 @@ class OFRDataViewStart(disnake.ui.View):
 #             max_values=1,
 #             custom_id="dtccdrop",
 #             options = [ 
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=1,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=2,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=3,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=4,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=5,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=6,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=7,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=8,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=9,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=10,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=11,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=12,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=13,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=14,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=15,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=16,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=17,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=1,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=2,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=3,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=4,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=5,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=6,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=7,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=8,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=9,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=10,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=11,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=12,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=13,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=14,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=15,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=16,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=17,label="",description=""),
 
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=18,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=19,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=20,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=21,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=22,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=23,label="",description=""),
-#                 disnake.SelectOption(emoji=emojis=f"{emojis}",value=24,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=18,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=19,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=20,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=21,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=22,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=23,label="",description=""),
+#                 disnake.SelectOption(emoji=emoji=f"{emojis}",value=24,label="",description=""),
 
 
 #                 ]
@@ -41901,25 +41901,25 @@ class RepoCitedDrop2(disnake.ui.Select):
             max_values=1,
             custom_id="fedworkscited",
             options=[
-                disnake.SelectOption(f"{emojis.fedstatic},", value="https://www.federalreserve.gov/econres/feds/liquidity-windfalls-the-consequences-of-repo-rehypothecation.htm", label="Liquidity Windfalls - The Consequences of Repo Rehypothecation."),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/28sch2p5", label="Demand Shocks, Hysteresis and Monetary Policy", description="November 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/y4ysnms9",label="Demand Segmentation in the Federal Funds Market",description="November 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/55d7sjt4",label="The Welfare Effects of Bank Liquidity and Capital Requirements",description="November 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/6nchuz54",label="These Caps Spilleth Over: Equilibrium Effects of Unemployment Insurance",description="November 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/4f7pyfy9",label="The Macroeconomic Implications of CBDC: A Review of the Literature",description="November 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/yhjvtmy9",label="Sentiment in Bank Examination Reports and Bank Outcomes",description="November 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/9sxmft4z",label="The Great Retirement Boom Surge in Retirements / Implications for Future Labor Force Participation",description="November 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/3sx8r2rw",label="The FOMC's Committee on the Directive: Behind Volcker's New Operating Procedures",description="September 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/yc5s4rv5",label="Pricing of Climate Risk Insurance: Regulation and Cross-Subsidies",description="October 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/mr4cu26p",label="Effects of Monetary Policy on Household Expectations: The Role of Homeownership",description="October 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/574ndbeh",label="Climate Change and Double Materiality in a Micro- and Macroprudential Context",description="October 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/4t3hcpty",label="Climate Change and the Role of Regulatory Capital: A Stylized Framework for Policy Assessment",description="October 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/mwzy75cr",label="Losing insurance and psychiatric hospitalizations",description="October 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/2s4x55h9",label="The use of the discount window to support economic activity through a funding for lending program",description="October 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/mr2ex4py",label="The Rise of Nonbanks and the Quality of Financial Services: Evidence from Consumer Complaints",description="September 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/ec7w4aa7",label="Bank Deposit Flows to Money Market Funds and ON RRP Usage during Monetary Policy Tightening",description="September 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/2p9cw8b6",label="Beliefs, Aggregate Risk, and the U.S. Housing Boom",description="September 2022"),
-                disnake.SelectOption(f"{emojis.fedstatic}",value="https://tinyurl.com/35af87dw",label="The Financial Stability Implications of Digital Assets", description="August 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic},", value="https://www.federalreserve.gov/econres/feds/liquidity-windfalls-the-consequences-of-repo-rehypothecation.htm", label="Liquidity Windfalls - The Consequences of Repo Rehypothecation."),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/28sch2p5", label="Demand Shocks, Hysteresis and Monetary Policy", description="November 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/y4ysnms9",label="Demand Segmentation in the Federal Funds Market",description="November 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/55d7sjt4",label="The Welfare Effects of Bank Liquidity and Capital Requirements",description="November 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/6nchuz54",label="These Caps Spilleth Over: Equilibrium Effects of Unemployment Insurance",description="November 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/4f7pyfy9",label="The Macroeconomic Implications of CBDC: A Review of the Literature",description="November 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/yhjvtmy9",label="Sentiment in Bank Examination Reports and Bank Outcomes",description="November 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/9sxmft4z",label="The Great Retirement Boom Surge in Retirements / Implications for Future Labor Force Participation",description="November 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/3sx8r2rw",label="The FOMC's Committee on the Directive: Behind Volcker's New Operating Procedures",description="September 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/yc5s4rv5",label="Pricing of Climate Risk Insurance: Regulation and Cross-Subsidies",description="October 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/mr4cu26p",label="Effects of Monetary Policy on Household Expectations: The Role of Homeownership",description="October 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/574ndbeh",label="Climate Change and Double Materiality in a Micro- and Macroprudential Context",description="October 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/4t3hcpty",label="Climate Change and the Role of Regulatory Capital: A Stylized Framework for Policy Assessment",description="October 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/mwzy75cr",label="Losing insurance and psychiatric hospitalizations",description="October 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/2s4x55h9",label="The use of the discount window to support economic activity through a funding for lending program",description="October 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/mr2ex4py",label="The Rise of Nonbanks and the Quality of Financial Services: Evidence from Consumer Complaints",description="September 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/ec7w4aa7",label="Bank Deposit Flows to Money Market Funds and ON RRP Usage during Monetary Policy Tightening",description="September 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/2p9cw8b6",label="Beliefs, Aggregate Risk, and the U.S. Housing Boom",description="September 2022"),
+                disnake.SelectOption(emoji=f"{emojis.fedstatic}",value="https://tinyurl.com/35af87dw",label="The Financial Stability Implications of Digital Assets", description="August 2022"),
                 ])
 
     async def callback(self, interaction:disnake.MessageCommandInteraction):
@@ -41934,30 +41934,30 @@ class RepoCitedDrop(disnake.ui.Select):
         custom_id="reporeporespo!",
         row=2,
         options=[
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr506.html",label="Repo Runs: Evidence from the Tri-Party Repo Market."),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr996",label="Repo over the Financial Crisis"),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/current_issues/ci9-6.html",label="The GCF Repo: Repurchase Agreements Re-Defined"),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/06v12n1/0605garb/0605garb.html",label="Repo: The Evolution of Repo Contracting Conventions in the 1980s."),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr426.html",label="Repo Market Effects of the Term Securities Lending Facility"),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/12v18n3/1210cope.html",label="Key Mechanics of the Tri-Party Repo Market"),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr529.html",label="The Repo and Securities Lending"),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr671.html",label="A Primer on the GCF Repo"),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/2022/epr_2022_fima-repo_choi",label="The FED's Central Bank Swap lines and FIMA Repo Facility."),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr616.html",label="The Risk of Fire Sales in the Tri-Party Repo Market"),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr740.html",label="Reference Guide to US Repo and Securities Lending Markets."),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr974",label="Reserves Were Not So Ample After-all"),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/06v12n1/0605kamb/0605kamb.html",label="Trading Risk, Liquidity, and Convergence Trading in the Interest Rate Swap Spread"),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/2017/epr_2017_gscc_ingber",label="The Development of the Government Securities Clearing Corporation"),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/current_issues/ci15-4.html",label="The FED's Primary Dealer Credit Facility."),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/executive_summary.html",label="Economic Policy Review: Executive Summaries."),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr642.html",label="FED Tools for Managing Rates and Reserves."),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr758.html",label="The use of Collateral in REPOs and Securities Lending."),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/2021/epr_2021_market-events_afonso",label="The Market Events of Mid-September 2019."),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/2013/execsum_adri.html",label="Shadow Banking."),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr809.html",label="Pre-Crisis Monetary Policy Implementation Framework."),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr964",label="Netting Efficiencies of Market-Wide Central Clearing."),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr969",label="The Value of Internal Sources of Funding Liquidity."),
-            disnake.SelectOption(f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/2016/EPR_2016-adrian-macroprudential-policy",label="Macroprudential Policy - A Case Study"),])
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr506.html",label="Repo Runs: Evidence from the Tri-Party Repo Market."),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr996",label="Repo over the Financial Crisis"),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/current_issues/ci9-6.html",label="The GCF Repo: Repurchase Agreements Re-Defined"),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/06v12n1/0605garb/0605garb.html",label="Repo: The Evolution of Repo Contracting Conventions in the 1980s."),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr426.html",label="Repo Market Effects of the Term Securities Lending Facility"),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/12v18n3/1210cope.html",label="Key Mechanics of the Tri-Party Repo Market"),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr529.html",label="The Repo and Securities Lending"),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr671.html",label="A Primer on the GCF Repo"),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/2022/epr_2022_fima-repo_choi",label="The FED's Central Bank Swap lines and FIMA Repo Facility."),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr616.html",label="The Risk of Fire Sales in the Tri-Party Repo Market"),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr740.html",label="Reference Guide to US Repo and Securities Lending Markets."),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr974",label="Reserves Were Not So Ample After-all"),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/06v12n1/0605kamb/0605kamb.html",label="Trading Risk, Liquidity, and Convergence Trading in the Interest Rate Swap Spread"),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/2017/epr_2017_gscc_ingber",label="The Development of the Government Securities Clearing Corporation"),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/current_issues/ci15-4.html",label="The FED's Primary Dealer Credit Facility."),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/executive_summary.html",label="Economic Policy Review: Executive Summaries."),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr642.html",label="FED Tools for Managing Rates and Reserves."),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr758.html",label="The use of Collateral in REPOs and Securities Lending."),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/2021/epr_2021_market-events_afonso",label="The Market Events of Mid-September 2019."),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/2013/execsum_adri.html",label="Shadow Banking."),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr809.html",label="Pre-Crisis Monetary Policy Implementation Framework."),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr964",label="Netting Efficiencies of Market-Wide Central Clearing."),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/staff_reports/sr969",label="The Value of Internal Sources of Funding Liquidity."),
+            disnake.SelectOption(emoji=f"{emojis.repo}",value="https://www.newyorkfed.org/research/epr/2016/EPR_2016-adrian-macroprudential-policy",label="Macroprudential Policy - A Case Study"),])
 
     async def callback(self, interaction: disnake.MessageCommandInteraction):
         if self.values[0] == self.values[0]:

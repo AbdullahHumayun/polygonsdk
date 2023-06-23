@@ -2,7 +2,7 @@ import disnake
 from disnake.ext import commands
 import requests
 from autocomp import videos_autocomp
-from views.learnviews import TechDropdown,TechDropdown2,SFTView,OCCView,CryptoOne
+from views.learnviews import TechDropdown,TechDropdown2,SFTView,OCCView
 from views.learnviews import ChinaView,DTCCView,ICEView,ETFView,NSCCView,FINRAView,Opt101View,TechView,NyseVIDView,CBOEView,NSFRView, PermaFTDViewStart
 import pandas as pd
 from _discord.views.menus import AlertMenus
@@ -230,9 +230,7 @@ class ViewCmd(commands.Cog):
             await inter.edit_original_message(embed=embed, ephemeral=True)
 
 
-    @view.sub_command()
-    async def crypto(self, inter:disnake.AppCmdInter):
-        await inter.send(view=CryptoOne())
+
 
 
 
