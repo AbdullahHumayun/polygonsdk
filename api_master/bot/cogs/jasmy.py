@@ -256,7 +256,7 @@ class Jasmy(commands.Cog):
             except KeyError:
                 await inter.send("Server busy! Try again later.")
 
-def setup(bot):
+async def setup(bot:commands.Bot):
     """SETUP"""
-    bot.add_cog(Jasmy(bot))
+    await bot.add_cog(Jasmy(bot))
     print(f"> Extension {__name__} is ready\n")

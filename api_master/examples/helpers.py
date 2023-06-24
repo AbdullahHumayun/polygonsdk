@@ -2,7 +2,7 @@ import csv
 from cfg import YOUR_API_KEY,today_str
 import requests
 import pandas as pd
-
+import asyncio
 import aiohttp
 
 
@@ -100,12 +100,6 @@ async def get_near_the_money_options(ticker: str, lower_strike, upper_strike, da
         print(urls)
         return urls
 
-import pdb
-import asyncio
-import aiohttp
-from api_master.cfg import YOUR_API_KEY, two_years_from_now_str, today_str
-import requests
-from urllib.parse import urlencode
 
 import pandas as pd
 async def get_price_data(ticker: str):
@@ -294,24 +288,3 @@ async def find_lowest_iv(output):
 
     return final_dicts_call, final_dicts_put
 
-
-async def main():
-    ticker = "SPX"
-    price = await get_price_data(ticker)
-    print(price)
-    lower_strike = 0.99 * price
-    upper_strike = 1.01 * price
-    symbols = await get_near_the_money_options(ticker="SPX", lower_strike=lower_strike, upper_strike=upper_strike)
-
-    low_iv_data = await find_lowest_iv(symbols)
-
-    low_iv_expiry = [k['expiry'] if 'expiry' in k else None for k in low_iv_data]
-
-
-    for k in low_iv_data[0]:
-        print(f"{k['expiry']} | STRIKE: ${k['strike']} v. PRICE: ${price} | IV: {k['iv']} | ")
-    else:
-        print("No lowest IV data found.")
-
-
-asyncio.run(main())

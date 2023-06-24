@@ -191,6 +191,7 @@ class Learn(commands.Cog):
         view.add_item(TrendDropdown())
         await inter.send("```py\nLearn Candle Patterns and Trends```", view=view)
 
-def setup(bot):
-    bot.add_cog(Learn(bot))
+async def setup(bot:commands.Bot):
+    """SETUP"""
+    await bot.add_cog(Learn(bot))
     print(f"> Extension {__name__} is ready\n")

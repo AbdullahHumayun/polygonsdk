@@ -23,7 +23,7 @@ import requests
 from .option_quote import OptionQuote
 from requests.exceptions import HTTPError
 from urllib.parse import urlencode
-from cfg import YOUR_API_KEY, thirty_days_from_now_str
+from cfg import YOUR_API_KEY, thirty_days_from_now_str, five_days_from_now_str
 
 MAX_SIMULTANEOUS_REQUESTS = 50 # adjust based on your needs. Lower = longer time to collect options data.
 
@@ -117,6 +117,39 @@ class PolygonOptionsSDK:
                 break
 
         return all_results
+    
+
+    async def _request_all_pages_concurrently(self, initial_url, params=None):
+        if params is None:
+            params = {}
+        params["apiKey"] = self.api_key
+
+        all_results = []
+        next_url = initial_url
+
+        while next_url:
+            try:
+                async with self.session.get(next_url, params=params) as response:
+                    response.raise_for_status()
+                    data = await response.json()
+
+                    if "results" in data:
+                        all_results.extend(data["results"])
+
+                    next_url = data.get("next_url")
+                    if next_url:
+                        next_url += f'&{urlencode({"apiKey": self.api_key})}'
+                        params = {}
+
+            except aiohttp.ClientResponseError as http_err:
+                print(f"An HTTP error occurred: {http_err}")
+                break
+            except Exception as err:
+                print(f"An error occurred: {err}")
+                break
+
+        return all_results
+
 
     async def get_options_contracts(
         self,
@@ -565,7 +598,7 @@ class PolygonOptionsSDK:
         params = {k: v for k, v in params.items() if v is not None}
         return await self._request(endpoint)
 
-    async def get_option_chain_all(self, underlying_asset, strike_price=None, expiration_date=None, contract_type=None, order=None, limit=250, sort=None) -> List[OptionSnapshotData]:
+    async def get_option_chain_all(self, underlying_asset, strike_price=None, expiration_date=None, contract_type=None, order=None, limit=250, sort=None):
         """
         Get all options contracts for an underlying ticker across all pages.
 
@@ -589,77 +622,49 @@ class PolygonOptionsSDK:
             "apiKey": self.api_key
         }
         response_data = await self._request_all_pages(endpoint, params=params)
-        option_data = [OptionSnapshotData(data) for data in response_data]
+        option_data = OptionSnapshotData(response_data)
+  
         return option_data
-
-    async def get_top_5_options_by_volume(self, df: pd.DataFrame):
-        sorted_df = df.sort_values(by='day_volume', ascending=False)
-        top_5_options = sorted_df.head(5)
-        return top_5_options
-        
-    async def fetch_top_5_option_snapshots(self, ticker):
-        all_options = await self.get_option_chain_all(ticker)
-        df = pd.DataFrame([option.to_dict() for option in all_options])
-        top_5_options = await self.get_top_5_options_by_volume(df)
-        top_5_snapshots = []
-        for index, row in top_5_options.iterrows():
-            option_contract = row['option_symbol']
-            snapshot = await self.get_option_contract_snapshot(ticker, option_contract)
-            top_5_snapshots.append(snapshot.to_dict())
-        top_5 = pd.DataFrame(top_5_snapshots)
-        return top_5
-            
     
 
-    async def fetch_top_5_options_by_open_interest(self, ticker):
-        all_options = await self.get_option_chain_all(ticker)
-        df = pd.DataFrame([option.to_dict() for option in all_options])
-        sorted_df = df.sort_values(by='open_interest', ascending=False)
-        top_5_options = sorted_df.head(5)
-        return top_5_options
+    async def search_chain(self, underlying_asset, strike_price=None, expiration_date=None, contract_type=None, order=None, limit=250, sort=None):
+            """
+            Get all options contracts for an underlying ticker across all pages.
 
-    async def fetch_options_with_highest_implied_volatility(self, ticker, top_n=5):
-        all_options = await self.get_option_chain_all(ticker)
-        df = pd.DataFrame([option.to_dict() for option in all_options])
-        sorted_df = df.sort_values(by='implied_volatility', ascending=False)
-        top_options = sorted_df.head(top_n)
-        return top_options
-
-    async def fetch_options_with_highest_gamma(self, ticker, top_n=5):
-        all_options = await self.get_option_chain_all(ticker)
-        df = pd.DataFrame([option.to_dict() for option in all_options])
-        sorted_df = df.sort_values(by='gamma', ascending=False)
-        top_options = sorted_df.head(top_n)
-        return top_options
-
-
-
-    async def fetch_options_with_highest_theta(self, ticker, top_n=5):
-        all_options = await self.get_option_chain_all(ticker)
-        df = pd.DataFrame([option.to_dict() for option in all_options])
-        sorted_df = df.sort_values(by='theta', ascending=False)
-        top_options = sorted_df.head(top_n)
-        return top_options
-
-    async def fetch_options_with_highest_vega(self, ticker, top_n=5):
-        all_options = await self.get_option_chain_all(ticker)
-        _ = all_options[0].vega
-        df = pd.DataFrame(vars(all_options))
-        print(df)
-        sorted_df = df.sort_values(by='vega', ascending=False)
-        top_options = sorted_df.head(top_n)
-        return top_options
+            :param underlying_asset: The underlying ticker symbol of the option contract.
+            :param strike_price: Query by strike price of a contract.
+            :param expiration_date: Query by contract expiration with date format YYYY-MM-DD.
+            :param contract_type: Query by the type of contract.
+            :param order: Order results based on the sort field.
+            :param limit: Limit the number of results returned, default is 10 and max is 250.
+            :param sort: Sort field used for ordering.
+            :return: A list containing all option chain data across all pages.
+            """
+            endpoint = f"{self.base_url}/v3/snapshot/options/{underlying_asset}"
+            params = {
+                "strike_price": strike_price,
+                "expiration_date": expiration_date,
+                "contract_type": contract_type,
+                "order": order,
+                "limit": limit,
+                "sort": sort,
+                "apiKey": self.api_key
+            }
+            response_data = await self._request_all_pages(endpoint, params=params)
+            option_data = OptionSnapshotData(response_data)
+    
+            return option_data
 
 
+    async def get_near_the_money_options(self, ticker, lower_strike, upper_strike, today_str):
 
-    async def get_near_the_money_works(self, ticker, lower_strike, upper_strike, today_str):
-
-        url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte={thirty_days_from_now_str}&limit=250&apiKey={YOUR_API_KEY}"
+        url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte={five_days_from_now_str}&limit=250&apiKey={YOUR_API_KEY}"
         print(url)
         async with aiohttp.ClientSession() as session:
             all_ticker = []  # to hold all the option symbols
-            all_urls=[]
+            
             while url:
+                all_urls=[]
                 async with session.get(url) as resp:
                     if resp.status != 200:
                         return
@@ -673,103 +678,106 @@ class PolygonOptionsSDK:
                     if url and YOUR_API_KEY not in url:
                         url += f"&apiKey={YOUR_API_KEY}"  # append the API key to the URL
                         all_urls.extend(url)
-            return all_ticker
+                        print(url)
+                return all_urls
         
 
     async def find_lowest_iv(self, output):
             final_dicts_call = []
             final_dicts_put = []
-
+   
             async with aiohttp.ClientSession() as session:
-                for url in output:
-                    async with session.get(url) as filtered_resp:
-                        if filtered_resp.status != 200:
-                            print(f"Error")
-                            continue
-                        else:
-                            response = await filtered_resp.json()
+                async with session.get(output) as filtered_resp:
+                    if filtered_resp.status != 200:
+                        print(f"Error")
+                    else:
+                        response = await filtered_resp.json()
 
-                            if response is None:
-                                print(f"Bad output: {output}")
-                                continue
-
-                            filtered_results = response['results'] if 'results' in response else None
-                            if filtered_results is not None:
-                                call_data = []
-                                put_data = []
-                                for result in filtered_results:
-                                    contract_type = result.get('details').get('contract_type')
-                                    if contract_type == 'call':
-                                        call_data.append(result)
-                                    elif contract_type == 'put':
-                                        put_data.append(result)
-                                    else:
-                                        continue
-
-                                call_symbols = [i.get('ticker', None) for i in call_data]
-                                call_ivs = [i.get('implied_volatility', None) for i in call_data]
-                                call_strikes = [i.get('details').get('strike_price', None) for i in call_data]
-                                call_expiry = [i.get('details').get('expiration_date', None) for i in call_data]
-                                call_name = [i.get('name', None) for i in call_data]
-                                put_symbols = [i.get('ticker', None) for i in put_data]
-                                put_ivs = [i.get('implied_volatility', None) for i in put_data]
-                                put_strikes = [i.get('details').get('strike_price', None) for i in put_data]
-                                put_expiry = [i.get('details').get('expiration_date', None) for i in put_data]
-                                put_name = [i.get('name', None) for i in put_data]
+                        if response is None:
+                            print(f"Bad output: {output}")
 
 
-                                call_volume = [i.get('session').get('volume', None) for i in call_data]
-                                put_volume = [i.get('session').get('volume', None) for i in put_data]
+                        filtered_results = response['results'] if 'results' in response else None
+                        if filtered_results is not None:
+                            call_data = []
+                            put_data = []
+                            for result in filtered_results:
+                                contract_type = result.get('details').get('contract_type')
+                                if contract_type == 'call':
+                                    call_data.append(result)
+                                elif contract_type == 'put':
+                                    put_data.append(result)
+                                else:
+                                    continue
 
-                                call_dict = {
-                                    'Symbol': call_symbols,
-                                    'Name': call_name,
-                                    'Strike': call_strikes,
-                                    'Expiry': call_expiry,
-                                    'IV': call_ivs,
-                                    'Volume': call_volume,
+                            call_symbols = [i.get('ticker', None) for i in call_data]
+                            call_ivs = [i.get('implied_volatility', None) for i in call_data]
+                            call_strikes = [i.get('details').get('strike_price', None) for i in call_data]
+                            call_expiry = [i.get('details').get('expiration_date', None) for i in call_data]
+                            call_name = [i.get('name', None) for i in call_data]
+                            call_type = [i.get('details').get('contract_type', None) for i in call_data]
+                            put_symbols = [i.get('ticker', None) for i in put_data]
+                            put_ivs = [i.get('implied_volatility', None) for i in put_data]
+                            put_strikes = [i.get('details').get('strike_price', None) for i in put_data]
+                            put_expiry = [i.get('details').get('expiration_date', None) for i in put_data]
+                            put_name = [i.get('name', None) for i in put_data]
+                            put_type = [i.get('details').get('contract_type', None) for i in put_data]
+
+                            call_volume = [i.get('session').get('volume', None) for i in call_data]
+                            put_volume = [i.get('session').get('volume', None) for i in put_data]
+
+                            call_dict = {
+                                'Call Symbol': call_symbols,
+                                'Call Name': call_name,
+                                'Call Strike': call_strikes,
+                                'Call Expiry': call_expiry,
+                                'IV': call_ivs,
+                                'Call Volume': call_volume,
+                                'Call Type': call_type,
+                            }
+
+                            put_dict = {
+                                'Put Symbol': put_symbols,
+                                'Put Name': put_name,
+                                'Put Strike': put_strikes,
+                                'Put Expiry': put_expiry,
+                                'IV': put_ivs,
+                                'Put Volume': put_volume,
+                                'Put Type': put_type
+                            }
+
+                            call_df = pd.DataFrame(call_dict).sort_values('IV').dropna(how="any")
+                            put_df = pd.DataFrame(put_dict).sort_values('IV').dropna(how="any")
+                            call_df.to_csv('iv_monitor_calls.csv', index=False)
+                            put_df.to_csv('iv_monitor_puts.csv', index=False)
+
+                            def get_lowest_iv(group):
+                                return group.sort_values('IV').iloc[0]
+
+                            grouped_call_df = call_df.groupby('Call Expiry').apply(get_lowest_iv)
+                            grouped_put_df = put_df.groupby('Put Expiry').apply(get_lowest_iv)
+
+                            for index, row in grouped_call_df.iterrows():
+                                current_dict = {
+                                    'call symbol': row['Call Symbol'],
+                                    'call name': row['Call Name'],
+                                    'call strike': row['Call Strike'],
+                                    'call expiry': index,  # level 0 index is 'Expiry'
+                                    'call iv': row['IV'],
+                                    'call volume': row['Call Volume']
                                 }
+                                final_dicts_call.append(current_dict)
 
-                                put_dict = {
-                                    'Symbol': put_symbols,
-                                    'Name': put_name,
-                                    'Strike': put_strikes,
-                                    'Expiry': put_expiry,
-                                    'IV': put_ivs,
-                                    'Volume': put_volume
+                            for index, row in grouped_put_df.iterrows():
+                                current_dict = {
+                                    'put symbol': row['Put Symbol'],
+                                    'put name': row['Put Name'],
+                                    'put strike': row['Put Strike'],
+                                    'put expiry': index,  # level 0 index is 'Expiry'
+                                    'put iv': row['IV'],
+                                    'put volume': row['Put Volume'],
+                                    
                                 }
-
-                                call_df = pd.DataFrame(call_dict).sort_values('IV').dropna(how="any")
-                                put_df = pd.DataFrame(put_dict).sort_values('IV').dropna(how="any")
-                                call_df.to_csv('iv_monitor_calls.csv', index=False)
-                                put_df.to_csv('iv_monitor_puts.csv', index=False)
-
-                                def get_lowest_iv(group):
-                                    return group.sort_values('IV').iloc[0]
-
-                                grouped_call_df = call_df.groupby('Expiry').apply(get_lowest_iv)
-                                grouped_put_df = put_df.groupby('Expiry').apply(get_lowest_iv)
-
-                                for index, row in grouped_call_df.iterrows():
-                                    current_dict = {
-                                        'symbol': row['Symbol'],
-                                        'name': row['Name'],
-                                        'strike': row['Strike'],
-                                        'expiry': index,  # level 0 index is 'Expiry'
-                                        'iv': row['IV'],
-                                        'volume': row['Volume']
-                                    }
-                                    final_dicts_call.append(current_dict)
-
-                                for index, row in grouped_put_df.iterrows():
-                                    current_dict = {
-                                        'symbol': row['Symbol'],
-                                        'name': row['Name'],
-                                        'strike': row['Strike'],
-                                        'expiry': index,  # level 0 index is 'Expiry'
-                                        'iv': row['IV'],
-                                        'volume': row['Volume']
-                                    }
-                                    final_dicts_put.append(current_dict)
+                                final_dicts_put.append(current_dict)
 
             return final_dicts_call, final_dicts_put

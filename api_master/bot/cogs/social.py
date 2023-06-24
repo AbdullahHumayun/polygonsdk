@@ -144,8 +144,6 @@ class Social(commands.Cog):
             url="https://static.wixstatic.com/media/3235bb_fedadfcf38994349b7fa98fbf3f6f372~mv2.gif")
         await inter.edit_original_message(embed=embed)
 
-
-def setup(bot):
-    """Social Setup"""
-    bot.add_cog(Social(bot))
+async def setup(bot:commands.Bot):
+    await bot.add_cog(Social(bot))
     print(f"> Extension {__name__} is ready\n")

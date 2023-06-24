@@ -223,6 +223,6 @@ class OFR(commands.Cog):
   
 
         await inter.edit_original_message(embed=embeds[0], view=view)
-def setup(bot:commands.Bot):
-    bot.add_cog(OFR(bot))
+async def setup(bot:commands.Bot):
+    await bot.add_cog(OFR(bot))
     print(f"> Extension {__name__} is ready\n")

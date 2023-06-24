@@ -1050,5 +1050,6 @@ class StockSera(commands.Cog):
         view.add_item(button)
         await inter.edit_original_message(embed=embeds[0], view=view)
 
-def setup(bot: commands.Bot):
-    bot.add_cog(StockSera(bot))
+async def setup(bot:commands.Bot):
+    await bot.add_cog(StockSera(bot))
+    print(f"> Extension {__name__} is ready\n")

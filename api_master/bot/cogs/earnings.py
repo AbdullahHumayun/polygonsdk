@@ -69,7 +69,7 @@ class Earnings(commands.Cog):
     #     if isinstance(error, commands.CheckAnyFailure):
     #         await inter.send("```py\n Make sure you're using an ETF and that youre using all CAPS.```")
 
-def setup(bot: commands.Bot):
-    """COG SETUP"""
-    bot.add_cog(Earnings(bot))
+async def setup(bot: commands.Bot):
+    """SETUP COG"""
+    await bot.add_cog(Earnings(bot))
     print(f"> Extension {__name__} is ready\n")

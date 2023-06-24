@@ -11,7 +11,7 @@ setup(
     description='Utilize several market-data APIs in production-ready format for real-time and simulated market analysis.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/your-username/your-package-repo',
+    url='https://github.com/chuckdustin12/polygonsdk',
     packages=find_packages(),
     classifiers=[
         'License :: OSI Approved :: MIT License',

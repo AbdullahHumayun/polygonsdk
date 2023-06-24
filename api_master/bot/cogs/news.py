@@ -85,6 +85,6 @@ class News(commands.Cog):
             except IndexError:
                 index1 = "N/A"
                 await inter.edit_original_message("N/A")
-def setup(bot):
-    bot.add_cog(News(bot))
+async def setup(bot:commands.Bot):
+    await bot.add_cog(News(bot))
     print(f"> Extension {__name__} is ready\n")

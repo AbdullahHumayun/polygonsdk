@@ -3,7 +3,7 @@ from cfg import YOUR_API_KEY
 
 
 async def get_price_data(ticker: str):
-    if ticker.startswith('SPX') or ticker.startswith("VIX"):
+    if ticker.startswith('SPX'):
         ticker = ticker.replace(f"{ticker}", f"I:{ticker}")
         url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={YOUR_API_KEY}"
         async with aiohttp.ClientSession() as session:

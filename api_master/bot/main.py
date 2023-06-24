@@ -8,13 +8,14 @@ import disnake
 from disnake.ext import commands
 
 from tabulate import tabulate
+import aiohttp
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
-from urllib.request import urlopen
+from tabulate import tabulate
 
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from _discord import emojis
-
+from testicles import get_option_data
 
 import pandas as pd
 from utils.technicals import bullish_continuationdiamond,bullish_continuationwedge,triplebottom,diamondbottom,roundedbottom,gapdown,gapup,diamondtop,bullish_gravestone,islandtop,doubletop,macd,bullish_headandshoulders
@@ -32,6 +33,7 @@ from views.learnviews import StockPage1,StockPage2,StockPage3,StockPage4,StockPa
 from views.learnviews import OFRViewStart, RepoCitedViewStart,CriteriaView,CommandsStart,PermaFTDViewStart
 from views.learnviews import AvoidView
 
+import asyncio
 
 
 from cfg import YOUR_API_KEY, YOUR_DISCORD_BOT_TOKEN
@@ -136,12 +138,103 @@ class PersistentViewBot(commands.Bot):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
 
 
-   
 
 
 
 bot = PersistentViewBot(command_prefix=">>", intents=intents)
 
+
+
+class RestartStreamView(disnake.ui.View):
+    def __init__(self, tickers=str):
+        self.tickers=tickers
+        super().__init__(timeout=None)
+
+
+    @disnake.ui.button(style=disnake.ButtonStyle.green,emoji=f"{emojis.greencircle}", custom_id="startbutton")
+    async def start(self, button: disnake.ui.Button, inter:disnake.AppCmdInter):
+        """Starts the live-stream"""
+        button.disabled = False
+        await allskew(interaction=inter, tickers=self.tickers)
+
+
+global_inter = None
+global_tickers = None
+@bot.event
+async def on_disconnect():
+    print("Bot has disconnected, waiting to reconnect...")
+
+
+
+ticker_symbols = ['AAPL', 'MSFT', 'AMZN', 'NVDA', 'GOOGL', 'TSLA', 'GOOG', 'META', 'UNH', 
+                  'JNJ', 'XOM', 'JPM', 'V', 'LLY', 'PG', 'AVGO', 'MA', 'HD', 'MRK', 'CVX', 'PEP', 
+                  'ABBV', 'KO', 'COST', 'ADBE', 'PFE', 'WMT', 'MCD', 'CSCO', 'CRM', 'TMO', 'ACN', 
+                  'BAC', 'ABT', 'NFLX', 'ORCL', 'LIN', 'AMD', 'CMCSA', 'DIS', 'DHR', 'TXN', 'WFC', 'HAL',
+                  'NEE', 'VZ', 'PM', 'RTX', 'BMY', 'INTC', 'NKE', 'HON', 'QCOM', 'LOW', 'SPGI', 'INTU',
+                  'UNP', 'UPS', 'COP', 'AMGN', 'CAT', 'IBM', 'AMAT', 'BA', 'MDT', 'SBUX', 'ISRG', 
+                  'GE', 'DE', 'NOW', 'T', 'MS', 'PLD', 'ELV', 'GS', 'LMT', 'BLK', 'MDLZ', 'SYK', 
+                  'AXP', 'BKNG', 'GILD', 'ADI', 'TJX', 'ADP', 'C', 'MMC', 'VRTX', 'CVS', 'AMT', 
+                  'REGN', 'LRCX', 'CI', 'CB', 'ZTS', 'SCHW', 'BSX', 'MO', 'ETN', 'SO', 'TMUS', 'SNAP','AMC','GME',
+                  'PGR', 'PYPL', 'PANW', 'FI', 'BDX', 'MU', 'EQIX', 'SPY', 'U', 'W', 'SHOP', 'KRE', 'EEM', 'EWZ', 'BABA', 'BIDU', 'BEKE']
+
+
+import datetime
+@bot.slash_command()
+async def allskew(inter: disnake.AppCmdInter, tickers= str):
+    """Scan multiple skews in real time"""
+    if not tickers:
+        tickers = ticker_symbols
+    tickers = tickers.split(',')
+
+    await inter.response.defer()
+
+    # Set the time for next refresh
+    next_disconnect_time = datetime.datetime.now() + datetime.timedelta(minutes=14)
+    view = RestartStreamView()
+    view.start.disabled = True
+    counter = 0
+    while True:
+        counter = counter  +1
+
+ 
+            
+
+
+        async with aiohttp.ClientSession() as session:
+            # Get prices for all tickers concurrently
+            price_tasks = [polygon.get_stock_price(ticker) for ticker in tickers]
+            prices = await asyncio.gather(*price_tasks)
+            ticker_prices = dict(zip(tickers, prices))  # Assuming no None prices
+
+            # Now get option data concurrently
+            option_data_tasks = [get_option_data(ticker, ticker_prices[ticker], session) for ticker in tickers]
+            results = await asyncio.gather(*option_data_tasks)
+            # Filter out None results and add valid results to data_list
+            data_list = [result for result in results if result is not None]
+
+            data_list = sorted(data_list, key=lambda x: x[4], reverse=True)
+            # Create a new list that only includes the parts you want to display
+            display_data = [row[:6] for row in data_list]
+
+            # Now, display_data contains the data you want to display for all tickers. Format it into a table and send it in discord chat.
+            table = tabulate(display_data, headers=['Symbol', 'Strike', 'Price', 'Expiry', 'IV', 'Skew'], tablefmt='fancy')
+
+            embed = disnake.Embed(title=f"All - Skew", description=f"```\n" + table + "\n```", color=disnake.Colour.random())
+            embed.set_footer(text=f"{counter} | Data Provided by Polygon.io | Implemented by FUDSTOP")
+            await inter.edit_original_message(embed=embed, view=view) # Send the table in a code block
+            if counter == 100:
+                view.start.disabled = False
+                await bot.close()
+                break
+@bot.event
+async def on_disconnect():
+    print("Bot has disconnected, waiting to reconnect...")
+
+@bot.event
+async def on_ready():
+    print("Bot has reconnected, restarting allskew command...")
+    if global_inter is not None and global_tickers is not None:
+        await allskew(global_inter, global_tickers)
 class ServerMenu(disnake.ui.ChannelSelect):
     def __init__(self):
         
@@ -591,19 +684,20 @@ async def on_message( message: disnake.Message):
 
 
 
+async def main():
 
 
 
 
-extensions = []
-cogs_directory = os.path.join(os.path.dirname(__file__), 'cogs')
+    extensions = []
+    cogs_directory = os.path.join(os.path.dirname(__file__), 'cogs')
 
-for filename in os.listdir(cogs_directory):
-    if filename.endswith('.py'):
-        extension_name = filename[:-3]  # Remove the .py extension
-        extensions.append(f'cogs.{extension_name}')
+    for filename in os.listdir(cogs_directory):
+        if filename.endswith('.py'):
+            extension_name = filename[:-3]  # Remove the .py extension
+            extensions.append(f'cogs.{extension_name}')
 
-for extension in extensions:
-    bot.load_extension(f'bot.{extension}')
+    for extension in extensions:
+       await bot.load_extension(f'bot.{extension}')
 
 bot.run(YOUR_DISCORD_BOT_TOKEN)

@@ -103,7 +103,7 @@ class Analysis(commands.Cog):
         em.add_field(name="Sell:", value=f"```py\n{sell}```", inline=True)
         em.add_field(name="Underperform:", value=f"```py\n{under}```", inline=False)
         await inter.edit_original_message(embed=em)
-def setup(bot):
+async def setup(bot: commands.Bot):
     """SETUP COG"""
-    bot.add_cog(Analysis(bot))
+    await bot.add_cog(Analysis(bot))
     print(f"> Extension {__name__} is ready\n")

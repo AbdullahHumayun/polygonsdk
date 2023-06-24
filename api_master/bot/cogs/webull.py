@@ -1,23 +1,19 @@
 """WEBULL COG"""
-from datetime import timedelta
-from datetime import date
-import re
 from disnake.ext import commands
-import requests
+
 import pyEX as p
 import disnake
 from utils.lists_and_dicts import pics_list
-from utils.webull_tickers import ticker_list
-from menus.menu import Menu
-
+from _discord import emojis as e
 from views.learnviews import OptionsPaperView,OrderView,ChainView,CustomizeView, AnalysisView
-from cfg import YOUR_RAPIDAPI_KEY
+from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from autocomp import tickerlist_autocomp, graphics_autocomp
 
 intents = disnake.Intents.all()
-
-
-
+from cfg import YOUR_API_KEY
+webull_sdk = AsyncWebullSDK()
+polygon_sdk = AsyncPolygonSDK(YOUR_API_KEY)
 
 class Webull(commands.Cog):
     """WEBULL COG"""
@@ -97,89 +93,50 @@ class Webull(commands.Cog):
         emb.set_footer(text="Implemented by FUDSTOP Trading", icon_url="https://static.wixstatic.com/media/3235bb_fedadfcf38994349b7fa98fbf3f6f372~mv2.gif")
         emb.set_thumbnail(url="https://media.discordapp.net/attachments/1009552305869303828/1009555505699639366/ezgif-2-f4a5623248.gif")
         await inter.edit_original_message(embed=emb, view=OrderView())
-
-
     @webull.sub_command()
-    async def webull_quote(self,inter:disnake.AppCmdInter, ticker: str=commands.Param(autocomplete=tickerlist_autocomp)):
-        """🔥Pulls webull data to discord in the form of price quote info."""
-        await inter.response.defer(with_message=True)
-        ids = ticker_list[ticker.upper()]
-        quoter = requests.get(url=f"https://quotes-gw.webullfintech.com/api/bgw/quote/realtime?ids={ids},&includeSecu=1&delay=0&more=1")
-        quoted = quoter.json()
-        index = quoted[0]
-        #name=index["name"]
-        #symbol=index["symbol"]
-        dissymbol=index["disSymbol"]
-        #disExchangeCode=index["disExchangeCode"]
-        #exchangeCode=index["exchangeCode"]
-        #listStatus=index["listStatus"]
-        #template=index["template"]
-        #derivativeSupport=index["derivativeSupport"]
-        #tradeTime=index["tradeTime"]
-        #status=index["status"]
-        close=index["close"]
-        #change=index["change"]
-        #changeRatio=index["changeRatio"]
-        #marketValue=index["marketValue"]
-        #volume=index["volume"]
-        #turnoverRate=index["turnoverRate"]
-        #timeZone=index["timeZone"]
-        #tzName=index["tzName"]
-        #preClose=index["preClose"]
-        #open=index["open"]
-        high=index["high"]
-        low=index["low"]
-        vibrateratio=index["vibrateRatio"]
-        #avgVol10D=index["avgVol10D"]
-        #avgVol3M=index["avgVol3M"]
-        #dealAmount=index["dealAmount"]
-        negmarketvalue=index["negMarketValue"]
-        #pe=index["pe"]
-        #indicatedPe=index["indicatedPe"]
-        #peTtm=index["peTtm"]
-        #eps=index["eps"]
-        #epsTtm=index["epsTtm"]
-        #pb=index["pb"]
-        #totalShares=index["totalShares"]
-        #outstandingShares=index["outstandingShares"]
-        #fiftyTwoWkHigh=index["fiftyTwoWkHigh"]
-        #fiftyTwoWkLow=index["fiftyTwoWkLow"]
-        #yields=index["yield"]
-        #currencyCode=index["currencyCode"]
-        #lotSize=index["lotSize"]
-        #latestDividendDate=index["latestDividendDate"]
-        #latestEarningsDate=index["latestEarningsDate"]
-        #ps=index["ps"]
-        #bps=index["bps"]
-        #estimateEarningsDate=index["estimateEarningsDate"]
-        #tradeStatus=index["tradeStatus"]
-        view = disnake.ui.View()
-        bu2 = disnake.ui.Button(label=f"SYMBOL: {dissymbol}", style = disnake.ButtonStyle.grey,row=0)
-        bu3 = disnake.ui.Button(label=f"Vibration Ratio: {vibrateratio}", style = disnake.ButtonStyle.green,row=1)
-        bu4 = disnake.ui.Button(label=f"Negative Mkt Value: {negmarketvalue}", style = disnake.ButtonStyle.red, row=1)
-        bu5 = disnake.ui.Button(label=f"High on Day: ${high}", style = disnake.ButtonStyle.green,row=2)
-        bu6 = disnake.ui.Button(label=f"Today's Open: ${open}", style = disnake.ButtonStyle.grey, row=2)
-        bu7 = disnake.ui.Button(label=f"Low of Day: ${low}", style = disnake.ButtonStyle.red,row=2)
-        bu8 = disnake.ui.Button(label=f"Current: ${close}", style = disnake.ButtonStyle.blurple, row=3)
-        bu9 = disnake.ui.Button(label="PUSHING NEW HIGHS!!!", style = disnake.ButtonStyle.blurple, row=3)
-        view.add_item(bu2)
-        view.add_item(bu3)
-        view.add_item(bu4)
-        view.add_item(bu5)
-        view.add_item(bu6)
-        view.add_item(bu7)
-        view.add_item(bu8)
-        emb = disnake.Embed(title=f"Webull Data for {dissymbol}", color=disnake.Colour.dark_blue())
-        if close > high:
-            view.remove_item(bu5)
-            view.add_item(bu9)
-        emb.set_footer(icon_url="https://static.wixstatic.com/media/3235bb_fedadfcf38994349b7fa98fbf3f6f372~mv2.gif", text="Implemented by Fudstop Trading")
-        emb.set_thumbnail(url="https://static.wixstatic.com/media/3235bb_fedadfcf38994349b7fa98fbf3f6f372~mv2.gif")
-        await inter.edit_original_message(embed = emb, view=view)
+    async def volume_analysis(self, inter: disnake.MessageCommandInteraction, ticker:str=commands.Param(autocomplete=tickerlist_autocomp)):
+        """Stream Volume Analysis for 30 Seconds"""
+        counter=0
+        await inter.send(f"-")
+        while True:
+            
+            counter=counter+1
+            vol_analysis_data = await webull_sdk.get_webull_vol_analysis_data(ticker)
 
 
+            buyvol = float(vol_analysis_data.buyVolume)
+            sellvol = float(vol_analysis_data.sellVolume)
+            neutvol = float(vol_analysis_data.nVolume)
+            avg_price_traded = float(vol_analysis_data.avePrice)
+            total = float(vol_analysis_data.totalVolume)
+            buyPct = (buyvol / total) * 100
+            sellPct = (sellvol / total) * 100
+            nPct = (neutvol / total) * 100
 
-def setup(bot):
-    """SETUP COG"""
-    bot.add_cog(Webull(bot))
+            if buyPct >= sellPct and buyPct >= nPct:
+                color = disnake.Colour.dark_green()
+
+            if sellPct >= buyPct and sellPct >= nPct:
+                color = disnake.Colour.dark_red()
+            else:
+                color = disnake.Colour.darker_gray()
+            embed = disnake.Embed(title=f"Volume Analysis - Webull", description=f"```py\nViewing live volume analysis data for {ticker}.```", color=color)
+            embed.add_field(name=f"Volume Analysis:", value=f"> {e.greenfire} Buy: **{buyvol:,}**\n> {e.greyfire} Neut: **{neutvol:,}**\n> {e.redfire} Sell: **{sellvol:,}**\n> {e.movers} Total: **{total:,}**", inline=False)
+            embed.add_field(name=f"Volume Percentile:", value=f"> {e.greenfire} Buy: **{round(float(buyPct),2)}%**\n> {e.greyfire} Neut: **{round(float(nPct),2)}%**\n> {e.redfire} Sell: **{round(float(sellPct),2)}%**", inline=False)
+            embed.add_field(name=f"Avg. Price Traded:", value=f"> **{e.redline}** **${avg_price_traded}**", inline=False)
+            embed.set_footer(text=f"{counter} | Implemented by FUDSTOP")
+            embed.set_thumbnail(await polygon_sdk.get_polygon_logo(ticker))
+            await inter.edit_original_message(embed=embed)
+            if counter ==100:
+                view = disnake.ui.View()
+                button = disnake.ui.Button(style=disnake.ButtonStyle.red, emoji=f"{e.confirmed}", label=f"RUN", custom_id="run button")
+                
+                view.add_item(button)
+                button.callback = lambda inter: self.volume_analysis(inter, ticker)
+                await inter.send(embed=embed, view=view)
+                await inter.delete_original_message()
+                break
+            
+async def setup(bot:commands.Bot):
+    await bot.add_cog(Webull(bot))
     print(f"> Extension {__name__} is ready\n")

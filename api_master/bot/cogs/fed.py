@@ -301,6 +301,6 @@ class Fed(commands.Cog):
         em.add_field(name=f"{type2}", value=f"```py\n\nCounterparty: {counterparty10}\nCurrency: {currency10}\n\nTrade Date: {tradedate10}\nSettlement Date: {settlement10}\n Maturity Date: {maturity10}\n\nTerm: {term10}\nAmount: {amount10}\n Small? {small10}```")
         await inter.edit_original_response(embed=em)
 
-def setup(bot):
-    bot.add_cog(Fed(bot))
+async def setup(bot:commands.Bot):
+    await bot.add_cog(Fed(bot))
     print(f"> Extension {__name__} is ready\n")

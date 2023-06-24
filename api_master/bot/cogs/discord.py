@@ -165,7 +165,7 @@ class Discord(commands.Cog):
         await inter.edit_original_response(embed=emb)
 
 
-def setup(bot):
-    """Load COG"""
-    bot.add_cog(Discord(bot))
+async def setup(bot: commands.Bot):
+    """SETUP COG"""
+    await bot.add_cog(Discord(bot))
     print(f"> Extension {__name__} is ready\n")

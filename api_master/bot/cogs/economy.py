@@ -243,6 +243,7 @@ class Economy(commands.Cog):
         await inter.edit_original_message(embed=em)
 
 
-def setup(bot):
-    bot.add_cog(Economy(bot))
+async def setup(bot: commands.Bot):
+    """SETUP COG"""
+    await bot.add_cog(Economy(bot))
     print(f"> Extension {__name__} is ready\n")

@@ -37,6 +37,6 @@ class prices_and_technicals(commands.Cog):
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
-def setup(bot):
-    bot.add_cog(prices_and_technicals(bot))
+async def setup(bot:commands.Bot):
+    await bot.add_cog(prices_and_technicals(bot))
     print(f"> Extension {__name__} is ready\n")
