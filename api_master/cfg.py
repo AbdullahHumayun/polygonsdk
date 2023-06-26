@@ -23,6 +23,13 @@ YOUR_FRED_API_KEY = os.environ.get('YOUR_FRED_API_KEY') #https://fred.stlouisfed
 YOUR_DISCORD_BOT_TOKEN = os.environ.get('YOUR_DISCORD_BOT_TOKEN')#https://discord.com/developers/docs/intro
 YOUR_RAPIDAPI_KEY = os.environ.get('YOUR_RAPIDAPI_KEY')
 
+# Access the Discord headers
+discord_headers = {
+    'Authorization': os.getenv('DISCORD_AUTHORIZATION'),
+    'User-Agent': os.getenv('DISCORD_USER_AGENT'),
+    'Accept': os.getenv('DISCORD_ACCEPT'),
+    'Content-Type': os.getenv('DISCORD_CONTENT_TYPE')
+}
 
 
 # Date and Time - import these to easily create date parameters for different functions such as option aggregates, stock aggregates.
@@ -35,6 +42,7 @@ five_days_from_now_str = (datetime.now() + timedelta(days=5)).strftime('%Y-%m-%d
 thirty_days_ago_str = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
 thirty_days_str = (datetime.now() + timedelta(days=30)).strftime('%Y-%m-%d')
 seven_days_from_now_str = (datetime.now() + timedelta(days=7)).strftime('%Y-%m-%d')
+fifteen_days_from_now_str = (datetime.now() + timedelta(days=15)).strftime('%Y-%m-%d')
 two_years_ago_str = (datetime.now() - timedelta(days=730)).strftime('%Y-%m-%d')
 two_years_from_now_str = (datetime.now() + timedelta(days=730)).strftime('%Y-%m-%d')
 thirty_days_from_now_str = (datetime.now() + timedelta(days=30)).strftime('%Y-%m-%d')

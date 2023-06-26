@@ -3,7 +3,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-
+from cfg import seven_days_from_now_str
 import requests
 from requests.exceptions import HTTPError
 from .option_aggs import OptionAggs
@@ -15,6 +15,7 @@ import aiofiles
 import re
 from polygon.exceptions import BadResponse
 from .option_snapshot import OptionSnapshotData
+from .universal_snapshot import UniversalOptionSnapshot, UniversalSnapshot
 from typing import List, Optional
 from datetime import datetime
 from urllib.parse import urlencode
@@ -23,7 +24,7 @@ import requests
 from .option_quote import OptionQuote
 from requests.exceptions import HTTPError
 from urllib.parse import urlencode
-from cfg import YOUR_API_KEY, thirty_days_from_now_str, five_days_from_now_str
+from cfg import YOUR_API_KEY, fifteen_days_from_now_str, five_days_from_now_str, today_str
 
 MAX_SIMULTANEOUS_REQUESTS = 50 # adjust based on your needs. Lower = longer time to collect options data.
 
@@ -31,8 +32,91 @@ class PolygonOptionsSDK:
     def __init__(self, api_key):
         self.api_key = api_key
         self.base_url = "https://api.polygon.io"
-        self.session = requests.Session()
+
         self.conditions_map = None
+
+
+    async def get_option_data(self, ticker, price):
+        async with aiohttp.ClientSession() as session:
+            if price is not None:
+                lower_strike = round(price * 0.95)
+                upper_strike = round(price * 1.05)
+                initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte={seven_days_from_now_str}&limit=250&apiKey={YOUR_API_KEY}"
+
+                async with session.get(initial_url) as resp:
+                    data = await resp.json()
+
+                    results = data['results']
+                    if results is not None:
+                        option_data = OptionSnapshotData(results)
+                        symbols = str(option_data.option_symbol).replace("'","").replace(']','').replace('[','').replace(' ','')
+
+
+                        if option_data is not None:
+                            df = pd.DataFrame(option_data.data_dict).dropna(how="any").sort_values('implied_volatility', ascending=True)
+                            if not df.empty:
+                                df = df.iloc[[0]]
+                                for _, row in df.iterrows():
+                                    strike = row['strike_price']
+                                    symbol = row['underlying_ticker']
+                                    iv = round(float(row['implied_volatility'])*100,5)
+                                    underlying_price = row['underlying_price']
+                                    expiry = row['expiration_date']
+                                    volume = float(row['day_volume'])
+                                    gamma = row['gamma']
+                                    delta = row['delta']
+                                    vega = row['vega']
+                                    open_interest = row['open_interest']
+                                    ask = row['ask']
+                                    bid = row['bid']
+                                    bid_size = row['bid_size']
+                                    ask_size = row['ask_size']
+                                    expiry = expiry[5:]
+                                    skew = "🔥" if strike <= underlying_price else "🟢"
+                                    skew_metric = strike - underlying_price
+                                    if skew_metric < -5 or skew_metric > 5:
+                                        return [symbol, f"{strike}", f"{skew}", underlying_price, expiry, iv, volume, skew_metric,gamma,delta,vega,ask,bid,bid_size,ask_size, open_interest]
+                        return None
+    async def get_universal_snapshot(self, tickers):
+        """Fetches the Polygon.io universal snapshot API endpoint"""
+        url=f"https://api.polygon.io/v3/snapshot?ticker.any_of={tickers}&limit=250&apiKey={self.api_key}"
+        print(url)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                data = await resp.json()
+                results = data['results'] if data['results'] is not None else None
+                if results is not None:
+                    return UniversalSnapshot(results)
+
+    async def _request_all_pages_concurrently(session, initial_url,api_key=YOUR_API_KEY):
+
+        all_results = []
+        next_url = initial_url
+        while next_url:
+            try:
+                async with session.get(next_url, params=params) as response:
+                    response.raise_for_status()
+                    data = await response.json()
+
+                    if "results" in data:
+                        all_results.extend(data["results"])
+
+                    next_url = data.get("next_url")
+                    if next_url:
+                        next_url += f'&{urlencode({"apiKey": api_key})}'
+                        params = {}
+
+            except aiohttp.ClientResponseError as http_err:
+                print(f"An HTTP error occurred: {http_err}")
+                break
+            except Exception as err:
+                print(f"An error occurred: {err}")
+                break
+
+        return all_results
+
+
+
 
     async def extract_underlying_symbol(self, symb):
 
@@ -187,6 +271,9 @@ class PolygonOptionsSDK:
             params["sort"] = sort
 
         return await self._request_all_pages(initial_url, params=params)
+    
+
+ 
         
     async def fetch_all_option_contracts(self, expiration_date=None, expiration_date_lt=None, expiration_date_lte=None,
                                         expiration_date_gt=None, expiration_date_gte=None):
@@ -781,3 +868,59 @@ class PolygonOptionsSDK:
                                 final_dicts_put.append(current_dict)
 
             return final_dicts_call, final_dicts_put
+    
+
+    
+    async def get_stock_price(self, ticker=str):
+        url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={self.api_key}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                try:
+                    data = await resp.json()
+                    results = data['results'] if 'results' in data else None
+                    if results is not None:
+                        value = results[0]['session']['close']
+                        if value is not None:
+                            return value
+                except KeyError:
+                    pass  # Handle the KeyError and continue with the next ticker
+
+        return None  # Return None if the stock price couldn't be retrieved
+    
+    async def near_the_money(self, ticker, price):
+
+        base_url = "https://api.polygon.io/v3/snapshot/options/"
+
+        if price is not None:
+            lower_strike = round(price * 0.95)
+            upper_strike = round(price * 1.05)
+            
+            endpoint = f"{base_url}{ticker}"
+            params = {
+                "strike_price.gte": lower_strike,
+                "strike_price.lte": upper_strike,
+                "expiration_date.gte": today_str,
+                "expiration_date.lte": fifteen_days_from_now_str,
+                "limit": 250,
+                "apiKey": YOUR_API_KEY
+            }
+            response_data = await self._request_all_pages_concurrently(endpoint, params=params)
+            print(response_data)
+            option_data = OptionSnapshotData(response_data)
+
+            if option_data is not None:
+                df = pd.DataFrame(option_data.data_dict).dropna(how="any").sort_values('implied_volatility', ascending=True)
+                if not df.empty:
+                    df = df.iloc[[0]]
+                    for _, row in df.iterrows():
+                        strike = row['strike_price']
+                        symbol = row['underlying_ticker']
+                        iv = round(float(row['implied_volatility'])*100,5)
+                        underlying_price = row['underlying_price']
+                        expiry = row['expiration_date']
+                        expiry = expiry[5:]
+                        skew = "🔥" if strike <= underlying_price else "🟢"
+                        skew_metric = strike - underlying_price
+                        if skew_metric < -15.5 or skew_metric > 15.5:
+                            return [symbol, strike, underlying_price, expiry, iv, skew, skew_metric]
+            return None

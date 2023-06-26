@@ -37,7 +37,7 @@ class Navigate(commands.Cog):
 
         await inter.send(channel.mention)
 
-async def setup(bot:commands.Bot):
+def setup(bot:commands.Bot):
     """SETUP"""
-    await bot.add_cog(Navigate(bot))
+    bot.add_cog(Navigate(bot))
     print(f"> Extension {__name__} is ready\n")

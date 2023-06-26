@@ -2,24 +2,33 @@ import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-
+from cogs.analysis import Analysis
+from cogs.ss import SS
+from cogs.learn import Learn
+from cogs.fmp import FMP
 import disnake
 from disnake.ext import commands
+from disnake import Option, OptionType
+from autocomp import command_autocomp
 
-from tabulate import tabulate
 import aiohttp
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+from _discord.views.menus import AlertMenus
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+from cogs.skews import Skew
+
 from tabulate import tabulate
+from disnake import Option, OptionType, OptionChoice
+from disnake.ext import commands
 
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from _discord import emojis
-from testicles import get_option_data
 
-import pandas as pd
-from utils.technicals import bullish_continuationdiamond,bullish_continuationwedge,triplebottom,diamondbottom,roundedbottom,gapdown,gapup,diamondtop,bullish_gravestone,islandtop,doubletop,macd,bullish_headandshoulders
-from utils.technicals import bollingerbands,momentum,bearish_outsidebar,bearflag,cci,bullish_outsidebar,tripletop,bullflag,rsi,doublebottom
+
+
+
+
+
 from views.learnviews import MenuStart,AlertStart, DiscordStart,TAStart,MarketsView,CryptoViewStart,PageTwoView,PageThreeView,HighShortsViewStart,LowFloatDropdown
 from views.learnviews import ForexViewStart,FTDViewStart,LosersViewStart,GainersViewStart,ActiveViewStart
 from views.learnviews import TotalOIViewStart,TotalVolumeViewStart
@@ -31,6 +40,11 @@ from views.learnviews import TopOIDownViewStart,TopOIUpViewStart,TopIVViewStart,
 from views.learnviews import FedDataStart,FINRADataStart,BlockchainDataStart,InflationDataStart,EconomicDataStart,TreasuryDataStart,HKEXDataStart,MMFDataStart,RepoDataStart
 from views.learnviews import StockPage1,StockPage2,StockPage3,StockPage4,StockPage5, AppStart, ToolsViewStart
 from views.learnviews import OFRViewStart, RepoCitedViewStart,CriteriaView,CommandsStart,PermaFTDViewStart
+import disnake
+from disnake.ext import commands
+
+from views.learnviews import CriteriaView
+
 from views.learnviews import AvoidView
 
 import asyncio
@@ -45,11 +59,11 @@ webull = AsyncWebullSDK()
 
 intents=disnake.Intents.all()
 class PersistentViewBot(commands.Bot):
-    def __init__(self, command_prefix, intents, ticker=None, embeds=None):
-        self.ticker = ticker
+    def __init__(self, command_prefix, intents, tickers=['PG', 'RBLX', 'JD', 'TSCO', 'BYND', 'GOOG', 'UBER', 'CAG', 'GME', 'CCL', 'QQQ', 'CSCO', 'FUTU', 'ARCC', 'GPN', 'CG', 'HUN', 'TNA', 'DXC', 'GRPN', 'ENTG', 'PEP', 'PGR', 'MSFT', 'PACW', 'PCG', 'ADBE', 'KRE', 'GILD', 'VST', 'VFC', 'JNJ', 'AMC', 'SQNS', 'CVS', 'CDE', 'SUP', 'TBIO', 'YALA', 'INO', 'LVS', 'WDAY', 'SPXU', 'TDOC', 'SBUX', 'LTRX', 'KIM', 'EMR', 'BOX', 'DD', 'TMUS', 'ATVI', 'ASAN', 'FTDR', 'HD', 'SCHW', 'IPSC', 'TARO', 'HASI', 'DIA', 'JWN', 'AVDX', 'MARA', 'PPL', 'MOS', 'ET', 'IAI', 'HOLI', 'QS', 'JBT', 'KEY', 'SFIX', 'AUPH', 'DXCM', 'CHRS', 'CRVS', 'SMRT', 'IBN', 'SQ', 'ACGL', 'ABT', 'AZN', 'INFN', 'KLR', 'BBAI', 'LYV', 'CTLT', 'TECK', 'BRMK', 'EFA', 'FCEL', 'ZGN', 'SBOW', 'NOVA', 'ARDX', 'FITB', 'GOOGL', 'SHOP', 'DAC', 'LNC', 'AMGN', 'TUYA', 'SYNH', 'NMTR', 'SMH', 'BGS', 'AEG', 'DKNG', 'FCX', 'NI', 'NMR', 'TSE', 'OBLG', 'CHPT', 'AES', 'NU', 'CRC', 'UNH', 'CIEN', 'FTCH', 'SWN', 'UP', 'RNG', 'EZPW', 'XPEV', 'PAAS', 'LBTYA', 'MUFG', 'BUD', 'INTZ', 'RKT', 'CLNE', 'APO', 'OTIS', 'VLY', 'DT', 'M', 'QCOM', 'PCT', 'TIL', 'IPG', 'ARKK', 'ADI', 'YUM', 'WMT', 'SMCI', 'XP', 'CCCC', 'AG', 'SAM', 'MGM', 'BOH', 'CAT', 'RYAN', 'MDT', 'HOWL', 'JETS', 'SYY', 'FLEX', 'VTRS', 'PYPL', 'VVV', 'UNIT', 'MRK', 'BANX', 'MRIN', 'VTR', 'NVDA', 'AVGO', 'GLUE', 'DOCU', 'KR', 'ASTS', 'CANO', 'MMM', 'ADVM', 'BIGC', 'SNDL', 'CZR', 'LX', 'HOOD', 'MDB', 'VIAV', 'SO', 'FTFT', 'STKH', 'RMTI', 'WEN', 'V', 'RYAM', 'AEP', 'TAP', 'PM', 'LOW', 'ALLO', 'DRH', 'AR', 'HBB', 'LESL', 'TELL', 'VTS', 'GLD', 'ASX', 'CCJ', 'STNE', 'NAT', 'SEE', 'NET', 'EA', 'EVA', 'LMB', 'BN', 'IEF', 'DELL', 'DADA', 'CX', 'RFL', 'DOW', 'INDI', 'DASH', 'ISEE', 'KWEB', 'XOP', 'TBLA', 'BX', 'FTV', 'PAYX', 'CL', 'XLU', 'LQD', 'STLA', 'MCHX', 'MSTR', 'ALLY', 'SU', 'HST', 'MULN', 'DLO', 'ONB', 'ACB', 'ABBV', 'FHN', 'XLI', 'AI', 'ORCL', 'CNET', 'BILI', 'COMP', 'EWZ', 'DSEY', 'WOW', 'BABA', 'BA', 'TLRY', 'EEM', 'SQQQ', 'CS', 'ANSS', 'NTCO', 'RIOT', 'KGC', 'TSP', 'BRDG', 'SKY', 'CSX', 'IBM', 'XIN', 'NEX', 'AAP', 'MCD', 'WRAP', 'LUMN', 'RPRX', 'BLDR', 'RXT', 'LABU', 'SYF', 'RPD', 'SGBX', 'RVLP', 'NXE', 'FNCB', 'SYPR', 'DVN', 'AQN', 'ONON', 'CNX', 'AGI', 'SPY', 'SVM', 'XLE', 'APPS', 'FRHC', 'AGEN', 'IOT', 'ZIM', 'BHC', 'ACN', 'AAL', 'SNAP', 'AFL', 'CRDO', 'BLNK', 'BOWL', 'VRAY', 'TRTX', 'ELAN', 'EOSE', 'UVXY', 'ZYNE', 'MQ', 'LYFT', 'ENVX', 'NKE', 'TNP', 'SAND', 'VZ', 'IWM', 'GE', 'XME', 'HTHT', 'XLK', 'GT', 'FAST', 'GLNG', 'IYR', 'DAL', 'KPTI', 'GS', 'BLDP', 'AVTR', 'BAC', 'NEWR', 'USAP', 'API', 'ANET', 'CRNT', 'LXP', 'SHLS', 'IP', 'BMBL', 'S', 'BFLY', 'LBTYK', 'LNT', 'DHT', 'CCO', 'NTAP', 'DOC', 'NGVC', 'PD', 'LAW', 'GTBP', 'RTX', 'BAX', 'LLY', 'FFIE', 'FLNT', 'PEG', 'FLO', 'COIN', 'CLOV', 'YMM', 'ETRN', 'IMAX', 'HSKA', 'WFC', 'GH', 'NEM', 'HITI', 'SSTI', 'EXPE', 'PFE', 'PATH', 'MFIN', 'ZTO', 'SGEN', 'UPRO', 'BCRX', 'CSIQ', 'ALIT', 'KOLD', 'AFRM', 'RXRX', 'TLT', 'NGM', 'OCGN', 'CTRA', 'FE', 'VERA', 'UDR', 'EVLV', 'XLC', 'NLY', 'TMF', 'GRAB', 'HAL', 'BITO', 'VALE', 'GSM', 'LBRDK', 'PRU', 'DNB', 'BP', 'HTZ', 'PXLW', 'CHWY', 'HYFM', 'LMNL', 'STT', 'ST', 'BGFV', 'FUBO', 'RUN', 'XLY', 'CGC', 'EFC', 'CNP', 'DISH', 'MANU', 'CVNA', 'AAOI', 'FSR', 'SANW', 'MREO', 'W', 'TMO', 'USB', 'DE', 'TDCX', 'ITRI', 'ZDGE', 'FXLV', 'ROKU', 'AVAH', 'PINS', 'VOD', 'SLP', 'PDS', 'AESI', 'CMCSA', 'PR', 'INTC', 'XLV', 'TSLA', 'WMB', 'OXY', 'IONQ', 'AMH', 'PLTR', 'ALEC', 'ACI', 'OSS', 'BIVI', 'JPM', 'MGNX', 'SPWR', 'LMT', 'SCPL', 'DLTR', 'ED', 'HPQ', 'LAZR', 'OSK', 'AIRS', 'FHTX', 'INSE', 'X', 'ADP', 'VMW', 'HRTG', 'BRLT', 'RDFN', 'ITUB', 'ETON', 'BIG', 'RCL', 'CBAT', 'RRC', 'ARR', 'SLI', 'ETN', 'OPEN', 'SENS', 'OWL', 'HBI', 'NVAX', 'DEI', 'ARMK', 'XRT', 'WEX', 'LSCC', 'LRCX', 'GOOS', 'IVZ', 'TLSA', 'APA', 'ROST', 'SLM', 'CERS', 'LGMK', 'DDOG', 'KMI', 'BTCM', 'AXLA', 'BTE', 'PAGS', 'FNGS', 'CRWD', 'ENOB', 'MGI', 'CMA', 'KHC', 'SGMO', 'WYNN', 'HYG', 'IOVA', 'ENSV', 'AMLX', 'VZIO', 'F', 'CIM', 'NFLX', 'ASC', 'WAL', 'AUMN', 'SOFI', 'DFS', 'TFC', 'FATE', 'JCI', 'CPB', 'HUT', 'CFG', 'IRIX', 'SKX', 'KSS', 'NRG', 'HZO', 'MCHP', 'AMX', 'KMB', 'MO', 'SPXS', 'IBRX', 'T', 'LC', 'MMAT', 'FUSN', 'FYBR', 'PEAK', 'CROX', 'PRDO', 'AMD', 'AEM', 'IFF', 'AMBA', 'U', 'CUZ', 'BOIL', 'XLF', 'EQT', 'DHI', 'AMZN', 'EGO', 'SOXS', 'VTGN', 'BBWI', 'FOXA', 'ASRT', 'GSAT', 'TXN', 'SPWH', 'HR', 'PDD', 'NVTS', 'ESI', 'KDP', 'DB', 'ERIC', 'OGN', 'SOXL', 'UPST', 'WOOF', 'PENN', 'ARAV', 'AIN', 'TPR', 'VKTX', 'MS', 'TIGR', 'GTLB', 'TSN', 'IRS', 'MA', 'GDXJ', 'FANH', 'UUP', 'FTCI', 'UNG', 'ETSY', 'KO', 'PAA', 'DNN', 'AA', 'TJX', 'ARRY', 'AM', 'CVE', 'AIG', 'COTY', 'LNG', 'TSM', 'NWL', 'BRFS', 'WTI', 'COST', 'AGNC', 'MTLS', 'RF', 'TOST', 'WBD', 'HLIT', 'MRNA', 'BMY', 'Z', 'TGT', 'XOM', 'URBN', 'DIS', 'SSSS', 'ENIC', 'DBRG', 'VXX', 'MLCO', 'RYN', 'ANF', 'ORC', 'LULU', 'SLG', 'SAVE', 'XENE', 'VERX', 'GEN', 'BIDU', 'SONO', 'GPRK', 'GP', 'NM', 'UAL', 'RITM', 'FXI', 'UPS', 'GURE', 'REXR', 'AAPL', 'SLB', 'MITT', 'IMBI', 'ODV', 'NEE', 'MESA', 'AEO', 'TQQQ', 'MRVL', 'SIG', 'ULTA', 'FDX', 'BB', 'ABR', 'EL', 'BEN', 'SIMO', 'PBR', 'CRBP', 'CAH', 'USO', 'SLV', 'META', 'GOLD', 'HPE', 'JFIN', 'EGHT', 'IEP', 'NTR', 'SID', 'SMWB', 'SPCE', 'ESLT', 'XBI', 'MSOS', 'CVX', 'RXST', 'CVT', 'AMRS', 'MTG', 'PRM', 'CHS', 'EPIX', 'COLB', 'ATUS', 'GM', 'MET', 'HZNP', 'SHEL', 'EQH', 'AMRN', 'PARA', 'ICLN', 'TARS', 'GFI', 'BEKE', 'NIO', 'GOEV', 'NCLH', 'EMB'], embeds=str):
+        self.ticker = tickers
         super().__init__(command_prefix=command_prefix, intents=intents)
         self.persistent_views_added = False
-        self.embeds = embeds
+        self.embeds = []
 
     async def on_ready(self):
         if not self.persistent_views_added:
@@ -73,6 +87,7 @@ class PersistentViewBot(commands.Bot):
             self.add_view(ForexViewStart())
             self.add_view(HighShortsViewStart())
             self.add_view(LowFloatDropdown())
+            self.add_view(AlertMenus(embeds=self.embeds))
             self.add_view(FTDViewStart())
             self.add_view(LosersViewStart())
             self.add_view(GainersViewStart())
@@ -132,6 +147,7 @@ class PersistentViewBot(commands.Bot):
             self.add_view(AvoidView())
             self.add_view(ServerMenuView())
 
+
             self.persistent_views_added = True
 
 
@@ -142,99 +158,224 @@ class PersistentViewBot(commands.Bot):
 
 
 bot = PersistentViewBot(command_prefix=">>", intents=intents)
+skew_cmds = Skew(bot=bot)
+analysis_cmds = Analysis(bot)
+learn_cmds = Learn(bot)
+ss_cmds = SS(bot)
+fmp_cmds = FMP(bot)
 
 
 
-class RestartStreamView(disnake.ui.View):
-    def __init__(self, tickers=str):
-        self.tickers=tickers
-        super().__init__(timeout=None)
-
-
-    @disnake.ui.button(style=disnake.ButtonStyle.green,emoji=f"{emojis.greencircle}", custom_id="startbutton")
-    async def start(self, button: disnake.ui.Button, inter:disnake.AppCmdInter):
-        """Starts the live-stream"""
-        button.disabled = False
-        await allskew(interaction=inter, tickers=self.tickers)
-
-
-global_inter = None
-global_tickers = None
-@bot.event
-async def on_disconnect():
-    print("Bot has disconnected, waiting to reconnect...")
 
 
 
-ticker_symbols = ['AAPL', 'MSFT', 'AMZN', 'NVDA', 'GOOGL', 'TSLA', 'GOOG', 'META', 'UNH', 
-                  'JNJ', 'XOM', 'JPM', 'V', 'LLY', 'PG', 'AVGO', 'MA', 'HD', 'MRK', 'CVX', 'PEP', 
-                  'ABBV', 'KO', 'COST', 'ADBE', 'PFE', 'WMT', 'MCD', 'CSCO', 'CRM', 'TMO', 'ACN', 
-                  'BAC', 'ABT', 'NFLX', 'ORCL', 'LIN', 'AMD', 'CMCSA', 'DIS', 'DHR', 'TXN', 'WFC', 'HAL',
-                  'NEE', 'VZ', 'PM', 'RTX', 'BMY', 'INTC', 'NKE', 'HON', 'QCOM', 'LOW', 'SPGI', 'INTU',
-                  'UNP', 'UPS', 'COP', 'AMGN', 'CAT', 'IBM', 'AMAT', 'BA', 'MDT', 'SBUX', 'ISRG', 
-                  'GE', 'DE', 'NOW', 'T', 'MS', 'PLD', 'ELV', 'GS', 'LMT', 'BLK', 'MDLZ', 'SYK', 
-                  'AXP', 'BKNG', 'GILD', 'ADI', 'TJX', 'ADP', 'C', 'MMC', 'VRTX', 'CVS', 'AMT', 
-                  'REGN', 'LRCX', 'CI', 'CB', 'ZTS', 'SCHW', 'BSX', 'MO', 'ETN', 'SO', 'TMUS', 'SNAP','AMC','GME',
-                  'PGR', 'PYPL', 'PANW', 'FI', 'BDX', 'MU', 'EQIX', 'SPY', 'U', 'W', 'SHOP', 'KRE', 'EEM', 'EWZ', 'BABA', 'BIDU', 'BEKE']
+class RsiHourOption(OptionChoice):
+    name = "rsi_hour"
+    description = "Get the RSI for the specified hour"
+    type = OptionType.sub_command
+    options = [
+        Option(
+            name="ticker",
+            description="Ticker to get RSI for",
+            type=OptionType.string,
+            required=True
+        )
+    ]
 
 
-import datetime
+
+
+
+
+
 @bot.slash_command()
-async def allskew(inter: disnake.AppCmdInter, tickers= str):
+async def test(inter: disnake.AppCommandInter, command:str=commands.Param(autocomplete=command_autocomp)):
+    if command == "allskew":
+        await allskew(inter)
+
+    if command == "all_options":
+        await inter.send(f"> **Click to Run:**\n> </all_options:1122312195154387024>")
+    elif command == "learn discord":
+        await learn_cmds.discord(inter)
+    elif command == "learn_order_types":
+        await learn_cmds.order_types(inter)
+    elif command == "learn_core_logic":
+        await learn_cmds.core_logic(inter)
+    elif command == "learn_filings":
+        await learn_cmds.filings(inter)
+    elif command == "learn_cmds.calls":
+        await learn_cmds.calls(inter)
+    elif command == "learn_etfs":
+        await learn_cmds.etfs(inter)
+    elif command == "learn_greeks":
+        await learn_cmds.greeks(inter)
+    elif command == "learn_china":
+        await learn_cmds.china(inter)
+    elif command == "learn_options_101":
+        await learn_cmds.options_101(inter)
+    elif command == "learn_option_strategies":
+        await learn_cmds.option_strategies(inter)
+    elif command == "learn_core_logic":
+        await learn_cmds.core_logic(inter)
+    elif command == "learn_covered_calls":
+        await learn_cmds.covered_calls(inter)
+    elif command == "learn_nsfr_ratio":
+        await learn_cmds.nsfr_ratio(inter)
+    elif command == "learn_candle_patterns":
+        await learn_cmds.candle_patterns(inter)
+    elif command == "learn_occ":
+        await learn_cmds.occ(inter)
+    elif command == "learn_criteria":
+        await learn_cmds.criteria(inter)
+    elif command == "learn_ta":
+        await learn_cmds.ta(inter)
+    elif command == "learn_finra":
+         await learn_cmds.finra(inter)      
+
+    elif command == "analysis_gaps_up":
+        await inter.send(f"**Click to Run:**\n> </analysis gaps_up:1122243463723876533>")
+    
+    elif command == "analysis_gaps_down":
+        await inter.send(f"**Click to Run:**\n> </analysis gaps_down:1122243463723876533>")
+    
+
+
+    elif command == "analysis_overbought_gap":
+        
+        await inter.send(f"**Click to Run:**\n> </analysis overbought_gap:1122243463723876533>")
+
+    elif command == "analysis_topshorts":
+        await analysis_cmds.topshorts(inter)
+
+
+    elif command == "rsi":
+        await inter.send(f"> **Click to Run:**\n> </ta rsi_snapshot:1122650723021238362>")
+
+
+      
+
+    elif command == "company_information":
+        await inter.send(f"> **Click to Run:**\n> </poly company_info:1122243463862300754")
+
+
+
+    elif command == "earnings_calendar":
+        await ss_cmds.earnings(inter)
+
+    elif command == "insider_trading_market_wide":
+        await ss_cmds.insider_summary(inter)
+
+
+    elif command == "daily_treasury_balance":
+        await ss_cmds.treasury(inter)
+
+    elif command == "inflation":
+        await ss_cmds.inflation(inter)
+
+    elif command == "jobless_claims":
+        await ss_cmds.jobless_claims(inter)
+
+    elif command == "market_news":
+        await ss_cmds.market_news(inter)
+
+    elif command == "short_volume":
+        await inter.send(f"> **Click to run:**\n> </ss short_volume:1122243463862300759>")
+
+
+    elif command == "reverse_repo":
+        await ss_cmds.reverse_repo(inter)
+
+
+
+
+    elif command =="low_floats":
+        await ss_cmds.low_floats(inter)
+
+
+    elif command == "short_interest":
+
+        await ss_cmds.short_interest(inter)
+
+
+
+    elif command == "news_sentiment":
+        await inter.send(f"> **Click to Run:**\n> </ss news_sentiment:1122243463862300759>")
+
+
+
+    elif command == "sec_filings":
+        await inter.send(f"> **Click to Run:**\n> </ss sec_filings:1122243463723876533>")
+
+        
+
+    elif command == "short_interest":
+        await ss_cmds.short_interest(inter)
+
+
+    elif command == "price_target":
+        await inter.send(f"> **Click to Run:**\n> </fmp price_target:1122711896773103698>")
+    elif command == "subreddits":
+        await inter.send(f"> **Click to Run:**\n> </ss subreddits:1122243463862300759>")
+
+
+
+
+@bot.slash_command(name="allskew")
+async def allskew(inter: disnake.AppCmdInter):
     """Scan multiple skews in real time"""
-    if not tickers:
-        tickers = ticker_symbols
-    tickers = tickers.split(',')
+    tickers = [
+        'COIN', 'WFC', 'GM', 'PYPL', 'CVS', 'CVX', 'BKNG', 'NVDA', 'AMD', 'MSFT',
+        'META', 'U', 'W', 'ADBE', 'MSTR', 'LLY', 'BLK', 'MCD', 'WMT', 'TGT', 'SPY',
+        'F', 'SHOP', 'SNAP', 'AMC', 'GME', 'BABA', 'BIDU', 'JD', 'NFLX', 'AMZN',
+        'BAC', 'KRE', 'EWZ', 'M', 'SO', 'KO', 'PEP', 'CSCO', 'COST', 'SBUX', 'BBY',
+        'SQQQ', 'QQQ', 'TQQQ', 'EEM', 'CHZ', 'HYG', 'TSLA', 'AMD', 'QCOM', 'INTC'
+    ]
 
     await inter.response.defer()
 
-    # Set the time for next refresh
-    next_disconnect_time = datetime.datetime.now() + datetime.timedelta(minutes=14)
-    view = RestartStreamView()
-    view.start.disabled = True
     counter = 0
     while True:
-        counter = counter  +1
+        counter += 1
 
- 
-            
+        # Get prices for all tickers concurrently
+        price_tasks = [polygon.get_stock_price(ticker) for ticker in tickers]
+        prices = await asyncio.gather(*price_tasks)
+        ticker_prices = dict(zip(tickers, prices))  # Assuming no None prices
+        print(ticker_prices)
+
+        # Now get option data concurrently
+        option_data_tasks = [
+            poly_options.get_option_data(ticker, ticker_prices[ticker]) for ticker in tickers
+        ]
+        results = await asyncio.gather(*option_data_tasks)
+        print(results)
+
+        # Filter out None results and add valid results to data_list
+        data_list = [result for result in results if result is not None]
+        data_list = sorted(data_list, key=lambda x: x[6], reverse=True)
+
+        # Create a new list that only includes the parts you want to display
+        display_data = [row[:7] for row in data_list]
+
+        # Now, display_data contains the data you want to display for all tickers.
+        # Format it into a table and send it in discord chat.
+        table = tabulate(display_data, headers=['Symbol', 'Skew', ' ', 'Price', 'Expiry', 'IV', 'Vol','Skew Metric'], tablefmt='fancy')
+
+        embed = disnake.Embed(
+            title=f"All - Skew",
+            description=f"```\n" + table + "\n```",
+            color=disnake.Colour.random()
+        )
+        embed.set_footer(text=f"{counter} | Data Provided by Polygon.io | Implemented by FUDSTOP")
+        await inter.edit_original_message(embed=embed)  # Send the table in a code block
+
+        if counter == 100:
+            await inter.send(f"> **Click to Run:**\n> </allskew:1121980575276879983>")
+            break
 
 
-        async with aiohttp.ClientSession() as session:
-            # Get prices for all tickers concurrently
-            price_tasks = [polygon.get_stock_price(ticker) for ticker in tickers]
-            prices = await asyncio.gather(*price_tasks)
-            ticker_prices = dict(zip(tickers, prices))  # Assuming no None prices
 
-            # Now get option data concurrently
-            option_data_tasks = [get_option_data(ticker, ticker_prices[ticker], session) for ticker in tickers]
-            results = await asyncio.gather(*option_data_tasks)
-            # Filter out None results and add valid results to data_list
-            data_list = [result for result in results if result is not None]
 
-            data_list = sorted(data_list, key=lambda x: x[4], reverse=True)
-            # Create a new list that only includes the parts you want to display
-            display_data = [row[:6] for row in data_list]
-
-            # Now, display_data contains the data you want to display for all tickers. Format it into a table and send it in discord chat.
-            table = tabulate(display_data, headers=['Symbol', 'Strike', 'Price', 'Expiry', 'IV', 'Skew'], tablefmt='fancy')
-
-            embed = disnake.Embed(title=f"All - Skew", description=f"```\n" + table + "\n```", color=disnake.Colour.random())
-            embed.set_footer(text=f"{counter} | Data Provided by Polygon.io | Implemented by FUDSTOP")
-            await inter.edit_original_message(embed=embed, view=view) # Send the table in a code block
-            if counter == 100:
-                view.start.disabled = False
-                await bot.close()
-                break
-@bot.event
-async def on_disconnect():
-    print("Bot has disconnected, waiting to reconnect...")
-
-@bot.event
-async def on_ready():
-    print("Bot has reconnected, restarting allskew command...")
-    if global_inter is not None and global_tickers is not None:
-        await allskew(global_inter, global_tickers)
 class ServerMenu(disnake.ui.ChannelSelect):
     def __init__(self):
         
@@ -300,404 +441,67 @@ class ThreadMenu(disnake.ui.ChannelSelect):
 
 
 
-
-
-@bot.listen()
-async def on_message( message: disnake.Message):
-    
-    if "repo?" in message.content:
-        await message.channel.send("```py\nPosts every day at 12:15PM CST.``` https://www.newyorkfed.org/markets/desk-operations/reverse-repo")
-    if "start!" in message.content:
-        await message.channel.send(view=LinksStartView())
-    if "short volume?" in message.content:
-        await message.channel.send("```py\nHere is FINRA's daily short volume files. Simply open the current date's file and search for the ticker with control + f or the search feature in your phone.``` https://www.finra.org/finra-data/browse-catalog/short-sale-volume-data/daily-short-sale-volume-files ")
-
-
-    if "market share?" in message.content:
-        await message.channel.send(
-            "```py\nView the lit and un-lit market share graph from CBOE.``` https://media.discordapp.net/attachments/896207280117264434/1045612084169293824/image.png?width=999&height=671")
-
-
-
-    if "rsi?" in message.content:
-        await message.channel.send(rsi, delete_after=10)
-
-    if "macd" in message.content:
-        await message.channel.send(macd, delete_after=10)
-
-    if "bullish continuation diamond" in message.content:
-        await message.channel.send(bullish_continuationdiamond, delete_after=10)
-
-    if "bullish continuationwedge" in message.content:
-        await message.channel.send(bullish_continuationwedge)
-
-    if "bullish gravestone" in message.content:
-        await message.channel.send(bullish_gravestone, delete_after=10)
-
-    if "bullish heada and shoulders" in message.content:
-        await message.channel.send(bullish_headandshoulders, delete_after=10)
-
-    if "triple bottom" in message.content:
-        await message.channel.send(triplebottom, delete_after=10)
-
-    if "diamond bottom" in message.content:
-        await message.channel.send(diamondbottom, delete_after=10)
-
-
-    if "rounded bottom" in message.content:
-        await message.channel.send(roundedbottom, delete_after=10)
-
-    if "double bottom" in message.content:
-        await message.channel.send(doublebottom, delete_after=10)
-
-
-    if "gap down" in message.content:
-        await message.channel.send(gapdown, delete_after=10)
-
-
-    if "gap up" in message.content:
-        await message.channel.send(gapup, delete_after=10)
-
-
-
-    if "diamond top" in message.content:
-        await message.channel.send(diamondtop, delete_after=10)
-
-
-    if "triple top" in message.content:
-        await message.channel.send(tripletop, delete_after=10)
-
-
-    if "double top" in message.content:
-        await message.channel.send(doubletop, delete_after=10)
-
-
-    if "island top" in message.content:
-        await message.channel.send(islandtop, delete_after=10)
-
-
-    if "bbands" in message.content:
-        await message.channel.send(bollingerbands, delete_after=10)
-
-    if "momentum" in message.content:
-        await message.channel.send(momentum, delete_after=10)
-
-    if "oi?" in message.content:
-        view=disnake.ui.View()
-        await message.channel.send(view=TotalOIViewStart(), delete_after=10)
-
-
-    if "top volume?" in message.content:
-        await message.channel.send(view=TotalVolumeViewStart(), delete_after=10)
-
-
-
-    if "mainmenu" in message.content:
-        await message.channel.send(view=LitStart(), delete_after=10)
-
-
-    if "data?" in message.content:
-        await message.channel.send(view=DataViewStart(), delete_after=10)
-
-
-    if "webull commands" in message.content:
-        await message.channel.send(view=WebullCmdViewStart(), delete_after=10)
-
-
-    if "dd commands" in message.content:
-        await message.channel.send(view=DDCmdViewStart(), delete_after=10)
-
-
-    if "option commands" in message.content:
-        await message.channel.send(view=OptionCmdViewStart(), delete_after=10)
-
-
-    if "flow commands" in message.content:
-        await message.channel.send(view=FlowCmdViewStart(), delete_after=10)
-
-
-    if "dps commands" in message.content:
-        await message.channel.send(view=DPSCmdViewStart(), delete_after=10)
-
-
-    if "earnings commands" in message.content:
-        await message.channel.send(view=EarningsCmdViewStart(), delete_after=10)
-
-
-    if "economy commands" in message.content:
-        await message.channel.send(view=EconomyCmdViewStart(), delete_after=10)
-
-
-    if "learn commands" in message.content:
-        await message.channel.send(view=LearnCmdViewStart(), delete_after=10)
-
-
-    if "stream commands" in message.content:
-        await message.add_reaction(emojis.clockspin)
-        await message.channel.send(view=StreamCmdViewStart(), delete_after=10)
-
-
-    if "stock commands" in message.content:
-        await message.channel.send(view=StockCmdViewStart(), delete_after=10)
-
-
-    if "charting commands" in message.content:
-        await message.channel.send(view=ChartingCmdViewStart())
-
-    if "send conditions" in message.content:
-        await message.channel.send(file=disnake.File("views/TRADE CONDITIONS.csv"))
-
-    if "videos1" in message.content:
-        await message.channel.send(view=VideoStartView())
-
-
-    if "videos2" in message.content:
-        await message.channel.send(view=VideoStart2View())
-
-    if "conditions" in message.content:
-        from cfg import YOUR_API_KEY
-        embeds = [ 
-        disnake.Embed(title=f"Conditions", url=f"https://api.polygon.io/v3/reference/conditions?asset_class=options&apiKey={YOUR_API_KEY}"),
-        disnake.Embed(title=f"Conditions", url=f"https://api.polygon.io/v3/reference/conditions?cursor=YXA9MTAmYXM9JmFzc2V0X2NsYXNzPW9wdGlvbnMmbGltaXQ9MTAmc29ydD1hc3NldF9jbGFzcw&apiKey={YOUR_API_KEY}"),
-        disnake.Embed(title=f"Conditions", url=f"https://api.polygon.io/v3/reference/conditions?cursor=YXA9MTAmYXM9JmFzc2V0X2NsYXNzPW9wdGlvbnMmbGltaXQ9MTAmc29ydD1hc3NldF9jbGFzcw&apiKey={YOUR_API_KEY}"),
-        disnake.Embed(title=f"Conditions", url=f"https://api.polygon.io/v3/reference/conditions?cursor=YXA9MTAmYXM9JmFzc2V0X2NsYXNzPW9wdGlvbnMmbGltaXQ9MTAmc29ydD1hc3NldF9jbGFzcw&apiKey={YOUR_API_KEY}"),
-        disnake.Embed(title=f"Conditions", url=f"https://api.polygon.io/v3/reference/conditions?cursor=YXA9MjAmYXM9JmFzc2V0X2NsYXNzPW9wdGlvbnMmbGltaXQ9MTAmc29ydD1hc3NldF9jbGFzcw&apiKey={YOUR_API_KEY}"),
-        disnake.Embed(title=f"Conditions", url=f"https://api.polygon.io/v3/reference/conditions?cursor=YXA9MzAmYXM9JmFzc2V0X2NsYXNzPW9wdGlvbnMmbGltaXQ9MTAmc29ydD1hc3NldF9jbGFzcw&apiKey={YOUR_API_KEY}")
-        ]
-        await message.channel.send(view=AlertStart(embeds[0]), embed=embeds[0])
-
-    if "videos3" in message.content:
-        await message.channel.send(view=VideoStart3View())
-
-
-    if "top options?" in message.content:
-        await message.channel.send(view=TopOptionsViewStart())
-
-
-    if "agency?" in message.content:
-        await message.channel.send(view=AgencyViewStart())
-
-
-    if "dtcc?" in message.content:
-        await message.channel.send(view=DTCCViewStart())
-
-
-    if "nyse?" in message.content:
-        await message.channel.send(view=NYSEViewStart())
-
-
-    if "cboe?" in message.content:
-        await message.channel.send(view=CBOEViewStart())
-
-
-    if "top oi_down?" in message.content:
-        await message.channel.send(view=TopOIDownViewStart())
-
-
-    if "top oi_up?" in message.content:
-        await message.channel.send(view=TopOIUpViewStart())
-
-
-    if "top iv?" in message.content:
-        await message.channel.send(view=TopIVViewStart())
-
-
-    if "top oi?" in message.content:
-        await message.channel.send(view=TopOIViewStart())
-
-
-    if "top volume?" in message.content:
-        await message.channel.send(view=TopVolumeViewStart())
-
-
-    if "total turnover?" in message.content:
-        await message.channel.send(view=TotalTurnoverViewStart())
-
-
-    if "total oi?" in message.content:
-        await message.channel.send(view=TotalOIViewStart())
-
-
-    if "total volume?" in message.content:
-        await message.channel.send(view=TotalVolumeViewStart())
-
-
-    if "fed data?" in message.content:
-        await message.channel.send(view=FedDataStart())
-
-
-    if "finra data?" in message.content:
-        await message.channel.send(view=FINRADataStart())
-
-
-    if "blockchain data?" in message.content:
-        await message.channel.send(view=BlockchainDataStart())
-
-
-    if "inflation data?" in message.content:
-        await message.channel.send(view=InflationDataStart())
-
-
-    if "economic data?" in message.content:
-        await message.channel.send(view=EconomicDataStart())
-
-
-    if "treasury data?" in message.content:
-        await message.channel.send(view=TreasuryDataStart())
-
-
-    if "hkex data?" in message.content:
-        await message.channel.send(view=HKEXDataStart())
-
-
-    if "mmf data?" in message.content:
-        await message.channel.send(view=MMFDataStart())
-
-
-    if "repo data?" in message.content:
-        await message.channel.send(view=RepoDataStart())
-
-
-    if "bull flag?" in message.content:
-        await message.channel.send(bullflag)
-
-
-    if "bear flag?" in message.content:
-        await message.channel.send(bearflag)
-
-
-    if "bearish_outsidebar?" in message.content:
-        await message.channel.send(bearish_outsidebar)
-
-
-    if "bullish_outsidebar?" in message.content:
-        await message.channel.send(bullish_outsidebar)
-
-    if "cci?" in message.content:
-        await message.channel.send(cci)
-
-    if "treasury auctions?" in message.content:
-        await message.channel.send("```py\nHere are the latest Treasury Auction Operations for the last two weeks:``` https://markets.newyorkfed.org/api/tsy/sales/results/summary/lastTwoWeeks.csv")
-
-    if "soma holdings?" in message.content:
-        await message.channel.send("```py\nHere are the latest details on the Federal Reserve's SOMA Holdings:``` https://markets.newyorkfed.org/api/soma/summary.csv")
-
-    if "lending?" in message.content:
-        await message.channel.send("```py\nHere are the latest operations data for the last two weeks of securities lending operations:``` https://markets.newyorkfed.org/api/seclending/all/results/details/lastTwoWeeks.csv")
-
-    if "earnings per share?" in message.content:
-        await message.channel.send( 
-            "```py\nEarnings per share (EPS) refers to the net profit earned by a company during one period divided by the number of outstanding common shares. It tells us the amount shareholders will receive per share if the company distributes all its profits earned in one period. It is an important indicator of a company's profitability."
-
-            "\nSpecifically, there are two forms of EPS: basic and diluted. We won't elaborate on their calculation here, but their difference should be noticed."
-
-            "```py\nBasic EPS: This only includes current outstanding common shares.```"
-            "```py\nDiluted EPS: Assuming all potentially dilutive financial instruments (e.g., stock options, convertible bonds, etc.) are converted into common shares, there would be more common shares outstanding than before.```"
-            "\nTherefore, the diluted EPS is equal to or less than basic EPS.")
-        
-    if "market cap?" in message.content:
-        await message.channel.send( 
-            "```py\nSimply put, market capitalization refers to the market value of a company. It is calculated by multiplying the current stock price of the company by the number of total outstanding shares:```"
-
-            "```py\nMarket Capitalization = Stock Price×Shares Outstanding```"
-
-            "```py\nFor example, company C has 100 million common shares outstanding, trading at $10 per share. Its market capitalization is $1 billion.```"
-        )
-
-    if "profit margin?" in message.content:
-        await message.channel.send("```py\nWhen looking at an income statement from any listed company, you can usually find three types of profit: gross profit, operating profit, and net income. The three types of profit margins are calculated below, generally in percentage.```"
-
-            "```py\n'Gross Margin' = Gross Profits/Revenues\n"
-            "'Operating Margin' = Operating Profits/Revenues\n"
-            "'Net Margin' = Net Income/Revenues```"
-            "```py\nProfit margins measure a company's profitability, used in both horizontal and trend analysis. Now we can answer the question posed at the beginning of the article: which company is more profitable? Even though company A has a higher net income, its net margin is 10% (=1÷10), lower than company B's net margin of 25% (=0.5÷2). We can conclude that Company B is more profitable than A due to its higher net margin ratio.```")
-
-
-    if "price multiples?" in message.content:
-        
-        view = disnake.ui.View()
-        button = disnake.ui.Button(style=disnake.ButtonStyle.blurple,emoji=f"{emojis.pink1}", label="PE RATIO")
-        button2 = disnake.ui.Button(style=disnake.ButtonStyle.blurple,emoji=f"{emojis.pink2}",label="PB RATIO")
-        button3 = disnake.ui.Button(style=disnake.ButtonStyle.blurple,emoji=f"{emojis.pink3}", label="PS RATIO")
-        button4 = disnake.ui.Button(style=disnake.ButtonStyle.blurple,emoji=f"{emojis.pink3}", label="P/CF RATIO")
-        
-        button.callback = lambda interaction:interaction.response.edit_message( 
-
-    "```py\nThe P/E ratio measures the value of a company's stock price to its earnings per share.```"
-
-    "```py\nP/E Ratio= Share Price/Earnings per Share```"
-
-    "```py\nSuppose company ABC has a P/E ratio of 30. It indicates that investors are willing to pay 30 times company ABC's earnings to purchase one share.```"
-
-    "```py\nWhen you buy stocks, you, in a sense, buy the rights to receive the firm's future earnings. Suppose stock A has higher current earnings than stock B. In that case, you are generally willing to pay a higher price to buy stock A, assuming the two companies' profitability stays the same.```"
-            , view=view)
-
-        button2.callback = lambda interaction: interaction.response.edit_message( 
-            "```py\nThe Price/Book ratio (P/B) measures a company's stock price to its book value per share.```"
-    "```py\nP/B Ratio = Share Price/Book Value per Share```"
-        , view=view)
-
-        button3.callback = lambda interaction: interaction.response.edit_message( 
-    "```py\nThe Price/Sales ratio (P/S) measures a company's stock price to its sales per share.```"
-    "```py\nP/S Ratio = Share Price/Sales per Share```"
-        , view=view)
-
-        button4.callback = lambda interaction: interaction.response.edit_message( 
-            "```py\nThe Price/Cash Flow ratio (P/CF) measures a company's stock price to the cash flow per share, which includes free cash flow (FCF) and operating cash flow (OCF).```"
-    "```py\nP/CF Ratio = Share Price/Free Cash Flow per Share```"
-
-
-    "Or"
-    "```py\nP/CF Ratio = Share Price/Operating Cash Flow per Share```"
-            ,view=view)
-        view.add_item(button)
-        view.add_item(button2)
-        view.add_item(button3)
-        view.add_item(button4)
-        await message.channel.send("```py\nLet's talk about four common price multiples. Select one by clicking a button:```", view=view)
-
-
-    if "options?" in message.content:
-        view = disnake.ui.View()
-        select = disnake.ui.Select( 
-            placeholder=f"Options Videos:",
-            min_values=1,
-            max_values=1,
-            custom_id="vidvid!@4e",
-            options = [ 
-        
-            disnake.SelectOption(emoji=f"{emojis.video}",label="Options Course - Options Introduction",value="https://youtu.be/7jcqknbX99c"),
-            disnake.SelectOption(emoji=f"{emojis.video}",label="Options Course - Options Terminology",value="https://youtu.be/namg44EBFBs"),
-            disnake.SelectOption(emoji=f"{emojis.video}",label="Options Course - Buying Calls",value="https://youtu.be/Bc5gpsa7Z1M"),
-            disnake.SelectOption(emoji=f"{emojis.video}",label="Options Course - Buying Puts",value="https://youtu.be/jrYUzSibjzo"),
-            disnake.SelectOption(emoji=f"{emojis.video}",label="Options Course - Exercising and Assignment 1",value="https://youtu.be/Dgc2fO4GlR8"),
-            disnake.SelectOption(emoji=f"{emojis.video}",label="Options Course - Exercising and Assignment 2",value="https://youtu.be/e_W_5jd-2v4"),
-            disnake.SelectOption(emoji=f"{emojis.video}",label="Options Course - Options Premium",value="https://youtu.be/22X3h_rwiEA"),
-            disnake.SelectOption(emoji=f"{emojis.video}",label="Options Course - Risk v. Reward",value="https://youtu.be/p36Ovh8x89I"),
-            disnake.SelectOption(emoji=f"{emojis.video}",label="Options Course - Calls and Put Specifics",value="https://youtu.be/NpSQdICvNBk"),])
-        view.add_item(select)
-        select.callback = lambda interaction: interaction.response.edit_message(f"{select.values[0]}",view=view)
-        await message.channel.send(view=view, delete_after=45)
-
-
-
-
-
-
-async def main():
-
-
-
-
-    extensions = []
-    cogs_directory = os.path.join(os.path.dirname(__file__), 'cogs')
-
-    for filename in os.listdir(cogs_directory):
-        if filename.endswith('.py'):
-            extension_name = filename[:-3]  # Remove the .py extension
-            extensions.append(f'cogs.{extension_name}')
-
-    for extension in extensions:
-       await bot.load_extension(f'bot.{extension}')
+@bot.command()
+async def cmds(ctx: commands.Context):
+    """Views the server commands from all bots."""
+    embeds = [ 
+
+        disnake.Embed(title=f"FUDSTOP Commands - Webull", description=f"```py\nYou are viewing fudstop commands regarding webull. Learn how to use the Webull App, customize it, and view several graphics such as TA, Trend Analysis, Candlestick analysis, and general market knowledge.```\n> The webull commands can be accessed by using:\n\n> **/webull**"),
+        disnake.Embed(title=f"FUDSTOP Commands - Stocksera", description=f"```py\nYou are viewing the fudstop implemented commands from the Stocksera API. View economic data, FTDs, low floats, short interest, short volume, social media chatter and more.```\n> The Stocksera commands can be access by using:\n\n> **/ss**")
+    ]
+
+    # Add fields to a specific embed (e.g., the second embed at index 1)
+    embed1 = 0
+    embed2 = 1
+    embed3 = 2
+    embed4 = 3
+    embed5 = 4
+    embed1target = embeds[embed1]
+    embed1target.add_field(name="Analysis Tools", value="> View webull tools pertaining to how to utilize data analysis tools.\n> Click to use:\n\n</webull analysis_tools:1122243464042659942>", inline=True)
+    embed1target.add_field(name="Bid/Ask Spread", value="> Learn about the bid ask spread.\n> Click to use:\n\n</webull bid_ask_spread:1122243464042659942>", inline=True)
+    embed1target.add_field(name="Graphics", value="> View several webull graphics such as TA, Chart Patterns, and more.\n> Click to use:\n\n</webull graphics:1122243464042659942>", inline=True)
+    embed1target.add_field(name="Options Chain", value="> Learn about the Webull Option Chain and how to use it.\n> Click to use:\n\n</webull options_chain:1122243464042659942>", inline=True)
+    embed1target.add_field(name="Options Setup", value="> Learn how to cutsomize your webull options chart.\n> Click to use:\n\n> </webull options_setup:1122243464042659942>", inline=True)
+    embed1target.add_field(name="Orders", value="> Learn about the different market order types.\n> Click to use:\n\n</webull orders:1122243464042659942>", inline=True)
+    embed1target.add_field(name="Paper Trading", value="> Learn about paper trading and options paper trading via Webull.\n> Click to use:\n\n</webull paper_trading:1122243464042659942>", inline=True)
+    embed1target.add_field(name="Volume Analysis", value="> Returns a live stream of the input ticker's volume analysis on the day.\n> Click to use:\n\n</webull volume_analysis:1122243464042659942>", inline=True)
+
+    embed2target = embeds[embed2]
+    embed2target.add_field(name=f"Earnings", value=f"> Returns earnings tickers for the given date range.\n> Click to use:\n\n</ss earnings:1122243463862300759>")
+    embed2target.add_field(name=f"FTDs", value=f"> Search market-wide FTDs ranked by highest to lowest with T+35 dates.\n> Click to use:\n\n</ss ftds:1122243463862300759>")
+    embed2target.add_field(name=f"Inflation", value=f"> Returns historic inflation up to the current day dated back to 1977.\n> Click to use:\n\n</ss inflation:1122243463862300759>")
+    embed2target.add_field(name=f"Insider Summary", value=f"> View the latest insider trades across the market.\n> Click to use:\n\n</ss insider_summary:1122243463862300759>")
+    embed2target.add_field(name=f"Jobless Claims", value=f"> View the latest and historic jobless claims numbers.\n> Click to use:\n\n</ss jobless_claims:1122243463862300759>")
+    embed2target.add_field(name=f"Low Floats", value=f"> Returns tickers with extremely low free floats.\n> Click to use:\n\n</ss low_floats:1122243463862300759>")
+    embed2target.add_field(name=f"Market News", value=f"> Return market-wide news to track narratives.\n> Click to use:\n\n</ss market_news:1122243463862300759>")
+    embed2target.add_field(name=f"News Sentiment", value=f"> View headlines for a ticker and the underlying sentiment.\n> Click to use:\n\n</ss news_sentiment:1122243463862300759>")
+    embed2target.add_field(name=f"Reverse Repo", value=f"> View the latest and historic repo numbers from the FED.\n\n</ss reverse_repo:1122243463862300759>")
+    embed2target.add_field(name=f"SEC Filings", value=f"> View the latest SEC Filings for a ticker.\n> Click to use:\n\n</ss sec_filings:1122243463862300759>")
+    embed2target.add_field(name=f"Short Interest", value=f"> View tickers with high % of their float shorted.\n> Click to use:\n\n</ss short_interest:1122243463862300759>")
+    embed2target.add_field(name=f"Short Volume", value=f"> View a stock's latest and historic short volume.\n> Click to use:\n\n</ss short_volume:1122243463862300759>")
+    embed2target.add_field(name=f"Stocktwits", value=f"> Return a ticker's rank on StockTwits.\n> Click to use:\n\n</ss stocktwits:1122243463862300759>")
+    embed2target.add_field(name=f"Subreddits", value=f"> View a ticker's popular subreddit / active users and rank.\n> Click to use:\n\n</ss subreddits:1122243463862300759>")
+
+
+
+    # Add more fields as needed
+
+    await ctx.send(embed=embed1target, view=AlertMenus(embeds))
+extensions = []
+cogs_directory = os.path.join(os.path.dirname(__file__), 'cogs')
+
+for filename in os.listdir(cogs_directory):
+    if filename.endswith('.py'):
+        extension_name = filename[:-3]  # Remove the .py extension
+        extensions.append(f'cogs.{extension_name}')
+
+for extension in extensions:
+    bot.load_extension(f'bot.{extension}')
 
 bot.run(YOUR_DISCORD_BOT_TOKEN)
+
+
+
+
+
+

@@ -136,7 +136,7 @@ class Webull(commands.Cog):
                 await inter.send(embed=embed, view=view)
                 await inter.delete_original_message()
                 break
-            
-async def setup(bot:commands.Bot):
-    await bot.add_cog(Webull(bot))
+
+def setup(bot:commands.Bot):
+    bot.add_cog(Webull(bot))
     print(f"> Extension {__name__} is ready\n")

@@ -88,7 +88,7 @@ class Collect(commands.Cog):
         em = disnake.Embed(title=f"Vwap for {stock}", description=f"```py\nContract:\n\n")
         await inter.edit_original_message(embed=em)
 
-async def setup(bot: commands.Bot):
+def setup(bot: commands.Bot):
     """SETUP COG"""
-    await bot.add_cog(Collect(bot))
+    bot.add_cog(Collect(bot))
     print(f"> Extension {__name__} is ready\n")

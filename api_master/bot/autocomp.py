@@ -28,6 +28,32 @@ def ticker_autocomp(inter,ticker: str):
 
 
 
+
+
+def command_autocomp(inter,command: str):
+    if not command:
+        return ["TYPE", "WHAT YOU", "NEED"]
+    print(f"command_autocomp [command]: {command}")
+    tlow = command.lower()
+    col_list = ["Command"]
+    file = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "files",
+        "cmds",
+        "cmds.csv",
+    )
+    df = pd.read_csv(file, usecols=col_list)
+    df = df["Command"]
+    return [commands for commands in df if commands.lower().startswith(tlow)][:24]
+
+
+def execute_command(command, args):
+    formatted_command = "/" + command + " " + " ".join(args)
+    # Here you would actually execute the command
+    print(f"Executing: {formatted_command}")
+
+
+
 def graphics_autocomp(inter,graphic: str):
     if not graphic:
         return ["MUST", "USE", "CAPS"]

@@ -1380,6 +1380,6 @@ class OCC(commands.Cog):
         await inter.edit_original_message(embed=embed)
 
 
-async def setup(bot:commands.Bot):
-    await bot.add_cog(OCC(bot))
+def setup(bot:commands.Bot):
+    bot.add_cog(OCC(bot))
     print(f"> Extension {__name__} is ready\n")

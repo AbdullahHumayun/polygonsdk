@@ -90,8 +90,8 @@ class Jasmy(commands.Cog):
         data = jholdersd['data']
         points = data['points']
         val_list = list(points.values())
-        emb = disnake.Embed(title="Jasmy Holders!")
-        await inter.edit_original_message(val_list[0], embed=emb)
+        emb = disnake.Embed(title="Jasmy Holders!", description=f"```py\nAs per etherscan data - there are currently {val_list[0]} jasmy holders.```")
+        await inter.edit_original_message(embed=emb)
 
     @jasmy.sub_command()
     async def price(self, inter:disnake.AppCmdInter):
@@ -256,7 +256,7 @@ class Jasmy(commands.Cog):
             except KeyError:
                 await inter.send("Server busy! Try again later.")
 
-async def setup(bot:commands.Bot):
+def setup(bot:commands.Bot):
     """SETUP"""
-    await bot.add_cog(Jasmy(bot))
+    bot.add_cog(Jasmy(bot))
     print(f"> Extension {__name__} is ready\n")

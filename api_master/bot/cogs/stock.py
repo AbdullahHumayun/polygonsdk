@@ -844,6 +844,6 @@ class Stock(commands.Cog):
 
 
 
-async def setup(bot:commands.Bot):
-    await bot.add_cog(Stock(bot))
+def setup(bot:commands.Bot):
+    bot.add_cog(Stock(bot))
     print(f"> Extension {__name__} is ready\n")

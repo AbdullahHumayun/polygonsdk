@@ -159,7 +159,7 @@ class MainView(disnake.ui.View):
         await interaction.response.edit_message(view=MainMenu())
 
     @disnake.ui.button(label="🔄", style=disnake.ButtonStyle.blurple, row=2)
-    async def homer( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def homer( self, interaction: disnake.ApplicationCommandInteraction, button):
         em = disnake.Embed(title="🔄",description=f"```py\nYou just switched from 'LEARN' to 'TRADE'.```", color = disnake.Colour.dark_gold())
         em.add_field(name="Navigation", value="To naviate on the **TRADE SIDE** simply use the buttons below.")
 
@@ -168,7 +168,7 @@ class MainView(disnake.ui.View):
         await interaction.response.edit_message(embed=em, view=MainView2())
 
     @disnake.ui.button(label="⬅️", style=disnake.ButtonStyle.red, row=2)
-    async def home( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def home( self, interaction: disnake.ApplicationCommandInteraction, button):
         em = disnake.Embed(title="⬅️",description=f"```py\nRise above the narrative.```", color = disnake.Colour.dark_gold())
         em.set_image(url="https://media.discordnet/attachments/896207280117264434/1018632105477013554/3235bb_fedadfcf38994349b7fa98fbf3f6f372_mv2.gif")
 
@@ -176,7 +176,7 @@ class MainView(disnake.ui.View):
         await interaction.response.edit_message(embed=em, view=MainView())
 
     @disnake.ui.button(label="⭕", style=disnake.ButtonStyle.red, row=2)
-    async def bye( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def bye( self, interaction: disnake.ApplicationCommandInteraction, button):
         em = disnake.Embed(title="🔄",description=f"```py\nYou just switched from LEARN to TRADE.```", color = disnake.Colour.dark_gold())
         em.add_field(name="Navigation", value="To naviate on the **TRADE SIDE** simply use the buttons below.")
 
@@ -13484,7 +13484,7 @@ class OStratsView(disnake.ui.View):
 )
 
     @disnake.ui.button(label="🐂 Long Call 1️⃣", style=disnake.ButtonStyle.green)
-    async def opts( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def opts( self, interaction: disnake.ApplicationCommandInteraction, button):
         embeds=[
         disnake.Embed(title="Introduction", description="You believe that the stock you have been researching is going to increase in price during a given time frame regardless of general market conditions. You are familiar with long stock positions but are wondering if there is a more efficient trade to use your available money to express this investment idea.\n\n"
 
@@ -13524,7 +13524,7 @@ class OStratsView(disnake.ui.View):
         disnake.Embed(title="🐂", description="Before we choose to complete the transaction to purchase long calls, let’s look a bit further at the decisions we face before and on the contract’s expiration date:"),]
         await interaction.response.send_message(embed=embeds[0], view=Menu(embeds))
     @disnake.ui.button(label="🤡Losng Call: Losing", style=disnake.ButtonStyle.red, )
-    async def losingcall( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def losingcall( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed=disnake.Embed(title="Outcome 2: Loss🤡", description="With a long call position, you have paid money (net premium) to establish an options position that gives you access to the stock’s unlimited upside profit potential. \n\n  This means that your potential losses (or downside risk exposure if the stock declines in price) are known and limited to the net premium paid.")
         embed.add_field(name="Max Loss = Net Premium Paid", value="Example: \n\n\n *Stock XYZ is trading at $50 and you purchase 10 XYZ Jan 50 calls for $1.25.*\n **At expiration, stock XYZ is trading lower at $43.**")
         embed.set_image(url="https://social-media.webullfintech.com/social/3123a4b332da4ee2b28aa162bab3544f.png")
@@ -13532,7 +13532,7 @@ class OStratsView(disnake.ui.View):
 
         await interaction.response.send_message(view=OStratsView(), embed=embed)
     @disnake.ui.button(label="🚀 Long Call: Profiting", style=disnake.ButtonStyle.green, )
-    async def winningcall( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def winningcall( self,interaction: disnake.ApplicationCommandInteraction, button):
         embed=disnake.Embed(title="Outcome 1: Profit🚀", description="value and rise in price. There is unlimited profit potential. Let’s now assume we are correct in our sentiment and the stock price rises.\n\n"
 
 "**To calculate our profit on the position when we purchased our contracts without borrowing funds, we use the following formula:**")
@@ -13549,7 +13549,7 @@ class OStratsView(disnake.ui.View):
 
 
     @disnake.ui.button(label="🏡", style=disnake.ButtonStyle.green, )
-    async def home( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def home( self, interaction: disnake.ApplicationCommandInteraction, button):
         em = disnake.Embed(title="🏡 Home Menu",description=f"```py\nWelcome to FUDSTOP. This is an Application you can use to view important market data, discord tutorials, educational youtube videos, and so much more. ``` ```py\nSimply click the buttons to navigate where desired.```", color = disnake.Colour.dark_green())
 
         em.add_field(name="Navigation Tooltip:", value="You just went **🏡 Home** from the **Options Menu**")
@@ -13557,7 +13557,7 @@ class OStratsView(disnake.ui.View):
         await interaction.response.edit_message(embed=em, view=MainView2())
 
     @disnake.ui.button(label="🔙 Go Back", style=disnake.ButtonStyle.blurple, )
-    async def pin( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def pin( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed= disnake.Embed(title="You just went **BACK** from **Bear Market Menu**", color=disnake.Colour.dark_blue())
 
 
@@ -14585,13 +14585,13 @@ class NyseVIDView(disnake.ui.View):
 
 
     @disnake.ui.button(label="🏡", style=disnake.ButtonStyle.green, )
-    async def home( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def home( self, interaction: disnake.ApplicationCommandInteraction, button):
         em = disnake.Embed(title="🏡 Home Menu", color=disnake.Colour.dark_green())
         em.set_footer(text="Implemented by FUDSTOP Trading", )
         await interaction.response.edit_message(embed=em, )
 
     @disnake.ui.button(label="🔙", style=disnake.ButtonStyle.blurple, )
-    async def goback( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def goback( self, interaction: disnake.ApplicationCommandInteraction, button):
         em = disnake.Embed(title="video menu.", color=disnake.Colour.dark_gold())
         em.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -14613,49 +14613,49 @@ class SmilesView(disnake.ui.View):
 
 
     @disnake.ui.button(label="Earnings", style=disnake.ButtonStyle.blurple, )
-    async def earnings( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def earnings( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="Option Smiles and Earnings", description="If you've been in this group for a bit - you'll remember where we started: GAPS. **since then, gaps have always been an essential part of our strategy, and nothing has changed there.** \n\n OPTION SMILES ARE AN INDICATION OF FUTURE PRICE ACTION DUE TO EARNINGS (positive news).", url="https://1drv.ms/x/s!AgLOXVUYbs6VhYMswtMd9SvCFGeA4w?e=g57FaY", color=disnake.Colour.random())
         embed.set_image(url="https://media.discordnet/attachments/896207280117264434/955135923530629190/816.png?width=789&height=629")
         embed.add_field(name="HOW TO FIND THE LIST", value="First - use the /sp500 command to get a list of all tickers in the sp500. Take that list - and copy/paste it into alphaquery, and then select next earnings report date for the list of tickers. This will return a giant list of sp500 components we can sort by date to have a scheduled list of plays!")
         await interaction.response.edit_message(embed=embed, view=SmilesView())
 
     @disnake.ui.button(label="Affected Tickers", style=disnake.ButtonStyle.blurple, )
-    async def affected( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def affected( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="Option Smiles Constituents", description=" https://www.sec.gov/rules/sro/occ/2022/34-95319.pdf \n\n The filing above is the bread and butter for why this works. It clearly states in the filing that they are trying to remedy the options methodology for calculating RISK. \n\n In doing this - they're specifically targeting components of the SP500 index for the new methodology, which are the tickers we should be playing for SMILES near earnings.", color=disnake.Colour.random())
         embed.set_image(url="https://media.discordnet/attachments/896207280117264434/955135923530629190/816.png?width=789&height=629")
         embed.add_field(name="Sp500 earnings list by date", value="https://1drv.ms/x/s!AgLOXVUYbs6VhYMswtMd9SvCFGeA4w?e=g57FaY")
         await interaction.response.edit_message(embed=embed, view=SmilesView())
 
     @disnake.ui.button(label="A Moving Target", style=disnake.ButtonStyle.blurple, )
-    async def moving( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def moving( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="OPTION SMILES MOVE", description="Due to the fact option smiles move - IT IS IMPERATIVE NOT TO BUY IN TOO EARLY. Wait until the week of earnings and try to wait for a dip in the stock like any other strategy. If you buy a smile too soon - it could be the WRONG smile, which ill explain more in the next button.", color=disnake.Colour.random())
         embed.set_image(url="https://media3.giphy.com/media/4lXLKH5PxBD6CYhAKp/giphy.gif?cid=790b7611af379f64558476bc3a73966395e64d7a605c2d5c&rid=giphy.gif&ct=g")
         embed.add_field(name="Sp500 earnings list by date", value="https://1drv.ms/x/s!AgLOXVUYbs6VhYMswtMd9SvCFGeA4w?e=g57FaY")
         await interaction.response.edit_message(embed=embed, view=SmilesView())
 
     @disnake.ui.button(label="LOCK IN THE SMILE STRIKE", style=disnake.ButtonStyle.blurple, )
-    async def lock( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def lock( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="Where's the real smile?", description="Since the dawn of this group - gaps and earnings has been our bread and butter. How can we be sure where the true smile should be if they move? \n\n\n USE THE GAPS ON THE CHART! ", color=disnake.Colour.random())
         embed.set_image(url="https://i.ibb.co/fdXsVPY/clx.png")
         embed.add_field(name="For example - look for a gap on the daily. If the gap is at $150 and the stock is trading at $125 - go through the options chain for that ticker until you find a smile out at those prices ", value="https://1drv.ms/x/s!AgLOXVUYbs6VhYMswtMd9SvCFGeA4w?e=g57FaY")
         await interaction.response.edit_message(embed=embed, view=SmilesView())
 
     @disnake.ui.button(label="THIS IS NEW FOR EVERYONE!", style=disnake.ButtonStyle.blurple, )
-    async def new( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def new( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="USE YOUR EYES", description="Just like everything else - this is a new occurence in the market compared to what we've seen lately. THIS MEANS IT WILL TAKE YOU, AS AN INDIVIDUAL, MANAGING YOUR POSITIONS AND TAKING NOTE OF YOUR SMILE LOCATION / THE DIRECTION OF THE GENERAL MARKET / AND HOW THE STRIKE MOVES AS YOU'RE EXPOSED TO IT. \n\n\n Please use risk management here with everything else - and **make sure you are watching your positions if holding intraday and overnight. It is nobody's responsibility to watch your plays for you but you!**", color=disnake.Colour.random())
         embed.set_image(url="https://i.ibb.co/fdXsVPY/clx.png")
         embed.add_field(name="For example - look for a gap on the daily. If the gap is at $150 and the stock is trading at $125 - go through the options chain for that ticker until you find a smile out at those prices ", value="https://1drv.ms/x/s!AgLOXVUYbs6VhYMswtMd9SvCFGeA4w?e=g57FaY")
         await interaction.response.edit_message(embed=embed, view=SmilesView())
 
     @disnake.ui.button(label="🏡", style=disnake.ButtonStyle.green, )
-    async def home( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def home( self, interaction: disnake.ApplicationCommandInteraction, button):
         em = disnake.Embed(title="🏡 Home Menu", color=disnake.Colour.dark_green())
         em.set_footer(text="Implemented by FUDSTOP Trading", )
 
         await interaction.response.edit_message(embed=em, )
 
     @disnake.ui.button(label="🔙", style=disnake.ButtonStyle.blurple, )
-    async def goback( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def goback( self, interaction: disnake.ApplicationCommandInteraction, button):
         em = disnake.Embed(title="Opportunities Menu", color=disnake.Colour.yellow())
         em.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -14669,7 +14669,7 @@ class SpyView(disnake.ui.View):
 )
 
     @disnake.ui.button(label="Spy🕵️", style=disnake.ButtonStyle.red, )
-    async def spyn( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def spyn( self, interaction: disnake.ApplicationCommandInteraction, button):
             embed = disnake.Embed(title="Spy🕵️", color = disnake.Colour.random())
             embed.add_field(name="Spy🕵️", value="**SPY** IS ONE OF THE MOST LIQUID TICKERS IN THE MARKET. \n\n **I HIGHLY RECOMMEND AVOIDING SPY UNTIL YOU GRASP CORE.** \n\n PLAY SPY WITH PROFITS ONLY IS MY RECOMMENDATION. TRADE AT YOUR OWN RISK.", inline = True)
             embed.add_field(name="Spy Relevance🕵️", value="**SPY** is best played around macro-economic events and especially around FOMC meetings. Other than that - the **CORE LOGIC** is the supreme logic and is what should be learned and practiced by anyone looking to scale gains consistently.", inline = True)
@@ -14680,14 +14680,14 @@ class SpyView(disnake.ui.View):
             await interaction.response.edit_message(embed=embed, view=SpyView())
 
     @disnake.ui.button(label="🏡", style=disnake.ButtonStyle.green, )
-    async def gohome( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def gohome( self, interaction: disnake.ApplicationCommandInteraction, button):
         em = disnake.Embed(title="🏡 Home Menu", color=disnake.Colour.dark_green())
         em.set_footer(text="Implemented by FUDSTOP Trading", )
 
         await interaction.response.edit_message(embed=em, )
 
     @disnake.ui.button(label="🔙", style=disnake.ButtonStyle.blurple, )
-    async def goback( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def goback( self, interaction: disnake.ApplicationCommandInteraction, button):
         em = disnake.Embed(title="Opportunities Menu", color=disnake.Colour.yellow())
         em.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -14709,14 +14709,14 @@ class SFTView(disnake.ui.View):
 
 
     @disnake.ui.button(label="🏡", style=disnake.ButtonStyle.green, )
-    async def home( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def home( self, interaction: disnake.ApplicationCommandInteraction, button):
         em = disnake.Embed(title="🏡 Home Menu", color=disnake.Colour.dark_green())
         em.set_footer(text="Implemented by FUDSTOP Trading", )
 
         await interaction.response.edit_message(embed=em, )
 
     @disnake.ui.button(label="🔙", style=disnake.ButtonStyle.blurple, )
-    async def goback( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def goback( self, interaction: disnake.ApplicationCommandInteraction, button):
         em = disnake.Embed(title="eo Menu", color=disnake.Colour.yellow())
         em.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -14731,7 +14731,7 @@ class VidVideoView(disnake.ui.View):
 
 
     @disnake.ui.button(label="China", style=disnake.ButtonStyle.blurple, custom_id="chinas")
-    async def China( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def China( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="China", description="```py\nChina experienced an earlier lockdown than other countries in the fight against the coronavirus, followed by an earlier easing of restrictions. Government policies in the initial crisis phase focused on containing the coronavirus via lockdowns, travel and immigration restrictions, and strict quarantine regulations. A second phase began in March as the policy focus shifted to a gradual easing of restrictions and the reopening of China’s economy. An important milestone was reached in early April. After 11 weeks, China announced the end of the lockdown in Wuhan, the epicenter of the initial outbreak, allowing stranded travelers and migrant workers to finally return home or to their place of work. Beijing’s successful strategy to contain the coronavirus is being reflected in household and business confidence, which are returning to more normal levels```", color=disnake.Colour.dark_green())
         embed.add_field(name="2012-2022 | The Completed Puzzle", value="https://youtu.be/cyFyepDlAh8", inline=False)
         embed.add_field(name="Learn about China's Three Red Lines Policy", value="https://youtu.be/qk0zftFn5s8", inline=False)
@@ -14746,7 +14746,7 @@ class VidVideoView(disnake.ui.View):
         await interaction.response.edit_message(embed=embed, view=ChinaView())
 
     @disnake.ui.button(label="The DTCC / DTC", style=disnake.ButtonStyle.gray, custom_id="dtcc")
-    async def dtcc( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def dtcc( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="The Depository Trust Clearing Corporation", description="```py\nThe Depository Trust and Clearing Corporation (DTCC) is an American financial services company founded in 1999 that provides clearing and settlement services for the financial markets. When the DTCC was established in 1999, it combined the functions of the Depository Trust Company (DTC) and the National Securities Clearing Corporation (NSCC).1 The NSCC is currently a subsidiary of the DTCC.```")
         embed.set_image(url="https://stopnakedshortselling.org/wp-content/uploads/2020/05/DTCC.jpg")
         embed.add_field(name="DTC-2021-005 | A Closer Look", value="https://youtu.be/DZ4e1zl_LxM", inline=False)
@@ -14767,7 +14767,7 @@ class VidVideoView(disnake.ui.View):
         await interaction.response.edit_message(embed=embed, view=DTCCView())
 
     @disnake.ui.button(label="The OCC", style=disnake.ButtonStyle.gray, custom_id="occ2")
-    async def occ( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def occ( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="The Options Clearing Corporation", description="```py\nOptions Clearing Corporation is a United States clearing house based in Chicago. It specializes in equity derivatives clearing, providing central counterparty clearing and settlement services to 16 exchanges.```",color=disnake.Colour.dark_orange())
         embed.add_field(name="OCC-2021-011 | Margin & Defaults", value="https://youtu.be/XJNTt2Yrf30 \n", inline=False)
         embed.add_field(name="SEC FILING OCC-2021-006", value="https://youtu.be/OkiPeHgDimk \n", inline=False)
@@ -14829,7 +14829,7 @@ class VidVideoView(disnake.ui.View):
         await interaction.response.edit_message(embed=embed, view=FINRAView())
 
     @disnake.ui.button(label="The SFT Service", style=disnake.ButtonStyle.green, custom_id="sft")
-    async def sft(self,interaction: disnake.ApplicationCommandInteraction ):
+    async def sft(self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="The Securities Financing Transaction Service", description="```py\nSFTs are transactions in which a securities lender loans securities to a securities borrower, for a fee. \n\n\n The borrowers typically use the borrowed securities to **cover short sales or fails to deliver that may result from either short or long sales.** \n\n A lender typically lends securities to generate income through the fees that it charges. \n\n As a CCP (Central Clearing Counterparty)***, NSCC would interpose itself **between the securities lender and borrower and become the counterparty to each entity. \n\n NSCC would then be obligated to complete the transaction, that is, to return loaned securities to the lender and collateral to the borrower, even if a lender or borrower in an SFT fails to satisfy its obligations, thereby assuming the risk of each entity’s failure to perform to each other.```", color=disnake.Color.random())
         embed.add_field(name="Basel III Regulations and Reforms", value="https://youtu.be/G_4qeFJqSdk \n Learn about the Basel III regulation regime.", inline=False)
         embed.add_field(name="Introduction to the NSCC SFT Service" , value="https://youtu.be/cGjsCr72hjU", inline=False)
@@ -14840,7 +14840,7 @@ class VidVideoView(disnake.ui.View):
         await interaction.response.edit_message(embed=embed, view=SFTView())
 
     @disnake.ui.button(label="The NET Stable Funding Ratio", style=disnake.ButtonStyle.green,custom_id="net" )
-    async def net( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def net( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="The Net Stable Funding Ratio, TITLE 12 CFR", description="```py\nFollowing the failure of many banks to adequately measure, manage and control their liquidity risk in 2007 and in subsequent years, the Basel Committee on Banking Supervision (BCBS) introduced two liquidity standards as part of the Basel III post-crisis reforms. The first of these is the Liquidity Coverage Ratio (LCR). It enhances banks' short-term resilience and is presented in another Executive Summary. The second standard - the Net Stable Funding Ratio (NSFR) - aims to promote resilience over a longer time horizon by creating incentives for banks to fund their activities with more stable sources of funding on an ongoing basis.```", color=disnake.Colour.dark_gold())
         embed.set_image(url="https://www.novantas.com/wp-content/uploads/2016/10/figure1.jpg")
         embed.add_field(name="The Net Stable Funding Ratio - Intro", value="https://youtu.be/LHKekbnr2lY \n Learn about the Title 12 Net Stable Funding Ratio", inline=False)
@@ -14870,7 +14870,7 @@ class VidVideoView(disnake.ui.View):
 
 
     @disnake.ui.button(label="Chicago Board Options Exchange (CBOE)", style=disnake.ButtonStyle.green, custom_id="cboe")
-    async def cboes( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def cboes( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="The Chicago Board Options Exchange (CBOE)", description="```py\nCBOE is the abbreviation for the Chicago Board Options Exchange. It is the world's largest options exchange, having served as an innovator of new option-based products since its first day of trading in 1973. The CBOE offers options contracts on hundreds of stocks and exchange-traded funds, as well as several of the most popular stock indexes. \n\n Among its proprietary products are stock index options on the **S&P 500 (^GSPC)**, which are the most active index options in the U.S. market. These and other financial products give investors the opportunity to manage risk in executing their investment strategies.```", url="https://www.cboe.com/us/equities/market_share/", color=disnake.Colour.dark_gold())
         embed.set_image(url="https://th.bing.com/th/id/OIP.D58Ciou2qdjSeY0tCcCVVwHaEH?pid=ImgDet&rs=1")
         embed.add_field(name="SR-CBOE-2021-02 | ETF Manipulation", value="```py\nCBOE Files and specifically refers to ETFs being bad for price discovery in markets.``` https://youtu.be/vQCH8teGyHQ", inline=False)
@@ -14908,7 +14908,7 @@ class VidVideoView(disnake.ui.View):
         await interaction.response.edit_message(embed=embed, view=ICEView())
 
     @disnake.ui.button(label="Exchange Traded Funds", style=disnake.ButtonStyle.red, custom_id="etfs")
-    async def etfs( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def etfs( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="Exchange Traded Funds", description="```py\nAn exchange-traded fund (ETF) is a basket of securities that trades on an exchange just like a stock does. \n ETF share prices fluctuate all day as the ETF is bought and sold this is different from mutual funds, which only trade once a day after the market closes. \n ETFs can contain all types of investments, including stocks, commodities, or bonds; some offer U.S.-only holdings, while others are international. \n ETFs offer low expense ratios and fewer broker commissions than buying the stocks individually.```", color=disnake.Colour.random())
         embed.add_field(name= "ETF Mechanics 101", value="https://youtu.be/CgsFdfTavvk \n Learn the basics of ETFs and how they work as explained by BlackRock.", inline=False)
         embed.add_field(name="Why ETFs Are Shorted", value="https://youtu.be/aeW_ETxGumc \n **Shorting** provides price disovery and liquidity in markets.", inline=False)
@@ -15087,7 +15087,7 @@ class VideoView(disnake.ui.View):
         await interaction.response.edit_message(embed=embed, view=NSFRView())
 
     @disnake.ui.button(label="Options 101 Course", style=disnake.ButtonStyle.green)
-    async def Options( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def Options( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="Options 101 Course", description="```py\nThis in-depth options 101 course is provided by the 'Options Industry Council.'```")
         embed.add_field(name="#1 Options Introduction", value="https://youtu.be/7jcqknbX99c \n", inline=False)
         embed.add_field(name="#2 Options Terminology", value="https://youtu.be/namg44EBFBs \n", inline=False)
@@ -16303,7 +16303,7 @@ class NewsNotifView(disnake.ui.View):
 
 
     @disnake.ui.button(label="🔎52 Week Lows❗⭐⭐", style=disnake.ButtonStyle.gray)
-    async def fiftytwowklow( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def fiftytwowklow( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed= disnake.Embed(title="🔎52week-lows❗", description="🔎52week-lows❗ Posts a daily message with tickers that hit their 52 week lows. \n **THIS CAN BE VERY HELPFUL FOR FINDING PLAYS.** ", color=disnake.Colour.random())
         self.add_item(disnake.ui.Button(style=disnake.ButtonStyle.url, label="AVBLS | Bitcoin Average Block Size", url=f"https://data.nasdaq.com/api/v3/datasets/BCHAIN/AVBLS.csv?&api_key={YOUR_NASDAQ_KEY}"))
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
@@ -16312,7 +16312,7 @@ class NewsNotifView(disnake.ui.View):
         await interaction.response.edit_message(embed=embed, view=NewsNotifView())
 
     @disnake.ui.button(label="🔎Top Stories❗📰", style=disnake.ButtonStyle.gray)
-    async def topstories( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def topstories( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed= disnake.Embed(title="🔎topstories❗📰", color=disnake.Colour.random())
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16320,7 +16320,7 @@ class NewsNotifView(disnake.ui.View):
         await interaction.response.edit_message(embed=embed, view=NewsNotifView())
 
     @disnake.ui.button(label="🔎Trade Ideas❗📰", style=disnake.ButtonStyle.gray)
-    async def tradeideas( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def tradeideas( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed= disnake.Embed(title="🔎trade-ideas❗📰", color=disnake.Colour.random())
         embed.set_image(url="https://media.giphy.com/media/nyGYAlY0djsVoEA1T9/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16329,7 +16329,7 @@ class NewsNotifView(disnake.ui.View):
 
 
     @disnake.ui.button(label="🔎Options❗📰", style=disnake.ButtonStyle.gray)
-    async def options( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def options( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed= disnake.Embed(title="🔎Options❗📰",  color=disnake.Colour.random())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16338,7 +16338,7 @@ class NewsNotifView(disnake.ui.View):
 
 
     @disnake.ui.button(label="🔎Industry Specific❗📰", style=disnake.ButtonStyle.gray)
-    async def industrynews( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def industrynews( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed= disnake.Embed(title="🔎Industry Specific❗📰", color=disnake.Colour.random())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16347,7 +16347,7 @@ class NewsNotifView(disnake.ui.View):
 
 
     @disnake.ui.button(label="🔎Penny Stocks❗📰", style=disnake.ButtonStyle.gray)
-    async def pennynews( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def pennynews( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed= disnake.Embed(title="🔎Penny Stocks❗📰", color=disnake.Colour.random())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16356,7 +16356,7 @@ class NewsNotifView(disnake.ui.View):
 
 
     @disnake.ui.button(label="🔍Small Caps❗📰", style=disnake.ButtonStyle.gray)
-    async def smallcapnews( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def smallcapnews( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed= disnake.Embed(title="🔍Small Caps❗📰", color=disnake.Colour.random())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -16365,7 +16365,7 @@ class NewsNotifView(disnake.ui.View):
 
 
     @disnake.ui.button(label="🔍Emerging Market ETFs📰⭐⭐", style=disnake.ButtonStyle.gray)
-    async def emetfs( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def emetfs( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed= disnake.Embed(title="🔍Emerging Market ETFs📰", description="🔎52week-lows❗ Posts a daily message with tickers that hit their 52 week lows. \n **THIS CAN BE VERY HELPFUL FOR FINDING PLAYS.** ", color=disnake.Colour.dark_red())
         embed.add_field(name="-", value="🔔Click the link to setup notifications for this topic.")
         embed.set_footer(text="Implemented by FUDSTOP Trading", )
@@ -17568,7 +17568,7 @@ class BestCommandsView(disnake.ui.View):
 
 
     @disnake.ui.button(label="Open Interest", style=disnake.ButtonStyle.red)
-    async def oicmnd( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def oicmnd( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="/op oi", description="```py\nOpen Interest [/op oi <ticker] || [op oi '<ticker>' <YYYY-MM-DD>```", color=disnake.Colour.random())
         embed.add_field(name="Open Interest",value="```py\n/op oi '<ticker>'``` ```py\n || This allows you to get a consolidated view of open interest. Its always recommended to then call /op oi '<ticker>' '<YYYY-MM-DD>' aferwards, as you can breakdown the OI by specific expiration, and the dates are given to you from the initial !oi command. For example: !oi `gme` and then !oi 'gme 2022-06-17'.```", inline=False)
         embed.set_image(url="https://i.ibb.co/LxBz971/OI.png")
@@ -17577,7 +17577,7 @@ class BestCommandsView(disnake.ui.View):
         await interaction.response.edit_message(embed=embed, view=BestCommandsView())
 
     @disnake.ui.button(label="Earnings", style=disnake.ButtonStyle.red)
-    async def earningscmnd( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def earningscmnd( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="/earnings", description="```py\n/earnings or /earnings <ticker>```", color=disnake.Colour.random())
         embed.add_field(name="Earnings",value='```py\n/earnings is a super important command.``` ```py\n It creates a list of earnings separated After Hours from Premarket - and is already formatted to quickly make spreadsheets to find plays. Be sure to always go BACK one day after calling the command, as we dont want to enter into a core play BEFORE earnings, only after (and the gap has happened). Command usage: /earnings `<ticker>` for specific ticker or /earnings for all tickers.```', inline=False)
         embed.set_image(url="https://i.ibb.co/7YcKSxF/earnings2.png")
@@ -17586,7 +17586,7 @@ class BestCommandsView(disnake.ui.View):
         await interaction.response.edit_message(embed=embed, view=BestCommandsView())
 
     @disnake.ui.button(label="The FIB", style=disnake.ButtonStyle.red)
-    async def fibcmnd(self,interaction: disnake.ApplicationCommandInteraction ):
+    async def fibcmnd(self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="/fib", description="```py\n/fib <timeframe> <ticker>```", color=disnake.Colour.random())
         embed.add_field(name="The FIB",value='```py\nThe /fib command is super important - as it helps us identify where the stock is trading respective to its yearly high or low.``` If the 🎯 is **near the 52week high** - it fits put criteria. \n\n If the 🎯is **near the 52week low**, it matches call criteria. You can use ```py\n/fib `<ticker> year`, /fib `<ticker> month`, /fib `<ticker> week`, /fib `<ticker> quarter`, /fib `<ticker> hour`, etc.```', inline=False)
         embed.set_image(url="https://i.ibb.co/BPHbsjN/fib.png")
@@ -17595,7 +17595,7 @@ class BestCommandsView(disnake.ui.View):
         await interaction.response.edit_message(embed=embed, view=BestCommandsView())
 
     @disnake.ui.button(label="The Fib Chart📈", style=disnake.ButtonStyle.red)
-    async def fibcartcmd( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def fibcartcmd( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="The Fib Chart📈", description="```py\n/ta fib <ticker> <interval> where interval can be '1min', '5min', '30min', '60min', and 'daily (1440)'. Other options: extended hours:'[true/false]' heiken candles:'[true/false]' trendline: '[true/false]'```", color=disnake.Colour.random())
         embed.add_field(name="The FIB Chart", value="```py\nThis is a nice chart that displays the FIB retracement with a nice chart.``` ```py\n Use /ta fib <ticker> <interval> where interval can be '1min', '5min', '30min', '60min', and 'daily (1440)'. Other options: extended hours:'[true/false]' heiken candles:'[true/false]' trendline: '[true/false]'```", inline=False)
         embed.set_image(url="https://i.ibb.co/xzvS9Vd/TAFIB.png")
@@ -17604,20 +17604,20 @@ class BestCommandsView(disnake.ui.View):
         await interaction.response.edit_message(embed=embed, view=BestCommandsView())
 
     @disnake.ui.button(label="Futures🧞", style=disnake.ButtonStyle.red)
-    async def futcmnd( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def futcmnd( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="Futures🧞", description="```py\n/futures``` or ```py\n/futures <futures type>```", color=disnake.Colour.random())
         embed.add_field(name="Futures", value="```py\n/futures is an important command as it gives insight to the next pre-market session.```", inline=False)
         await interaction.response.edit_message(embed=embed, view=BestCommandsView())
 
     @disnake.ui.button(label="Max Pain😩", style=disnake.ButtonStyle.red)
-    async def mpxmnc( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def mpxmnc( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="Max Pain😩", description="```py\n/earnings or /earnings <ticker>```", color=disnake.Colour.random())
         embed.add_field(name="Max Pain", value="```py\n/mp <ticker> <YYYY-MM-DD> is an important command as it helps us identify our ceiling / floor with the core logic. The date format is the same as the /op oi command, making it easy to remember the date format.``` Example use: ```py\n/mp gme 2022-05-20`.``` ```py\nNOTE: MAX PAIN IS NOT THE STRIKE PRICE YOU BUY OR WHERE THE STOCK WILL BE TRADING COME EXPIRATION. IT'S YOUR CEILING FOR CORE PLAYS OR FLOOR DEPENDING ON THE DIRECTION.```", inline=False)
         embed.set_image(url="https://i.ibb.co/pjYp5kg/MPGME.png")
         await interaction.response.edit_message(embed=embed, view=BestCommandsView())
 
     @disnake.ui.button(label="Short Volume🩳", style=disnake.ButtonStyle.red)
-    async def shortvol( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def shortvol( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="Short Volume", description="```/shortvol <ticker```", color=disnake.Colour.random())
         embed.add_field(name="Short Volume", value="```py\n/shortvol `<ticker>` is a helpful command as it helps you take note of the short volume for the last 5 days and gives you a % overall short.``` Example use: ```py\n /shortvol KC```", inline=True)
         embed.set_image(url="https://i.ibb.co/JyznBFH/SHORTINT-SPY.png")
@@ -17625,14 +17625,14 @@ class BestCommandsView(disnake.ui.View):
 
 
     @disnake.ui.button(label="Heatmap🔥", style=disnake.ButtonStyle.red)
-    async def heatmapx( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def heatmapx( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="Heatmap", description="```py\n/heatmap``` or ```py\n/heatmap <heatmap type>```", color=disnake.Colour.random())
         embed.add_field(name="Heatmap", value="```py\n/heatmap is great for visualizing the current state of markets. The /heatmap option comes with ANY of the following:``` ```py\n /heatmap '[SP500 / ETF MAP / WORLD MAP / STOCK MARKET MAP]' and the time frames of '[1day, 1week, 1month, 3month, 6month, 1year, and year to date.]'``` Example use: ```py\n/heatmap [maps:SP500] [timeline: 1 Day Performance]```", inline=False)
         embed.set_image(url="https://i.ibb.co/Sdx00r3/HEATMAP.png")
         await interaction.response.edit_message(embed=embed, view=BestCommandsView())
 
     @disnake.ui.button(label="Reverse Repo♾️", style=disnake.ButtonStyle.red)
-    async def repocmnd( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def repocmnd( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="-", description="```py\n/econ repo```", color=disnake.Colour.random())
         embed.add_field(name="Reverse Repo", value="```py\n/econ repo will return the last 50 days of the ON RRP in a paginated embed menu. You can survey as much as 100 days.```", inline=False)
         embed.set_image(url="https://i.ibb.co/dJCqnbN/ECONREPO.png")
@@ -17640,14 +17640,14 @@ class BestCommandsView(disnake.ui.View):
 
 
     @disnake.ui.button(label="ETF Holders", style=disnake.ButtonStyle.red)
-    async def etfs2cmnd(self,interaction: disnake.ApplicationCommandInteraction ):
+    async def etfs2cmnd(self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="ETF Holders", description="```py\n/etf_holders <ticker>```")
         embed.add_field(name="ETF stock holdings by ETF", value="```py\n/etf_holders <ticker> displays which tickers are piled into the ETF selected.``` Example use: ```py\n/etf_holders SPY returns all stocks that are exposed to SPY. Displays all holdings in order of weight.```", inline=False)
         embed.set_image(url="https://i.ibb.co/ctwXyDr/ETFHOLDINGSMYFUND.png")
         await interaction.response.edit_message(embed=embed, view=BestCommandsView())
 
     @disnake.ui.button(label="Flow Summary💦", style=disnake.ButtonStyle.red, )
-    async def flowcmnd( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def flowcmnd( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="/flowsum", description="```py\n/flowsum <ticker>```", color=disnake.Colour.random())
         embed.add_field(name="/flowsum", value="```py\nThe /flowsum <ticker> command is a great way to visualize option order flow intra-day. You'll see call and put side premium and can easily analyze it.``` Example use: ```py\n/flowsum DIDI```", inline=False)
         embed.set_image(url="https://i.ibb.co/3v9WsyN/FLOWSUM.png")
@@ -17655,7 +17655,7 @@ class BestCommandsView(disnake.ui.View):
 
 
     @disnake.ui.button(label="🔙", style=disnake.ButtonStyle.blurple, )
-    async def goback( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def goback( self, interaction: disnake.ApplicationCommandInteraction, button):
         em = disnake.Embed(title="Bots Menu", color=disnake.Colour.dark_blue())
         em.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -17825,7 +17825,7 @@ class TutorialsView(disnake.ui.View):
 
 
     @disnake.ui.button(label="Setting notifications🔔", style=disnake.ButtonStyle.green)
-    async def botcmds( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def botcmds( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="Setting notifications🔔", color=disnake.Colour.dark_green())
         embed.add_field(name="🔔", value="In order to receive push notifications as well as desk-top notifications, make sure you have notifications turned on for the information you want to have streamlined to you. There's a lot to choose from!")
         embed.add_field(name="🔔", value="FUDSTOP Video Help \n\n https://youtu.be/zPG_hoQXAto")
@@ -17835,7 +17835,7 @@ class TutorialsView(disnake.ui.View):
 
 
     @disnake.ui.button(label="Slash Commands⚔️", style=disnake.ButtonStyle.blurple)
-    async def slashr( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def slashr( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="Slash Commands⚔️", color=disnake.Colour.dark_red())
         embed.set_image(url="https://media.giphy.com/media/waq1okC7KZgqC6N229/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading")
@@ -17843,14 +17843,14 @@ class TutorialsView(disnake.ui.View):
 
 
     @disnake.ui.button(label="Discord Tutorials⚔️", style=disnake.ButtonStyle.blurple)
-    async def disctuts( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def disctuts( self, interaction: disnake.ApplicationCommandInteraction, button):
         embed = disnake.Embed(title="Slash Commands⚔️", color=disnake.Colour.random())
         embed.set_image(url="https://media.giphy.com/media/waq1okC7KZgqC6N229/giphy.gif")
         embed.set_footer(text="Implemented by FUDSTOP Trading")
         await interaction.response.edit_message(view=TutorialsView())
 
     @disnake.ui.button(label="🏡", style=disnake.ButtonStyle.green, )
-    async def home( self,interaction: disnake.ApplicationCommandInteraction ):
+    async def home( self, interaction: disnake.ApplicationCommandInteraction, button):
         em = disnake.Embed(title="🏡 Home Menu", color=disnake.Colour.dark_green())
         em.set_footer(text="Implemented by FUDSTOP Trading", )
 
@@ -19478,29 +19478,17 @@ class AlertMenus(disnake.ui.View):
         self, embeds: List[disnake.Embed], options: List[disnake.ui.Select]
     ):
         super().__init__(timeout=None)
-        self.embeds = embeds
-        # Sets the embed list variable.
+        self.embeds = [] if embeds is None else embeds
         self.options = options
-        #self.options2 = options2
-
-        # Current embed number.
         self.embed_count = 0
-
-        # Disables previous page button by default.
         self.prev_page.disabled = True
 
-
-        # Sets the footer of the embeds with their respective page numbers.
-        self.count = 0
-
         for opt in options:
-            self.selector.append_option(opt)  # pylint: disable=E1101
-        for i, embed in enumerate(self.embeds):
-            embed.set_footer(
-                text=f"Page {i + 1} of {len(self.embeds)}",
-            )
+            self.selector.append_option(opt)
 
-
+        if self.embeds is not None:
+            for i, embed in enumerate(self.embeds):
+                embed.set_footer(text=f"Page {i + 1} of {len(self.embeds)}")
 
 
 

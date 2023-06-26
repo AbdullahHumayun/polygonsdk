@@ -13,6 +13,7 @@ from .company_info import CompanyInfo
 from .forex_crypto import ForexSnapshot, CryptoSnapshot
 from .technicals.rsi import RSI
 from .technicals.macd import MACDData
+from .universal_snapshot import UniversalSnapshot
 from .financials import BalanceSheet,IncomeStatement,ComprehensiveIncome,CashFlow
 from .technicals.sma import SimpleMovingAverage
 from _discord import emojis
@@ -53,8 +54,18 @@ class AsyncPolygonSDK:
     async def __aexit__(self, exc_type, exc, tb):
         print("Closing session")
         await self.session.__aexit__(exc_type, exc, tb)
+
+    @staticmethod
+    def create_data_model(data_type, data):
+        data_model_factories = {
+            'stock_snapshot': lambda: StockSnapshot(data),
+            # Add other data model factories here...
+        }
+        return data_model_factories[data_type]() if data_type in data_model_factories else None
+
     async def initialize(self):
         self.conditions_map = await self.get_stock_conditions()
+
 
 
     async def get_cik(self, ticker):
@@ -143,6 +154,8 @@ class AsyncPolygonSDK:
                 df.to_csv('files/indices/indices_data.csv')
 
                 return df
+            
+
     async def get_all_crypto_snapshots(self) -> List[CryptoSnapshot]:
         """Fetch all Crypto snapshots"""
         url=f"https://api.polygon.io/v2/snapshot/locale/global/markets/crypto/tickers?apiKey={self.api_key}"
@@ -1189,31 +1202,19 @@ class AsyncPolygonSDK:
         url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={self.api_key}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
-                data = await resp.json()
+                try:
+                    data = await resp.json()
+                    results = data['results'] if 'results' in data else None
+                    if results is not None:
+                        value = results[0]['session']['close']
+                        if value is not None:
+                            return value
+                except KeyError:
+                    pass  # Handle the KeyError and continue with the next ticker
 
-                results = data['results'] if 'results' in data else None
-                if results is not None:
-                    
-                    value = results[0]['session']['close']
-                    if value is not None:
-                        return value
-                    else:
-                        return 0
+        return None  # Return None if the stock price couldn't be retrieved
 
             
-    async def get_multiple_stock_prices(self, tickers=str):
-        values = []
-        for ticker in tickers:
-            url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={self.api_key}"
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url) as resp:
-                    data = await resp.json()
-                    results = data['results'] if data['results'] is not None else None
-                    if results is None:
-                        print(f"Error - results from price request.")
-                    value = results[0]['session']['close']
-                    values.append(value)
-        return values
 
 
     async def find_lowest_iv(self, output):
@@ -1313,4 +1314,5 @@ class AsyncPolygonSDK:
                                 final_dicts_put.append(current_dict)
 
         return final_dicts_call, final_dicts_put
+
 

@@ -74,16 +74,19 @@ class PrevDay:
 
 
 @dataclass
-class StockSnapshot:
+class StockSnapshot():  # Inheritance
+    def __init__(self):
+        super().__init__()
 
-    ticker: str
-    today_changep: float
-    today_change: float
-    stock_day: Day
-    stock_last_quote: LastQuote
-    last_trade: LastTrade
-    stock_minute_bar: Min
-    prev_day: PrevDay
+        
+    ticker: Optional[str] = None
+    today_changep: Optional[float] = None
+    today_change: Optional[float] = 0.0
+    stock_day: Optional[Day] = None
+    stock_last_quote: Optional[LastQuote] = None
+    last_trade: Optional[LastTrade] = None
+    stock_minute_bar: Optional[Min] = None
+    prev_day: Optional[PrevDay] = None
 
     
     def __init__(self, ticker_data):

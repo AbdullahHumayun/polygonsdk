@@ -1,0 +1,180 @@
+import pandas as pd
+
+
+class UniversalSnapshot:
+    def __init__(self, results):
+        session = [i['session'] if i['session'] is not None else None for i in results]
+        self.change = [i['change'] if 'change' in i else None for i in session]
+        self.change_percent = [i['change_percent'] if 'change_percent' in i else None for i in session]
+        self.early_trading_change = [i['early_trading_change'] if 'early_trading_change' in i else None for i in session]
+        self.early_trading_change_percent = [i['early_trading_change_percent'] if 'early_trading_change_percent' in i else None for i in session]
+        self.close = [i['close'] if 'close' in i else None for i in session]
+        self.high = [i['high'] if 'high' in i else None for i in session]
+        self.low = [i['low'] if 'low' in i else None for i in session]
+        self.open = [i['open'] if 'open' in i else None for i in session]
+        self.volume =[i['volume'] if 'volume' in i else None for i in session]
+        self.prev_close = [i['previous_close'] if 'previous_close' in i else None for i in session]
+
+        details = [i['details'] for i in results]
+        self.strike = [i['strike_price'] if 'strike_price' in i else None for i in details]
+        self.expiry = [i['expiration_date'] if 'expiration_date' in i else None for i in details]
+        self.contract_type = [i['contract_type'] if 'contract_type' in i else None for i in details]
+        self.exercise_style = [i['exercise_style'] if 'exercise_style' in i else None for i in details]
+        self.ticker = [i['ticker'] if 'ticker' in i else None for i in details]
+
+        greeks = [i['greeks'] if i['greeks'] is not None else None for i in results]
+        self.theta = [i['theta'] if 'theta' in i else None for i in greeks]
+        self.delta = [i['delta'] if 'delta' in i else None for i in greeks]
+        self.gamma = [i['gamma'] if 'gamma' in i else None for i in greeks]
+        self.vega = [i['vega'] if 'vega' in i else None for i in greeks]
+
+        
+        self.implied_volatility = [i['implied_volatility'] if 'implied_volatility' in i else None for i in results]
+        self.open_interest = [i['open_interest'] if i['open_interest'] is not None else None for i in results]
+        
+
+        last_trade = [i['last_trade'] if i['last_trade'] is not None else None for i in results]
+        self.sip_timestamp = [i['sip_timestamp'] if 'sip_timestamp' in i else None for i in last_trade]
+        self.conditions = [i['conditions'] if 'conditions' in i else None for i in last_trade]
+        self.trade_price = [i['price'] if 'price' in i else None for i in last_trade]
+        self.trade_size = [i['size'] if 'size' in i else None for i in last_trade]
+        self.exchange = [i['exchange'] if 'exchange' in i else None for i in last_trade]
+
+        last_quote = [i['last_quote'] if i['last_quote'] is not None else None for i in results]
+        self.ask = [i['ask'] if 'ask' in i else None for i in last_quote]
+        self.bid = [i['bid'] if 'bid' in i else None for i in last_quote]
+        self.bid_size = [i['bid_size'] if 'bid_size' in i else None for i in last_quote]
+        self.ask_size = [i['ask_size'] if 'ask_size' in i else None for i in last_quote]
+        self.midpoint = [i['midpoint'] if 'midpoint' in i else None for i in last_quote]
+        
+
+
+        self.name = [i.get('name') for i in results]
+        self.market_status = [i.get('market_status') for i in results]
+        self.ticker = [i.get('ticker') for i in results]
+        self.type = [i.get('type') for i in results]
+
+        underlying_asset = [i['underlying_asset'] if i['underlying_asset'] is not None else None for i in results]
+        self.change_to_breakeven = [i['change_to_break_even'] if 'change_to_break_even' in i else None for i in underlying_asset]
+        self.underlying_ticker = [i['ticker'] if 'ticker' in i else None for i in underlying_asset]
+        if self.underlying_ticker[0] == "I:SPX":
+
+            self.underlying_price = [i['value'] if 'value' in i else None for i in underlying_asset]
+        else:
+            self.underlying_price = [i['price'] if 'price' in i else None for i in underlying_asset]
+
+
+
+
+        self.data_dict = {
+            'Change Percent': self.change_percent,
+            'Early Trading Change': self.early_trading_change,
+            'Early Trading Change Percent': self.early_trading_change_percent,
+            'Close': self.close,
+            'High': self.high,
+            'Low': self.low,
+            'Open': self.open,
+            'Vol': self.volume,
+            'Previous Close': self.prev_close,
+            'Type': self.contract_type,
+            'Exercise Style': self.exercise_style,
+            'Exp': self.expiry,
+            'Strike': self.strike,
+            'Delta': self.delta,
+            'Gamma': self.gamma,
+            'Theta': self.theta,
+            'Vega': self.vega,
+            'IV': self.implied_volatility,
+            'Ask': self.ask,
+            'Ask Size': self.ask_size,
+            'Bid': self.bid,
+            'Bid Size': self.bid_size,
+            'Midpoint': self.midpoint,
+            'Last Trade Sip Timestamp': self.sip_timestamp,
+            'Last Trade Conditions': self.conditions,
+            'Last Trade Price': self.trade_price,
+            'Last Trade Size': self.trade_size,
+            'Last Trade Exchange': self.exchange,
+            'Open Interest': self.open_interest,
+            'Price': self.underlying_price,
+            'Sym': self.underlying_ticker,
+            'Name': self.name,
+            'Market Status': self.market_status,
+            'Ticker': self.ticker,
+            'Types': self.type
+        }
+        self.df = pd.DataFrame(self.data_dict)
+
+
+class UniversalOptionSnapshot:
+    def __init__(self, results):
+        self.break_even = [i['break_even_price'] if 'break_even_price' in i else None for i in results]
+        self.implied_volatility = [i['implied_volatility'] if 'implied_volatility' in i else None for i in results] 
+        self.open_interest = [i['open_interest'] if 'open_interest' in i else None for i in results]
+
+
+
+
+
+
+
+        details = [i['details'] for i in results]
+        self.strike = [i['strike_price'] if 'strike_price' in i else None for i in details]
+        self.expiry = [i['expiration_date'] if 'expiration_date' in i else None for i in details]
+        self.contract_type = [i['contract_type'] if 'contract_type' in i else None for i in details]
+        self.exercise_style = [i['exercise_style'] if 'exercise_style' in i else None for i in details]
+        self.ticker = [i['ticker'] if 'ticker' in i else None for i in details]
+
+        greeks = [i['greeks'] if i['greeks'] is not None else None for i in results]
+        self.theta = [i['theta'] if 'theta' in i else None for i in greeks]
+        self.delta = [i['delta'] if 'delta' in i else None for i in greeks]
+        self.gamma = [i['gamma'] if 'gamma' in i else None for i in greeks]
+        self.vega = [i['vega'] if 'vega' in i else None for i in greeks]
+
+
+        last_trade = [i['last_trade'] if i['last_trade'] is not None else None for i in results]
+        self.sip_timestamp = [i['sip_timestamp'] if 'sip_timestamp' in i else None for i in last_trade]
+        self.conditions = [i['conditions'] if 'conditions' in i else None for i in last_trade]
+        self.trade_price = [i['price'] if 'price' in i else None for i in last_trade]
+        self.trade_size = [i['size'] if 'size' in i else None for i in last_trade]
+        self.exchange = [i['exchange'] if 'exchange' in i else None for i in last_trade]
+
+        last_quote = [i['last_quote'] if i['last_quote'] is not None else None for i in results]
+        self.ask = [i['ask'] if 'ask' in i else None for i in last_quote]
+        self.bid = [i['bid'] if 'bid' in i else None for i in last_quote]
+        self.bid_size = [i['bid_size'] if 'bid_size' in i else None for i in last_quote]
+        self.ask_size = [i['ask_size'] if 'ask_size' in i else None for i in last_quote]
+        self.midpoint = [i['midpoint'] if 'midpoint' in i else None for i in last_quote]
+
+
+        underlying_asset = [i['underlying_asset'] if i['underlying_asset'] is not None else None for i in results]
+        self.change_to_breakeven = [i['change_to_break_even'] if 'change_to_break_even' in i else None for i in underlying_asset]
+        self.underlying_price = [i['price'] if 'price' in i else None for i in underlying_asset]
+        self.underlying_ticker = [i['ticker'] if 'ticker' in i else None for i in underlying_asset]
+
+
+    def __repr__(self) -> str:
+        return f"UniversalOptionSnapshot(break_even={self.break_even}, \
+                implied_volatility={self.implied_volatility},\
+                change={self.exchange}, \
+                expiry={self.expiry}, \
+                ticker={self.ticker} \
+                contract_type={self.contract_type}, \
+                exercise_style={self.exercise_style}, \
+                theta={self.theta}, \
+                delta={self.delta}, \
+                gamma={self.gamma}, \
+                vega={self.vega}, \
+                sip_timestamp={self.sip_timestamp}, \
+                conditions={self.conditions}, \
+                trade_price={self.trade_price}, \
+                trade_size={self.trade_size}, \
+                exchange={self.exchange}, \
+                ask={self.ask}, \
+                bid={self.bid}, \
+                bid_size={self.bid_size}, \
+                ask_size={self.ask_size}, \
+                midpoint={self.midpoint}, \
+                change_to_breakeven={self.change_to_breakeven}, \
+                underlying_price={self.underlying_price}, \
+                underlying_ticker={self.underlying_ticker})"

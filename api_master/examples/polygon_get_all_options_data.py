@@ -14,8 +14,8 @@ polyoptions = PolygonOptionsSDK(YOUR_API_KEY)
 async def get_all_options_data():
 
     contracts  = await polyoptions.fetch_all_option_contracts(
-        expiration_date_gte="2023-05-18", #the expiration will be after today
-        expiration_date_lte="2023-07-01", #select your desired date range
+        expiration_date_gte="2023-06-26", #the expiration will be after today
+        expiration_date_lte="2023-06-30", #select your desired date range
         )
 
 

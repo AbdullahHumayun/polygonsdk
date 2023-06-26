@@ -3,6 +3,11 @@ import pytz
 from typing import List
 from datetime import datetime, timedelta
 from polygon.exceptions import BadResponse
+from cfg import YOUR_API_KEY
+import aiohttp
+import asyncio
+import pandas as pd
+from urllib.parse import urlencode
 now = datetime.now()
 def format_timestamp(timestamp: datetime) -> str:
     return timestamp.strftime("%Y/%m/%d")
@@ -168,3 +173,67 @@ async def extract_underlying_symbol(symb):
         return "M/A"
     
     return underlying_symbol
+
+
+async def fetch_url(session, url):
+    async with session.get(url) as response:
+        if response.status == 200:
+            data = await response.json()
+            return data
+        else:
+            print(f"Error: {response.status}")
+            return None
+
+# Fetch all URLs
+async def paginate():
+    all_results = []
+    next_urls = [f"https://api.polygon.io/v3/snapshot?type=options&order=asc&ticker.lt=SPY&ticker.gt=I:SPX&limit=250&apiKey={YOUR_API_KEY}"]
+    async with aiohttp.ClientSession() as session:
+        while next_urls:
+            tasks = [fetch_url(session, url) for url in next_urls]
+            responses = await asyncio.gather(*tasks, return_exceptions=True)
+
+            next_urls = []
+            for response in responses:
+                if isinstance(response, Exception):
+                    print(f"Error: {response}")
+                else:
+                    if "results" in response:
+                        print(response['results'][0]['ticker'])
+                        all_results.extend(response["results"])
+                        next_url = response.get("next_url")
+                        if next_url:
+                            next_url += f'&{urlencode({"apiKey": YOUR_API_KEY})}'
+                            next_urls.append(next_url)
+    df = pd.DataFrame(all_results)
+    df.to_csv('testing_it.csv')
+    return all_results
+
+
+
+
+
+
+
+
+
+# import aiohttp
+# async def main():
+#     ticker_symbols = ['AAPL', 'GOOGL', 'MSFT']  # Assuming you have a list of ticker symbols
+
+#     async with aiohttp.ClientSession() as session:
+#         price_tasks = [poly.get_stock_price(ticker) for ticker in tickers]
+#         prices = await asyncio.gather(*price_tasks)
+#         ticker_prices = dict(zip(tickers, prices))  # Assuming no None prices
+
+#         # Now get option data concurrently
+#         option_data_tasks = [get_option_data(ticker, ticker_prices[ticker], session) for ticker in tickers]
+#         results = await asyncio.gather(*option_data_tasks)
+#         # Filter out None results and add valid results to data_list
+#         data_list = [result for result in results if result is not None]
+
+#         data_list = sorted(data_list, key=lambda x: x[6], reverse=True)
+#         print(data_list)
+
+# if __name__ == "__main__":
+#     asyncio.run(main())

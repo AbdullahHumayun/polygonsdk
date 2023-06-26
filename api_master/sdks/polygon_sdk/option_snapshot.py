@@ -3,7 +3,7 @@ import pandas as pd
 import asyncio
 import requests
 import aiohttp
-from cfg import YOUR_API_KEY as API_KEY, today_str
+from cfg import YOUR_API_KEY as API_KEY, today_str, seven_days_from_now_str
 import json
 class OptionSnapshotData:
     def __init__(self, data):
@@ -65,93 +65,54 @@ class OptionSnapshotData:
             self.underlying_last_updated = underlying.get("last_updated")
             self.underlying_price = underlying.get("price")
             self.underlying_ticker = underlying.get("ticker")
-        self.data_dict = {
-        "implied_volatility": [i.get("implied_volatility", None) for i in data],
-        "open_interest": [i.get("open_interest") for i in data],
-        "break_even_price": [i.get("break_even_price") for i in data],
-        "day_close": [i.get('day').get("close") for i in data],
-        "day_high": [i.get('day').get("high") for i in data],
-        "last_updated": [i.get('day').get("last_updated") for i in data],
-        "day_low": [i.get('day').get("low") for i in data],
-        "day_open": [i.get('day').get("open") for i in data],
-        "day_change_percent": [i.get('day').get("change_percent") for i in data],
-        "day_change": [i.get('day').get("change") for i in data],
-        "previous_close": [i.get('day').get("previous_close") for i in data],
-        "day_volume": [i.get('day').get("volume") for i in data],
-        "day_vwap": [i.get('day').get("vwap") for i in data],
-        "contract_type": [i.get('details').get("contract_type") for i in data],
-        "exercise_style": [i.get('details').get("exercise_style") for i in data],
-        "expiration_date": [i.get('details').get("expiration_date") for i in data],
-        "shares_per_contract": [i.get('details').get("shares_per_contract") for i in data],
-        "strike_price": [i.get('details').get("strike_price") for i in data],
-        "option_symbol": [i.get('details').get("ticker") for i in data],
-        "delta": [i.get('greeks').get("delta") for i in data],
-        "gamma": [i.get('greeks').get("gamma") for i in data],
-        "theta": [i.get('greeks').get("theta") for i in data],
-        "vega": [i.get('greeks').get("vega") for i in data],
-        "ask": [i.get('last_quote').get("ask") for i in data],
-        "ask_size": [i.get('last_quote').get("ask_size") for i in data],
-        "bid": [i.get('last_quote').get("bid") for i in data],
-        "bid_size": [i.get('last_quote').get("bid_size") for i in data],
-        "quote_last_updated": [i.get('last_quote').get("last_updated") for i in data],
-        "midpoint": [i.get('last_quote').get("midpoint") for i in data],
-        "conditions": [i.get('last_trade').get("conditions") for i in data],
-        "exchange": [i.get('last_trade').get("exchange") for i in data],
-        "price": [i.get('last_trade').get("price") for i in data],
-        "sip_timestamp": [i.get('last_trade').get("sip_timestamp") for i in data],
-        "size": [i.get('last_trade').get("size") for i in data],
-        "change_to_break_even": [i.get('underlying_asset').get("change_to_break_even") for i in data],
-        "underlying_last_updated": [i.get('underlying_asset').get("last_updated") for i in data],
-        "underlying_price": [i.get('underlying_asset').get("price") for i in data],
-        "underlying_ticker": [i.get('underlying_asset').get("ticker") for i in data]
-    }
+            self.data_dict = {
+            "implied_volatility": [i.get("implied_volatility", None) for i in data],
+            "open_interest": [i.get("open_interest") for i in data],
+            "break_even_price": [i.get("break_even_price") for i in data],
+            "day_close": [i.get('day').get("close") for i in data],
+            "day_high": [i.get('day').get("high") for i in data],
+            "last_updated": [i.get('day').get("last_updated") for i in data],
+            "day_low": [i.get('day').get("low") for i in data],
+            "day_open": [i.get('day').get("open") for i in data],
+            "day_change_percent": [i.get('day').get("change_percent") for i in data],
+            "day_change": [i.get('day').get("change") for i in data],
+            "previous_close": [i.get('day').get("previous_close") for i in data],
+            "day_volume": [i.get('day').get("volume") for i in data],
+            "day_vwap": [i.get('day').get("vwap") for i in data],
+            "contract_type": [i.get('details').get("contract_type") for i in data],
+            "exercise_style": [i.get('details').get("exercise_style") for i in data],
+            "expiration_date": [i.get('details').get("expiration_date") for i in data],
+            "shares_per_contract": [i.get('details').get("shares_per_contract") for i in data],
+            "strike_price": [i.get('details').get("strike_price") for i in data],
+            "option_symbol": [i.get('details').get("ticker") for i in data],
+            "delta": [i.get('greeks').get("delta") for i in data],
+            "gamma": [i.get('greeks').get("gamma") for i in data],
+            "theta": [i.get('greeks').get("theta") for i in data],
+            "vega": [i.get('greeks').get("vega") for i in data],
+            "ask": [i.get('last_quote').get("ask") for i in data],
+            "ask_size": [i.get('last_quote').get("ask_size") for i in data],
+            "bid": [i.get('last_quote').get("bid") for i in data],
+            "bid_size": [i.get('last_quote').get("bid_size") for i in data],
+            "quote_last_updated": [i.get('last_quote').get("last_updated") for i in data],
+            "midpoint": [i.get('last_quote').get("midpoint") for i in data],
+            "conditions": [i.get('last_trade').get("conditions") for i in data],
+            "exchange": [i.get('last_trade').get("exchange") for i in data],
+            "price": [i.get('last_trade').get("price") for i in data],
+            "sip_timestamp": [i.get('last_trade').get("sip_timestamp") for i in data],
+            "size": [i.get('last_trade').get("size") for i in data],
+            "change_to_break_even": [i.get('underlying_asset').get("change_to_break_even") for i in data],
+            "underlying_last_updated": [i.get('underlying_asset').get("last_updated") for i in data],
+            "underlying_price": [i.get('underlying_asset').get("price") for i in data],
+            "underlying_ticker": [i.get('underlying_asset').get("ticker") for i in data]
+        }
 
 
 
     @classmethod
     def to_dict(self):
         return {slot: getattr(self, slot) for slot in self.__slots__}
+    
 
-
-async def get_price(ticker=str):
-    async with aiohttp.ClientSession() as session:
-        if ticker.startswith('SPX'):
-            ticker = ticker.replace(f"{ticker}", f"I:{ticker}")
-            url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={API_KEY}"
-            async with session.get(url) as resp:
-                data = await resp.json()
-                results = data['results'] if data['results'] is not None else None
-                if results is None:
-                    print(f"Error - results from price request.")
-                value = results[0]['value']
-                return value
-        
-        elif ticker.startswith('VIX'):
-            ticker = ticker.replace(f"{ticker}", f"I:{ticker}")
-            url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={API_KEY}"
-            async with session.get(url) as resp:
-                data = await resp.json()
-                results = data['results'] if data['results'] is not None else None
-                if results is None:
-                    print(f"Error - results from price request.")
-                value = results[0]['value']
-                return value
-        else:
-            url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={API_KEY}"
-            async with session.get(url) as resp:
-                data = await resp.json()
-                results = data['results'] if data['results'] is not None else None
-                if results is None:
-                    print(f"Error - results from price request.")
-                value = results[0]['session']['close']
-                return value
-
-async def fetch_prices(tickers):
-    async with aiohttp.ClientSession() as session:
-        tasks = []
-        for ticker in tickers:
-            tasks.append(get_price(session, ticker))
-        return await asyncio.gather(*tasks)
 
 async def get_near_the_money_options(ticker: str, lower_strike, upper_strike):
     if ticker.startswith('SPX'):

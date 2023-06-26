@@ -198,6 +198,6 @@ class Learn(commands.Cog):
         await inter.send("```py\nLearn Candle Patterns and Trends```", view=view)
 
 
-async def setup(bot):
+def setup(bot):
     bot.add_cog(Learn(bot))
     print(f"> Extension {__name__} is ready\n")

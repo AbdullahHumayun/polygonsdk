@@ -71,6 +71,6 @@ class School(commands.Cog):
         await inter.edit_original_response(view=view)
 
 
-async def setup(bot:commands.Bot):
-    await bot.add_cog(School(bot))
+def setup(bot:commands.Bot):
+    bot.add_cog(School(bot))
     print(f"> Extension {__name__} is ready\n")

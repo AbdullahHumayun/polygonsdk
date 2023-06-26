@@ -204,6 +204,6 @@ class Stream(commands.Cog):
             if counter == 50:
                 break
 
-async def setup(bot:commands.Bot):
-    await bot.add_cog(Stream(bot))
+def setup(bot:commands.Bot):
+    bot.add_cog(Stream(bot))
     print(f"> Extension {__name__} is ready\n")

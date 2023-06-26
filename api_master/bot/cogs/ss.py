@@ -201,19 +201,17 @@ class AlertMenus(disnake.ui.View):
 
         await interaction.response.edit_message(embed=embed, view=self)
 
-
-class StockSera(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
+class SS(commands.Cog):
+    def __init__(self, bot:commands.Bot):
+        self.bot=bot
 
 
     @commands.slash_command()
     async def ss(self, inter):
         pass
 
-
-    @ss.sub_command()
-    async def treasury(self, inter: disnake.AppCmdInter):
+    @ss.sub_command(name="daily_treasury_balance")
+    async def treasury(self, inter:disnake.AppCmdInter):
         
         """💹Returns the treasury balance as well as open/close and moving avg."""
         await inter.response.defer()
@@ -265,8 +263,8 @@ class StockSera(commands.Cog):
         view.add_item(button)
         await inter.edit_original_message(embed=embeds[0], view=view)
         
-    @ss.sub_command()
-    async def earnings(self, inter: disnake.AppCommandInter, date_from=today_str, date_to=thirty_days_from_now_str, page="1"):
+    @ss.sub_command(name="earnings_calendar")
+    async def earnings(self, inter:disnake.AppCommandInter, date_from=today_str, date_to=thirty_days_from_now_str, page="1"):
         """💹Returns upcoming earnings for a set amount of dates or 30 days by default."""
         await inter.response.defer()
 
@@ -315,25 +313,25 @@ class StockSera(commands.Cog):
             select4 = PageSelect4(embeds[75:100])
             view.add_item(select4)
         button = disnake.ui.Button(style=disnake.ButtonStyle.blurple, emoji="🔻", label=f"Download", row=4)
-        button.callback = lambda interaction: interaction.response.send_message(file=disnake.File('files/ss_cmds/earnings/earnings_calendar.csv'))
+        button.callback = lambda interaction: interaction.response.send_message(file=disnake.File(filename))
 
         
         view.add_item(button)
-  
+
 
         await inter.edit_original_message(embed=embeds[0], view=view)
 
-    @ss.sub_command()
-    async def ftds(self, inter:disnake.AppCmdInter, symbol=str, date_from=two_years_ago_str, to_date=today_str):
+    @ss.sub_command(name="fails_to_deliver_market_wide")
+    async def ftds(self, inter:disnake.AppCmdInter, ticker=str, date_from=two_years_ago_str, to_date=today_str):
         """💹Fetch market-wide or specific ticker FTDs overall or by date."""
         await inter.response.defer()
-        _fails = sdk.ftd(ticker=symbol,date_from=date_from, date_to=to_date)
+        _fails = sdk.ftd(ticker=ticker,date_from=date_from, date_to=to_date)
 
         df = pd.DataFrame(vars(_fails))
- 
+
         filename = 'files/ss_cmds/ftds/ftds.csv'
         df.to_csv(filename)
-  
+
         embeds = []
         embed = None
         for i, row in df.iterrows():
@@ -344,7 +342,7 @@ class StockSera(commands.Cog):
             t_35 = row['t35_date']
                         # If we have 10 tickers in the current embed or we don't have an embed yet, create a new one
             embed = disnake.Embed(title=f"❌ Fail To Deliver ❌", 
-                                  description=f"```py\nDisplaying tickers with the largest amount of fails with T+35 dates as well as dollar cost.```", color=disnake.Colour.dark_blue())
+                                    description=f"```py\nDisplaying tickers with the largest amount of fails with T+35 dates as well as dollar cost.```", color=disnake.Colour.dark_blue())
             
             embed.add_field(name=f"Date:", value=f"```py\n {date}```", inline=False)
             embed.add_field(name=f"Amount:", value=f"> Failed: **{FTD:,}**\n> **@**\n> Price: **💲{price}**")
@@ -436,7 +434,7 @@ class StockSera(commands.Cog):
 
         await inter.edit_original_message(embed=embeds[0], view=view)
 
-    @ss.sub_command()
+    @ss.sub_command(name="insider_trading_market_wide")
     async def insider_summary(self, inter:disnake.AppCmdInter):
         """💹Returns market-wide insider trading summary."""
         await inter.response.defer()
@@ -479,7 +477,7 @@ class StockSera(commands.Cog):
         await inter.edit_original_message(embed=embeds[0], view=view)
 
 
-    @ss.sub_command()
+    @ss.sub_command(name="short_interest")
     async def short_interest(self, inter:disnake.AppCmdInter):
         """💹Returns tickers with the highest levels of short interest."""
         await inter.response.defer()
@@ -524,7 +522,7 @@ class StockSera(commands.Cog):
 
         await inter.edit_original_message(embed=embeds[0], view=view)
 
-    @ss.sub_command()
+    @ss.sub_command(name="low_floats")
     async def low_floats(self, inter:disnake.AppCmdInter):
         """💹Returns tickers with the lowest free floats."""
         await inter.response.defer()
@@ -554,7 +552,7 @@ class StockSera(commands.Cog):
             embed.add_field(name=f"% Shorted:", value=f"> **{short_interest}%**")
             embed.add_field(name=f"Industry:", value=f"> **{industry}**\n> Market Cap: **{market_cap}**")
             embed.set_footer(text=f"Data Provided by Stocksera | Implemented by FUDSTOP")
-    
+
             embeds.append(embed)
         select = PageSelect(embeds[:25])
         view = AlertMenus(embeds).add_item(select)
@@ -576,10 +574,11 @@ class StockSera(commands.Cog):
 
         await inter.edit_original_message(embed=embeds[0], view=view)
 
-    @ss.sub_command()
-    async def sec_filings(self, inter:disnake.AppCmdInter, ticker):
+    @ss.sub_command(name="sec_filings")
+    async def sec_filings(self, inter:disnake.AppCmdInter, ticker: str):
         """💹Return SEC filings for a ticker."""
         await inter.response.defer()
+        ticker = ticker.upper()
         sec_filings = sdk.sec_fillings(ticker)
         df = pd.DataFrame(vars(sec_filings))
         print(df)
@@ -624,7 +623,7 @@ class StockSera(commands.Cog):
         await inter.edit_original_message(embed=embeds[0], view=view)
 
 
-    @ss.sub_command()
+    @ss.sub_command(name="market_news")
     async def market_news(self, inter:disnake.AppCmdInter):
         """💹Returns market news in paginated form."""
         await inter.response.defer()
@@ -659,9 +658,9 @@ class StockSera(commands.Cog):
         
         view.add_item(button)
         await inter.edit_original_message(embed=embeds[0], view=view)
-           
-    @ss.sub_command()
-    async def jobless_claims(self, interaction: disnake.AppCommandInteraction, days:str=100):
+            
+    @ss.sub_command(name="jobless_claims")
+    async def jobless_claims(interaction: disnake.AppCommandInteraction, days:str=100):
         """💹Returns jobless claims data."""
         await interaction.response.defer()
         jobless_claims_data = sdk.jobless_claims(days=days)
@@ -703,9 +702,10 @@ class StockSera(commands.Cog):
         await interaction.edit_original_message(embed=embeds[0], view=view)
 
 
-    @ss.sub_command()
+    @ss.sub_command(name="short_volume")
     async def short_volume(self, inter:disnake.AppCmdInter, stock: str=commands.Param(autocomplete=ticker_autocomp), date_from=thirty_days_ago_str, to_date=today_str):
         """💹Returns short volume for a ticker. Enter a date range to search specific dates."""
+        stock = stock.upper()
         await inter.response.defer()
         short_volume_data = sdk.short_volume(stock=stock,date_from=date_from,to_date=to_date)
         df = pd.DataFrame(vars(short_volume_data))
@@ -746,7 +746,7 @@ class StockSera(commands.Cog):
         view.add_item(button)
         await inter.edit_original_message(embed=embeds[0], view=view)
 
-    @ss.sub_command()
+    @ss.sub_command(name="stocktwits")
     async def stocktwits(self, inter:disnake.AppCmdInter, stock: str=commands.Param(autocomplete=ticker_autocomp)):
         """💹Returns the stock's rank on StockTwits followed by # of watchlists."""
         await inter.response.defer()
@@ -777,7 +777,7 @@ class StockSera(commands.Cog):
 
         print(df)
 
-    @ss.sub_command()
+    @ss.sub_command(name="subreddits")
     async def subbredits(self, inter:disnake.AppCmdInter, stock: str=commands.Param(autocomplete=ticker_autocomp)):
         """💹Returns subreddit stats for a ticker."""
         await inter.response.defer()
@@ -830,7 +830,7 @@ class StockSera(commands.Cog):
         view.add_item(button)
         await inter.edit_original_message(embed=embeds[0], view=view)
 
-    @ss.sub_command()
+    @ss.sub_command(name="reverse_repo")
     async def reverse_repo(self, inter:disnake.AppCmdInter, days=100):
         """💹Fetch and view reverse repo data. Optionally search by number of days."""
         await inter.response.defer()
@@ -876,8 +876,8 @@ class StockSera(commands.Cog):
         view.add_item(button)
         await inter.edit_original_message(embed=embeds[0], view=view)
 
-    @ss.sub_command()
-    async def inflation(self, inter: disnake.AppCmdInter):
+    @ss.sub_command(name="inflation")
+    async def inflation(self, inter:disnake.AppCmdInter):
         """💹Prints historic inflation back to 1972"""
         await inter.response.defer()
         data = sdk.inflation()
@@ -944,7 +944,7 @@ class StockSera(commands.Cog):
         await inter.edit_original_message(embed=embeds[0], view=view)
 
 
-    @ss.sub_command()
+    @ss.sub_command(name="news_sentiment")
     async def news_sentiment(self, inter:disnake.AppCmdInter,ticker:str=commands.Param(autocomplete=ticker_autocomp), days=100):
         """💹Returns news sentiment surround ticker news."""
         await inter.response.defer()
@@ -995,7 +995,7 @@ class StockSera(commands.Cog):
         view.add_item(button)
         await inter.edit_original_message(embed=embeds[0], view=view)
 
-    @ss.sub_command()
+    @ss.sub_command(name="wsb_options")
     async def wsb_options(self, inter:disnake.AppCmdInter, ticker: str=commands.Param(autocomplete=ticker_autocomp),days=100):
         """💹Fetches WallstreetBets mentions of a ticker regarding Call and Put options."""
         await inter.response.defer()
@@ -1019,8 +1019,8 @@ class StockSera(commands.Cog):
             else:
                 color = disnake.Colour.dark_green()
             embed = disnake.Embed(title=f"⤵️ WSB Mentions - {ticker} ⤴️",
-                                  description=f"```py\nViewing the latest Call vs Put mentions on WSB"
-                                  f"for {ticker}. Click the button below to download all data.```",color=color)
+                                    description=f"```py\nViewing the latest Call vs Put mentions on WSB"
+                                    f"for {ticker}. Click the button below to download all data.```",color=color)
 
             embed.add_field(name=f"Mentions:", value=f"> Calls: **{calls:,}**\n> Puts: **{puts:,}**")
             embed.add_field(name=f"Ratio:", value=f"> **{ratio}%**")
@@ -1050,6 +1050,6 @@ class StockSera(commands.Cog):
         view.add_item(button)
         await inter.edit_original_message(embed=embeds[0], view=view)
 
-async def setup(bot:commands.Bot):
-    await bot.add_cog(StockSera(bot))
+def setup(bot:commands.Bot):
+    bot.add_cog(SS(bot))
     print(f"> Extension {__name__} is ready\n")
