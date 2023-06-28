@@ -1,7 +1,76 @@
-<widgetbot
-    server="888488311927242753"
-    channel="896207280117264434"
-    width="800"
-    height="600"
-></widgetbot>
-<script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>3D Carousel with Widgetbot Integration</title>
+  <!-- Flickity CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flickity/2.2.2/flickity.min.css" />
+
+  <!-- Custom CSS -->
+  <style>
+    body {
+      background-color: black;
+      margin: 0;
+      padding: 0;
+    }
+
+    .carousel {
+      width: 100%;
+      height: 100vh;
+    }
+
+    .carousel-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .widgetbot {
+      box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="carousel">
+    <div class="carousel-cell">
+      <widgetbot
+        class="widgetbot"
+        id="widgetbot1"
+        server="888488311927242753"
+        channel="896207280117264434"
+        width="1080"
+        height="920"
+      ></widgetbot>
+    </div>
+    <div class="carousel-cell">
+      <widgetbot
+        class="widgetbot"
+        id="widgetbot2"
+        server="888488311927242753"
+        channel="1123494898339938345"
+        width="1080"
+        height="920"
+      ></widgetbot>
+    </div>
+    <!-- Add more carousel cells for additional widgets if needed -->
+  </div>
+
+  <!-- Flickity JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flickity/2.2.2/flickity.pkgd.min.js"></script>
+
+  <!-- Widgetbot JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+
+  <script>
+    // Initialize Flickity carousel
+    var carousel = new Flickity('.carousel', {
+      wrapAround: true,
+      lazyLoad: true,
+      prevNextButtons: true, // Set to true if you want navigation buttons
+      pageDots: true // Set to true if you want dot indicators
+    });
+  </script>
+</body>
+</html>

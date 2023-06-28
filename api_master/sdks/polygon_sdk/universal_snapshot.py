@@ -95,7 +95,7 @@ class UniversalSnapshot:
             'Last Trade Price': self.trade_price,
             'Size': self.trade_size,
             'Last Trade Exchange': self.exchange,
-            'Open Interest': self.open_interest,
+            'OI': self.open_interest,
             'Price': self.underlying_price,
             'Sym': self.underlying_ticker,
             'Name': self.name,
