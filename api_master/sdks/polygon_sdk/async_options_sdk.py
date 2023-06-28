@@ -15,7 +15,7 @@ import aiofiles
 import re
 from polygon.exceptions import BadResponse
 from .option_snapshot import OptionSnapshotData
-from .universal_snapshot import UniversalOptionSnapshot, UniversalSnapshot
+from .universal_snapshot import UniversalOptionSnapshot, UniversalSnapshot, CallsOrPuts
 from typing import List, Optional
 from datetime import datetime
 from urllib.parse import urlencode
@@ -34,6 +34,7 @@ class PolygonOptionsSDK:
         self.base_url = "https://api.polygon.io"
 
         self.conditions_map = None
+
 
 
     async def get_option_data(self, ticker, price):
@@ -194,38 +195,6 @@ class PolygonOptionsSDK:
                     params = {}
 
             except HTTPError as http_err:
-                print(f"An HTTP error occurred: {http_err}")
-                break
-            except Exception as err:
-                print(f"An error occurred: {err}")
-                break
-
-        return all_results
-    
-
-    async def _request_all_pages_concurrently(self, initial_url, params=None):
-        if params is None:
-            params = {}
-        params["apiKey"] = self.api_key
-
-        all_results = []
-        next_url = initial_url
-
-        while next_url:
-            try:
-                async with self.session.get(next_url, params=params) as response:
-                    response.raise_for_status()
-                    data = await response.json()
-
-                    if "results" in data:
-                        all_results.extend(data["results"])
-
-                    next_url = data.get("next_url")
-                    if next_url:
-                        next_url += f'&{urlencode({"apiKey": self.api_key})}'
-                        params = {}
-
-            except aiohttp.ClientResponseError as http_err:
                 print(f"An HTTP error occurred: {http_err}")
                 break
             except Exception as err:

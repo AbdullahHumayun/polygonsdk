@@ -22,7 +22,7 @@ class ViewCmd(commands.Cog):
     @view.sub_command()
     async def technical_pattern(self, inter:disnake.AppCmdInter):
         """👁️Returns an animated example + a link to a detailed explanation of technicals."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         view = disnake.ui.View()
         view.add_item(TechDropdown())
         view.add_item(TechDropdown2())
@@ -31,7 +31,7 @@ class ViewCmd(commands.Cog):
     @view.sub_command()
     async def dictionary(self, inter:disnake.AppCmdInter, word):
         """👁️Define something! Enter a word to get the definition."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         raw = requests.get(f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{word}?key=c4695830-f1ab-4d67-a2ce-301bfd661c2d")
         d = raw.json()
         index1 = d[0]
@@ -46,7 +46,7 @@ class ViewCmd(commands.Cog):
     @view.sub_command()
     async def videos(self, inter: disnake.AppCmdInter, videos: str = commands.Param(autocomplete=videos_autocomp)):
         """👁️View a plethora of topics of educational videos!"""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         embed = disnake.Embed(title ="FUDSTOP Application Online🟢", color = disnake.Colour.random())
         embed.set_thumbnail(url="https://static.wixstatic.com/media/3235bb_fedadfcf38994349b7fa98fbf3f6f372~mv2.gif")
         embed.set_footer(icon_url="https://static.wixstatic.com/media/3235bb_fedadfcf38994349b7fa98fbf3f6f372~mv2.gif", text="Implemented by Fudstop Trading")
@@ -88,7 +88,7 @@ class ViewCmd(commands.Cog):
     @view.sub_command()
     async def markets(self, inter:disnake.AppCmdInter, market: str=commands.Param(choices=["Repo Market","Short Term Funding Market", "Corporate Bond Market", "Commercial Real Estate Market", "Leveraged Loans Market", "Resitential Mortgage Market", "Municipal Securities Market"])):
         """👁️View the ecosystem for several different Financial Markets."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         if market == "Repo Market":
             em = disnake.Embed(title="The Repo Market", description=f"```py\nTo learn more about this complex ecosystem - see URL in title.``` ```py\n The approximately $4 trillion repo market provides secured, short-term, marked-to-market funding against various forms of securities collateral.``` ```py\n The collateral from several short- and long-term funding markets and participants connects the repo market to the rest of the financial system.``` ```py\n The repo market is a critical source of liquidity and, accordingly, essential to the ongoing operations of various market participants, including market makers in virtually all sectors of the capital markets.```", url="https://www.financialresearch.gov/briefs/2016/01/13/us-bilateral-repo-market-lessons-from-a-new-survey/", color=disnake.Colour.dark_gold())
             em.set_image(url="https://i.ibb.co/P1jtpDw/repo-MARKET.png")
@@ -127,107 +127,107 @@ class ViewCmd(commands.Cog):
         "Platinum🍽️", "SP500🦾", "Corn🌽", "GBP British Pound 🇬🇧", "CAD Canadian Dollar 🇨🇦", "Swiss Francs 🇨🇭", "Oats🐴", "Japan 🇯🇵", "Canola", "Soybean Oil", "Silver🥈",
         "Natural GAS⛽", "Coacoa🍫"])):
         """Get futures for a wide variety of options."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         if map == "Dow Jones Industrial Average🏗️":
             embed = disnake.Embed(title="Dow Jones Industrial Average🏗️ Futures", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?ym_d1_s.png")
             embed.set_footer(text="Real time Data Provided by IEXCloud")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "Crude Oil🛢️":
             embed = disnake.Embed(title="Crude Oil🛢️ Futures", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?cl_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "Crude Oil🛢️ Brent":
             embed = disnake.Embed(title="Crude Oil🛢️ Brent Futures", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?qa_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "Cotton 👕":
             embed = disnake.Embed(title="Cotton 👕 Futures", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?ct_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "Orange Juice🍊":
             embed = disnake.Embed(title="Orange Juice🍊 Futures", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?jo_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "Platinum🍽️":
             embed = disnake.Embed(title="Platinum🍽️ Futures", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?pl_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "SP500🦾":
             embed = disnake.Embed(title="SP500", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?es_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "Corn🌽":
             embed = disnake.Embed(title="Corn Futures", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?zc_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "GBP British Pound 🇬🇧":
             embed = disnake.Embed(title="GBP Futures 🇬🇧", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?6b_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "CAD Canadian Dollar 🇨🇦":
             embed = disnake.Embed(title="CAD Futures 🇨🇦", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?6c_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "Swiss Francs 🇨🇭":
             embed = disnake.Embed(title="Swiss Francs 🇨🇭 Futures", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?6s_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "Oats🐴":
             embed = disnake.Embed(title="Oats🐴 Futures", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?zo_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "Canola":
             embed = disnake.Embed(title="Canola Futures", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?rs_d1_s.png")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "Japan 🇯🇵":
             embed = disnake.Embed(title="Japan 🇯🇵 Futures", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?6j_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "Natural GAS⛽":
             embed = disnake.Embed(title="Natural Gas Futures", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?ng_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "Silver🥈":
             embed = disnake.Embed(title="Silver🥈 Futures", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?si_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
         elif map == "Coacoa🍫":
             embed = disnake.Embed(title="Coacoa 🍫 Futures", color=disnake.Colour.random())
             embed.set_image(url="https://elite.finviz.com/fut_image.ashx?cc_d1_s.png")
             embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
-            await inter.edit_original_message(embed=embed, ephemeral=True)
+            await inter.edit_original_message(embed=embed, ephemeral=False)
 
 
 
@@ -305,7 +305,7 @@ class ViewCmd(commands.Cog):
     @view.sub_command()
     async def technicals(inter:disnake.AppCmdInter):
         """View a dropdown of technical patterns"""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         await inter.edit_original_response(view=TechView())
 
 

@@ -76,10 +76,10 @@ class UniversalSnapshot:
             'Open': self.open,
             'Vol': self.volume,
             'Previous Close': self.prev_close,
-            'Type': self.contract_type,
+            'type': self.contract_type,
             'Exercise Style': self.exercise_style,
-            'Exp': self.expiry,
-            'Strike': self.strike,
+            '🗓️': self.expiry,
+            'Skew': self.strike,
             'Delta': self.delta,
             'Gamma': self.gamma,
             'Theta': self.theta,
@@ -93,7 +93,7 @@ class UniversalSnapshot:
             'Last Trade Sip Timestamp': self.sip_timestamp,
             'Last Trade Conditions': self.conditions,
             'Last Trade Price': self.trade_price,
-            'Last Trade Size': self.trade_size,
+            'Size': self.trade_size,
             'Last Trade Exchange': self.exchange,
             'Open Interest': self.open_interest,
             'Price': self.underlying_price,
@@ -103,9 +103,26 @@ class UniversalSnapshot:
             'Ticker': self.ticker,
             'Types': self.type
         }
-        self.df = pd.DataFrame(self.data_dict)
+        self.df = pd.DataFrame(self.data_dict).sort_values('IV', ascending=False)
 
+    def __getitem__(self, index):
+        return self.df[index]
 
+    def __setitem__(self, index, value):
+        self.df[index] = value
+    def __iter__(self):
+        # If df is a DataFrame, it's already iterable (over its column labels)
+        # To iterate over rows, use itertuples or iterrows
+        self.iter = self.df.itertuples()
+        return self
+
+    def __next__(self):
+        # Just return the next value from the DataFrame iterator
+        try:
+            return next(self.iter)
+        except StopIteration:
+            # When there are no more rows, stop iteration
+            raise StopIteration
 class UniversalOptionSnapshot:
     def __init__(self, results):
         self.break_even = [i['break_even_price'] if 'break_even_price' in i else None for i in results]
@@ -152,7 +169,33 @@ class UniversalOptionSnapshot:
         self.underlying_price = [i['price'] if 'price' in i else None for i in underlying_asset]
         self.underlying_ticker = [i['ticker'] if 'ticker' in i else None for i in underlying_asset]
 
+        self.data_dict = {
+            'strike': self.strike,
+            'exp': self.expiry,
+            'type': self.contract_type,
+            'exercise_style': self.exercise_style,
+            'ticker': self.ticker,
+            'theta': self.theta,
+            'delta': self.delta,
+            'gamma': self.gamma,
+            'vega': self.vega,
+            'sip_timestamp': self.sip_timestamp,
+            'conditions': self.conditions,
+            'trade_price': self.trade_price,
+            'Size': self.trade_size,
+            'exchange': self.exchange,
+            'ask': self.ask,
+            'bid': self.bid,
+            'IV': self.implied_volatility,
+            'bid_size': self.bid_size,
+            'ask_size': self.ask_size,
+            'midpoint': self.midpoint,
+            'change_to_breakeven': self.change_to_breakeven,
+            'price': self.underlying_price,
+            'sym': self.underlying_ticker
+        }
 
+        self.df = pd.DataFrame(self.data_dict)
     def __repr__(self) -> str:
         return f"UniversalOptionSnapshot(break_even={self.break_even}, \
                 implied_volatility={self.implied_volatility},\
@@ -178,3 +221,28 @@ class UniversalOptionSnapshot:
                 change_to_breakeven={self.change_to_breakeven}, \
                 underlying_price={self.underlying_price}, \
                 underlying_ticker={self.underlying_ticker})"
+    
+
+
+class CallsOrPuts:
+    def __init__(self, data):
+        self.cfi = [i['cfi'] if 'cfi' in i else None for i in data]
+        self.contract_type = [i['contract_type'] if 'contract_type' in i else None for i in data]
+        self.exercise_style = [i['exercise_style'] if 'exercise_style' in i else None for i in data]
+        self.expiration_date = [i['expiration_date'] if 'expiration_date' in i else None for i in data]
+        self.primary_exchange = [i['primary_exchange'] if 'primary_exchange' in i else None for i in data]
+        self.shares_per_contract = [i['shares_per_contract'] if 'shares_per_contract' in i else None for i in data]
+        self.strike_price = [i['strike_price'] if 'strike_price' in i else None for i in data]
+        self.ticker = [i['ticker'] if 'ticker' in i else None for i in data]
+        self.underlying_ticker = [i['underlying_ticker'] if 'underlying_ticker' in i else None for i in data]
+
+
+        self.data_dict = { 
+            'ticker': self.ticker,
+            'strike': self.strike_price,
+            'expiry': self.expiration_date
+
+        }
+
+
+        self.df = pd.DataFrame(self.data_dict).sort_values(by='expiry')

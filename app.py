@@ -36,6 +36,11 @@ async def ball():
     return render_template('bouncy_ball.html')
 
 
+@app.route('/fudstop', methods=['GET','POST','PUT'])
+async def fudstop():
+    return render_template('fudstop.html')
+
+
 @app.route('/ticker_cards')
 def ticker_cards():
     return render_template('ticker_cards.html')

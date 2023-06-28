@@ -1185,17 +1185,18 @@ class AsyncPolygonSDK:
 
     async def get_index_price(self, ticker=str):
         """Fetch the price of an index ticker"""
-        url = f"https://api.polygon.io/v3/snapshot?ticker.any_of=I:{ticker}&apiKey={self.api_key}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
+        if ticker == "SPX":
+            url = f"https://api.polygon.io/v3/snapshot?ticker.any_of=I:{ticker}&apiKey={self.api_key}"
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as resp:
 
-                data = await resp.json()
-                results = data['results'] if data['results'] is not None else None
-                if results is None:
-                    print(f"Error - results from price request.")
-                value = results[0]['value']
-                return value
-                
+                    data = await resp.json()
+                    results = data['results'] if data['results'] is not None else None
+                    if results is None:
+                        print(f"Error - results from price request.")
+                    value = results[0]['value']
+                    return value
+
 
 
     async def get_stock_price(self, ticker=str):

@@ -4,6 +4,51 @@
 import disnake
 from typing import List
 
+class NumberSelect(disnake.ui.Select):
+    def __init__(self, options: list[str]):
+        super().__init__(
+            custom_id="number_selector",
+            placeholder="Select a command",
+            min_values=1,
+            max_values=1,
+            options=options,
+            row=1
+        )
+
+    async def callback(self, interaction: disnake.Interaction):
+        selected_index = int(self.values[0])
+        current_embed_target = self.view.embeds[self.view.current_page_index]
+
+        if selected_index < len(current_embed_target.fields):
+            selected_field = current_embed_target.fields[selected_index]
+            await interaction.channel.send(selected_field.value)
+        else:
+            await interaction.channel.send("Invalid command selected.")
+class PageSelect(disnake.ui.Select):
+    def __init__(self, embeds):
+        options = [
+            disnake.SelectOption(
+                label=embed.title,
+                value=f"{i}"
+            ) for i, embed in enumerate(embeds)
+        ]
+
+        super().__init__(
+            custom_id="page_selector1",
+            placeholder="Select A Category",
+            min_values=1,
+            max_values=1,
+            options=options,
+            row=0
+        )
+        
+        self.embeds = embeds
+
+    async def callback(self, interaction: disnake.Interaction):
+        selected_value = int(self.values[0])
+        embed_to_show = self.embeds[selected_value]
+        
+        await interaction.response.edit_message(embed=embed_to_show)
 class AlertMenus(disnake.ui.View):
     def __init__(
         self, embeds: List[disnake.Embed]
@@ -24,10 +69,6 @@ class AlertMenus(disnake.ui.View):
         # Sets the footer of the embeds with their respective page numbers.
         self.count = 0
 
-        for i, embed in enumerate(self.embeds):
-            embed.set_footer(
-                text=f"Page {i + 1} of {len(self.embeds)}",
-            )
 
 
     @disnake.ui.button(

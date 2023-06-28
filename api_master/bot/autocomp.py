@@ -1,5 +1,11 @@
 import sys
 import os
+from sdks.polygon_sdk.universal_snapshot import CallsOrPuts
+
+from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+from cfg import YOUR_API_KEY
+import aiohttp
+polygon = AsyncPolygonSDK(YOUR_API_KEY)
 
 # Get the directory path of the polygonsdkmaster package
 package_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -8,6 +14,11 @@ sys.path.append(package_dir)
 
 
 import pandas as pd
+
+
+
+                # save to csv
+    
 
 
 def ticker_autocomp(inter,ticker: str):
@@ -56,14 +67,14 @@ def execute_command(command, args):
 
 def graphics_autocomp(inter,graphic: str):
     if not graphic:
-        return ["MUST", "USE", "CAPS"]
+        return ["START", "TYPING"]
     print(f"graphic_autocomp [graphic]: {graphic}")
     tlow = graphic.lower()
     col_list = ["Graphics"]
     file = os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
         "files",
-        "images",
+        "autocompleters",
         "graphics.csv",
     )
     df = pd.read_csv(file, usecols=col_list)
@@ -115,11 +126,15 @@ def contracts_autocomp(inter, contract: str):
     file = os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
         "files",
-        "contracts.csv",
+        "autocompleters",
+        
     )
     df = pd.read_csv(file, usecols=col_list)
     df = df["Contracts"]
     return [contracts for contracts in df if contract.lower().startswith(tlow)][:24]
+
+
+
 
 def derivatives_autocomp(inter, derivatives: str):
     if not derivatives:

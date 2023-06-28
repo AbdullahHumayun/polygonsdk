@@ -237,3 +237,9 @@ async def paginate():
 
 # if __name__ == "__main__":
 #     asyncio.run(main())
+
+
+def chunk_list(input_list, chunk_size):
+    """Yield successive n-sized chunks from a list."""
+    for i in range(0, len(input_list), chunk_size):
+        yield input_list[i:i + chunk_size]

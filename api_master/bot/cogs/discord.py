@@ -149,7 +149,7 @@ class Discord(commands.Cog):
     @discord.sub_command()
     async def help_me(self,inter:disnake.AppCmdInter):
         """⚙️Quick shortcut to the help menu for discord."""
-        await inter.response.defer(with_message=True,ephemeral=True)
+        await inter.response.defer(with_message=True,ephemeral=False)
         await inter.edit_original_response(view=HelperView())
 
 

@@ -1,7 +1,7 @@
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.abspath(__file__))
 
 
 import disnake
@@ -1034,7 +1034,7 @@ class TopOptionDropdown(disnake.ui.Select):
         )
 
     async def callback(self, interaction: disnake.MessageInteraction):
-            await interaction.response.defer(with_message=True, ephemeral=True)
+            await interaction.response.defer(with_message=True, ephemeral=False)
             if self.values[0] == "The Eight Conditions of the List🌟":
                 embed = disnake.Embed(title="The Eight Conditions of the Top Options List🌟", color=disnake.Colour.random())
                 embed.add_field(name="-", value="**Total Volume**")
@@ -2307,7 +2307,7 @@ class CommandsDropdown(disnake.ui.Select):
         ),
 
     async def callback(self, interaction: disnake.MessageInteraction):
-        await interaction.response.defer(with_message=True, ephemeral=True)
+        await interaction.response.defer(with_message=True, ephemeral=False)
         if self.values[0] == "🤖 FUDSTOP Bot":
             embed = disnake.Embed(title = "FUDSTOP BOT", description = "FUDSTOP Bot is a bot that I've programmed myself using the highest quality data APIs to provide the group with original, highquality commands. This data comes from all of us - so enjoy its superiority. Notable commands:  \n\n **/all** **/fudstop** **/contract_scan** **/order_flow**",color=disnake.Colour.random(), url="https://www.fudstop.org")
             embed.set_image(url="https://media.discordnet/attachments/1009552305869303828/1009554886817501204/ezgif-2-f4a5623248.gif")
@@ -3647,7 +3647,7 @@ class Op(disnake.ui.Select):
         ),
 
     async def callback(self, interaction: disnake.MessageInteraction):
-        await interaction.response.defer(with_message=False, ephemeral=True)
+        await interaction.response.defer(with_message=False, ephemeral=False)
         if self.values[0] =="/op chains":
             await interaction.edit_original_message("```py\nDisplays Options Chain By Expiry.```</op chains:1004263746111275138>")
         elif self.values[0] =="/op oi":
@@ -5800,7 +5800,7 @@ class FUDSTOPMenu(disnake.ui.Select):
         )
 
     async def callback(self, interaction:disnake.MessageCommandInteraction):
-        await interaction.response.defer(with_message=True, ephemeral=True)
+        await interaction.response.defer(with_message=True, ephemeral=False)
         em = disnake.Embed(title=f"Welcome to FUDSTOP", description="```py\nThis is the server Menu. For those that are new - it's a great place to start going through the channels and begin customizing your notifications.\n\nWe offer over 175 channels with a plethora of tools, resources, and feeds that you can have streamlined to your PC or mobile device. Select from the menu below to get started!\n\n\nWhen you select from the menu - the command /navigate will be printed alongside the key to type into the search box. Simply click the command and type in the key to being findind what you need!``` ```py\nNote: The messages will dissapear after 30 seconds.```", color=disnake.Colour.dark_gold())
         if self.values[0] == "map🗾Heatmaps":
             em2 = disnake.Embed(title="map🗾Heatmaps", description=f"```py\nThis section provides automated heatmaps covering six different market indexes.``` ```py\nKeycode: map```",color=disnake.Colour.dark_green())
@@ -5814,7 +5814,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em2.add_field(name="Navigation Code:",value="```py\nmap```")
             em2.set_footer(text="`All map channels provide the heat-map for the specific index.`")
             await interaction.edit_original_message(embed=em2)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)
 
 
 
@@ -5829,7 +5829,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em3.add_field(name="💬", value="<#1022199154069471232>")
             em3.add_field(name="Navigation Code:",value="```py\nch```")
             await interaction.edit_original_message(embed=em3)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)
         
         elif self.values[0] =="flow💦Options Flow":
             em4 = disnake.Embed(title="",description=f"```py\nSet notifications here to recieve automatic order flow posts real-time and intraday.```", color=disnake.Colour.dark_gold())
@@ -5837,7 +5837,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em4.add_field(name="💦",value="<#1035273514250408037>")
             em4.add_field(name="Navigation Code:",value="```py\nflow```")
             await interaction.edit_original_message(embed=em4)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)
         
         elif self.values[0] =="tt🚀TradyTics Realtime Alerts":
             em5 = disnake.Embed(title="tt🚀TradyTics Realtime Alerts", description=f"```py\nPlay at your own risk. Very good return rates and play-calling. Definitely set notifications here to recieve the play alerts as soon as possible.```", color=disnake.Colour.dark_red())
@@ -5872,7 +5872,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em5.add_field(name="tt🚀", value="<#1016372517251850360>")
             em5.add_field(name="Navigation Code:",value="```py\ntt```")
             await interaction.edit_original_message(embed=em5)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)
 
         
         elif self.values[0] =="fm📜Forums":
@@ -5890,7 +5890,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em6.add_field(name="Navigation Code:",value="```py\nfm```")
             
             await interaction.edit_original_message(embed=em6)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)
 
 
         elif self.values[0] =="ut💡Utilities Sector":
@@ -5903,14 +5903,14 @@ class FUDSTOPMenu(disnake.ui.Select):
             em.add_field(name="ut💡",value="<#1015405869929861130>")
             em.add_field(name="Navigation Code:",value="```py\nut```")
             await interaction.edit_original_message(f"</navigate channels:1034275861865705476>",embed=em)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)
         
         elif self.values[0] =="etf⚓ETF Sector":
             em = disnake.Embed(title="Sector Monitoring", description=f"```py\nSector monitoring for stock market industries. Each section contains dark pool feeds, quant alerts, unusual options alerts, regulation SHO alerts, and dark pool feeds real-time.```",color=disnake.Colour.random())
             em.add_field(name="etf⚓",value="<#1015396437015674890>")
             em.add_field(name="Navigation Code:",value="```py\netf```")
             await interaction.edit_original_message(f"</navigate channels:1034275861865705476>",embed=em)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)
         
         elif self.values[0] =="cc🌒Consumer Cyclical Sector":
             em = disnake.Embed(title="Sector Monitoring", description=f"```py\nSector monitoring for stock market industries. Each section contains dark pool feeds, quant alerts, unusual options alerts, regulation SHO alerts, and dark pool feeds real-time.```",color=disnake.Colour.random())
@@ -5927,7 +5927,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em.add_field(name="cc🌒",value="<#1015416093826896013>")
             em.add_field(name="Navigation Code:",value="```py\ncc```")
             await interaction.edit_original_message(f"</navigate channels:1034275861865705476>",embed=em)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)
 
 
         elif self.values[0] =="fd📶Market & Social Feeds": 
@@ -5942,7 +5942,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em.add_field(name="fd📶",value="<#1035211665991553074>")
             em.add_field(name="Navigation Code:",value="```py\nfd```")
             await interaction.edit_original_message(f"</navigate channels:1034275861865705476>",embed=em)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)
 
         
         elif self.values[0] =="rss🔊RSS Feeds":
@@ -5957,7 +5957,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em.add_field(name="🔊",value="<#1028668345702166698>")
             em.add_field(name="Navigation Code:",value="```py\nrss```")
             await interaction.edit_original_message(embed=em)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)  
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)  
 
 
         elif self.values[0] =="nw🌐News Feeds":
@@ -5988,7 +5988,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em.add_field(name="nw🌐", value="<#1015663450296430672>")
             em.add_field(name="Navigation Code:",value="```py\nnw```")
             await interaction.edit_original_message(embed=em)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)  
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)  
         
         elif self.values[0] =="cs📣Communication Services Sector":
             em = disnake.Embed(title="Sector Monitoring", description=f"```py\nSector monitoring for stock market industries. Each section contains dark pool feeds, quant alerts, unusual options alerts, regulation SHO alerts, and dark pool feeds real-time.```",color=disnake.Colour.random())
@@ -6000,7 +6000,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em.add_field(name="cs📣",value="<#1015391238704332932>")
             em.add_field(name="Navigation Code:",value="```py\ncs```")
             await interaction.edit_original_message(embed=em)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)  
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)  
 
         elif self.values[0] =="re🏠Real Estate Sector":
             em = disnake.Embed(title="Sector Monitoring", description=f"```py\nSector monitoring for stock market industries. Each section contains dark pool feeds, quant alerts, unusual options alerts, regulation SHO alerts, and dark pool feeds real-time.```",color=disnake.Colour.random())
@@ -6010,7 +6010,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em.add_field(name="re🏠",value="<#1015398725801226260>")
             em.add_field(name="Navigation Code:",value="```py\nre```")
             await interaction.edit_original_message(embed=em)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)  
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)  
         
         elif self.values[0] =="he💉Healthcare Sector":
             em = disnake.Embed(title="Sector Monitoring", description=f"```py\nSector monitoring for stock market industries. Each section contains dark pool feeds, quant alerts, unusual options alerts, regulation SHO alerts, and dark pool feeds real-time.```",color=disnake.Colour.random())
@@ -6022,7 +6022,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em.add_field(name="he💉",value="<#1015398924426674257>")
             em.add_field(name="Navigation Code:",value="```py\nhe```")
             await interaction.edit_original_message(embed=em)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)  
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)  
         elif self.values[0] =="te💿Technology Sector":
             emte = disnake.Embed(title="Sector Monitoring", description=f"```py\nSector monitoring for stock market industries. Each section contains dark pool feeds, quant alerts, unusual options alerts, regulation SHO alerts, and dark pool feeds real-time.```",color=disnake.Colour.random())
             emte.add_field(name="te💿",value="<#1015398199785168927>")
@@ -6037,7 +6037,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             emte.add_field(name="te💿",value="<#1015400438541070398>")
             em.add_field(name="Navigation Code:",value="```py\nte```")
             await interaction.edit_original_message(embed=emte)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)  
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)  
         elif self.values[0] =="in🌆Industrials Sector": 
             emin = disnake.Embed(title="Sector Monitoring", description=f"```py\nSector monitoring for stock market industries. Each section contains dark pool feeds, quant alerts, unusual options alerts, regulation SHO alerts, and dark pool feeds real-time.```",color=disnake.Colour.random())
             emin.add_field(name="in🌆",value="<#1015403820337070181>")
@@ -6057,7 +6057,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             emin.add_field(name="in🌆",value="<#1015397859023147131>")
             emin.add_field(name="Navigation Code:",value="```py\nin```")
             await interaction.edit_original_message(embed=emin)    
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)   
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)   
         elif self.values[0] == "cd⛴️Consumer Defensive Sector":
             em = disnake.Embed(title="Sector Monitoring", description=f"```py\nSector monitoring for stock market industries. Each section contains dark pool feeds, quant alerts, unusual options alerts, regulation SHO alerts, and dark pool feeds real-time.```",color=disnake.Colour.random())
             em.add_field(name="cd⛴️",value="<#1015394369483849758>")
@@ -6069,7 +6069,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em.add_field(name="cd⛴️",value="<#1015394516229963807>")
             em.add_field(name="Navigation Code:",value="```py\ncd```")  
             await interaction.edit_original_message(embed=em)
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)  
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)  
 
 
         elif self.values[0] =="fs💰Financial Services Sector":
@@ -6085,7 +6085,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em.add_field(name="fs💰",value="<#1015396854772531292>")
             em.add_field(name="fs💰",value="<#1015396867028291614>")
             em.add_field(name="Navigation Code:",value="```py\nfs```")
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)  
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)  
             await interaction.edit_original_message(embed=em)
 
         elif self.values[0] == "bm🧱Basic Materials Sector":
@@ -6099,7 +6099,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em.add_field(name="bm🧱",value="<#1015391514458849342>")
             em.add_field(name="bm🧱",value="<#1015391524013477898>")
             em.add_field(name="Navigation Code:",value="```py\nbm```")
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)  
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)  
             await interaction.edit_original_message(embed=em)
 
 
@@ -6109,7 +6109,7 @@ class FUDSTOPMenu(disnake.ui.Select):
             em.add_field(name="en⚡",value="<#1015399058388561980>")
             em.add_field(name="en⚡",value="<#1015399068480045237>")
             em.add_field(name="Navigation Code:",value="```py\nen```")
-            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=True)  
+            await interaction.send("</navigate channels:1034275861865705476>", ephemeral=False)  
             await interaction.edit_original_message(embed=em)
 
 
@@ -6163,25 +6163,25 @@ class StockCmdSelect(disnake.ui.Select):
 
     async def callback(self, interaction: disnake.MessageCommandInteraction):
         if self.values[0] == "🤖/stock shortinterest":
-            await interaction.send("</stock shortinterest:1034275861941211161>", ephemeral=True)
+            await interaction.send("</stock shortinterest:1034275861941211161>", ephemeral=False)
         elif self.values[0] == "🤖/stock ipos":
-            await interaction.send("</stock ipos:1034275861941211161>", ephemeral=True)
+            await interaction.send("</stock ipos:1034275861941211161>", ephemeral=False)
         elif self.values[0] == "🤖/stock capitalflow":
-            await interaction.send("</stock capitalflow:1034275861941211161>", ephemeral=True)
+            await interaction.send("</stock capitalflow:1034275861941211161>", ephemeral=False)
         elif self.values[0] == "🤖/stock orderflow":
-            await interaction.send("</stock orderflow:1034275861941211161>", ephemeral=True)
+            await interaction.send("</stock orderflow:1034275861941211161>", ephemeral=False)
         elif self.values[0] == "🤖/stock liquidity":
-            await interaction.send("</stock liquidity:1034275861941211161>", ephemeral=True)
+            await interaction.send("</stock liquidity:1034275861941211161>", ephemeral=False)
         elif self.values[0] == "🤖/stock criminals":
-            await interaction.send("</stock criminals:1034275861941211161>", ephemeral=True)
+            await interaction.send("</stock criminals:1034275861941211161>", ephemeral=False)
         elif self.values[0] == "🤖/stock leverage":
-            await interaction.send("/stock leverage:1034275861941211161>", ephemeral=True)
+            await interaction.send("/stock leverage:1034275861941211161>", ephemeral=False)
         elif self.values[0] == "🤖/stock company_brief":
-            await interaction.send("/stock company_brief:1034275861941211161>", ephemeral=True)
+            await interaction.send("/stock company_brief:1034275861941211161>", ephemeral=False)
         elif self.values[0] == "🤖/stock insider_summary":
-            await interaction.send("/stock insider_summary:1034275861941211161>", ephemeral=True)
+            await interaction.send("/stock insider_summary:1034275861941211161>", ephemeral=False)
         elif self.values[0] == "🤖/stock institutions":
-            await interaction.send("/stock institutions:1034275861941211161>", ephemeral=True)
+            await interaction.send("/stock institutions:1034275861941211161>", ephemeral=False)
 
 
 
@@ -6219,37 +6219,37 @@ class QuantSelect(disnake.ui.Select):
 
     async def callback(self, interaction: disnake.MessageCommandInteraction):
         if self.values[0] == "🤖/flow":
-            await interaction.send("<</flow:910724015490998293>```", ephemeral=True)
+            await interaction.send("<</flow:910724015490998293>```", ephemeral=False)
         elif self.values[0] == "🤖/stats contract":
-            await interaction.send("<</stats contract:911140318118838274>```", ephemeral=True)
+            await interaction.send("<</stats contract:911140318118838274>```", ephemeral=False)
         elif self.values[0] == "🤖/stats market":
-            await interaction.send("<</stats market:911140318118838274>```", ephemeral=True)
+            await interaction.send("<</stats market:911140318118838274>```", ephemeral=False)
         elif self.values[0] == "🤖/stats ticker":
-            await interaction.send("<</stats ticker:911140318118838274>```", ephemeral=True)
+            await interaction.send("<</stats ticker:911140318118838274>```", ephemeral=False)
         elif self.values[0] == "🤖/dividends today":
-            await interaction.send("<</dividends today:911140318118838276>```", ephemeral=True)
+            await interaction.send("<</dividends today:911140318118838276>```", ephemeral=False)
         elif self.values[0] == "🤖/dividends tomorrow":
-            await interaction.send("<</dividends tomorrow:911140318118838276>```", ephemeral=True)
+            await interaction.send("<</dividends tomorrow:911140318118838276>```", ephemeral=False)
         elif self.values[0] == "🤖/dividends date":
-            await interaction.send("<</dividends date:911140318118838276>```", ephemeral=True)
+            await interaction.send("<</dividends date:911140318118838276>```", ephemeral=False)
         elif self.values[0] == "🤖/dividends ticker":
-            await interaction.send("<</dividends ticker:911140318118838276>```", ephemeral=True)
+            await interaction.send("<</dividends ticker:911140318118838276>```", ephemeral=False)
         elif self.values[0] == "🤖/dividends calendar":
-            await interaction.send("<</dividends calendar:911140318118838276>```", ephemeral=True)
+            await interaction.send("<</dividends calendar:911140318118838276>```", ephemeral=False)
         elif self.values[0] == "🤖/fib":
-            await interaction.send("<</fib:910724015541334088>```", ephemeral=True)
+            await interaction.send("<</fib:910724015541334088>```", ephemeral=False)
         elif self.values[0] == "🤖/earnings calendar":
-            await interaction.send("<</earnings calendar:911140318118838277>```", ephemeral=True)
+            await interaction.send("<</earnings calendar:911140318118838277>```", ephemeral=False)
         elif self.values[0] == "🤖/earnings ticker":
-            await interaction.send("<</earnings ticker:911140318118838277>```", ephemeral=True)
+            await interaction.send("<</earnings ticker:911140318118838277>```", ephemeral=False)
         elif self.values[0] == "🤖/earnings date":
-            await interaction.send("<</earnings date:911140318118838277>```", ephemeral=True)
+            await interaction.send("<</earnings date:911140318118838277>```", ephemeral=False)
         elif self.values[0] == "🤖/federal-reserve today":
-            await interaction.send("<</federal-reserve today:1002066714198024197>```", ephemeral=True)
+            await interaction.send("<</federal-reserve today:1002066714198024197>```", ephemeral=False)
         elif self.values[0] == "🤖/federal-reserve calendar":
-            await interaction.send("<</federal-reserve calendar:1002066714198024197>```", ephemeral=True)
+            await interaction.send("<</federal-reserve calendar:1002066714198024197>```", ephemeral=False)
         elif self.values[0] == "🤖/sec-filings":
-            await interaction.send("<</sec-filings:1002066714198024198>```", ephemeral=True)
+            await interaction.send("<</sec-filings:1002066714198024198>```", ephemeral=False)
 
 
 class StreamSelect(disnake.ui.Select):
@@ -6275,17 +6275,17 @@ class StreamSelect(disnake.ui.Select):
 
     async def callback(self, interaction: disnake.MessageCommandInteraction):
         if self.values[0] =="💦/stream time_and_sales":
-            await interaction.send("</stream time_and_sales:1034275861865705478>", ephemeral=True)
+            await interaction.send("</stream time_and_sales:1034275861865705478>", ephemeral=False)
         elif self.values[0] =="💦/stream crypto":
-            await interaction.send("</stream crypto:1034275861865705478>", ephemeral=True)
+            await interaction.send("</stream crypto:1034275861865705478>", ephemeral=False)
         elif self.values[0] =="💦/stream double_crypto":
-            await interaction.send("</stream double_crypto:1034275861865705478>", ephemeral=True)
+            await interaction.send("</stream double_crypto:1034275861865705478>", ephemeral=False)
         elif self.values[0] == "</stream quote":
-            await interaction.send("</stream quote:1034275861865705478>", ephemeral=True)
+            await interaction.send("</stream quote:1034275861865705478>", ephemeral=False)
         elif self.values[0] =="💦/stream double_quote:1034275861865705478 ":
-            await interaction.send("</stream double_quote:1034275861865705478> ", ephemeral=True)
+            await interaction.send("</stream double_quote:1034275861865705478> ", ephemeral=False)
         elif self.values[0] =="💦/stream topvolume:1034275861865705478":
-            await interaction.send("</stream topvolume:1034275861865705478>", ephemeral=True)
+            await interaction.send("</stream topvolume:1034275861865705478>", ephemeral=False)
 
 class AnalysisSelect(disnake.ui.Select):
     def __init__(self):
@@ -7091,7 +7091,7 @@ class VideoSelect(disnake.ui.Select):
         options=options)
 
     async def callback(self, interaction: disnake.MessageCommandInteraction):
-        await interaction.response.defer(with_message=True, ephemeral=True)
+        await interaction.response.defer(with_message=True, ephemeral=False)
         if self.values[0] == "🇨🇳 🇨 🇭 🇮 🇳 🇦":
             await interaction.edit_original_message(view=ChinaView())
         elif self.values[0] == "🇩 🇹 🇨 🇨 / 🇩 🇹 🇨":
@@ -8368,7 +8368,7 @@ class Dropdown3(disnake.ui.Select):
         ),
 
     async def callback(self, interaction: disnake.MessageInteraction):
-        await interaction.response.defer(with_message=True, ephemeral=True)
+        await interaction.response.defer(with_message=True, ephemeral=False)
         if self.values[0] == "Use Ctrl + K ShortCut":
             em = disnake.Embed(title="Ctrl+K Shortcut", colour=disnake.Colour.random())
             em.set_image(url=f"https://media.giphy.com/media/ljoxwgpLK54RS4hz3Q/giphy.mp")
@@ -8451,7 +8451,7 @@ class LearningMainMenuDropdown(disnake.ui.Select):
 
 
     async def callback(self, interaction: disnake.MessageInteraction):
-        await interaction.response.defer(with_message=False, ephemeral=True)
+        await interaction.response.defer(with_message=False, ephemeral=False)
         if self.values[0] == "Discord Tutorials⚔️":
             embed = disnake.Embed(title="Discord Tutorials⚔️", color=disnake.Colour.dark_blue())
             embed.set_image(url="https://media.giphy.com/media/waq1okC7KZgqC6N229/giphy.gif")
@@ -8483,14 +8483,14 @@ class LearningMainMenuDropdown(disnake.ui.Select):
 
             await interaction.edit_original_message(embed=embed, view=ToolsView())
         elif self.values[0] == "Webull & Market School🏫":
-            await interaction.response.defer(with_message=False, ephemeral=True)
+            await interaction.response.defer(with_message=False, ephemeral=False)
             embed = disnake.Embed(title="Webull & Market School🏫", color=disnake.Colour.dark_green())
             embed.set_image(url="https://media.giphy.com/media/waq1okC7KZgqC6N229/giphy.gif")
             embed.set_footer(text="Implemented by FUDSTOP Trading")
 
             await interaction.edit_original_message(embed=embed, view = LearnView())
         elif self.values[0] == "Bot Commands🤖":
-            await interaction.response.defer(with_message=False, ephemeral=True)
+            await interaction.response.defer(with_message=False, ephemeral=False)
             embed = disnake.Embed(title="Bot Commands🤖", color=disnake.Colour.dark_blue())
 
             embed.set_footer(text="Implemented by FUDSTOP Trading")
@@ -8533,7 +8533,7 @@ class QuickView(disnake.ui.View):
     
     
     async def callback(self, interaction: disnake.MessageInteraction):
-        await interaction.response.defer(with_message=True, ephemeral=True)
+        await interaction.response.defer(with_message=True, ephemeral=False)
         if self.values[0] == "🐂Long Call":
             embed = disnake.Embed(title="🐂Long Call", color=disnake.Colour.green())
             embed.add_field(name="Strategy", value=
@@ -10290,7 +10290,7 @@ class TopOptionDropdown(disnake.ui.Select):
         )
 
     async def callback(self, interaction: disnake.MessageInteraction):
-            await interaction.response.defer(with_message=True, ephemeral=True)
+            await interaction.response.defer(with_message=True, ephemeral=False)
             if self.values[0] == "The Eight Conditions of the List🌟":
                 embed = disnake.Embed(title="The Eight Conditions of the Top Options List🌟", color=disnake.Colour.random())
                 embed.add_field(name="-", value="**Total Volume**")
@@ -10477,7 +10477,7 @@ class OptionsDropdown(disnake.ui.Select):
         )
 
     async def callback(self, interaction: disnake.MessageInteraction):
-        await interaction.response.defer(with_message=True, ephemeral=True)
+        await interaction.response.defer(with_message=True, ephemeral=False)
         if self.values[0] == "Options Strategies♟️":
             embed = disnake.Embed(title="Options Strategies♟️", description=f"```py\nThis menu provides educational content around different Options Strategies you can utilize in the market. Information is provided by Webull```", color=disnake.Colour.dark_blue())
 
@@ -11235,7 +11235,7 @@ class Dropdown2(disnake.ui.Select):
         ),
 
     async def callback(self, interaction: disnake.MessageInteraction):
-            await interaction.response.defer(with_message=False, ephemeral=True)
+            await interaction.response.defer(with_message=False, ephemeral=False)
             if self.values[0] == "📒 Settlement Window Dates":
                 em = disnake.Embed(title="Dropdown Results", color=disnake.Colour.random())
 
@@ -11299,7 +11299,7 @@ class AnalysisDropdown(disnake.ui.Select):
         )
 
     async def callback(self, interaction: disnake.MessageInteraction):
-            await interaction.response.defer(with_message=True, ephemeral=True)
+            await interaction.response.defer(with_message=True, ephemeral=False)
             if self.values[0] == "🔍 Orderflow Distribution":
                 embed = disnake.Embed(title="🔍 Orderflow Distribution", description="```py\nTap on 'Watchlists'. \n\n"
                 "Search for a stock and enter its detailed page.\n\n"
@@ -14530,7 +14530,7 @@ class VideoSelect(disnake.ui.Select):
         options=options)
 
     async def callback(self, interaction: disnake.MessageCommandInteraction):
-        await interaction.response.defer(with_message=True, ephemeral=True)
+        await interaction.response.defer(with_message=True, ephemeral=False)
         if self.values[0] == "🇨🇳 🇨 🇭 🇮 🇳 🇦":
             await interaction.edit_original_message(view=ChinaView())
         elif self.values[0] == "🇩 🇹 🇨 🇨 / 🇩 🇹 🇨":
@@ -16146,7 +16146,7 @@ class OptionsDropdown(disnake.ui.Select):
         )
 
     async def callback(self, interaction: disnake.MessageInteraction):
-        await interaction.response.defer(with_message=True, ephemeral=True)
+        await interaction.response.defer(with_message=True, ephemeral=False)
         if self.values[0] == "Options Strategies♟️":
             embed = disnake.Embed(title="Options Strategies♟️", description=f"```py\nThis menu provides educational content around different Options Strategies you can utilize in the market. Information is provided by Webull```", color=disnake.Colour.dark_blue())
 
@@ -25038,9 +25038,9 @@ class CoreDrop(disnake.ui.Select):
 
     async def callback(self, interaction: disnake.MessageCommandInteraction):
         if self.values[0] == "1":
-            await interaction.send("```py\nlogin: fudstoptrading@charliesindex.com || password: ||fudstoppers#23||``` Updates daily around 7-8 PM CST. https://www.alphaquery.com/stock-screener/600010229?run=1", ephemeral=True)
+            await interaction.send("```py\nlogin: fudstoptrading@charliesindex.com || password: ||fudstoppers#23||``` Updates daily around 7-8 PM CST. https://www.alphaquery.com/stock-screener/600010229?run=1", ephemeral=False)
         elif self.values[0] =="2":
-            await interaction.send("```py\nlogin: fudstoptrading@charliesindex.com || password: ||fudstoppers#23||``` Updates daily around 7-8 PM CST. https://www.alphaquery.com/stock-screener/600010229?run=1", ephemeral=True)
+            await interaction.send("```py\nlogin: fudstoptrading@charliesindex.com || password: ||fudstoppers#23||``` Updates daily around 7-8 PM CST. https://www.alphaquery.com/stock-screener/600010229?run=1", ephemeral=False)
 
 
 

@@ -35,7 +35,7 @@ class Economy(commands.Cog):
     async def ambs(interaction: disnake.ApplicationCommandInteraction, transaction: str=commands.Param
         (name="transaction", choices=["all", "sales", "purchases", "roll", "swap"])):
         """🪙Return the latest Agency Mortgage Backed Securities Transactions out of the FED."""
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.defer(ephemeral=False)
         r = requests.get(url=f"https://markets.newyorkfed.org/api/ambs/{transaction}/results/summary/last/3.json")
         d = r.json()
         ambs = d['ambs']

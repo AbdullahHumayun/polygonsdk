@@ -16,7 +16,7 @@ class Navigate(commands.Cog):
     async def channels(self, inter: disnake.CommandInteraction, channel: disnake.TextChannel):
         """Returns the channel to navigate to."""
 
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         embed = disnake.Embed(title="You just navigated!", color=disnake.Colour.dark_magenta())
         embed.set_footer(text="Data provided by Financial Modeling Prep. Implemented by FUDSTOP Trading.", icon_url="https://uploads-ssl.webflow.com/62661f74776abb77ef7621a8/6272ac0a541297826e1a5209_963244979063517184.gif")
         embed.set_thumbnail(url="https://media.discordapp.net/attachments/1009552305869303828/1009555505699639366/ezgif-2-f4a5623248.gif")
@@ -25,7 +25,7 @@ class Navigate(commands.Cog):
     @navigate.sub_command()
     async def threads(self, inter: disnake.CommandInteraction, channel: disnake.Thread,):
         """Returns the thread to navigate to."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         embed = disnake.Embed(title="You just navigated!",color=disnake.Colour.dark_magenta())
         embed.set_footer(text="Data provided by Financial Modeling Prep. Implemented by FUDSTOP Trading.", icon_url="https://uploads-ssl.webflow.com/62661f74776abb77ef7621a8/6272ac0a541297826e1a5209_963244979063517184.gif")
         embed.set_thumbnail(url="https://media.discordapp.net/attachments/1009552305869303828/1009555505699639366/ezgif-2-f4a5623248.gif")

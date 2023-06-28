@@ -352,20 +352,20 @@ class MainView(disnake.ui.View):
         view = disnake.ui.View(timeout=None)
         view2 = disnake.ui.View(timeout=None)
         eps_quarterly = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"EPS quarterly", row=4)
-        eps_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/EPS_quarterly.png'), ephemeral=True)
+        eps_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/EPS_quarterly.png'), ephemeral=False)
         view.add_item(eps_quarterly)
 
         revenue_quarterly = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"Revenue Quarterly", row=4)
-        revenue_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/Revenue_quarterly.png'), ephemeral=True)
+        revenue_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/Revenue_quarterly.png'), ephemeral=False)
         view.add_item(revenue_quarterly)
 
         roa_quarterly = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"ROA - Quarterly", row=4)
-        roa_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/ROA_quarterly.png'), ephemeral=True)
+        roa_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/ROA_quarterly.png'), ephemeral=False)
         view.add_item(roa_quarterly)
 
 
         roe_quarterly = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"Return on Investment - Quarterly", row=4)
-        roe_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/ROE_quarterly.png'), ephemeral=True)
+        roe_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/ROE_quarterly.png'), ephemeral=False)
         view.add_item(roe_quarterly)
 
 

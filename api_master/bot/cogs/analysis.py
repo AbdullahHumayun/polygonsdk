@@ -20,17 +20,17 @@ class Analysis(commands.Cog):
 
 
 
-    @analysis.sub_command(guild_ids=[888488311927242753], name="analysis_finscreen")
+    @analysis.sub_command(guild_ids=[888488311927242753], name="finscreen")
     async def finscreen(inter:disnake.ApplicationCommandInteraction, pattern: str = commands.Param(name="pattern", choices=["channeldown", "channelup", "wedgeup", "wedgedown", "wedgeresistance", "wedgesupport", "tlsupport", "tlresistance", "doublebottom", "doubletop", "headandshoulders", "headandshouldersinv"]), direction: str = commands.Param(name="direction", choices=["u", "d"]), rsi: str = commands.Param(name="rsi_type", choices=["os30", "os20", "ob60", "ob70"]), new_20d_high_or_low: str = commands.Param(name="new_20d_high_or_low", choices=["nh", "nl"])):
         """🔎Use the FinViz screener and customize your options."""
         url = f"https://finviz.com/screener.ashx?v=111&f=ta_gap_{direction},ta_highlow20d_{new_20d_high_or_low},ta_pattern_{pattern},ta_rsi_{rsi}&ft=3&ar=180"
         embed = disnake.Embed(title="Results:",description=f"```py\nGaps {direction} with {pattern} with the rsi at {rsi} with a 20-day {new_20d_high_or_low} \n\n (NH = NEW HIGH) \n\n (NL = NEW LOW)```", color=disnake.Colour.random(), url=f"{url}")
         embed.set_footer(text="Real time Data Provided by Nasdaq Datalink - Implemented by FUDSTOP Trading")
         embed.set_thumbnail(url="https://static.wixstatic.com/media/3235bb_fedadfcf38994349b7fa98fbf3f6f372~mv2.gif")
-        await inter.response.send_message(embed=embed, ephemeral=True)
+        await inter.response.send_message(embed=embed, ephemeral=False)
 
 
-    @analysis.sub_command(name="analysis_gaps_down")
+    @analysis.sub_command(name="gaps_down")
     async def gaps_down(inter: disnake.ApplicationCommandInteraction, percent=str):
         """🔎Returns a link to tickers with % gap down that you chooose."""
         url = f"https://finviz.com/screener.ashx?v=111&f=ta_gap_d{percent}&ft=3"
@@ -45,7 +45,7 @@ class Analysis(commands.Cog):
 
 
 
-    @analysis.sub_command(name="analysis_gaps_up")
+    @analysis.sub_command(name="gaps_up")
     async def gaps_up(inter: disnake.ApplicationCommandInteraction,percent):
         """🔎Returns a link to tickers with % gap up that you chooose."""
     
@@ -63,7 +63,7 @@ class Analysis(commands.Cog):
 
 
 
-    @analysis.sub_command(name="analysis_overbought_gap")
+    @analysis.sub_command(name="overbought_gaps")
     async def overbought_gap(inter: disnake.ApplicationCommandInteraction):
         """🔎Returns a link to tickers that are overbought, gapped up, and are in a downward channel."""
         
@@ -74,7 +74,7 @@ class Analysis(commands.Cog):
         await inter.send(embed=embed)
 
 
-    @analysis.sub_command(name="analysis_topshorts")
+    @analysis.sub_command(name="top_shorts")
     async def topshorts(inter: disnake.ApplicationCommandInteraction):
         """🔎Returns tickers with over 30% short interest"""
         await inter.response.defer()

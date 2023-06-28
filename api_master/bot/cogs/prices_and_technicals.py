@@ -34,7 +34,7 @@ class prices_and_technicals(commands.Cog):
         embed = disnake.Embed(title=f"Returned tickers that are {type}:", description=f"{items}", color=disnake.Colour.dark_theme())
         embed.set_thumbnail(url="https://i.ibb.co/vm0P0jW/ODLxwfPE.gif")
         embed.set_footer(text="Data Provided By Webull \n Implemented by FUDSTOP Trading -")
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+        await interaction.response.send_message(embed=embed, ephemeral=False)
 
 
 def setup(bot:commands.Bot):

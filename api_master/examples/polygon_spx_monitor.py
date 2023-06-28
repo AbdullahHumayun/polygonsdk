@@ -11,7 +11,7 @@ from sdks.polygon_sdk.universal_snapshot import UniversalOptionSnapshot, Univers
 poly = AsyncPolygonSDK(YOUR_API_KEY)
 import aiohttp
 import csv
-from cfg import two_days_from_now_str, today_str
+from cfg import two_days_from_now_str, today_str, thirty_days_from_now_str
 async def main():
     while True:
         ticker="SPX"
@@ -25,7 +25,7 @@ async def main():
         
 
         async with aiohttp.ClientSession() as session:
-            initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte={two_days_from_now_str}&limit=250&apiKey={YOUR_API_KEY}"
+            initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte={thirty_days_from_now_str}&limit=250&apiKey={YOUR_API_KEY}"
             async with session.get(initial_url) as resp:
                 data = await resp.json()
                 results = data['results']

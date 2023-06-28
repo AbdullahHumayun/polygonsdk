@@ -27,7 +27,7 @@ class occSDK:
             Optional[StockLoans]: Stock loan data for the specified report date and type, or None if data is not available.
         """
         r = requests.get(url=f"https://marketdata.theocc.com/mdapi/stock-loan?report_date={report_date}&report_type={type}").json()
-        entity = r['entity'] if r.get('entity') is not None else None
+        entity = r['entity']
         stockLoanResults = StockLoans(entity['stockLoanResults'] if entity.get('stockLoanResults') is not None else None)
         if stockLoanResults:
             return stockLoanResults

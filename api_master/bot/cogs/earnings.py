@@ -25,7 +25,7 @@ class Earnings(commands.Cog):
     @earnings.sub_command()
     async def upcoming(self,inter: disnake.AppCmdInter, date):
         """💸Type in a date: YYYY-MM-DD to return earnings for that date."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         rup = requests.get(url=f"https://quotes-gw.webullfintech.com/api/bgw/explore/calendar/earnings?regionId=6&pageIndex=1&pageSize=100&startDate={date}")
         dup = rup.json()
         data = dup['data']

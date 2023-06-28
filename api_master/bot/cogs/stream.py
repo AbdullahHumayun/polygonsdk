@@ -7,8 +7,9 @@ from utils.webull_tickers import ticker_list
 from autocomp import coin_autocomp
 from utils.crypto_coins import coins
 import json
+from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 
-
+webull = AsyncWebullSDK()
 
 
 class Stream(commands.Cog):
@@ -22,10 +23,12 @@ class Stream(commands.Cog):
     @stream.sub_command()
     async def time_and_sales(inter:disnake.AppCmdInter, ticker: str=commands.Param(autocomplete=tickerlist_autocomp)):
         """🫧Returns real-time time and sales date for 100 ticks."""
-        ids = ticker_list[ticker]
+        
         counter = 0
         await inter.response.defer(with_message=True)
         while True:
+            ids = await webull.fetch_ticker_id(ticker)
+            
             counter = counter + 1
             r = requests.get(url=f"https://quotes-gw.webullfintech.com/api/stock/capitalflow/deals?count=100&tickerId={ids}")
             d= r.json()
@@ -50,7 +53,7 @@ class Stream(commands.Cog):
         ids = ticker_list[ticker]
         ids1 = ticker_list[ticker1]
         counter = 0
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         while True:
             counter = counter + 1
             r = requests.get(url=f"https://quotes-gw.webullfintech.com/api/bgw/quote/realtime?ids={ids},{ids1}&includeSecu=1&delay=0&more=1")
@@ -90,7 +93,7 @@ class Stream(commands.Cog):
         ids = coins[coin]
         ids2 = coins[coin2]
         counter = 0
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         while True:
             counter = counter+ 1
             r = requests.get(url=f"https://quotes-gw.webullfintech.com/api/bgw/quote/realtime?ids={ids},{ids2}&includeSecu=1&delay=0&more=1")
@@ -109,7 +112,7 @@ class Stream(commands.Cog):
         """🫧Choose a crypto coin and stream their price in real-time for 200 ticks."""
         ids = coins[coin]
         counter = 0
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         while True:
             counter = counter+ 1
             r = requests.get(url=f"https://quotes-gw.webullfintech.com/api/bgw/quote/realtime?ids={ids}&includeSecu=1&delay=0&more=1")

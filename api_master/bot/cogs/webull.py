@@ -8,7 +8,10 @@ from _discord import emojis as e
 from views.learnviews import OptionsPaperView,OrderView,ChainView,CustomizeView, AnalysisView
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
-from autocomp import tickerlist_autocomp, graphics_autocomp
+from autocomp import tickerlist_autocomp, graphics_autocomp, ticker_autocomp
+from webull import webull
+
+
 
 intents = disnake.Intents.all()
 from cfg import YOUR_API_KEY
@@ -136,6 +139,29 @@ class Webull(commands.Cog):
                 await inter.send(embed=embed, view=view)
                 await inter.delete_original_message()
                 break
+
+
+    @webull.sub_command()
+    async def news_announcement(inter:disnake.AppCmdInter,stock:str=commands.Param(autocomplete=ticker_autocomp)):
+        """🌐Returns the latest announcement for a company."""
+        await inter.response.defer(with_message=True)
+        wb = webull()
+
+        d = wb.get_press_releases(stock=f"{stock}")
+        for i in d:
+            try:
+                ann = list(d['announcements'])
+                index1 = ann[0]
+                title = index1['title']
+                publish = index1['publishDate']
+                url = index1['htmlUrl']
+                name = index1['typeName']
+                form = index1['formType']
+                em = disnake.Embed(title=f"Latest Announcement for {stock}", description=f"```py\nTitle: {title} Published: {publish}\n\nName: {name}\n\nForm: {form}```", color=disnake.Colour.dark_blue(), url=f"{url}")
+                await inter.edit_original_message(embed=em)
+            except IndexError:
+                index1 = "N/A"
+                await inter.edit_original_message("N/A")
 
 def setup(bot:commands.Bot):
     bot.add_cog(Webull(bot))

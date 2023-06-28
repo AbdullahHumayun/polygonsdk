@@ -29,6 +29,6 @@ async def fetch_entire_chain():
     df = pd.DataFrame([option.to_dict() for option in all_options])
     # Save the DataFrame to a CSV file
     df.to_csv(f'files/options/ticker_chains/all_{ticker}_chains.csv', index=False)
-
+    return df
 # Run the main function
-asyncio.run(fetch_entire_chain())
+# asyncio.run(fetch_entire_chain())

@@ -17,7 +17,7 @@ class Learn(commands.Cog):
 
 
 
-    @learn.sub_command(name="learn_china")
+    @learn.sub_command(name="china")
     async def china(inter:disnake.AppCmdInter):
         """🧠Learn About the China Transformation Opportunity"""
         await inter.response.defer(with_message=True)
@@ -28,7 +28,7 @@ class Learn(commands.Cog):
         await inter.edit_original_message(embed=embed, view=ChinaOptView())
 
 
-    @learn.sub_command(name="learn_filings")
+    @learn.sub_command(name="filings")
     async def filings(inter:disnake.AppCmdInter):
         """🧠Learn about filings from self regulatory organizations."""
         await inter.response.defer(with_message=True)
@@ -38,7 +38,7 @@ class Learn(commands.Cog):
         embed.add_field(name="Available Panels View", value="/learn")
         await inter.edit_original_message(embed=embed, view=VideoView())
 
-    @learn.sub_command(name="learn_etfs")
+    @learn.sub_command(name="etfs")
     async def etfs(inter:disnake.AppCmdInter):
         """🧠Learn all about ETFs"""
         await inter.response.defer(with_message=True)
@@ -49,7 +49,7 @@ class Learn(commands.Cog):
         await inter.edit_original_message(embed=embed, view=ETFView())
 
 
-    @learn.sub_command(name="learn_options_101")
+    @learn.sub_command(name="options_101")
     async def options_101(inter:disnake.AppCmdInter):
         """🧠OIC Options 101 Course - Full"""
         await inter.response.defer(with_message=True)
@@ -59,7 +59,7 @@ class Learn(commands.Cog):
         embed.add_field(name="Available Panels View", value="/learn")
         await inter.edit_original_message(embed=embed, view=Opt101View())
 
-    @learn.sub_command(name="learn_option_strategies")
+    @learn.sub_command(name="option_strategies")
     async def option_strategies(inter:disnake.AppCmdInter):
         """🧠Learn about differente Options Strategies"""
         await inter.response.defer(with_message=True)
@@ -69,7 +69,7 @@ class Learn(commands.Cog):
         embed.add_field(name="Available Panels View", value="/learn")
         await inter.edit_original_message(embed=embed, view=OStratsView())
 
-    @learn.sub_command(name="learn_covered_calls")
+    @learn.sub_command(name="covered_calls")
     async def covered_calls(inter:disnake.AppCmdInter):
         """🧠Learn about the Covered Call Option Strategy"""
         await inter.response.defer(with_message=True)
@@ -79,7 +79,7 @@ class Learn(commands.Cog):
         embed.add_field(name="Available Panels View", value="/learn")
         await inter.edit_original_message(embed=embed,view=ccView())
 
-    @learn.sub_command(name="learn_core_logic")
+    @learn.sub_command(name="core_logic")
     async def core_logic(inter:disnake.AppCmdInter):
         """🧠Learn about the Core Logic"""
         await inter.response.defer(with_message=True)
@@ -89,7 +89,7 @@ class Learn(commands.Cog):
         embed.add_field(name="Available Panels View", value="/learn")
         await inter.edit_original_message(embed=embed, view=CoreView())
 
-    @learn.sub_command(name="learn_calls")
+    @learn.sub_command(name="calls")
     async def calls(inter:disnake.AppCmdInter):
         """🧠Learn all about Call Options!"""
         await inter.response.defer(with_message=True)
@@ -99,7 +99,7 @@ class Learn(commands.Cog):
         embed.add_field(name="Available Panels View", value="/learn")
         await inter.edit_original_message(embed=embed, view=CallView())
 
-    @learn.sub_command(name="learn_greeks")
+    @learn.sub_command(name="greeks")
     async def greeks(inter:disnake.AppCmdInter):
         """🧠Learn all about the Options Greeks"""
         await inter.response.defer(with_message=True)
@@ -110,7 +110,7 @@ class Learn(commands.Cog):
         await inter.edit_original_message(embed=embed, view=GreeksView())
 
 
-    @learn.sub_command(name="learn_discord")
+    @learn.sub_command(name="discord")
     async def discord(inter:disnake.AppCmdInter):
         """🧠Learn all about discord with these helpful tricks!"""
         await inter.response.defer(with_message=True)
@@ -121,7 +121,7 @@ class Learn(commands.Cog):
         await inter.edit_original_message(embed=embed, view=TutorialsView())
 
 
-    @learn.sub_command(name="learn_order_types")
+    @learn.sub_command(name="order_types")
     async def order_types(inter:disnake.AppCmdInter):
         """🧠Learn about the different order types."""
         await inter.response.defer(with_message=True)
@@ -131,7 +131,7 @@ class Learn(commands.Cog):
         embed.add_field(name="Available Panels View", value="/learn")
         await inter.edit_original_message(embed=embed, view=OrderView())
 
-    @learn.sub_command(name="learn_occ")
+    @learn.sub_command(name="occ")
     async def occ(inter:disnake.AppCmdInter):
         """🧠Learn about filings out of the Options Clearing Corporation"""
         await inter.response.defer(with_message=True)
@@ -142,7 +142,7 @@ class Learn(commands.Cog):
         await inter.edit_original_message(embed=embed, view=OCCView())
 
 
-    @learn.sub_command(name="learn_finra")
+    @learn.sub_command(name="finra")
     async def finra(inter:disnake.AppCmdInter):
         """🧠Learn about Filings out of FINRA"""
         await inter.response.defer(with_message=True)
@@ -155,7 +155,7 @@ class Learn(commands.Cog):
 
 
         
-    @learn.sub_command(name="learn_core_criteria")
+    @learn.sub_command(name="core_criteria")
     async def criteria(inter:disnake.AppCmdInter):
         """Learn the core logic and what to look for."""
         em = disnake.Embed(title="Criteria for Core", description="```py\nThe core logic has specific criteria for identifying play candidates.```", color=disnake.Colour.dark_red())
@@ -163,7 +163,7 @@ class Learn(commands.Cog):
         await inter.send(embed=em,view=CriteriaView())
 
 
-    @learn.sub_command(name="learn_nsfr_ratio")
+    @learn.sub_command(name="nsfr_ratio")
     async def nsfr_ratio(inter: disnake.AppCmdInter):
         """🧠Learn about the Webull APP and about Markets"""
         await inter.response.defer(with_message=True)
@@ -174,7 +174,7 @@ class Learn(commands.Cog):
         await inter.edit_original_message(embed=embed, view=LearnView())
     
     
-    @learn.sub_command(name="learn_ta")
+    @learn.sub_command(name="ta")
     async def ta(inter: disnake.AppCmdInter):
         """🧠Info-graphics on over 50 selectable Tech Patterns to learn about."""
         view = disnake.ui.View()
@@ -184,7 +184,7 @@ class Learn(commands.Cog):
         embed.set_image(url="https://assets.winton.com/cms/Images/longer-view/Technical-Analysis/TechAn4.gif")
         await inter.send(embed=embed, view=view)
 
-    @learn.sub_command(name="learn_candle_patterns")
+    @learn.sub_command(name="candle_patterns")
     async def candle_patterns(inter:disnake.AppCmdInter):
         """🧠Choose from candles and trend info-graphics to learn about."""
         view = disnake.ui.View()

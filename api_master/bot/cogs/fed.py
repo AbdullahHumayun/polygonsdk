@@ -16,7 +16,7 @@ class Fed(commands.Cog):
     @fed.sub_command()
     async def rates(inter:disnake.AppCmdInter):
         """🎆Returns the SOFRAI, TGCR, BGCR, and SOFR Secured Fed Rates."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         r = requests.get(url="https://markets.newyorkfed.org/api/rates/secured/all/latest.json")
         d = r.json()
         rates = d['refRates']
@@ -75,7 +75,7 @@ class Fed(commands.Cog):
     @fed.sub_command()
     async def soma(inter:disnake.AppCmdInter):
         """🎆Returns the latest soma holdings, if any."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         r = requests.get(url="https://markets.newyorkfed.org/api/soma/summary.json")
         d = r.json()
         soma = d['soma']
@@ -114,56 +114,12 @@ class Fed(commands.Cog):
 
         await inter.edit_original_response(embed=em)
 
-                
-
-    @fed.sub_command()
-    async def swaps(inter:disnake.AppCmdInter):
-        """🎆Returns recent AMBS transactions from the New York Fed."""
-        await inter.response.defer(with_message=True, ephemeral=True)
-        r = requests.get(url=f"https://api.stlouisfed.org/fred/series/observations?series_id=SWPT&api_key={YOUR_FRED_API_KEY}&file_type=json&limit=1&observation_start=2022-10-01")
-        d = r.json()
-        obs = d['observations']
-        value = obs['value']
-        date = obs['date']
-        em = disnake.Embed(title=f"FRED API - Swaps Recorded {date}", description=f"```py\n{value}```", color=disnake.Colour.dark_red())
-        await inter.edit_original_response(embed=em)
-
-    @fed.sub_command()
-    async def datasearch(inter:disnake.AppCmdInter, query: str):
-
-        query = query.lower()
-        await inter.response.defer(with_message=True, ephemeral=True)
-        try:
-            fred = Fred.Fred.__fetch_data(api_key=YOUR_FRED_API_KEY)
-            data = fred.search(f"{query}")
-            id = data['id']
-            start = data['realtime_start']
-            end = data['realtime_end']
-            title = data['title']
-            obs_start = data['observation_start']
-            obs_end = data['observation_end']
-            freq = data['frequency']
-            frequencys = data['frequency_short']
-            units = data['units']
-            unitss = data['units_short']
-            seasonal = data['seasonal_adjustment']
-            seasonals = data['seasonal_adjustment_short']
-            last_updated = data['last_updated']
-            popularity = data['popularity']
-            notes = data['notes']
-            print(f"```py\n{notes[0]} | {last_updated}```")
-            em = disnake.Embed(title=f"Fred API - {title[0]}", description=f"```py\n{notes[0]} | {last_updated[0]}``` ```py\nID: {id[0]}```")
-            await inter.edit_original_response(embed=em)
-
-        except commands.CheckAnyFailure:
-            await inter.send("```py\nNone found.```")
-
 
 
     @fed.sub_command()
     async def swaps_non_us(inter:disnake.AppCmdInter):
         """🎆Returns the last 10 non-us Swaps"""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         r = requests.get(url="https://markets.newyorkfed.org/api/fxs/nonusdollar/last/10.json")
         d = r.json()
         swaps = d['fxSwaps']

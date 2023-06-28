@@ -25,7 +25,7 @@ class Social(commands.Cog):
     async def score(self,inter:disnake.AppCmdInter,
         ticker: str=commands.Param(autocomplete=ticker_autocomp)):
         """🫂Lookup the positive vs negative mentions for a ticker."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         rscore = requests.get(url=f"https://finnhub.io/api/v1/stock/social-sentiment?symbol={ticker}&token={YOUR_FINNHUB_KEY}")
         dscore = rscore.json()
         reddit = dscore['reddit']
@@ -56,7 +56,7 @@ class Social(commands.Cog):
     @social.sub_command()
     async def wsb(self, inter: disnake.AppCmdInter, symbol: str = commands.Param(autocomplete=ticker_autocomp)):
         """🫂Returns mentions of calls/puts from Wallstreet Bets for a Ticker"""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         data = client.wsb_mentions(days=2, ticker=f"{symbol}")
         index = data[0]
         index2 = data[1]
@@ -100,7 +100,7 @@ class Social(commands.Cog):
     async def tradingview_spying(self, inter: disnake.AppCmdInter):
         """🫂Spy on the Public TradingView Chat"""
         counter = 1
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         while True:
             counter = 1 + 1
             rtv = requests.get(url="https://www.tradingview.com/chats/public/get/")
@@ -119,7 +119,7 @@ class Social(commands.Cog):
     @social.sub_command()
     async def sentiment(self, inter:disnake.ApplicationCommandInteraction, symbol: str = commands.Param(autocomplete=ticker_autocomp)):
         """🫂Returns Buy / Sell / Hold Ratings for a Specific Stock"""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         sentimentr = requests.get(url=f"https://financialmodelingprep.com/api/v4/upgrades-downgrades-consensus?symbol={symbol}&apikey={YOUR_FMP_KEY}")
         sentimentd = sentimentr.json()
         index = sentimentd[0]

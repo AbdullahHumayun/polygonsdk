@@ -5,7 +5,8 @@ import requests
 from views.learnviews import LeverageDropdown
 from autocomp import ticker_autocomp
 import stocksera
-from cfg import YOUR_STOCKSERA_KEY, YOUR_NASDAQ_KEY, YOUR_FINNHUB_KEY, YOUR_IEX_CLOUD_KEY
+from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+from cfg import YOUR_STOCKSERA_KEY, YOUR_NASDAQ_KEY, YOUR_FINNHUB_KEY, YOUR_IEX_CLOUD_KEY, YOUR_API_KEY
 from autocomp import tickerlist_autocomp, ticker_autocomp
 from utils.webull_tickers import ticker_list
 from time import sleep
@@ -17,8 +18,9 @@ from datetime import date
 import pandas as pd
 intents = disnake.Intents.all()
 bot = commands.Bot( command_prefix="!", intents=intents)
-client = stocksera.Client(api_key=YOUR_NASDAQ_KEY)
+client = stocksera.Client(api_key=YOUR_STOCKSERA_KEY)
 finnhub_client = finnhub.Client(api_key=f"{YOUR_FINNHUB_KEY}")
+poly = AsyncPolygonSDK(YOUR_API_KEY)
 class Stock(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -57,7 +59,7 @@ class Stock(commands.Cog):
     async def orderflow(inter:disnake.AppCmdInter, ticker: str=commands.Param(autocomp=tickerlist_autocomp)):
         """📊Returns order-flow data straight from the SIP Feed"""
         counter = 0
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         while True:
             counter = counter + 1
             ids = ticker_list[ticker.upper()]
@@ -169,7 +171,7 @@ class Stock(commands.Cog):
         em = disnake.Embed(title=f"Short Interest for {ticker}", description=f"```py\n Settlement Date: {setdate}``` ```py\n Short Interest: {shortinterst} million shares``` ```py\nAverage Volume: {averagevol} million. \n\n Days to Cover: {dtc}```", color=disnake.Colour.dark_red())
         em.set_footer(text="FUDSTOP Trading")
         await inter.edit_original_message(embed=em)
-        await inter.send(f"To run this command, click --> </stock shortinterest:1029251181987500134>")
+        await inter.send(f"To run this command, click --> </stock shortinterest:1122243463862300760>")
     @shortinterest.error
     async def shortinterror(inter: disnake.AppCmdInter, error):
         if isinstance(error, commands.CheckAnyFailure):
@@ -433,7 +435,7 @@ class Stock(commands.Cog):
    # @stock.sub_command()
     #async def logo(inter:disnake.AppCmdInter, symbol: str = commands.Param(autocomplete=ticker_autocomp)):
        # """🌟Returns the Logo of a Company - Downloadable"""
-       # await inter.response.defer(ephemeral=True)
+       # await inter.response.defer(ephemeral=False)
        # embed = disnake.Embed(title=f"```py\nLogo for {symbol.upper()}.```", color=disnake.Colour.random())
         #embed.set_image(url=f"{logo}")
         #await inter.edit_original_message(embed=embed)
@@ -442,7 +444,7 @@ class Stock(commands.Cog):
     @stock.sub_command()
     async def insider_summary(inter:disnake.AppCmdInter):
         """📊Returns the latest and largest insider summary information."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
         data = client.latest_insider_trading_summary()
         headers = "```py\n Symbol  | Amount  | Market Cap | % of Market Cap```"
         index1 = data[0]
@@ -534,312 +536,31 @@ class Stock(commands.Cog):
     @stock.sub_command()
     async def leverage(inter:disnake.AppCmdInter, ticker: str=commands.Param(autocomplete=tickerlist_autocomp)):
         """📊Return overnight rates / short and long rates / short type for a ticker."""
-        await inter.response.defer(with_message=True, ephemeral=True)
-        ids = str(ticker_list[ticker.upper()])
-        em = disnake.Embed(title=f"Leverage for {ticker}", description=f"```py\nTrade Type: {LeverageDropdown.tradetype}``` ```py\nShort Type:\n{LeverageDropdown.shorttype}``` ```py\nTrade Policy: {LeverageDropdown.tradepolicy}```", color=disnake.Colour.dark_orange())
-        em.add_field(name="Short/Long:", value=f"```py\n Short Interest Rate:\n{LeverageDropdown.shortintrate}%``` ```py\n Long Interest Rate:\n{LeverageDropdown.longintrate}%```  ```py\nShort Rate: {LeverageDropdown.srate}% Long Rate: {LeverageDropdown.lrate}%```")
-        em.add_field(name="Overnight:", value=f"```py\nOvernight Long Leverage: {LeverageDropdown.overnightlonglever}``` ```py\nOvernight Short Leverage: {LeverageDropdown.overnightshortlever}``` ```py\n\nOvernight Short Rate: {LeverageDropdown.onshortrate}%``` ```py\nOvernight Long Rate:\n{LeverageDropdown.onlongrate}%```")
-        em.add_field(name="Day Trade:", value=f"```py\n Day Trade Long Leverage: {LeverageDropdown.daytradelonglever}``` ```py\nDay Trade Short Leverage: {LeverageDropdown.daytradeshortlever}``` ```py\nDay Trade Short Rate: {LeverageDropdown.dayshortrate}%``` ```py\nDay Trade Long Rate:\n{LeverageDropdown.daylongrate}%```")
-        em.add_field(name="Crypto Transferrable?", value=f"```py\n {LeverageDropdown.crypto}```", inline=True)
-        em.add_field(name="Can Fract?", value=f"```py\n {LeverageDropdown.canfract}```", inline=True)
+        await inter.response.defer(with_message=True, ephemeral=False)
+
+        em = disnake.Embed(title=f"Leverage for {ticker}", description=f"```py\nTrade Type: {LeverageDropdown(ticker).tradetype}``` ```py\nShort Type:\n{LeverageDropdown(ticker).shorttype}``` ```py\nTrade Policy: {LeverageDropdown(ticker).tradepolicy}```", color=disnake.Colour.dark_orange())
+        em.add_field(name="Short/Long:", value=f"```py\n Short Interest Rate:\n{LeverageDropdown(ticker).shortintrate}%``` ```py\n Long Interest Rate:\n{LeverageDropdown(ticker).longintrate}%```  ```py\nShort Rate: {LeverageDropdown(ticker).srate}% Long Rate: {LeverageDropdown(ticker).lrate}%```")
+        em.add_field(name="Overnight:", value=f"```py\nOvernight Long Leverage: {LeverageDropdown(ticker).overnightlonglever}``` ```py\nOvernight Short Leverage: {LeverageDropdown(ticker).overnightshortlever}``` ```py\n\nOvernight Short Rate: {LeverageDropdown(ticker).onshortrate}%``` ```py\nOvernight Long Rate:\n{LeverageDropdown(ticker).onlongrate}%```")
+        em.add_field(name="Day Trade:", value=f"```py\n Day Trade Long Leverage: {LeverageDropdown(ticker).daytradelonglever}``` ```py\nDay Trade Short Leverage: {LeverageDropdown(ticker).daytradeshortlever}``` ```py\nDay Trade Short Rate: {LeverageDropdown(ticker).dayshortrate}%``` ```py\nDay Trade Long Rate:\n{LeverageDropdown(ticker).daylongrate}%```")
+        em.add_field(name="Crypto Transferrable?", value=f"```py\n {LeverageDropdown(ticker).crypto}```", inline=True)
+        em.add_field(name="Can Fract?", value=f"```py\n {LeverageDropdown(ticker).canfract}```", inline=True)
+        em.set_thumbnail(await poly.get_polygon_logo(ticker))
         em.set_footer(text="Implemented by FUDSTOP Trading", )
         view = disnake.ui.View()
-        view.add_item(LeverageDropdown())
+        view.add_item(LeverageDropdown(ticker))
         await inter.edit_original_message(embed = em, view=view)
 
 
-    @stock.sub_command()
-    async def marketshare(inter:disnake.AppCmdInter, ticker:str=commands.Param(autocomp = ticker_autocomp)):
-        """📊Returns the % of market share for each exchange with explanations."""
-        exvol = requests.get(url=f"https://cloud.iexapis.com/stable/stock/{ticker}/batch?types=volume&token={YOUR_IEX_CLOUD_KEY}").json()
-        exvolume = exvol['volume']
-
-        trf = exvolume[0]
-        trfmic = trf['mic']
-        trftapeid = trf['tapeId']
-        trfname = trf['venueName']
-        trfvol = trf['volume']
-        trfpercent = round(float(trf['marketPercent'])*100, ndigits=2)
-        trfepoch = int(trf['lastUpdated']/1000)
-        trfupdate = datetime.datetime.fromtimestamp(trfepoch)
-        trfa = round(float(trf['tapeA'])*0.000001, ndigits=2)
-        trfb = round(float(trf['tapeB'])*0.000001, ndigits=2)
-        trfc = round(float(trf['tapeC'])*0.000001, ndigits=2)
-
-
-
-
-
-
-
-        xngs = exvolume[1]
-        xngsmic = xngs['mic']
-        xngstapeid = xngs['tapeId']
-        xngsname = xngs['venueName']
-        xngsvol = xngs['volume']
-        xngspercent = round(float(xngs['marketPercent'])*100, ndigits=2)
-        xngsepoch = int(xngs['lastUpdated']/1000)
-        xngsupdate = datetime.datetime.fromtimestamp(xngsepoch)
-        xngsa = round(float(xngs['tapeA'])*0.000001, ndigits=2)
-        xngsb = round(float(xngs['tapeB'])*0.000001, ndigits=2)
-        xngsc = round(float(xngs['tapeC'])*0.000001, ndigits=2)
-
-        xnys = exvolume[2]
-        xnysmic = xnys['mic']
-        xnystapeid = xnys['tapeId']
-        xnysname = xnys['venueName']
-        xnysvol = xnys['volume']
-        xnyspercent = round(float(xnys['marketPercent'])*100, ndigits=2)
-        xnysepoch = int(xnys['lastUpdated']/1000)
-        xnysupdate = datetime.datetime.fromtimestamp(xnysepoch)
-        xnysa = round(float(xnys['tapeA'])*0.000001, ndigits=2)
-        xnysb = round(float(xnys['tapeB'])*0.000001, ndigits=2)
-        xnysc = round(float(xnys['tapeC'])*0.000001, ndigits=2)
-
-        arcx = exvolume[3]
-        arcxmic = arcx['mic']
-        arcxtapeid = arcx['tapeId']
-        arcxname = arcx['venueName']
-        arcxvol = arcx['volume']
-        arcxpercent = round(float(arcx['marketPercent'])*100, ndigits=2)
-        arcxepoch = int(arcx['lastUpdated']/1000)
-        arcxupdate = datetime.datetime.fromtimestamp(arcxepoch)
-        arcxa = round(float(arcx['tapeA'])*0.000001, ndigits=2)
-        arcxb = round(float(arcx['tapeB'])*0.000001, ndigits=2)
-        arcxc = round(float(arcx['tapeC'])*0.000001, ndigits=2)
-
-        edgx = exvolume[4]
-        edgxmic = edgx['mic']
-        edgxtapeid = edgx['tapeId']
-        edgxname = edgx['venueName']
-        edgxvol = edgx['volume']
-        edgxpercent = round(float(edgx['marketPercent'])*100, ndigits=2)
-        edgxepoch = int(edgx['lastUpdated']/1000)
-        edgxupdate = datetime.datetime.fromtimestamp(edgxepoch)
-        edgxa = round(float(edgx['tapeA'])*0.000001, ndigits=2)
-        edgxb = round(float(edgx['tapeB'])*0.000001, ndigits=2)
-        edgxc = round(float(edgx['tapeC'])*0.000001, ndigits=2)
-
-
-        bats = exvolume[5]
-        batsmic = bats['mic']
-        batstapeid = bats['tapeId']
-        batsname = bats['venueName']
-        batsvol = bats['volume']
-        batspercent = round(float(bats['marketPercent'])*100, ndigits=2)
-        batsepoch = int(bats['lastUpdated']/1000)
-        batsupdate = datetime.datetime.fromtimestamp(batsepoch)
-        batsa = round(float(bats['tapeA'])*0.000001, ndigits=2)
-        batsb = round(float(bats['tapeB'])*0.000001, ndigits=2)
-        batsc = round(float(bats['tapeC'])*0.000001, ndigits=2)
-
-        memx = exvolume[6]
-        memxmic = memx['mic']
-        memxtapeid = memx['tapeId']
-        memxname = memx['venueName']
-        memxvol = memx['volume']
-        memxpercent = round(float(memx['marketPercent'])*100, ndigits=2)
-        memxepoch = int(memx['lastUpdated']/1000)
-        memxupdate = datetime.datetime.fromtimestamp(memxepoch)
-        memxa = round(float(memx['tapeA'])*0.000001, ndigits=2)
-        memxb = round(float(memx['tapeB'])*0.000001, ndigits=2)
-        memxc = round(float(memx['tapeC'])*0.000001, ndigits=2)
-
-        iexg = exvolume[7]
-        iexgmic = iexg['mic']
-        iexgtapeid = iexg['tapeId']
-        iexgname = iexg['venueName']
-        iexgvol = iexg['volume']
-        iexgpercent = round(float(iexg['marketPercent'])*100, ndigits=2)
-        iexgepoch = int(iexg['lastUpdated']/1000)
-        iexgupdate = datetime.datetime.fromtimestamp(iexgepoch)
-        iexga = round(float(iexg['tapeA'])*0.000001, ndigits=2)
-        iexgb = round(float(iexg['tapeB'])*0.000001, ndigits=2)
-        iexgc = round(float(iexg['tapeC'])*0.000001, ndigits=2)
-
-        edga = exvolume[8]
-        edgamic = edga['mic']
-        edgatapeid = edga['tapeId']
-        edganame = edga['venueName']
-        edgavol = edga['volume']
-        edgapercent = round(float(edga['marketPercent'])*100, ndigits=2)
-        edgaepoch = int(edga['lastUpdated']/1000)
-        edgaupdate = datetime.datetime.fromtimestamp(edgaepoch)
-        edgaa = round(float(edga['tapeA'])*0.000001, ndigits=2)
-        edgab = round(float(edga['tapeB'])*0.000001, ndigits=2)
-        edgac = round(float(edga['tapeC'])*0.000001, ndigits=2)
-
-        baty = exvolume[9]
-        batymic = baty['mic']
-        batytapeid = baty['tapeId']
-        batyname = baty['venueName']
-        batyvol = baty['volume']
-        batypercent = round(float(baty['marketPercent'])*100, ndigits=2)
-        batyepoch = int(baty['lastUpdated']/1000)
-        batyupdate = datetime.datetime.fromtimestamp(batyepoch)
-        batya = round(float(baty['tapeA'])*0.000001, ndigits=2)
-        batyb = round(float(baty['tapeB'])*0.000001, ndigits=2)
-        batyc = round(float(baty['tapeC'])*0.000001, ndigits=2)
-
-        eprl = exvolume[10]
-        eprlmic = eprl['mic']
-        eprltapeid = eprl['tapeId']
-        eprlname = eprl['venueName']
-        eprlvol = eprl['volume']
-        eprlpercent = round(float(eprl['marketPercent'])*100, ndigits=2)
-        eprlepoch = int(eprl['lastUpdated']/1000)
-        eprlupdate = datetime.datetime.fromtimestamp(eprlepoch)
-        eprla = round(float(eprl['tapeA'])*0.000001, ndigits=2)
-        eprlb = round(float(eprl['tapeB'])*0.000001, ndigits=2)
-        eprlc = round(float(eprl['tapeC'])*0.000001, ndigits=2)
-
-        xphl = exvolume[11]
-        xphlmic = xphl['mic']
-        xphltapeid = xphl['tapeId']
-        xphlname = xphl['venueName']
-        xphlvol = xphl['volume']
-        xphlpercent = round(float(xphl['marketPercent'])*100, ndigits=2)
-        xphlepoch = int(xphl['lastUpdated']/1000)
-        xphlupdate = datetime.datetime.fromtimestamp(xphlepoch)
-        xphla = round(float(xphl['tapeA'])*0.000001, ndigits=2)
-        xphlb = round(float(xphl['tapeB'])*0.000001, ndigits=2)
-        xphlc = round(float(xphl['tapeC'])*0.000001, ndigits=2)
-
-        xcix = exvolume[12]
-        xcixmic = xcix['mic']
-        xcixtapeid = xcix['tapeId']
-        xcixname = xcix['venueName']
-        xcixvol = xcix['volume']
-        xcixpercent = round(float(xcix['marketPercent'])*100, ndigits=2)
-        xcixepoch = int(xcix['lastUpdated']/1000)
-        xcixupdate = datetime.datetime.fromtimestamp(xcixepoch)
-        xcixa = round(float(xcix['tapeA'])*0.000001, ndigits=2)
-        xcixb = round(float(xcix['tapeB'])*0.000001, ndigits=2)
-        xcixc = round(float(xcix['tapeC'])*0.000001, ndigits=2)
-
-        xbos = exvolume[13]
-        xbosmic = xbos['mic']
-        xbostapeid = xbos['tapeId']
-        xbosname = xbos['venueName']
-        xbosvol = xbos['volume']
-        xbospercent = round(float(xbos['marketPercent'])*100, ndigits=2)
-        xbosepoch = int(xbos['lastUpdated']/1000)
-        xbosupdate = datetime.datetime.fromtimestamp(xbosepoch)
-        xbosa = round(float(xbos['tapeA'])*0.000001, ndigits=2)
-        xbosb = round(float(xbos['tapeB'])*0.000001, ndigits=2)
-        xbosc = round(float(xbos['tapeC'])*0.000001, ndigits=2)
-
-        xchi = exvolume[14]
-        xchimic = xchi['mic']
-        xchitapeid = xchi['tapeId']
-        xchiname = xchi['venueName']
-        xchivol = xchi['volume']
-        xchipercent = round(float(xchi['marketPercent'])*100, ndigits=2)
-        xchiepoch = int(xchi['lastUpdated']/1000)
-        xchiupdate = datetime.datetime.fromtimestamp(xchiepoch)
-        xchia = round(float(xchi['tapeA'])*0.000001, ndigits=2)
-        xchib = round(float(xchi['tapeB'])*0.000001, ndigits=2)
-        xchic = round(float(xchi['tapeC'])*0.000001, ndigits=2)
-
-        xase = exvolume[15]
-        xasemic = xase['mic']
-        xasetapeid = xase['tapeId']
-        xasename = xase['venueName']
-        xasevol = xase['volume']
-        xasepercent = round(float(xase['marketPercent'])*100, ndigits=2)
-        xaseepoch = int(xase['lastUpdated']/1000)
-        xaseupdate = datetime.datetime.fromtimestamp(xaseepoch)
-        xasea = round(float(xase['tapeA'])*0.000001, ndigits=2)
-        xaseb = round(float(xase['tapeB'])*0.000001, ndigits=2)
-        xasec = round(float(xase['tapeC'])*0.000001, ndigits=2)
-
-        ltse = exvolume[16]
-        ltsemic = ltse['mic']
-        ltsetapeid = ltse['tapeId']
-        ltsename = ltse['venueName']
-        ltsevol = ltse['volume']
-        ltsepercent = round(float(ltse['marketPercent'])*100, ndigits=2)
-        ltseepoch = int(ltse['lastUpdated']/1000)
-        ltseupdate = datetime.datetime.fromtimestamp(ltseepoch)
-        ltsea = round(float(ltse['tapeA'])*0.000001, ndigits=2)
-        ltseb = round(float(ltse['tapeB'])*0.000001, ndigits=2)
-        ltsec = round(float(ltse['tapeC'])*0.000001, ndigits=2)
-
-        cbsx = exvolume[17]
-        cbsxmic = cbsx['mic']
-        cbsxtapeid = cbsx['tapeId']
-        cbsxname = cbsx['venueName']
-        cbsxvol = cbsx['volume']
-        cbsxpercent = round(float(cbsx['marketPercent'])*100, ndigits=2)
-        cbsxepoch = int(cbsx['lastUpdated']/1000)
-        cbsxupdate = datetime.datetime.fromtimestamp(cbsxepoch)
-        cbsxa = round(float(cbsx['tapeA'])*0.000001, ndigits=2)
-        cbsxb = round(float(cbsx['tapeB'])*0.000001, ndigits=2)
-        cbsxc = round(float(cbsx['tapeC'])*0.000001, ndigits=2)
-        view=disnake.ui.View()
-        select = disnake.ui.Select(
-            placeholder ="🇪 🇽 🇨 🇭 🇦 🇳 🇬 🇪 🇸",
-            min_values=1,
-            max_values=1,
-            custom_id="exchangesel",
-            options=[ 
-                disnake.SelectOption(label=f"{trfname} = {trfpercent}% market share", description=f"Tape 🇦: {trfa} m | Tape🅱️: {trfb} m | Tape 🇨: {trfc} m"),
-                disnake.SelectOption(label=f"{xngsname} = {xngspercent}% market share", description=f"Tape 🇦: {xngsa} m | Tape🅱️: {xngsb} m | Tape 🇨: {xngsc} m"),
-                disnake.SelectOption(label=f"{xnysname} = {xnyspercent}% market share", description=f"Tape 🇦: {xnysa} m | Tape🅱️: {xnysb} m | Tape 🇨: {xnysc} m"),
-                disnake.SelectOption(label=f"{arcxname} = {arcxpercent}% market share", description=f"Tape 🇦: {arcxa} m | Tape🅱️: {arcxb} m | Tape 🇨: {arcxc} m"),
-                disnake.SelectOption(label=f"{edgxname} = {edgxpercent}% market share", description=f"Tape 🇦: {edgxa} m | Tape🅱️: {edgxb} m | Tape 🇨: {edgxc} m"),
-                disnake.SelectOption(label=f"{batsname} = {batspercent}% market share", description=f"Tape 🇦: {batsa} m | Tape🅱️: {batsb} m | Tape 🇨: {batsc} m"),
-                disnake.SelectOption(label=f"{memxname} = {memxpercent}% market share", description=f"Tape 🇦: {memxa} m | Tape🅱️: {memxb} m | Tape 🇨: {memxc} m"),
-                disnake.SelectOption(label=f"{edganame} = {edgapercent}% market share", description=f"Tape 🇦: {edgaa} m | Tape🅱️: {edgab} m | Tape 🇨: {edgac} m"),
-                disnake.SelectOption(label=f"{batyname} = {batypercent}% market share", description=f"Tape 🇦: {batya} m | Tape🅱️: {batyb} m | Tape 🇨: {batyc} m"),
-                disnake.SelectOption(label=f"{eprlname} = {eprlpercent}% market share", description=f"Tape 🇦: {eprla} m | Tape🅱️: {eprlb} m | Tape 🇨: {eprlc} m"),
-                disnake.SelectOption(label=f"{xphlname} = {xphlpercent}% market share", description=f"Tape 🇦: {xphla} m | Tape🅱️: {xphlb} m | Tape 🇨: {xphlc} m"),
-                disnake.SelectOption(label=f"{xcixname} = {xcixpercent}% market share", description=f"Tape 🇦: {xcixa} m | Tape🅱️: {xcixb} m | Tape 🇨: {xcixc} m"),
-                disnake.SelectOption(label=f"{xbosname} = {xbospercent}% market share", description=f"Tape 🇦: {xbosa} m | Tape🅱️: {xbosb} m | Tape 🇨: {xbosc} m"),
-                disnake.SelectOption(label=f"{xchiname} = {xchipercent}% market share", description=f"Tape 🇦: {xchia} m | Tape🅱️: {xchib} m | Tape 🇨: {xchic} m"),
-                disnake.SelectOption(label=f"{xasename} = {xasepercent}% market share", description=f"Tape 🇦: {xasea} m | Tape🅱️: {xaseb} m | Tape 🇨: {xasec} m"),
-                disnake.SelectOption(label=f"{cbsxname} = {cbsxpercent}% market share", description=f"Tape 🇦: {cbsxa} m | Tape🅱️: {cbsxb} m | Tape 🇨: {cbsxc} m"),
-                disnake.SelectOption(label=f"{ltsename} = {ltsepercent}% market share", description=f"Tape 🇦: {ltsea} m | Tape🅱️: {ltseb} m | Tape 🇨: {ltsec} m"),])
-        button = disnake.ui.Button(label="Learn About Market Volume", style=disnake.ButtonStyle.url, url="https://www.ctaplan.com/publicdocs/data/Market_Data_Vendor_Guide.pdf")
-        view.add_item(select)
-        view.add_item(button)
-        em = disnake.Embed(title=f"Market Share by Venue for {ticker}", description="```py\nThis command is taken directly from the Securities Information Processor feed, and dessiminates the paired volume for all three tapes: Tape A, Tape B, and Tape C.```", color=disnake.Colour.dark_gold(), url="https://www.ctaplan.com/index")
-        em.add_field(name="Tape 🇦:", value="```py\nTape 🇦 is Trade and quote information for ALL NYSE listed securities. Also referred to as Tape A.```")
-        em.add_field(name="Tape 🅱️:", value="```py\nTape 🅱️ is Trade and quote information for securities listed on BATS, NYSE Arca, NYSE MKT (f/k/aAmex) and other regional exchanges. For list of regional exchanges.```")
-        em.add_field(name="Tape C:", value="```py\nTape C represents NASDAQ-listed stocks and it also traded on NYSE.```")
-        await inter.send(embed=em,view=view)
 
     @stock.sub_command()
     async def ipo(inter:disnake.AppCmdInter):
-        """A list of upcoming and recent IPOs as per Stocksera."""
-        await inter.response.defer(with_message=True, ephemeral=True)
+        """📊A list of upcoming and recent IPOs as per Stocksera."""
+        await inter.response.defer(with_message=True, ephemeral=False)
         data = client.ipo_calendar()[0:20]
         items = "\n\n".join(f"{i['Date']} {i['Symbol']} {i['Name']} Price: ${i['Expected Price']} Status: {i['Status']} #ofShares: {i['Number Shares']}" for i in data)
         em = disnake.Embed(title="Recent and Upcoming IPOs", description=f"```py\n{items}```", color=disnake.Colour.dark_gold())
         await inter.edit_original_message(embed = em)
 
-    @stock.sub_command()
-    async def criminals(inter:disnake.AppCmdInter, ticker: str=commands.Param(autocomplete=ticker_autocomp)):
-        """Most recent insider trading information for a ticker."""
-        await inter.response.defer(with_message=True, ephemeral=True)
-        N_DAYS_AGO = 30
-        today = date.today()
-        n_days_ago = today - timedelta(days=N_DAYS_AGO)
-        r = finnhub_client.stock_insider_transactions(ticker, f"{n_days_ago}", f"{today}")
-        data = r['data']
-        symbol = [i['symbol'] for i in data]
-        name = [i['name'] for i in data]
-        share = [i['share'] for i in data]
-        change = [i['change'] for i in data]
-        filingdate = [i['filingDate'] for i in data]
-        trans = [i['transactionDate'] for i in data]
-        price = [i['transactionPrice'] for i in data]
-
-        items = "\n\n".join(f"{i['name']} | Shares: {i['share']}\nChange: {i['change']}\nDate FIled: '{i['filingDate']}'\nTransaction Date: '{i['transactionDate']}'\nTransaction Price: ${i['transactionPrice']}" for i in data)
-        em = disnake.Embed(title=f"Criminals. Insider Transactions for {ticker}", description=f"```py\n{items}```", color=disnake.Colour.dark_purple())
-
-
-        await inter.edit_original_message(embed=em)
 
 
 
