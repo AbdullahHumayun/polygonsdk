@@ -80,7 +80,10 @@ async def earnings():
     data = await earnings_calendar_endpoint()
     return data
 
+@app.route('/test', methods=['GET', 'POST'])
+async def test():
 
+    return render_template('test_template.html')
 
 @app.route('/api/stock_data/<string:ticker>', methods=['GET', 'POST'])
 async def stock_data(ticker):

@@ -6,11 +6,11 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from cogs.analysis import Analysis
 import pandas as pd
 from cogs.ss import SS
-from _discord.views.mainview import MainView
+from views.mainview import MainView
 from cogs.learn import Learn
 from cogs.fmp import FMP
 import disnake
-from _discord.views.menus import PageSelect
+from menus.embedmenus import PageSelect
 from disnake.ext import commands
 from disnake import Option, OptionType
 from autocomp import command_autocomp, ticker_autocomp
@@ -19,7 +19,7 @@ import aiohttp
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.polygon_sdk.universal_snapshot import UniversalOptionSnapshot,UniversalSnapshot,CallsOrPuts
 from sdks.fudstop_sdk.fudstop_sdk import fudstopSDK
-from _discord.views.menus import AlertMenus
+from menus.embedmenus import AlertMenus
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from cogs.skews import Skew
 

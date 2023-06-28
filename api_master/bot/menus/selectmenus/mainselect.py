@@ -1,43 +1,103 @@
-import sys
-import os
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-
-
-
 import disnake
-from ..selectmenus.mainselect import FTDShortSelect
-import requests
-from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-from sdks.webull_sdk.webull_sdk import AsyncWebullSDK, thresholds
-from sdks.helpers.helpers import get_checkmark, get_date_string
-from examples.polygon_get_latest_ticker_data import get_all_ticker_data
-from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+import pandas as pd
 from sdks.webull_sdk.forecast import ForecastEvaluator
-
-from typing import List
-from _discord import emojis
+import openai
+from sdks.polygon_sdk.get_all_options import fetch_all_option_contracts
+from tabulate import tabulate
+from cfg import today_str, YOUR_OPENAI_KEY, YOUR_API_KEY
+from datetime import datetime
+from sdks.webull_sdk.webull_sdk import thresholds
+from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+from sdks.helpers.helpers import get_checkmark
 from bs4 import BeautifulSoup
+from menus.embedmenus import AlertMenus
+import pandas as pd
+from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+import disnake
+from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
+webull = AsyncWebullSDK()
+import requests
+import disnake
+import requests
+from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
+from cfg import today_str
+from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from datetime import datetime
 import asyncio
-import pandas as pd
-from sdks.fudstop_sdk.fudstop_sdk import fudstopSDK
-from tabulate import tabulate
-import openai
-from cfg import YOUR_OPENAI_KEY, today_str
+
 today = datetime.today()
 from cfg import YOUR_API_KEY
-polygon = AsyncPolygonSDK(YOUR_API_KEY)
-opts = PolygonOptionsSDK(YOUR_API_KEY)
+from sdks.fudstop_sdk.fudstop_sdk import fudstopSDK
 fudstop = fudstopSDK()
+polygon = AsyncPolygonSDK(YOUR_API_KEY)
+from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+polyoptions = PolygonOptionsSDK(YOUR_API_KEY)
 webull = AsyncWebullSDK()
+import disnake
+import asyncio
+
+
+def find_gaps(o, h, l, c, t):
+    gap_ups = []
+    gap_downs = []
+
+    for i in range(1, len(o)):
+        if o[i] > c[i-1]:  # Check if the opening price is greater than the previous high price
+            gap_ups.append(i)
+        elif o[i] < c[i-1]:  # Check if the opening price is less than the previous low price
+            gap_downs.append(i)
+
+    gap_ups_with_timestamps = [(t[i], i) for i in gap_ups]
+    gap_downs_with_timestamps = [(t[i], i) for i in gap_downs]
+
+    return gap_ups_with_timestamps, gap_downs_with_timestamps
+
+
+def find_gap_price_range(o, h, l, c, t, candle, filled=None):
+    if o[candle] > h[candle - 1]:
+        direction = "up"
+        gap_low = l[candle - 1]
+        gap_high = h[candle]
+    elif o[candle] < l[candle - 1]:
+        direction = "down"
+        gap_low = l[candle]
+        gap_high = h[candle - 1]
+    else:
+        direction = "unknown"
+        gap_low = None
+        gap_high = None
+
+    if filled is None:
+        return gap_low, gap_high
+    else:
+        fill_index = None
+        for i in range(candle + 1, len(c)):
+            if direction == "up":
+                if l[i] <= gap_high and h[i] >= gap_low:
+                    fill_index = i
+                    break
+            elif direction == "down":
+                if h[i] >= gap_high and l[i] <= gap_low:
+                    fill_index = i
+                    break
+
+        if filled is True:
+            if fill_index is not None:
+                return t[fill_index]
+            else:
+                return None
+        else:
+            if fill_index is not None:
+                return t[fill_index]
+            else:
+                return None
+
+
 class MainView(disnake.ui.View):
     def __init__(self, bot, ticker):
         self.ticker = ticker
         self.bot = bot
         super().__init__(timeout=None)
- 
         self.add_item(FTDShortSelect(bot, ticker, self))
 
 
@@ -60,7 +120,7 @@ class MainView(disnake.ui.View):
         prompt = "Start a conversation with GPT-4"
         # Retrieve the conversation history from the dictionary
         history = conversation_history.get(conversation_id, [])
-        await interaction.send(f'> {emojis.redline} **GPT-4 Initializing...** {emojis.redline}')
+        await interaction.send(f'> **GPT-4 Initializing...**')
         while True:
             # Add the new prompt to the conversation history
             history.append({"role": "user", "content": prompt})
@@ -82,7 +142,7 @@ class MainView(disnake.ui.View):
             # Store the updated conversation history in the dictionary
             conversation_history[conversation_id] = history
 
-            embed = disnake.Embed(title=f"{emojis.redline} GPT4 {emojis.redline}", description=f"```py\n{message_content}```")
+            embed = disnake.Embed(title=f" GPT4 ", description=f"```py\n{message_content}```")
             embed.add_field(name=f"YOUR PROMPT:", value=f"```py\nYou asked: {prompt}```")
 
             # Send the response to the user
@@ -107,7 +167,7 @@ class MainView(disnake.ui.View):
             prompt = user_message.content
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.blurple, custom_id="fwewe", label="GPT4")
+    @disnake.ui.button(style=disnake.ButtonStyle.blurple, custom_id="gpt4", label="GPT4")
     async def getplays(self, button: disnake.ui.Button, interaction: disnake.ApplicationCommandInteraction):
         # Disable the button and update the message
         button.disabled = True
@@ -119,7 +179,7 @@ class MainView(disnake.ui.View):
         button.disabled = False
         await interaction.response.edit_message(view=self)
 
-    @disnake.ui.button(style=disnake.ButtonStyle.green, emoji=f"{emojis.redline}", label="Core Calls", row=4, custom_id="corecalls")
+    @disnake.ui.button(style=disnake.ButtonStyle.green,label="Core Calls", row=4, custom_id="corecalls")
     async def coreputs(self, button: disnake.ui.Button, interaction: disnake.ApplicationCommandInteraction):
         await interaction.response.defer()
         url="https://www.alphaquery.com/service/run-screen?a=59151c73bd4421857d85cb49d1f3e836a248e6cf930c2a36693d15232a4dd38c&screen=[{%22columnName%22:%22sector%22,%22operator%22:%22is%20not%22,%22value%22:%22Healthcare%22,%22valueType%22:%22%22,%22unit%22:%22%22},{%22columnName%22:%22days_since_report_date_qr0%22,%22operator%22:%22is%20less%20than%22,%22value%22:%229%22,%22valueType%22:%22number%22,%22unit%22:%22%22},{%22columnName%22:%22close_price%22,%22operator%22:%22is%20greater%20than%22,%22value%22:%225%22,%22valueType%22:%22number%22,%22unit%22:%22%22},{%22columnName%22:%22rsi_14%22,%22operator%22:%22is%20less%20than%22,%22value%22:%2230%22,%22valueType%22:%22number%22,%22unit%22:%22%22}]"
@@ -142,9 +202,9 @@ class MainView(disnake.ui.View):
         df = pd.DataFrame(data, columns=['Symb', 'Sector', 'RSI', 'Days Since ER'])
         table = tabulate(df, headers='', tablefmt='fancy')
         view = MainView(self.bot,self.ticker)
-        embed = disnake.Embed(title=f"{emojis.redcheck} Core Calls {emojis.redcheck}", description=f"\n**{emojis.redcheck} Symbol       {emojis.redcheck} Sector       {emojis.redcheck} RSI          {emojis.redline} Days Since ER**\n```{table}```", color=disnake.Colour.dark_green())
+        embed = disnake.Embed(title=f"Core Calls", description=f"\n** Symbol        Sector        RSI           Days Since ER**\n```{table}```", color=disnake.Colour.dark_green())
         await interaction.edit_original_message(embed=embed)
-    @disnake.ui.button(style=disnake.ButtonStyle.red, emoji=f"{emojis.greencheck}", label=f"Core Puts", row=4, custom_id="coreputs")
+    @disnake.ui.button(style=disnake.ButtonStyle.red, label=f"Core Puts", row=4, custom_id="coreputs")
     async def corecalls(self, button: disnake.ui.Button, interaction: disnake.ApplicationCommandInteraction):
         """Returns core logic results for calls. Make sure to check for criteria"""
         await interaction.response.defer()
@@ -168,13 +228,13 @@ class MainView(disnake.ui.View):
 
         table = tabulate(df, headers='', tablefmt='fancy')
         view = MainView(self.bot,self.ticker)
-        embed = disnake.Embed(title=f"{emojis.greencheck} Core Puts {emojis.greencheck}", description=f"\n**{emojis.greencheck} Symbol {emojis.greencheck} Sector{emojis.greencheck} RSI {emojis.greencheck} Days Since ER**\n```{table}```", color=disnake.Colour.dark_red())
+        embed = disnake.Embed(title=f" Core Puts ", description=f"\n** Symbol        Sector        RSI           Days Since ER**\n```{table}```", color=disnake.Colour.dark_red())
         await interaction.edit_original_message(embed=embed, view=view)
 
 
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.red, custom_id="indices", emoji=f"{emojis.redline}", label="All Indices", row=3)
+    @disnake.ui.button(style=disnake.ButtonStyle.red, custom_id="indices",label="All Indices", row=3)
     async def indices(self, button: disnake.ui.Button, interaction: disnake.ApplicationCommandInteraction):
         """All indices data"""
         indices = await polygon.get_all_indices()
@@ -183,23 +243,23 @@ class MainView(disnake.ui.View):
         await interaction.send(file=disnake.File(file))
 
 
-    @disnake.ui.button(style=disnake.ButtonStyle.red, custom_id="tickers", emoji=f"{emojis.redline}", label="All Stocks", row=3)
+    @disnake.ui.button(style=disnake.ButtonStyle.red, custom_id="tickers",label="All Stocks", row=3)
     async def stocks(self, button: disnake.ui.Button, interaction: disnake.ApplicationCommandInteraction):
         """All indices data"""
         await interaction.response.defer(with_message=True)
-        await interaction.followup.send(f'> {emojis.redline} **Gathering all stock snapshots...** {emojis.redline}')
-        indices = await polygon.get()
+        await interaction.followup.send(f'> **Gathering all stock snapshots...**')
+        indices = await polygon.get_all_snapshots()
         df = pd.DataFrame(indices)
         file = 'files\stocks\snapshots.csv'
         
         await interaction.edit_original_message(file=disnake.File(file))
 
-    @disnake.ui.button(style=disnake.ButtonStyle.red, custom_id="alloptions", emoji=f"{emojis.redline}", row=3, label="All Options")
+    @disnake.ui.button(style=disnake.ButtonStyle.red, custom_id="alloptions", emoji=f"👑", row=3, label="All Options")
     async def alloptions(self, button: disnake.ui.Button, interaction: disnake.ApplicationCommandInteraction):
         await interaction.response.defer(with_message=True)
-        await interaction.followup.send(f'> {emojis.redline} **Fetching all options expiring today...** {emojis.redline}')
-        options_contracts = await opts.fetch_all_option_contracts(expiration_date_gte=today_str, expiration_date_lte="2023-09-01")
-        x = await opts.get_snapshots(options_contracts,output_file="all_options.csv")
+        await interaction.followup.send(f'> **Fetching all options expiring today...**')
+        options_contracts = await fetch_all_option_contracts(expiration_date_gte=today_str, expiration_date_lte=today_str)
+        x = await polyoptions.get_snapshots(options_contracts,output_file="all_options.csv")
         df = pd.DataFrame(x)
         
         # for i, row in df.iterrows():
@@ -207,21 +267,14 @@ class MainView(disnake.ui.View):
         await interaction.edit_original_message(file=disnake.File('all_options.csv'))
 
 
-    # @disnake.ui.button(style=disnake.ButtonStyle.blurple, custom_id="earningcal", emoji=f"{calendar}", label="Earnings Screener", row=0)
-    # async def screener(self, button: disnake.ui.Button, interaction: disnake.ApplicationCommandInteraction):
-    #     """The Earnings Screener"""
-    #     embed=disnake.Embed(title=f"Earnings Screener", description=f"Select Your Earnings Info", color=disnake.Colour.random())
-
-    #     await interaction.response.edit_message(embed=embed,view=EarningsScreenerView(self.bot, self.ticker))
 
 
 
-
-    @disnake.ui.button(style=disnake.ButtonStyle.green,row=0, custom_id="financescore", emoji=f"{emojis.earnings}", label="Financial Score")
+    @disnake.ui.button(style=disnake.ButtonStyle.green,row=0, custom_id="financescore", label="Financial Score")
     async def financialscore(self, button: disnake.ui.Button, interaction: disnake.ApplicationCommandInteraction):
         """The Earnings Screener"""
         await interaction.response.defer()
-        await interaction.send(f'> {emojis.greencheck} Gathering financial score..** {emojis.greencheck}', delete_after=4)
+        await interaction.send(f'> Gathering financial score..**', delete_after=4)
         self.tik, symbol = await webull.fetch_ticker_id(self.ticker)
 
         analysts = await webull.get_analysis_data(self.ticker)
@@ -280,7 +333,7 @@ class MainView(disnake.ui.View):
 
         
         embed = disnake.Embed(title=f"Financial Score", description=f"{output.format(ticker=self.ticker)}", color=color)
-        embed2 = disnake.Embed(title=f"{emojis.eye} {emojis.eye}", description=f"Viewing Additional Data for {self.ticker}", color=disnake.Colour.random())
+        embed2 = disnake.Embed(title=f"Additional Data:", description=f"Viewing Additional Data for {self.ticker}", color=disnake.Colour.random())
         embed2.set_thumbnail(await polygon.get_polygon_logo(symbol))
         embed2.set_footer(text=f"Click the arrow to return to the main page.")
         embed.set_thumbnail(await polygon.get_polygon_logo(symbol))
@@ -295,21 +348,21 @@ class MainView(disnake.ui.View):
 
         view = disnake.ui.View(timeout=None)
         view2 = disnake.ui.View(timeout=None)
-        eps_quarterly = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"EPS quarterly", emoji=f"{emojis.movingchart}", row=4)
-        eps_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/EPS_quarterly.png'), ephemeral=True)
+        eps_quarterly = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"EPS quarterly", row=4)
+        eps_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/EPS_quarterly.png'), ephemeral=False)
         view.add_item(eps_quarterly)
 
-        revenue_quarterly = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"Revenue Quarterly", emoji=f"{emojis.movingchart}", row=4)
-        revenue_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/Revenue_quarterly.png'), ephemeral=True)
+        revenue_quarterly = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"Revenue Quarterly", row=4)
+        revenue_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/Revenue_quarterly.png'), ephemeral=False)
         view.add_item(revenue_quarterly)
 
-        roa_quarterly = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"ROA - Quarterly", emoji=f"{emojis.movingchart}", row=4)
-        roa_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/ROA_quarterly.png'), ephemeral=True)
+        roa_quarterly = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"ROA - Quarterly", row=4)
+        roa_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/ROA_quarterly.png'), ephemeral=False)
         view.add_item(roa_quarterly)
 
 
-        roe_quarterly = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"Return on Investment - Quarterly", emoji=f"{emojis.movingchart}", row=4)
-        roe_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/ROE_quarterly.png'), ephemeral=True)
+        roe_quarterly = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"Return on Investment - Quarterly", row=4)
+        roe_quarterly.callback = lambda interaction: interaction.send(embed=embed, file=disnake.File('files/financials/ROE_quarterly.png'), ephemeral=False)
         view.add_item(roe_quarterly)
 
 
@@ -320,33 +373,66 @@ class MainView(disnake.ui.View):
 
 
 
-    # @disnake.ui.button(style=disnake.ButtonStyle.grey, label=f"Company Info", emoji=f"{question}", custom_id="Cmpinfo")    
-    # async def companyinfo(self, button: disnake.ui.Button, interaction: disnake.ApplicationCommandInteraction):
-    #     info = await polygon.company_information(self.ticker)
-    #     desc = info.description
-    #     name = info.name
-    #     list_date = info.list_date
-    #     website = info.homepage_url
-    #     embed = disnake.Embed(title=f"{green_magic} Data Ready {sparkly}", description=f"```py\n**{name}**:\n```py\n{desc}```", color=disnake.Colour.old_blurple())
-    #     embed.add_field(name=f"List Date:", value=f"> **{list_date}**\n\n> Website: **{info.homepage_url}**")
-    #     embed.add_field(name=f"Address:", value=f"> **{info.street}** **{info.city}**, **{info.state}**\n> **{info.phone_number}**")
-    #     embed.add_field(name=f"Primary Exchange:", value=f"> **{info.primary_exchange}**")
-    #     embed.add_field(name=f"Market:", value=f"> **{info.market}**")
-        
-    #     embed.add_field(name=f"Employees & Website:", value=f"> **{info.total_employees}**")
-    #     embed.add_field(name=f"Codes:", value=f"> CIK#: **{info.cik}**")
-    #     embed.add_field(name=f"Industry Code:", value=f"> **{info.sic_code}**\n\n> **{info.sic_description}**")
-    #     embed.add_field(name=f"Market Cap & Shares:", value=f"> **${float(info.market_cap):,}**\n\n> Outstanding: **{float(info.share_class_shares_outstanding):,}**\n> Weighted: **{float(info.weighted_shares_outstanding):,}**", inline=True)
-    #     await interaction.response.edit_message(embed=embed)
+    @disnake.ui.button(style=disnake.ButtonStyle.grey,label=f"Econ Calendar", row=3, custom_id="eoncal1337")
+    async def economic_events(self, button: disnake.ui.Button, interaction: disnake.AppCommandInteraction):
+        df = await webull.economic_events()
+        filename="files/economy/economic_calendar.csv"
+        df.to_csv(filename)
+        embeds=[]
+        for i, row in df.iterrows():
 
-    @disnake.ui.button(style=disnake.ButtonStyle.blurple, label="Change Ticker", emoji=f"{emojis.inof}", row=4, custom_id="changetick")
+            actual = row['Actual']
+            comment =row['Comment']
+            country =row['Country']
+            currency =row['Currency']
+            date =row['Date']
+            time =row['Time']
+            forecast =row['Forecast']
+            importance =row['Importance']
+            indicator =row['Indicator']
+            link =row['Link']
+            period =row['Period']
+            previous =row['Previous']
+            scale =row['Scale']
+            source =row['Source']
+            title =row['Title']
+            unit =row['Unit']
+
+            embed = disnake.Embed(title=f"IMPORTANT Economic Calendar of Events", description=f"> **{comment}**", color=disnake.Colour.dark_orange())
+            
+            embed.add_field(name=f"Name:", value=f">  **{title}** ", inline=False)
+            embed.add_field(name=f"Time:", value=f"> **{time}**")
+            embed.add_field(name=f"Country:", value=f"> **{country}**\n> **{currency}** @ **{unit}**")
+            embed.add_field(name=f"Forecast v Actual:", value=f">  **{forecast}** v. **{actual}**")
+            embed.add_field(name=f"Period:", value=f"> **{period}**")
+            embed.add_field(name=f"Previous:", value=f">  **{previous}**")
+            embed.add_field(name=f"Source:", value=f"> {source}")
+            embed.set_footer(text=f"Implemented by FUDSTOP")
+            embeds.append(embed)
+        view = AlertMenus(embeds)
+        view.add_item(FTDShortSelect(self.bot, self.ticker, self))
+        view.add_item(MainView(self.bot,self.ticker).change_ticker)
+
+
+    
+
+
+
+        button = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"Download Data")
+        button.callback = lambda interaction: interaction.response.send_message(file=disnake.File(filename))
+        view.add_item(button)
+        await interaction.response.edit_message(embed=embeds[0], view=view)
+
+
+
+    @disnake.ui.button(style=disnake.ButtonStyle.blurple, label="Change Ticker", emoji=f"🔀", row=4, custom_id="changetick")
     async def change_ticker(self, button: disnake.ui.Button, interaction: disnake.ApplicationCommandInteraction):
         logo = await polygon.get_polygon_logo(self.ticker)
         # Set up the message and listener to ask for a new ticker
         embed = disnake.Embed(title="Change Ticker", description="Please enter the new ticker symbol in chat:",
                             color=disnake.Colour.random())
         message = await interaction.response.edit_message(embed=embed)
-        message = await interaction.send(f"{emojis.inof} **Type A Ticker** {emojis.inof}", delete_after=5)
+        message = await interaction.send(f"**Type the next ticker.**", delete_after=5)
         messages = await interaction.channel.history(limit=1).flatten()
         origin_message = interaction.message
     
@@ -389,6 +475,9 @@ class MainView(disnake.ui.View):
             optvol=float(totals.optionsVol)
             ydaily=float(totals.yearlydailyavg)
 
+            # Update the OptionSelect and FTDShortSelect dropdown menus
+            option_select = self.get_item('optionselect')
+            option_select.ticker = self.ticker
 
             ftd_short_select = self.get_item('ftdshortselect')
             ftd_short_select.ticker = self.ticker
@@ -397,11 +486,11 @@ class MainView(disnake.ui.View):
             await origin_message.edit(embed=embed, view=self)
 
             embed = disnake.Embed(
-                title=f"{emojis.redline} Data Ready {emojis.redline}",
+                title=f"Data Ready",
                 description=f"```py\nWelcome. Before you look at {self.ticker}'s data - here are the option stats on the day:```",
                 color=disnake.Colour.old_blurple())
             embed.add_field(name=f"Futures Volume:", value=f"> **{futures:,}**")
-            embed.add_field(name=f"Options Volume:", value=f"> {emojis.uparrow} High: **{f2high:,}**\n\n> {emojis.redline} Today: **{optvol:,}**\n\n> {emojis.redline} Low: **{f2low:,}**")
+            embed.add_field(name=f"Options Volume:", value=f"> High: **{f2high:,}**\n\n> Today: **{optvol:,}**\n\n> Low: **{f2low:,}**")
             embed.add_field(name=f"Averages:", value=f"> Monthly-Daily: **{mdaily:,}**\n> Yearly-Dayly: **{ydaily:,}**", inline=True)
             embed.set_thumbnail(logo)
 
@@ -416,41 +505,148 @@ class MainView(disnake.ui.View):
 
 
 
-def send_embeds(symbols):
-    max_embed_description_length = 4096
-
-    current_embed_description = ""
-    embeds = []
-
-    for entry in symbols:
-        formatted_entry = f"{entry} - Report Time: postmarket\n"
-
-        # Check if the current description plus the new entry would exceed the limit
-        if len(current_embed_description) + len(formatted_entry) > max_embed_description_length:
-            embed = disnake.Embed(title="Earnings Tickers", description=f"```py\n{current_embed_description}\n```", color=disnake.Color.random())
-            embeds.append(embed)
-            current_embed_description = ""
-
-        current_embed_description += formatted_entry
-
-    # Create the last embed for remaining data
-    if current_embed_description:
-        embed = disnake.Embed(title="Earnings Tickers", description=f"```py\n{current_embed_description}\n```", color=disnake.Color.random())
-        embeds.append(embed)
-
-    return embeds
 
 
+class FTDShortSelect(disnake.ui.Select):
+    def __init__(self, bot, ticker, main_view: MainView):
+        self.bot=bot
+        self.main_view = main_view
+        self.polygon = AsyncPolygonSDK(YOUR_API_KEY)
+        self.ticker=ticker
+        super().__init__(
+            placeholder=f"🇸 🇹 🇴 🇨 🇰  🇩 🇦 🇹 🇦  ➡️",
+            min_values=1,
+            max_values=1,
+            custom_id=f"ftdshortselect",
+            options= [ 
+                disnake.SelectOption(label=f"View Cost Distribution", value="5", description=f"View the shares profit proportion and cost data."),
+                disnake.SelectOption(label=f"View ETFs with {self.ticker}", value=f"4", description=f"View ETFs exposed to {self.ticker}"),
+            ]
+        )
 
 
-def generate_sectors_url(sectors: List[str]) -> str:
-    sectors_url = ""
-    for sector in sectors:
-        sectors_url += f"&sectors[]={sector}"
-    return sectors_url
+    async def callback(self, interaction: disnake.MessageCommandInteraction):
+        """Each selected option should initialize a command."""
+        print("Callback function started") 
+        self.current_ticker = self.main_view.ticker
+
+        if self.values[0] == "5":
+            cost = await webull.cost_distribution(self.current_ticker)
+            avgcost=[i.avgCost for i in cost]
+            inprotif70end=[i.chip70End for i in cost]
+            inprofit70ratio=[i.chip70Ratio for i in cost]
+            inprofit70start=[i.chip70Start for i in cost]
+            inprofit90end=[i.chip90End for i in cost]
+            inprofit90ratio=[i.chip90Ratio for i in cost]
+            inprofit90start=[i.chip90Start for i in cost]
+            closeprice=[i.close for i in cost]
+            closeprofitratio=[i.closeProfitRatio for i in cost]
+            distributions=[i.distributions for i in cost]
+            totalshares=[i.totalShares for i in cost]
+
+            data = { 
+                'Close Price': closeprice,
+                'Percent Profiting': closeprofitratio,
+                'Average Cost': avgcost,
+                'In Profit 70% Start Price': inprofit70start,
+                'In Profit 70% End Price': inprotif70end,
+                'In Profit 70% Ratio': inprofit70ratio,
+                'In Profit 90% Start Price': inprofit90start,
+                'In Profit 90% End Price': inprofit90end,
+                'In Profit 90% Ratio': inprofit90ratio,
+                'Total Shares': totalshares, 
+            }
 
 
+            df = pd.DataFrame(data)
+            filename = f'files/stocks/cost/{self.current_ticker}_cost.csv'
+            df.to_csv(filename)
+            embeds = []
+            for i,row in df.iterrows():
+                close_price = row['Close Price']
+                pctprofit = row['Percent Profiting']
+                avg_cost = row['Average Cost']
+                inprofitstart70 = row['In Profit 70% Start Price']
+                inprofitend70 = row['In Profit 70% End Price']
+                inprofitratio70 = row['In Profit 70% Ratio']
+                inprofitstart90 = row['In Profit 90% Start Price']
+                inprofitend90 = row['In Profit 90% End Price']
+                inprofitratio90 = row['In Profit 90% Ratio']
+                total_shares = row['Total Shares']
+                embed = disnake.Embed(title=f"Cost Distribution Analysis for {self.current_ticker}", description=f"```py\nCurrently viewing the % shares proportioned in profit as well as average cost.```")
+                embed.add_field(name=f"Close Price:", value=f"> **${close_price}**")
+                embed.add_field(name=f"70% Profit Proportion:", value=f">  Start Price: **${inprofitstart70}**\n>  End Price: **${inprofitend70}**\n> Ratio: **{round(float(inprofitratio70)*100,2)}%**")
+                embed.add_field(name=f"90% Profit Proportion:", value=f">  Start Price: **${inprofit90start}**\n>  End Price: **${inprofitend90}**\n> Ratio: **{round(float(inprofitratio90)*100,2)}%**")
+                embed.add_field(name=f"Average Price & Percent Profiting:", value=f"> **${avg_cost}**\n> **${round(float(pctprofit)*100,2)}%**")
+                embed.add_field(name=f"Total Shares:", value=f"> **{float(total_shares):,}**")
+                embeds.append(embed)
+            view = AlertMenus(embeds).add_item(FTDShortSelect(self.bot, self.current_ticker, self.main_view))
+            df.to_csv(filename)
+            button = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"Download ETF Holdings")
+            button.callback = lambda interaction: interaction.response.send_message(file=disnake.File(filename))
+            view.add_item(button)
+            view.add_item(MainView(self.bot,self.ticker).change_ticker)                
+        if self.values[0] == "4":
+            etf_holdings = await webull.get_etfs_for_ticker(self.ticker)
+            changeratio = [i.changeRatio for i in etf_holdings]
+            etfname=[i.etfname for i in etf_holdings]
+            stockname=[i.name for i in etf_holdings]
+            ratio=[i.ratio for i in etf_holdings]
+            sharenum=[i.shareNumber for i in etf_holdings]
+            tickerid=[i.tickerId for i in etf_holdings]
+            symbol=[i.symbol for i in etf_holdings]
+            data = { 
+                'ETF Name': etfname,
+                'Name': stockname,
+                'Shares of Stock': sharenum,
+                'Ratio %': ratio,
+                'Change Ratio': changeratio,
+                'tick_id': tickerid
+
+            }
+            df = pd.DataFrame(data)
+            filename = f'files/stocks/etfs/{self.current_ticker}_etfs.csv'
+            
+            embeds = []
+            df_sorted = df.sort_values('Shares of Stock', ascending=False)
+            df_sorted.to_csv(filename)
+            for i, row in df_sorted.iterrows():
+                etf = row['ETF Name']
+                Name = row['Name']
+                Shares = row['Shares of Stock']
+                Ratio = row['Ratio %']
+                ChangeRatio = row['Change Ratio']
+                TickerID = row['tick_id']
+                if Ratio is not None:
+                    ratio_value = round(float(Ratio) * 100, 2)
+                else:
+                    ratio_value = "N/A"
+                            
+                embed = disnake.Embed(title=f"ETFs for {self.current_ticker}", description=f"```py\nViewing ETFs exposed to {self.current_ticker}```", color=disnake.Colour.dark_gold())
+                embed.add_field(name=f"ETF:", value=f"> **{etf}** | **{Name}**")
+                embed.add_field(name=f"Number of Shares:", value=f"> **{float(Shares):,}**")
+                embed.add_field(name="Ratio", value=f"> **{ratio_value}**")
+                embed.add_field(name=f"Change Ratio:", value=f"> **{round(float(ChangeRatio)*100,2)}**")
+                embeds.append(embed)
+
+            view = AlertMenus(embeds).add_item(FTDShortSelect(self.bot, self.ticker, self.main_view))
+            df.to_csv(filename)
+            button = disnake.ui.Button(style=disnake.ButtonStyle.blurple, label=f"Download ETF Holdings")
+            button.callback = lambda interaction: interaction.response.send_message(file=disnake.File(filename))
+            view.add_item(button)
+            view.add_item(MainView(self.bot,self.ticker).change_ticker)
+
+            await interaction.response.edit_message(view=view, embed=embeds[0])
 
 
+    async def refresh_options(self, interaction: disnake.MessageCommandInteraction):
+        # Update the options according to the new ticker
+        for option in self.options:
+            option.label = option.label.replace(self.ticker, self.main_view.ticker)
+            option.description = option.description.replace(self.ticker, self.main_view.ticker)
+
+        # Update the ticker attribute
+        self.ticker = self.main_view.ticker
+        self.refresh_state(interaction)
 
 

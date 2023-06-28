@@ -2,7 +2,7 @@ from disnake.ext import commands
 import requests
 import pandas as pd
 import disnake
-from _discord.views.menus import AlertMenus
+from menus.embedmenus import AlertMenus
 
 class OFR(commands.Cog):
     def __init__(self, bot):

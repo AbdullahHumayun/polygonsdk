@@ -1,6 +1,6 @@
 from disnake.ext import commands
 import disnake
-from _discord.views.menus import AlertMenus
+from menus.embedmenus import AlertMenus
 import os
 from autocomp import ticker_autocomp
 from sdks.stocksera_sdk.sdk import StockeraSDK

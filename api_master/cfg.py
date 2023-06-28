@@ -23,6 +23,7 @@ YOUR_FRED_API_KEY = os.environ.get('YOUR_FRED_API_KEY') #https://fred.stlouisfed
 YOUR_DISCORD_BOT_TOKEN = os.environ.get('YOUR_DISCORD_BOT_TOKEN')#https://discord.com/developers/docs/intro
 YOUR_RAPIDAPI_KEY = os.environ.get('YOUR_RAPIDAPI_KEY')
 
+
 # Access the Discord headers
 discord_headers = {
     'Authorization': os.getenv('DISCORD_AUTHORIZATION'),
@@ -30,6 +31,159 @@ discord_headers = {
     'Accept': os.getenv('DISCORD_ACCEPT'),
     'Content-Type': os.getenv('DISCORD_CONTENT_TYPE')
 }
+
+
+# Webhook URLs
+news_urls = {
+    'MarketWatch': os.environ.get('MarketWatch'),
+    'SeekingAlpha': os.environ.get('SeekingAlpha'),
+    'ZacksInvestmentResearch': os.environ.get('ZacksInvestmentResearch'),
+    'Investing.com': os.environ.get('Investing.com'),
+    'PennyStock': os.environ.get('PennyStock'),
+    'Benzinga': os.environ.get('Benzinga'),
+    'GlobeNewswireInc': os.environ.get('GlobeNewswireInc'),
+    'TheMotleyFool': os.environ.get('TheMotleyFool'),
+}
+
+
+
+
+# STOCK EXCHANGES
+exchange_volume = {
+    'large_volume': os.environ.get('large_volume'),
+    'adf_trf': os.environ.get('adf_trf'),
+    'cboe_byx': os.environ.get('cboe_byx'),
+    'ltse': os.environ.get('ltse'),
+    'cboe_bzx': os.environ.get('cboe_bzx'),
+    'nyse': os.environ.get('nyse'),
+    'nyse_arca': os.environ.get('nyse_arca'),
+    'nasdaq': os.environ.get('nasdaq'),
+    'miaxpearl': os.environ.get('miaxpearl'),
+    'cta': os.environ.get('cta'),
+    'ise': os.environ.get('ise'),
+    'iex': os.environ.get('iex'),
+    'memx': os.environ.get('memx'),
+    'edgx': os.environ.get('edgx'),
+    'edga': os.environ.get('edga'),
+    'nasdaq_psx': os.environ.get('nasdaq_psx'),
+    'nyse_amer': os.environ.get('nyse_amer'),
+    'nat': os.environ.get('nat'),
+    'utp': os.environ.get('utp'),
+    'ssr': os.environ.get('ssr'),
+    'icx': os.environ.get('icx'),
+    'odd_lot': os.environ.get('odd_lot'),
+    'intermarket': os.environ.get('intermarket'),
+    'otc': os.environ.get('otc')
+}
+
+
+##CRYPTO##
+lrc = os.environ.get('lrc')
+ada = os.environ.get('ada')
+eth = os.environ.get('eth')
+gala = os.environ.get('gala')
+ape = os.environ.get('ape')
+nct = os.environ.get('nct')
+xrp = os.environ.get('xrp')
+jasmy = os.environ.get('jasmy')
+ctsi = os.environ.get('ctsi')
+hbar = os.environ.get('hbar')
+hmt = os.environ.get('hmt')
+sol = os.environ.get('sol')
+usdt = os.environ.get('usdt')
+xlm = os.environ.get('xlm')
+btc = os.environ.get('btc')
+xtz = os.environ.get('xtz')
+bch = os.environ.get('bch')
+imx = os.environ.get('imx')
+doge = os.environ.get('doge')
+luna = os.environ.get('luna')
+shib = os.environ.get('shib')
+fil = os.environ.get('fil')
+ach = os.environ.get('ach')
+etc = os.environ.get('etc')
+xmr = os.environ.get('xmr')
+ltc = os.environ.get('ltc')
+mkr = os.environ.get('mkr')
+algo = os.environ.get('algo')
+atom = os.environ.get('atom')
+ada2 = os.environ.get('ada2')
+jet = os.environ.get('jet')
+sand = os.environ.get('sand')
+sutu = os.environ.get('sutu')
+mana = os.environ.get('mana')
+kava = os.environ.get('kava')
+matic = os.environ.get('matic')
+neo = os.environ.get('neo')
+link = os.environ.get('link')
+cgld = os.environ.get('cgld')
+coti = os.environ.get('coti')
+sushi = os.environ.get('sushi')
+grt = os.environ.get('grt')
+bnb = os.environ.get('bnb')
+hnt = os.environ.get('hnt')
+dot = os.environ.get('dot')
+avax = os.environ.get('avax')
+wbtc = os.environ.get('wbtc')
+vet = os.environ.get('vet')
+dash = os.environ.get('dash')
+uni = os.environ.get('uni')
+ftt = os.environ.get('ftt')
+aave = os.environ.get('aave')
+zec = os.environ.get('zec')
+rndr = os.environ.get('rndr')
+yfi = os.environ.get('yfi')
+ren = os.environ.get('ren')
+stx = os.environ.get('stx')
+rose = os.environ.get('rose')
+ogn = os.environ.get('ogn')
+ankr = os.environ.get('ankr')
+tru = os.environ.get('tru')
+uma = os.environ.get('uma')
+qnt = os.environ.get('qnt')
+iota = os.environ.get('iota')
+xyo = os.environ.get('xyo')
+zrx = os.environ.get('zrx')
+spell = os.environ.get('spell')
+boson = os.environ.get('boson')
+crv = os.environ.get('crv')
+snt = os.environ.get('snt')
+flow = os.environ.get('flow')
+icp = os.environ.get('icp')
+bat = os.environ.get('bat')
+nexo = os.environ.get('nexo')
+dai = os.environ.get('dai')
+swftc = os.environ.get('swftc')
+ocean = os.environ.get('ocean')
+rari = os.environ.get('rari')
+ust = os.environ.get('ust')
+inj = os.environ.get('inj')
+cro = os.environ.get('cro')
+rep = os.environ.get('rep')
+gtc = os.environ.get('gtc')
+ksm = os.environ.get('ksm')
+omg = os.environ.get('omg')
+
+
+##FOREX##
+usdcad = os.environ.get('usdcad')
+usdjpy = os.environ.get('usdjpy')
+usdhkd = os.environ.get('usdhkd')
+usdcny = os.environ.get('usdcny')
+
+
+
+##OPTION EXCHANGES##
+nyse_amer_options = os.environ.get('nyse_amer_options')
+
+
+
+
+
+
+
+
+
 
 
 # Date and Time - import these to easily create date parameters for different functions such as option aggregates, stock aggregates.

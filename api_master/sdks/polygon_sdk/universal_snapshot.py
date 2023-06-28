@@ -64,6 +64,12 @@ class UniversalSnapshot:
             self.underlying_price = [i['price'] if 'price' in i else None for i in underlying_asset]
 
 
+        self.unusual = None
+        if self.volume > self.open_interest:
+            self.unusual = True
+        else:
+            self.unusual = False
+
 
 
         self.data_dict = {
@@ -80,6 +86,7 @@ class UniversalSnapshot:
             'Exercise Style': self.exercise_style,
             '🗓️': self.expiry,
             'Skew': self.strike,
+            'Strike': self.strike,
             'Delta': self.delta,
             'Gamma': self.gamma,
             'Theta': self.theta,
@@ -101,7 +108,8 @@ class UniversalSnapshot:
             'Name': self.name,
             'Market Status': self.market_status,
             'Ticker': self.ticker,
-            'Types': self.type
+            'Types': self.type,
+            'UOA?': self.unusual
         }
         self.df = pd.DataFrame(self.data_dict).sort_values('IV', ascending=False)
 
@@ -129,8 +137,13 @@ class UniversalOptionSnapshot:
         self.implied_volatility = [i['implied_volatility'] if 'implied_volatility' in i else None for i in results] 
         self.open_interest = [i['open_interest'] if 'open_interest' in i else None for i in results]
 
-
-
+        day = [i['day'] if i['day'] is not None else None for i in results]
+        self.volume = [i['volume'] if 'volume' in i  else None for i in day]
+        self.high = [i['high'] if 'high' in i else None for i in day]
+        self.low = [i['low'] if 'low' in i else None for i in day]
+        self.vwap = [i['vwap'] if 'vwap' in i else None for i in day]
+        self.open = [i['open'] if 'open' in i else None for i in day]
+        self.close = [i['close'] if 'close' in i else None for i in day]
 
 
 
@@ -180,8 +193,13 @@ class UniversalOptionSnapshot:
             'gamma': self.gamma,
             'vega': self.vega,
             'sip_timestamp': self.sip_timestamp,
+            'open': self.open,
+            'high': self.high,
+            'low': self.low,
+            'close': self.close,
+            'vwap':self.vwap,
             'conditions': self.conditions,
-            'trade_price': self.trade_price,
+            'price': self.trade_price,
             'Size': self.trade_size,
             'exchange': self.exchange,
             'ask': self.ask,
@@ -189,7 +207,8 @@ class UniversalOptionSnapshot:
             'IV': self.implied_volatility,
             'bid_size': self.bid_size,
             'ask_size': self.ask_size,
-            'midpoint': self.midpoint,
+            'vol': self.volume,
+            'mid': self.midpoint,
             'change_to_breakeven': self.change_to_breakeven,
             'price': self.underlying_price,
             'sym': self.underlying_ticker

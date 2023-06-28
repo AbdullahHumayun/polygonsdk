@@ -5,7 +5,7 @@ from autocomp import videos_autocomp
 from views.learnviews import TechDropdown,TechDropdown2,SFTView,OCCView
 from views.learnviews import ChinaView,DTCCView,ICEView,ETFView,NSCCView,FINRAView,Opt101View,TechView,NyseVIDView,CBOEView,NSFRView, PermaFTDViewStart
 import pandas as pd
-from _discord.views.menus import AlertMenus
+from menus.embedmenus import AlertMenus
 from menus.pagination import PageSelect
 
 from _discord import emojis

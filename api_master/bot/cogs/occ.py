@@ -4,7 +4,7 @@ import requests
 
 import datetime
 import pandas as pd
-from _discord.views.menus import AlertMenus
+from menus.embedmenus import AlertMenus
 from sdks.occ_sdk.sdk import occSDK
 
 occ = occSDK()

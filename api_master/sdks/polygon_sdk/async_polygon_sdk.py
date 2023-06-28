@@ -3,7 +3,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-
+from requests import session
 import httpx
 from typing import List, Union, Tuple, Optional
 from urllib.parse import urlencode, unquote
@@ -1161,6 +1161,21 @@ class AsyncPolygonSDK:
         return upper_band, middle_band, lower_band
 
 
+    def get_polygon_logo(symbol):
+        data = session().get(f"https://api.polygon.io/v3/reference/tickers/{symbol}?apiKey={YOUR_API_KEY}")
+                
+        if 'results' not in data:
+            # No results found
+            return None
+        
+        results = data['results']
+        branding = results.get('branding')
+
+        if branding and 'icon_url' in branding:
+            encoded_url = branding['icon_url']
+            decoded_url = unquote(encoded_url)
+            url_with_api_key = f"{decoded_url}?apiKey={YOUR_API_KEY}"
+            return url_with_api_key
 
 
 

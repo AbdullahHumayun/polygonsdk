@@ -7,7 +7,7 @@ import time
 import pandas as pd
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-from _discord.views.menus import AlertMenus
+from menus.embedmenus import AlertMenus
 from sdks.polygon_sdk.mapping_dicts import OPTIONS_EXCHANGES, option_condition_dict
 from sdks.helpers.helpers import human_readable
 from cfg import YOUR_API_KEY

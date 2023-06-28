@@ -14,8 +14,8 @@ discord_config.py
 fudstop.py
 strat.py
 myconfig.py
-api_master/bot/cogs/
 oldapp.py
+polygon_enhanced/
 api_master.egg_info/
 test.py
 dump.txt

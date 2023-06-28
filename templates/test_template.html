@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .card {
+            width: 200px;
+            height: 200px;
+            background-color: lightgray;
+            margin: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .widget-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s;
+        }
+
+        .widget-container.active {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+</head>
+<body>
+    <div class="card" onclick="expandWidget('widget1')">
+        <h3>Widget 1</h3>
+    </div>
+
+    <div class="card" onclick="expandWidget('widget2')">
+        <h3>Widget 2</h3>
+    </div>
+
+    <div class="widget-container" id="widget1"></div>
+    <div class="widget-container" id="widget2"></div>
+
+    <script>
+function expandWidget(widgetId) {
+  const widgetContainer = document.getElementById(widgetId);
+  widgetContainer.classList.toggle('active');
+
+  if (widgetContainer.innerHTML === '') {
+    const widget = document.createElement('widgetbot');
+    widget.setAttribute('server', '888488311927242753');
+    widget.setAttribute('channel', '1123688758366191626');
+    widget.setAttribute('width', '1080');
+    widget.setAttribute('height', '920');
+    widgetContainer.appendChild(widget);
+
+    const script = document.createElement('script');
+    script.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@widgetbot/html-embed/dist/widget.js');
+    script.setAttribute('async', 'true');
+    widgetContainer.appendChild(script);
+  }
+}
+    </script>
+</body>
+</html>

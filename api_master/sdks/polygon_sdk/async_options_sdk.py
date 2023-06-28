@@ -683,162 +683,19 @@ class PolygonOptionsSDK:
         return option_data
     
 
-    async def search_chain(self, underlying_asset, strike_price=None, expiration_date=None, contract_type=None, order=None, limit=250, sort=None):
-            """
-            Get all options contracts for an underlying ticker across all pages.
-
-            :param underlying_asset: The underlying ticker symbol of the option contract.
-            :param strike_price: Query by strike price of a contract.
-            :param expiration_date: Query by contract expiration with date format YYYY-MM-DD.
-            :param contract_type: Query by the type of contract.
-            :param order: Order results based on the sort field.
-            :param limit: Limit the number of results returned, default is 10 and max is 250.
-            :param sort: Sort field used for ordering.
-            :return: A list containing all option chain data across all pages.
-            """
-            endpoint = f"{self.base_url}/v3/snapshot/options/{underlying_asset}"
-            params = {
-                "strike_price": strike_price,
-                "expiration_date": expiration_date,
-                "contract_type": contract_type,
-                "order": order,
-                "limit": limit,
-                "sort": sort,
-                "apiKey": self.api_key
-            }
-            response_data = await self._request_all_pages(endpoint, params=params)
-            option_data = OptionSnapshotData(response_data)
-    
-            return option_data
-
-
-    async def get_near_the_money_options(self, ticker, lower_strike, upper_strike, today_str):
-
-        url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte={five_days_from_now_str}&limit=250&apiKey={YOUR_API_KEY}"
-        print(url)
-        async with aiohttp.ClientSession() as session:
-            all_ticker = []  # to hold all the option symbols
-            
-            while url:
-                all_urls=[]
+    async def get_index_price(self, ticker=str):
+        """Fetch the price of an index ticker"""
+        if ticker == "SPX":
+            url = f"https://api.polygon.io/v3/snapshot?ticker.any_of=I:{ticker}&apiKey={self.api_key}"
+            async with aiohttp.ClientSession() as session:
                 async with session.get(url) as resp:
-                    if resp.status != 200:
-                        return
+
                     data = await resp.json()
                     results = data['results'] if data['results'] is not None else None
-                    details = [i['details'] if i['details'] is not None else None for i in results]
-                    ticker = [i.get('ticker', None) for i in details]
-                    all_ticker.extend(ticker)
-                    
-                    url = data.get('next_url')  # get the next page URL
-                    if url and YOUR_API_KEY not in url:
-                        url += f"&apiKey={YOUR_API_KEY}"  # append the API key to the URL
-                        all_urls.extend(url)
-                        print(url)
-                return all_urls
-        
-
-    async def find_lowest_iv(self, output):
-            final_dicts_call = []
-            final_dicts_put = []
-   
-            async with aiohttp.ClientSession() as session:
-                async with session.get(output) as filtered_resp:
-                    if filtered_resp.status != 200:
-                        print(f"Error")
-                    else:
-                        response = await filtered_resp.json()
-
-                        if response is None:
-                            print(f"Bad output: {output}")
-
-
-                        filtered_results = response['results'] if 'results' in response else None
-                        if filtered_results is not None:
-                            call_data = []
-                            put_data = []
-                            for result in filtered_results:
-                                contract_type = result.get('details').get('contract_type')
-                                if contract_type == 'call':
-                                    call_data.append(result)
-                                elif contract_type == 'put':
-                                    put_data.append(result)
-                                else:
-                                    continue
-
-                            call_symbols = [i.get('ticker', None) for i in call_data]
-                            call_ivs = [i.get('implied_volatility', None) for i in call_data]
-                            call_strikes = [i.get('details').get('strike_price', None) for i in call_data]
-                            call_expiry = [i.get('details').get('expiration_date', None) for i in call_data]
-                            call_name = [i.get('name', None) for i in call_data]
-                            call_type = [i.get('details').get('contract_type', None) for i in call_data]
-                            put_symbols = [i.get('ticker', None) for i in put_data]
-                            put_ivs = [i.get('implied_volatility', None) for i in put_data]
-                            put_strikes = [i.get('details').get('strike_price', None) for i in put_data]
-                            put_expiry = [i.get('details').get('expiration_date', None) for i in put_data]
-                            put_name = [i.get('name', None) for i in put_data]
-                            put_type = [i.get('details').get('contract_type', None) for i in put_data]
-
-                            call_volume = [i.get('session').get('volume', None) for i in call_data]
-                            put_volume = [i.get('session').get('volume', None) for i in put_data]
-
-                            call_dict = {
-                                'Call Symbol': call_symbols,
-                                'Call Name': call_name,
-                                'Call Strike': call_strikes,
-                                'Call Expiry': call_expiry,
-                                'IV': call_ivs,
-                                'Call Volume': call_volume,
-                                'Call Type': call_type,
-                            }
-
-                            put_dict = {
-                                'Put Symbol': put_symbols,
-                                'Put Name': put_name,
-                                'Put Strike': put_strikes,
-                                'Put Expiry': put_expiry,
-                                'IV': put_ivs,
-                                'Put Volume': put_volume,
-                                'Put Type': put_type
-                            }
-
-                            call_df = pd.DataFrame(call_dict).sort_values('IV').dropna(how="any")
-                            put_df = pd.DataFrame(put_dict).sort_values('IV').dropna(how="any")
-                            call_df.to_csv('iv_monitor_calls.csv', index=False)
-                            put_df.to_csv('iv_monitor_puts.csv', index=False)
-
-                            def get_lowest_iv(group):
-                                return group.sort_values('IV').iloc[0]
-
-                            grouped_call_df = call_df.groupby('Call Expiry').apply(get_lowest_iv)
-                            grouped_put_df = put_df.groupby('Put Expiry').apply(get_lowest_iv)
-
-                            for index, row in grouped_call_df.iterrows():
-                                current_dict = {
-                                    'call symbol': row['Call Symbol'],
-                                    'call name': row['Call Name'],
-                                    'call strike': row['Call Strike'],
-                                    'call expiry': index,  # level 0 index is 'Expiry'
-                                    'call iv': row['IV'],
-                                    'call volume': row['Call Volume']
-                                }
-                                final_dicts_call.append(current_dict)
-
-                            for index, row in grouped_put_df.iterrows():
-                                current_dict = {
-                                    'put symbol': row['Put Symbol'],
-                                    'put name': row['Put Name'],
-                                    'put strike': row['Put Strike'],
-                                    'put expiry': index,  # level 0 index is 'Expiry'
-                                    'put iv': row['IV'],
-                                    'put volume': row['Put Volume'],
-                                    
-                                }
-                                final_dicts_put.append(current_dict)
-
-            return final_dicts_call, final_dicts_put
-    
-
+                    if results is None:
+                        print(f"Error - results from price request.")
+                    value = results[0]['value']
+                    return value
     
     async def get_stock_price(self, ticker=str):
         url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={self.api_key}"
@@ -856,40 +713,60 @@ class PolygonOptionsSDK:
 
         return None  # Return None if the stock price couldn't be retrieved
     
-    async def near_the_money(self, ticker, price):
+    async def fetch_option_data(self, session, tickers):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"https://api.polygon.io/v3/snapshot?ticker.any_of={tickers}&apiKey={YOUR_API_KEY}") as response:
+                try:
+                    near_money = await response.json(content_type=None)
+                    near_money_results = near_money['results']
+                    atm_data = UniversalOptionSnapshot(near_money_results)
+                    return atm_data.df.sort_values('IV', ascending=True)
+                except Exception as e:
+                    print(f"Error processing tickers: {tickers}. Error: {e}")
+                    return pd.DataFrame()
 
-        base_url = "https://api.polygon.io/v3/snapshot/options/"
+    async def get_near_the_money_options(self,ticker:str):
+        ticker = ticker.upper()
+        if ticker.startswith("SPX"):
+            price = await self.get_index_price(ticker)
+            lower_strike = round(price) * 0.98
+            upper_strike = round(price) * 1.02
+        else:
+            price = await self.get_stock_price(ticker)
+            lower_strike = round(price) * 0.90
+            upper_strike = round(price) * 1.10
+        print(f"SPX TICKER: {ticker}: {lower_strike}, {price}, {upper_strike}")
 
-        if price is not None:
-            lower_strike = round(price * 0.95)
-            upper_strike = round(price * 1.05)
-            
-            endpoint = f"{base_url}{ticker}"
-            params = {
-                "strike_price.gte": lower_strike,
-                "strike_price.lte": upper_strike,
-                "expiration_date.gte": today_str,
-                "expiration_date.lte": fifteen_days_from_now_str,
-                "limit": 250,
-                "apiKey": YOUR_API_KEY
-            }
-            response_data = await self._request_all_pages_concurrently(endpoint, params=params)
-            print(response_data)
-            option_data = OptionSnapshotData(response_data)
+        async with aiohttp.ClientSession() as session:
+            initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte=2023-12-30&limit=250&apiKey={YOUR_API_KEY}"
 
-            if option_data is not None:
-                df = pd.DataFrame(option_data.data_dict).dropna(how="any").sort_values('implied_volatility', ascending=True)
-                if not df.empty:
-                    df = df.iloc[[0]]
-                    for _, row in df.iterrows():
-                        strike = row['strike_price']
-                        symbol = row['underlying_ticker']
-                        iv = round(float(row['implied_volatility'])*100,5)
-                        underlying_price = row['underlying_price']
-                        expiry = row['expiration_date']
-                        expiry = expiry[5:]
-                        skew = "🔥" if strike <= underlying_price else "🟢"
-                        skew_metric = strike - underlying_price
-                        if skew_metric < -15.5 or skew_metric > 15.5:
-                            return [symbol, strike, underlying_price, expiry, iv, skew, skew_metric]
-            return None
+            results = await self._request_all_pages(initial_url)
+            if results is not None:
+                option_data = UniversalOptionSnapshot(results)
+                calls = option_data.df[option_data.df['type'] == 'call']
+                puts = option_data.df[option_data.df['type'] == 'put']
+                calls_grouped = calls.groupby('exp')
+                puts_grouped = puts.groupby('exp')
+                async def process_grouped_tickers(grouped_df, session):
+                    results = []
+                    for _, group in grouped_df:
+                        group_tickers = group['ticker'].tolist()
+                        if not group_tickers:
+                            continue
+                        tickers_string = ','.join(group_tickers)
+                        async with session.get(f"https://api.polygon.io/v3/snapshot?ticker.any_of={tickers_string}&apiKey={YOUR_API_KEY}") as response:
+                            try:
+                                near_money = await response.json(content_type=None)
+                                near_money_results = near_money['results']
+                                atm_data = UniversalSnapshot(near_money_results)
+                                results.append(atm_data.df.sort_values('IV', ascending=True))
+                            except Exception as e:
+                                print(f"Error processing tickers_string: {tickers_string}. Error: {e}")
+                    return results
+                
+                calls_results = await process_grouped_tickers(calls_grouped, session)
+                puts_results = await process_grouped_tickers(puts_grouped, session)
+                calls_results_df = pd.concat(calls_results)
+                puts_results_df = pd.concat(puts_results)
+
+                return calls_results_df, puts_results_df
