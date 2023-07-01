@@ -135,20 +135,22 @@ class MasterSDK(PolygonOptionsSDK):
             price = await self.get_index_price(ticker)
         else:
             price = await self.get_stock_price(ticker)
+        if price is not None:
+            lower_strike = round(price * (1 - threshold/100), 2)
+            upper_strike = round(price * (1 + threshold/100), 2)
 
-        lower_strike = round(price * (1 - threshold/100), 2)
-        upper_strike = round(price * (1 + threshold/100), 2)
-
-        async with aiohttp.ClientSession() as session:
-            url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.lte={upper_strike}&strike_price.gte={lower_strike}&expiration_date.lte={fifteen_days_from_now_str}&expiration_date.gt={today_str}&limit=250&apiKey={YOUR_API_KEY}"
-            async with session.get(url) as resp:
-                r = await resp.json()
-                results = r['results']
-                if results is not None:
-                    results = UniversalOptionSnapshot(results)
-                    tickers = results.ticker
-                    atm_tickers = ','.join(tickers)
-                    return atm_tickers
+            async with aiohttp.ClientSession() as session:
+                url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.lte={upper_strike}&strike_price.gte={lower_strike}&expiration_date.lte={fifteen_days_from_now_str}&expiration_date.gt={today_str}&limit=250&apiKey={YOUR_API_KEY}"
+                async with session.get(url) as resp:
+                    r = await resp.json()
+                    results = r['results']
+                    if results is not None:
+                        results = UniversalOptionSnapshot(results)
+                        tickers = results.ticker
+                        atm_tickers = ','.join(tickers)
+                        return atm_tickers
+        else:
+            return None
                 
     async def fetch_data(self, session, url):
         async with session.get(url) as resp:
