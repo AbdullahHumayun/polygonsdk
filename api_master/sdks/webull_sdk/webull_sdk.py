@@ -102,7 +102,7 @@ class AsyncWebullSDK:
                 r = await resp.json()
                 data = r['data']
                 if data is not None:
-                    ticker = [i['ticker'] if 'ticker' is not None else None for i in data]
+                    ticker = [i['ticker'] if 'ticker' in i else None for i in data]
                     symb = [i['symbol'] if 'symbol' in i else None for i in ticker]
                     return symb
 
