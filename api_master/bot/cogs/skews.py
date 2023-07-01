@@ -31,61 +31,54 @@ class Skew(commands.Cog):
         pass
 
     
-
     @skew.sub_command()
     async def allskew(self, inter:disnake.AppCmdInter):
-        """View skews for the top traded options (if any)"""
         await inter.response.defer()
-        tickers = ['TSLA', 'IWM', 
-                    'AAPL','NVDA','AMZN','VIX','META','MSFT','TQQQ','BABA','COIN','NFLX','SQQQ', 
-                    'PYPL','NDX'
-                     ]
-        call_rows = []  # List to store first call rows for each ticker
-        put_rows = []  # List to store first put rows for each ticker
-        combined_rows =[]
+        tickers = ["AMD", "GME", "NVDA", "TSLA", "UPST", "BIDU", "U", "W", "MSFT"]
+        all_rows = []
+
         for ticker in tickers:
-            atm_contracts = await sdk.get_near_the_money(ticker)
+            options_lists = await sdk.get_near_the_money_single(ticker, 5)
+            print(options_lists)
+            x = await poly_opt.get_universal_snapshot(options_lists)
 
-            atm_data = await sdk.find_skew(atm_contracts)
-            if atm_data is not None and atm_data is not "N/A":
-                df = atm_data.df.sort_values(['IV'], ascending=True)
+            df = x.df
+            calls = df[df['C/P'] == 'call'].sort_values('IV', ascending=True)
+            puts = df[df['C/P'] == 'put'].sort_values('IV', ascending=True)
 
-                first_call = df[df['C/P'] == 'call'].iloc[[0]]
-                first_put = df[df['C/P'] == 'put'].iloc[[0]]
-                # Modify the '🗓️' column to remove the '2023-' prefix
-                first_call['🗓️'] = first_call['🗓️'].str[5:]
-                first_put['🗓️'] = first_put['🗓️'].str[5:]
-                # Add 'Emoji' column to the first call rows and first put rows
-                first_call['Type'] = first_call.apply(lambda row: '🔥' if row['💲'] > row['Skew'] else '🟢', axis=1)
-                first_put['Type'] = first_put.apply(lambda row: '🔥' if row['💲'] > row['Skew'] else '🟢', axis=1)
-                # Combine the first_call and first_put DataFrames
+            call_skew = calls.iloc[[0]]
+            put_skew = puts.iloc[[0]]
+            # Rename headers in call_skew DataFrame
+            call_skew = call_skew.rename(columns={"Vol": "C Vol", "OI": "C OI", "Skew": "C Skew", "IV": "C IV"})
 
+            # Rename headers in put_skew DataFrame
+            put_skew = put_skew.rename(columns={"Vol": "P Vol", "OI": "P OI", "Skew": "P Skew", "IV": "P IV"})
 
+            # Select specific columns from call_skew DataFrame
+            call_skew_selected = call_skew[["Sym","C IV", "C OI", "C Skew"]].reset_index(drop=True)
 
-                call_rows.append(first_call[["Sym", "C/P", "💲", "Strike", "🗓️", "IV", "Type"]])
-                put_rows.append(first_put[["Sym", "C/P", "💲", "Strike", "🗓️", "IV", "Type"]])
+            # Select specific columns from put_skew DataFrame
+            put_skew_selected = put_skew[["💲", "P Skew", "P OI", "P IV"]].reset_index(drop=True)
 
-  
+            combined_skew = pd.concat([call_skew_selected, put_skew_selected], axis=1)
+            combined_skew = combined_skew.fillna("")  # Replace remaining NaN values with empty string
 
+            # Dropping the duplicated 'Sym' column
+            # Modify IV columns
+            combined_skew["C IV"] = combined_skew["C IV"].apply(lambda x: round(float(x) * 100, 6) if x != "" else x)
+            combined_skew["P IV"] = combined_skew["P IV"].apply(lambda x: round(float(x) * 100, 6) if x != "" else x)
 
-        # Combine all first call rows and first put rows into single dataframes
-        call_df = pd.concat(call_rows)
-        put_df = pd.concat(put_rows)
-        combined_df = combined_df.rename(columns={"Sym": "Symbol", "C/P": "Call/Put", "💲": "Price", "Strike": "Strike Price", "🗓️": "Date", "IV": "Implied Volatility", "Type": "Option Type"})
+            # Dropping the duplicated 'Sym' column
+            combined_skew = combined_skew.loc[:, ~combined_skew.columns.duplicated()]
+            all_rows.append(combined_skew)
 
-        # Tabulate the first call rows and first put rows
-        call_table_str = tabulate(call_df, headers="keys", tablefmt="fancy_grid", showindex=False).strip()
-        put_table_str = tabulate(put_df, headers="keys", tablefmt="fancy_grid", showindex=False).strip()
-        # Combine the two tables
-        combined_table_str = call_table_str + "\n" + put_table_str
-        # Print the tables
-        print("First Call Rows:")
-        print(call_table_str)
-        print("\nFirst Put Rows:")
-        print(put_table_str)
-        embed = disnake.Embed(title=f"All-Skew", description=f"**CALLS:** ```{combined_table_str}```")
+        # Combine all dataframes in all_rows
+        all_data = pd.concat(all_rows)
+
+        # Print DataFrame as a fancy grid
+        data_table = tabulate(all_data, headers='keys', tablefmt='fancy', showindex=False)
+        embed = disnake.Embed(title=f"All Skew", description=f"```{data_table}```")
         await inter.edit_original_message(embed=embed)
-
 
     @skew.sub_command()
     async def multiple(inter: disnake.AppCmdInter, tickers: str):

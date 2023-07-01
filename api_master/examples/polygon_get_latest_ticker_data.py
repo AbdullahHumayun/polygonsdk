@@ -19,5 +19,5 @@ async def get_all_ticker_data():
     await polygonsdk.write_snapshots_to_csv()
 
     print(f"Data has been successfully saved to files/stocks/all_snapshots.csv.")
-# asyncio.run(get_all_ticker_data())
+asyncio.run(get_all_ticker_data())
 

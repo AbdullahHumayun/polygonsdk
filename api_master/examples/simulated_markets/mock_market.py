@@ -28,7 +28,7 @@ df = pd.read_csv('files/stocks/all_snapshots.csv') #you must first download this
 async def consume(queue: Queue):
     while True:
         m = await queue.get()
-        ask = m.last_quote_ask_price
+        ask = m.last_quote_ask
         close =m.close
         low=m.low
         open = m.open
@@ -37,7 +37,7 @@ async def consume(queue: Queue):
         prev_volume = m.prev_volume
         prev_vwap = m.prev_vwap
         vwap = m.vwap
-        bid = m.last_quote_bid_price
+        bid = m.last_quote_bid
         conditions = m.last_trade_conditions
         print(open, high)
         # Process the event as necessary
