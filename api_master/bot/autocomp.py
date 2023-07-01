@@ -1,16 +1,16 @@
 import sys
 import os
-from sdks.polygon_sdk.universal_snapshot import CallsOrPuts
 
-from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-from cfg import YOUR_API_KEY
-import aiohttp
-polygon = AsyncPolygonSDK(YOUR_API_KEY)
+
+
 
 # Get the directory path of the polygonsdkmaster package
 package_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(package_dir)
-
+from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+from cfg import YOUR_API_KEY
+import aiohttp
+polygon = AsyncPolygonSDK(YOUR_API_KEY)
 
 
 import pandas as pd

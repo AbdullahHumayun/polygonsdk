@@ -64,16 +64,11 @@ class UniversalSnapshot:
             self.underlying_price = [i['price'] if 'price' in i else None for i in underlying_asset]
 
 
-        self.unusual = None
-        if self.volume > self.open_interest:
-            self.unusual = True
-        else:
-            self.unusual = False
 
 
 
         self.data_dict = {
-            'Change Percent': self.change_percent,
+            'Change %': self.change_percent,
             'Early Trading Change': self.early_trading_change,
             'Early Trading Change Percent': self.early_trading_change_percent,
             'Close': self.close,
@@ -82,7 +77,7 @@ class UniversalSnapshot:
             'Open': self.open,
             'Vol': self.volume,
             'Previous Close': self.prev_close,
-            'type': self.contract_type,
+            'C/P': self.contract_type,
             'Exercise Style': self.exercise_style,
             '🗓️': self.expiry,
             'Skew': self.strike,
@@ -103,13 +98,12 @@ class UniversalSnapshot:
             'Size': self.trade_size,
             'Last Trade Exchange': self.exchange,
             'OI': self.open_interest,
-            'Price': self.underlying_price,
+            '💲': self.underlying_price,
             'Sym': self.underlying_ticker,
             'Name': self.name,
             'Market Status': self.market_status,
             'Ticker': self.ticker,
             'Types': self.type,
-            'UOA?': self.unusual
         }
         self.df = pd.DataFrame(self.data_dict).sort_values('IV', ascending=False)
 
@@ -241,7 +235,24 @@ class UniversalOptionSnapshot:
                 underlying_price={self.underlying_price}, \
                 underlying_ticker={self.underlying_ticker})"
     
+    def __getitem__(self, index):
+        return self.df[index]
 
+    def __setitem__(self, index, value):
+        self.df[index] = value
+    def __iter__(self):
+        # If df is a DataFrame, it's already iterable (over its column labels)
+        # To iterate over rows, use itertuples or iterrows
+        self.iter = self.df.itertuples()
+        return self
+
+    def __next__(self):
+        # Just return the next value from the DataFrame iterator
+        try:
+            return next(self.iter)
+        except StopIteration:
+            # When there are no more rows, stop iteration
+            raise StopIteration
 
 class CallsOrPuts:
     def __init__(self, data):

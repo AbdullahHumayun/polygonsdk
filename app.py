@@ -7,21 +7,23 @@ from flask_cors import CORS
 import pandas as pd
 import aiohttp
 from flask import Flask, render_template, request, jsonify
-
+from api_master.cfg import YOUR_API_KEY
 from api_master.examples.webull_webull_data import Webull
 from api_master.sdks.webull_sdk.webull_sdk import AsyncWebullSDK
+from api_master.sdks.polygon_sdk.masterSDK import MasterSDK
+from api_master.sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from static.py.api_functions import get_top_gainers_data, volume_analysis_endpoint, financial_statement_endpoint,balance_sheet_endpoint, cash_flow_endpoint, balance_sheet_endpoint
 from static.py.api_functions import financial_ratios_endpoint, capital_flow_endpoint, process_data, institutional_holdings_endpoint,short_interest_endpoint
 from static.py.api_functions import analyst_ratings_endpoint, stock_data_endpoint,get_top_gainers_data, earnings_calendar_endpoint, get_fifty_twos_endpoint
 
 import asyncio
-
+poly = AsyncPolygonSDK(YOUR_API_KEY)
 webull = AsyncWebullSDK()
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 app = Flask(__name__)
 CORS(app)
-
+master = MasterSDK()
 @app.route('/')
 async def index():
     return render_template('index.html')
@@ -36,8 +38,16 @@ async def ball():
     return render_template('bouncy_ball.html')
 
 
+@app.route('/skew', methods=['GET', 'POST'])
+async def skew():
+     
+     table = await master.tabulate_options()  # assuming this function now returns current prices too
+     return render_template('skew.html', table=table.to_html(index=False, classes='table table-striped'))
+
+
 @app.route('/fudstop', methods=['GET','POST','PUT'])
 async def fudstop():
+    
     return render_template('fudstop.html')
 
 

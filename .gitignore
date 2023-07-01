@@ -30,3 +30,4 @@ runtime.txt
 .coveratge
 newcogs/
 skew_data.csv
+testfuncs.py

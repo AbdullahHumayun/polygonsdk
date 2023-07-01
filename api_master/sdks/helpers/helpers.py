@@ -2,7 +2,7 @@ import re
 import pytz
 from typing import List
 from datetime import datetime, timedelta
-from polygon.exceptions import BadResponse
+
 from cfg import YOUR_API_KEY
 import aiohttp
 import asyncio
@@ -167,8 +167,7 @@ async def extract_underlying_symbol(symb):
     try:
         match = re.search(r'O:(\w{1,5})(\d{2})(\d{2})(\d{2})([CP])(\d+)', symb)
         underlying_symbol, year, month, day, call_put, strike_price = match.groups() 
-    except BadResponse:
-        return "N/A"
+
     except AttributeError:
         return "M/A"
     

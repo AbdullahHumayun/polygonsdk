@@ -1004,13 +1004,16 @@ class AsyncPolygonSDK:
         """
         url=f"https://api.polygon.io/v1/indicators/rsi/{symbol}?timespan={timespan}&adjusted={adjusted}&window={window}&series_type=close&order={order}&limit={limit}&apiKey={self.api_key}"
         async with aiohttp.ClientSession() as session:
-            print(url)
+    
             async with session.get(url) as response:
                 data = await response.json()
                 results = data['results']
-                values = results['values']
-                rsi = RSI(values)
-                return rsi
+                if results is not None:
+                    values = results['values'] if 'values' in results else None
+                    rsi = RSI(values)
+                    return rsi
+                else:
+                    return None
 
 
 

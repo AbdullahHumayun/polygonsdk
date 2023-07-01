@@ -7,24 +7,85 @@ from menus.embedmenus import SkewPageSelect,SkewAlertMenus
 from tabulate import tabulate
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from cfg import YOUR_API_KEY
 from cfg import today_str,seven_days_from_now_str, today_str
 from sdks.polygon_sdk.universal_snapshot import UniversalOptionSnapshot,UniversalSnapshot
-
+from sdks.polygon_sdk.masterSDK import MasterSDK
 poly = AsyncPolygonSDK(YOUR_API_KEY)
 from _discord import emojis
 import pandas as pd
 poly_opt = PolygonOptionsSDK(YOUR_API_KEY)
-
-
+sdk = MasterSDK()
+webull = AsyncWebullSDK()
 class Skew(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
 
 
+
+
+
     @commands.slash_command()
     async def skew(self, inter):
         pass
+
+    
+
+    @skew.sub_command()
+    async def allskew(self, inter:disnake.AppCmdInter):
+        """View skews for the top traded options (if any)"""
+        await inter.response.defer()
+        tickers = ['TSLA', 'IWM', 
+                    'AAPL','NVDA','AMZN','VIX','META','MSFT','TQQQ','BABA','COIN','NFLX','SQQQ', 
+                    'PYPL','NDX'
+                     ]
+        call_rows = []  # List to store first call rows for each ticker
+        put_rows = []  # List to store first put rows for each ticker
+        combined_rows =[]
+        for ticker in tickers:
+            atm_contracts = await sdk.get_near_the_money(ticker)
+
+            atm_data = await sdk.find_skew(atm_contracts)
+            if atm_data is not None and atm_data is not "N/A":
+                df = atm_data.df.sort_values(['IV'], ascending=True)
+
+                first_call = df[df['C/P'] == 'call'].iloc[[0]]
+                first_put = df[df['C/P'] == 'put'].iloc[[0]]
+                # Modify the '🗓️' column to remove the '2023-' prefix
+                first_call['🗓️'] = first_call['🗓️'].str[5:]
+                first_put['🗓️'] = first_put['🗓️'].str[5:]
+                # Add 'Emoji' column to the first call rows and first put rows
+                first_call['Type'] = first_call.apply(lambda row: '🔥' if row['💲'] > row['Skew'] else '🟢', axis=1)
+                first_put['Type'] = first_put.apply(lambda row: '🔥' if row['💲'] > row['Skew'] else '🟢', axis=1)
+                # Combine the first_call and first_put DataFrames
+
+
+
+                call_rows.append(first_call[["Sym", "C/P", "💲", "Strike", "🗓️", "IV", "Type"]])
+                put_rows.append(first_put[["Sym", "C/P", "💲", "Strike", "🗓️", "IV", "Type"]])
+
+  
+
+
+        # Combine all first call rows and first put rows into single dataframes
+        call_df = pd.concat(call_rows)
+        put_df = pd.concat(put_rows)
+        combined_df = combined_df.rename(columns={"Sym": "Symbol", "C/P": "Call/Put", "💲": "Price", "Strike": "Strike Price", "🗓️": "Date", "IV": "Implied Volatility", "Type": "Option Type"})
+
+        # Tabulate the first call rows and first put rows
+        call_table_str = tabulate(call_df, headers="keys", tablefmt="fancy_grid", showindex=False).strip()
+        put_table_str = tabulate(put_df, headers="keys", tablefmt="fancy_grid", showindex=False).strip()
+        # Combine the two tables
+        combined_table_str = call_table_str + "\n" + put_table_str
+        # Print the tables
+        print("First Call Rows:")
+        print(call_table_str)
+        print("\nFirst Put Rows:")
+        print(put_table_str)
+        embed = disnake.Embed(title=f"All-Skew", description=f"**CALLS:** ```{combined_table_str}```")
+        await inter.edit_original_message(embed=embed)
+
 
     @skew.sub_command()
     async def multiple(inter: disnake.AppCmdInter, tickers: str):
@@ -33,7 +94,7 @@ class Skew(commands.Cog):
         tickers = tickers.split(',')
         embeds = []
         
-        async def process_ticker(ticker):
+        async def process_ticker(ticker: str):
             ticker = ticker.upper()
             if ticker.startswith("SPX"):
                 price = await poly.get_index_price(ticker)
@@ -56,7 +117,7 @@ class Skew(commands.Cog):
                     calls_grouped = calls.groupby('exp')
                     puts_grouped = puts.groupby('exp')
 
-                    async def process_grouped_tickers(grouped_df, session):
+                    async def process_grouped_tickers(grouped_df, session: aiohttp.ClientSession):
                         results = []
                         for _, group in grouped_df:
                             group_tickers = group['ticker'].tolist()
@@ -74,7 +135,7 @@ class Skew(commands.Cog):
                         return results
 
                     async with sem:  # Acquire semaphore to limit concurrent requests
-                        calls_results = await process_grouped_tickers(calls_grouped, session)
+                        calls_results = await process_grouped_tickers(calls_grouped, aiohttp.ClientSession)
                         calls_results_df = pd.concat(calls_results)
                         calls_grouped = calls_results_df.groupby('🗓️', as_index=False)
 
@@ -85,14 +146,14 @@ class Skew(commands.Cog):
                         calls_first_rows = calls_grouped.first()
                         puts_first_rows = puts_grouped.first()
 
-                        calls_selected_columns_df = calls_first_rows[['🗓️', 'IV', 'Skew', 'Price']]
-                        puts_selected_columns_df = puts_first_rows[['🗓️', 'IV', 'Skew', 'Price']]
+                        calls_selected_columns_df = calls_first_rows[['🗓️', 'IV', 'Skew', '💲']]
+                        puts_selected_columns_df = puts_first_rows[['🗓️', 'IV', 'Skew', '💲']]
                         calls_selected_columns_df['🗓️'] = calls_selected_columns_df['🗓️'].apply(lambda x: x[5:])
                         puts_selected_columns_df['🗓️'] = puts_selected_columns_df['🗓️'].apply(lambda x: x[5:])
                         calls_selected_columns_df['IV'] = (calls_selected_columns_df['IV'] * 100).round(4)
                         puts_selected_columns_df['IV'] = (puts_selected_columns_df['IV'] * 100).round(4)
-                        calls_selected_columns_df = calls_selected_columns_df.reset_index(drop=True)[['🗓️', 'IV', 'Skew', 'Price']]
-                        puts_selected_columns_df = puts_selected_columns_df.reset_index(drop=True)[['🗓️', 'IV', 'Skew', 'Price']]
+                        calls_selected_columns_df = calls_selected_columns_df.reset_index(drop=True)[['🗓️', 'IV', 'Skew', '💲']]
+                        puts_selected_columns_df = puts_selected_columns_df.reset_index(drop=True)[['🗓️', 'IV', 'Skew', '💲']]
 
                         print(calls_selected_columns_df)
                         print(puts_selected_columns_df)
@@ -189,14 +250,14 @@ class Skew(commands.Cog):
                     calls_first_rows = calls_grouped.first()
                     puts_first_rows = puts_grouped.first()
 
-                    calls_selected_columns_df = calls_first_rows[['🗓️', 'IV', 'Skew', 'Price', 'Size', 'Vol', 'OI']]
-                    puts_selected_columns_df = puts_first_rows[['🗓️', 'IV', 'Skew', 'Price', 'Size', 'Vol', 'OI']]
+                    calls_selected_columns_df = calls_first_rows[['🗓️', 'IV', 'Skew', '💲', 'Size', 'Vol', 'OI']]
+                    puts_selected_columns_df = puts_first_rows[['🗓️', 'IV', 'Skew', '💲', 'Size', 'Vol', 'OI']]
                     calls_selected_columns_df['🗓️'] = calls_selected_columns_df['🗓️'].apply(lambda x: x[5:])
                     puts_selected_columns_df['🗓️'] = puts_selected_columns_df['🗓️'].apply(lambda x: x[5:])
                     calls_selected_columns_df['IV'] = (calls_selected_columns_df['IV'] * 100).round(4)
                     puts_selected_columns_df['IV'] = (puts_selected_columns_df['IV'] * 100).round(4)
-                    calls_selected_columns_df = calls_selected_columns_df.reset_index(drop=True)[['🗓️', 'IV', 'Skew', 'Price', 'Size', 'Vol', 'OI']]
-                    puts_selected_columns_df = puts_selected_columns_df.reset_index(drop=True)[['🗓️', 'IV', 'Skew', 'Price', 'Size', 'Vol', 'OI']]
+                    calls_selected_columns_df = calls_selected_columns_df.reset_index(drop=True)[['🗓️', 'IV', 'Skew', '💲', 'Size', 'Vol', 'OI']]
+                    puts_selected_columns_df = puts_selected_columns_df.reset_index(drop=True)[['🗓️', 'IV', 'Skew', '💲', 'Size', 'Vol', 'OI']]
 
                     print(calls_selected_columns_df)
                     print(puts_selected_columns_df)
@@ -282,14 +343,14 @@ class Skew(commands.Cog):
                     calls_first_rows = calls_grouped.first()
                     puts_first_rows = puts_grouped.first()
 
-                    calls_selected_columns_df = calls_first_rows[['🗓️', 'IV', 'Skew', 'Price', 'Size']]
-                    puts_selected_columns_df = puts_first_rows[['🗓️', 'IV', 'Skew', 'Price', 'Size']]
+                    calls_selected_columns_df = calls_first_rows[['🗓️', 'IV', 'Skew', '💲', 'Size']]
+                    puts_selected_columns_df = puts_first_rows[['🗓️', 'IV', 'Skew', '💲', 'Size']]
                     calls_selected_columns_df['🗓️'] = calls_selected_columns_df['🗓️'].apply(lambda x: x[5:])
                     puts_selected_columns_df['🗓️'] = puts_selected_columns_df['🗓️'].apply(lambda x: x[5:])
                     calls_selected_columns_df['IV'] = (calls_selected_columns_df['IV'] * 100).round(4)
                     puts_selected_columns_df['IV'] = (puts_selected_columns_df['IV'] * 100).round(4)
-                    calls_selected_columns_df = calls_selected_columns_df.reset_index(drop=True)[['🗓️', 'IV', 'Skew', 'Price', 'Size']]
-                    puts_selected_columns_df = puts_selected_columns_df.reset_index(drop=True)[['🗓️', 'IV', 'Skew', 'Price', 'Size']]
+                    calls_selected_columns_df = calls_selected_columns_df.reset_index(drop=True)[['🗓️', 'IV', 'Skew', '💲', 'Size']]
+                    puts_selected_columns_df = puts_selected_columns_df.reset_index(drop=True)[['🗓️', 'IV', 'Skew', '💲', 'Size']]
 
                     print(calls_selected_columns_df)
                     print(puts_selected_columns_df)
@@ -341,15 +402,13 @@ class Skew(commands.Cog):
                                                 df = atm_data.df.sort_values('IV', ascending=True)
                                                 call_df = df[df['Type'] == 'call'].sort_values('IV', ascending=True)
                                                 put_df = df[df['Type'] == 'put'].sort_values('IV', ascending=True)
-                                                call_df.to_csv('test1.csv')
-                                                put_df.to_csv('test2.csv')
-
+                     
 
                                                 
 
                                                 # Add a field for the call options
-                                                call_table = call_df[['Sym','Price','Strike', 'IV', 'Exp', 'Type', 'Vol']].iloc[[0]]
-                                                put_table = put_df[['Sym','Price','Strike', 'IV', 'Exp', 'Type', 'Vol']].iloc[[0]]
+                                                call_table = call_df[['Sym','💲','Strike', 'IV', 'Exp', 'Type', 'Vol']].iloc[[0]]
+                                                put_table = put_df[['Sym','💲','Strike', 'IV', 'Exp', 'Type', 'Vol']].iloc[[0]]
                                                 put_rows = put_table.values.tolist()
                                                 put_table_str = tabulate(put_rows, headers=put_table.columns, tablefmt="fancy")
 
@@ -367,9 +426,6 @@ class Skew(commands.Cog):
                                     if counter == 50:
                                         await inter.send("Stream ended")
                                         break
-
-
-
 
 def setup(bot:commands.Bot):
     bot.add_cog(Skew(bot))

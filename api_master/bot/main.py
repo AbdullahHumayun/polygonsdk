@@ -32,7 +32,7 @@ from _discord import emojis
 
 
 fudstop = fudstopSDK()
-
+from stock_market import PolygonStockMarket
 
 
 from views.learnviews import MenuStart,AlertStart, DiscordStart,TAStart,MarketsView,CryptoViewStart,PageTwoView,PageThreeView,HighShortsViewStart,LowFloatDropdown
@@ -50,10 +50,8 @@ import disnake
 from disnake.ext import commands
 
 from views.learnviews import CriteriaView
-
+from polygon_enhanced.polygon_enhanced.websocket import WebSocketClient,WebSocketMessage,Market,EquityAgg,EquityQuote,EquityTrade
 from views.learnviews import AvoidView
-
-import asyncio
 
 
 from cfg import YOUR_API_KEY, YOUR_DISCORD_BOT_TOKEN
@@ -173,7 +171,7 @@ fmp_cmds = FMP(bot)
 
 
 
-
+stock_market = PolygonStockMarket()
 
 class RsiHourOption(OptionChoice):
     name = "rsi_hour"
@@ -191,6 +189,25 @@ class RsiHourOption(OptionChoice):
 
 
 
+@bot.slash_command()
+
+async def get_live_trades(inter:disnake.AppCmdInter, subscription: str = commands.Param(choices=["trades", "quotes", "aggregates"])):
+    if subscription == "trades":
+        
+        await stock_market.run_stream(subscriptions="T.*", inter=inter)
+        await inter.edit_original_message(WebSocketMessage)
+
+    elif subscription == "quotes":
+        await stock_market.run_stream(subscriptions="Q.*", inter=inter)
+ 
+
+
+
+
+    """Stream live trades directly from the polygon cluster."""
+
+    await inter.edit_original_message(WebSocketMessage)
+    
 
 
 

@@ -13,7 +13,7 @@ import csv
 import aiohttp
 import aiofiles
 import re
-from polygon.exceptions import BadResponse
+
 from .option_snapshot import OptionSnapshotData
 from .universal_snapshot import UniversalOptionSnapshot, UniversalSnapshot, CallsOrPuts
 from typing import List, Optional
@@ -126,8 +126,7 @@ class PolygonOptionsSDK:
         try:
             match = re.search(r'O:(\w{1,5})(\d{2})(\d{2})(\d{2})([CP])(\d+)', symb)
             underlying_symbol, year, month, day, call_put, strike_price = match.groups() 
-        except BadResponse:
-            return "N/A"
+
         except AttributeError:
             return "M/A"
         
@@ -725,20 +724,20 @@ class PolygonOptionsSDK:
                     print(f"Error processing tickers: {tickers}. Error: {e}")
                     return pd.DataFrame()
 
-    async def get_near_the_money_options(self,ticker:str):
+    async def get_near_the_money_options(self, ticker: str, lower_threshold: float, upper_threshold: float):
         ticker = ticker.upper()
         if ticker.startswith("SPX"):
             price = await self.get_index_price(ticker)
-            lower_strike = round(price) * 0.98
-            upper_strike = round(price) * 1.02
+            lower_strike = round(price) * 0.985
+            upper_strike = round(price) * 1.015
         else:
             price = await self.get_stock_price(ticker)
-            lower_strike = round(price) * 0.90
-            upper_strike = round(price) * 1.10
+            lower_strike = round(price * (1 - lower_threshold/100), 2)
+            upper_strike = round(price * (1 + upper_threshold/100), 2)
         print(f"SPX TICKER: {ticker}: {lower_strike}, {price}, {upper_strike}")
 
         async with aiohttp.ClientSession() as session:
-            initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte=2023-12-30&limit=250&apiKey={YOUR_API_KEY}"
+            initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte={fifteen_days_from_now_str}&limit=250&apiKey={YOUR_API_KEY}"
 
             results = await self._request_all_pages(initial_url)
             if results is not None:
@@ -747,6 +746,7 @@ class PolygonOptionsSDK:
                 puts = option_data.df[option_data.df['type'] == 'put']
                 calls_grouped = calls.groupby('exp')
                 puts_grouped = puts.groupby('exp')
+
                 async def process_grouped_tickers(grouped_df, session):
                     results = []
                     for _, group in grouped_df:
@@ -763,9 +763,16 @@ class PolygonOptionsSDK:
                             except Exception as e:
                                 print(f"Error processing tickers_string: {tickers_string}. Error: {e}")
                     return results
-                
-                calls_results = await process_grouped_tickers(calls_grouped, session)
-                puts_results = await process_grouped_tickers(puts_grouped, session)
+
+                # Create a list of tasks to run concurrently
+                tasks = [
+                    process_grouped_tickers(calls_grouped, session),
+                    process_grouped_tickers(puts_grouped, session)
+                ]
+
+                # Run the tasks concurrently and gather the results
+                calls_results, puts_results = await asyncio.gather(*tasks)
+
                 calls_results_df = pd.concat(calls_results)
                 puts_results_df = pd.concat(puts_results)
 

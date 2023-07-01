@@ -95,7 +95,16 @@ class AsyncWebullSDK:
                 results = GainersData(top_gainers)
                 
             return results    
-
+    async def get_top_traded_options(self):
+        async with aiohttp.ClientSession() as session:
+            url="https://quotes-gw.webullfintech.com/api/wlas/option/rank/list?regionId=6&rankType=totalVolume&pageIndex=1&pageSize=300"
+            async with session.get(url) as resp:
+                r = await resp.json()
+                data = r['data']
+                if data is not None:
+                    ticker = [i['ticker'] if 'ticker' is not None else None for i in data]
+                    symb = [i['symbol'] if 'symbol' in i else None for i in ticker]
+                    return symb
 
     async def fifty_two_high_and_lows(self):
         """Returns tickers near low/high or new low/high on the year."""

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Skew Data</title>
+    <!-- Include Bootstrap CSS for table styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #000;
+            background-image: url('matrix-code.jpg');
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #98c103;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .table-container {
+            margin-top: 30px;
+        }
+
+        .table {
+            background-color: #000;
+            color: #fff;
+            border: none;
+        }
+
+        .table thead th {
+            background-color: #98c103;
+            color: #000;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 10px;
+            border-top: none;
+            border-bottom: none;
+        }
+
+        .table tbody td {
+            background-color: #000;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .table tbody td.red {
+            background-color: #ff5252;
+            color: #fff;
+        }
+
+        .table tbody td.green {
+            background-color: #282b28;
+        }
+
+        .table tbody td.blue {
+            background-color: #0000ff;
+        }
+
+        .table tbody td:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Skew Data</h1>
+        <!-- Render the table here -->
+        <div id="table-container" class="table-container">
+            {{ table | safe }}
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const table = document.getElementById("options-table");
+            for (let i = 1, row; row = table.rows[i]; i++) {
+                // Parse the current price, call strike price, and put strike price from the row
+                let currentPrice = parseFloat(row.cells[4].innerText);
+                let callStrikePrice = parseFloat(row.cells[2].innerText);
+                let putStrikePrice = parseFloat(row.cells[6].innerText);
+
+                // Add color classes based on the data values
+                if (callStrikePrice < currentPrice) {
+                    row.cells[2].classList.add('red');
+                } else if (callStrikePrice > currentPrice) {
+                    row.cells[2].classList.add('green');
+                }
+
+                if (putStrikePrice > currentPrice) {
+                    row.cells[6].classList.add('red');
+                } else if (putStrikePrice < currentPrice) {
+                    row.cells[6].classList.add('blue');
+                }
+
+                // Add click event listeners to each cell
+                for (let j = 0, cell; cell = row.cells[j]; j++) {
+                    cell.addEventListener('click', function() {
+                        // Toggle the color classes when a cell is clicked
+                        if (this.classList.contains('red')) {
+                            this.classList.remove('red');
+                            this.classList.add('green');
+                        } else if (this.classList.contains('green')) {
+                            this.classList.remove('green');
+                        } else if (this.classList.contains('blue')) {
+                            this.classList.remove('blue');
+                        } else {
+                            this.classList.add('blue');
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>
