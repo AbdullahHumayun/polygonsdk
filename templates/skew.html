@@ -87,20 +87,24 @@
                 let currentPrice = parseFloat(row.cells[4].innerText);
                 let callStrikePrice = parseFloat(row.cells[2].innerText);
                 let putStrikePrice = parseFloat(row.cells[6].innerText);
-
+    
                 // Add color classes based on the data values
-                if (callStrikePrice < currentPrice) {
-                    row.cells[2].classList.add('red');
-                } else if (callStrikePrice > currentPrice) {
-                    row.cells[2].classList.add('green');
+                if (!isNaN(callStrikePrice)) {
+                    if (callStrikePrice < currentPrice) {
+                        row.cells[2].classList.add('red');
+                    } else if (callStrikePrice > currentPrice) {
+                        row.cells[2].classList.add('green');
+                    }
                 }
-
-                if (putStrikePrice > currentPrice) {
-                    row.cells[6].classList.add('red');
-                } else if (putStrikePrice < currentPrice) {
-                    row.cells[6].classList.add('blue');
+    
+                if (!isNaN(putStrikePrice)) {
+                    if (putStrikePrice > currentPrice) {
+                        row.cells[6].classList.add('red');
+                    } else if (putStrikePrice < currentPrice) {
+                        row.cells[6].classList.add('blue');
+                    }
                 }
-
+    
                 // Add click event listeners to each cell
                 for (let j = 0, cell; cell = row.cells[j]; j++) {
                     cell.addEventListener('click', function() {
