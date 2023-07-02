@@ -3,7 +3,7 @@ import pandas as pd
 
 class UniversalSnapshot:
     def __init__(self, results):
-        session = [i['session'] if i['session'] is not None else None for i in results]
+        session = [i['session'] if 'session' is not None else None for i in results]
         self.change = [i['change'] if 'change' in i else None for i in session]
         self.change_percent = [i['change_percent'] if 'change_percent' in i else None for i in session]
         self.early_trading_change = [i['early_trading_change'] if 'early_trading_change' in i else None for i in session]
@@ -91,7 +91,7 @@ class UniversalSnapshot:
             'Ask Size': self.ask_size,
             'Bid': self.bid,
             'Bid Size': self.bid_size,
-            'Midpoint': self.midpoint,
+            'entryCost': self.midpoint,
             'Last Trade Sip Timestamp': self.sip_timestamp,
             'Last Trade Conditions': self.conditions,
             'Last Trade Price': self.trade_price,
@@ -202,7 +202,7 @@ class UniversalOptionSnapshot:
             'bid_size': self.bid_size,
             'ask_size': self.ask_size,
             'vol': self.volume,
-            'mid': self.midpoint,
+            'entryCost': self.midpoint,
             'change_to_breakeven': self.change_to_breakeven,
             'price': self.underlying_price,
             'sym': self.underlying_ticker

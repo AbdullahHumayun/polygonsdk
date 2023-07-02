@@ -1,3 +1,5 @@
+import pandas as pd
+
 class GainersData:
     def __init__(self, data):
         self.tickerId = [int(i['ticker']['tickerId']) if isinstance(i['ticker']['tickerId'], str) else i['ticker']['tickerId'] for i in data if 'ticker' in i and 'tickerId' in i['ticker']]
@@ -76,4 +78,45 @@ class Ticker:
         self.pchange = [i['pchange'] if 'pchange' in i else None for i in ticker]
         self.pchRatio = [i['pchRatio'] if 'pchRatio' in i else None for i in ticker]
         self.pprice = [i['pprice'] if 'pprice' in i else None for i in ticker]
+        self.data_dict = {
+            'tickerId': self.tickerId,
+            'exchangeId': self.exchangeId,
+            'type': self.type,
+            'secType': self.secType,
+            'regionId': self.regionId,
+            'currencyId': self.currencyId,
+            'currencyCode': self.currencyCode,
+            'name': self.name,
+            'symbol': self.symbol,
+            'disSymbol': self.disSymbol,
+            'disExchangeCode': self.disExchangeCode,
+            'exchangeCode': self.exchangeCode,
+            'listStatus': self.listStatus,
+            'template': self.template,
+            'derivativeSupport': self.derivativeSupport,
+            'isPTP': self.isPTP,
+            'tradeTime': self.tradeTime,
+            'faTradeTime': self.faTradeTime,
+            'status': self.status,
+            'close': self.close,
+            'change': self.change,
+            'changeRatio': self.changeRatio,
+            'marketValue': self.marketValue,
+            'volume': self.volume,
+            'regionName': self.regionName,
+            'regionIsoCode': self.regionIsoCode,
+            'peTtm': self.peTtm,
+            'preClose': self.preClose,
+            'fiftyTwoWkHigh': self.fiftyTwoWkHigh,
+            'fiftyTwoWkLow': self.fiftyTwoWkLow,
+            'open': self.open,
+            'high': self.high,
+            'low': self.low,
+            'vibrateRatio': self.vibrateRatio,
+            'pchange': self.pchange,
+            'pchRatio': self.pchRatio,
+            'pprice': self.pprice
+        }
+
+        self.df = pd.DataFrame(self.data_dict)
 

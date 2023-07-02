@@ -233,10 +233,10 @@ class MarketSummary:
 
 class NewsSentiment:
     def __init__(self, data):
-        self.Date = [i['Date'] if i['Date'] is not None else None for i in data]
-        self.Title = [i['Title'] if i['Title'] is not None else None for i in data]
-        self.Link = [i['Link'] if i['Link'] is not None else None for i in data]
-        self.Sentiment = [i['Sentiment'] if i['Sentiment'] is not None else None for i in data]
+        self.Date = [i['Date'] if 'Date' in i else None for i in data]
+        self.Title = [i['Title'] if 'Title' in i else None for i in data]
+        self.Link = [i['Link'] if 'Link' in i else None for i in data]
+        self.Sentiment = [i['Sentiment'] if 'Sentiment' in i else None for i in data]
 
 class RetailSales:
     def __init__(self, data):

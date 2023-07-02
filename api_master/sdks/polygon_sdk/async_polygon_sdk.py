@@ -19,7 +19,7 @@ from .technicals.sma import SimpleMovingAverage
 from _discord import emojis
 import csv
 from cfg import YOUR_API_KEY
-from .news import News
+
 from datetime import datetime, timedelta
 from .snapshot import StockSnapshot
 import numpy as np
@@ -916,14 +916,7 @@ class AsyncPolygonSDK:
 
         return self.ivperavg
 
-    async def get_ticker_narrative(self, ticker, limit=10):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(f"https://api.polygon.io/v2/reference/news?ticker={ticker}&limit={limit}&sort=published_utc&apiKey={self.api_key}") as response:
-                data = await response.json()
 
-                results = data['results']
-                news_narrative = [News(i) for i in results if i is not None]
-                return news_narrative
 
      
     async def format_timestamp(self, timestamp: datetime) -> str:
@@ -1164,7 +1157,7 @@ class AsyncPolygonSDK:
         return upper_band, middle_band, lower_band
 
 
-    def get_polygon_logo(symbol):
+    def get_polygon_logo_sync(symbol):
         data = session().get(f"https://api.polygon.io/v3/reference/tickers/{symbol}?apiKey={YOUR_API_KEY}")
                 
         if 'results' not in data:

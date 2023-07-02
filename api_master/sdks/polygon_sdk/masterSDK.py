@@ -2,12 +2,15 @@ from cfg import YOUR_API_KEY, thirty_days_from_now_str, fifteen_days_from_now_st
 import aiohttp
 from .async_options_sdk import PolygonOptionsSDK
 from .universal_snapshot import UniversalOptionSnapshot, UniversalSnapshot
+from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from typing import List
 from tabulate import tabulate
 import pandas as pd
 import asyncio
 sdk = PolygonOptionsSDK(YOUR_API_KEY)
 from urllib.parse import urlencode
+
+webull = AsyncWebullSDK()
 class MasterSDK(PolygonOptionsSDK):
     def __init__(self):
         self.api_key = YOUR_API_KEY
@@ -45,12 +48,14 @@ class MasterSDK(PolygonOptionsSDK):
     async def find_skew(self, atm_options):
         async with aiohttp.ClientSession() as session:
             url=f"https://api.polygon.io/v3/snapshot?ticker.any_of={atm_options}&limit=250&apiKey={YOUR_API_KEY}"
-            async with session.get(url) as resp:
-                r = await resp.json()
+            async with session.get(url):
+                r = await self._request_all_pages_concurrently(url)
                 data = r['results'] if 'results' in r else None
                 if data is not None:
                     try:
-                        return UniversalSnapshot(data)
+                        option_data = UniversalSnapshot(data)
+                        skew_row = option_data.df.sort_values('IV', ascending=True)
+                        return skew_row.iloc[[0]]
                     except KeyError:
                         return None
     async def find_multiple_skews(self,atm_options_list):
@@ -131,26 +136,28 @@ class MasterSDK(PolygonOptionsSDK):
         return all_data
 
     async def get_near_the_money_single(self, ticker: str, threshold: float):
-        if ticker.startswith("SPX") or ticker.startswith("VIX") or ticker.startswith("NDX"):
-            price = await self.get_index_price(ticker)
-        else:
-            price = await self.get_stock_price(ticker)
-        if price is not None:
-            lower_strike = round(price * (1 - threshold/100), 2)
-            upper_strike = round(price * (1 + threshold/100), 2)
+        if ticker is not None:
+            if ticker.startswith("SPX") or ticker.startswith("VIX") or ticker.startswith("NDX"):
+                price = await self.get_index_price(ticker)
+            else:
+                price = await self.get_stock_price(ticker)
+            if price is not None:
+                lower_strike = round(price * (1 - threshold/100), 2)
+                upper_strike = round(price * (1 + threshold/100), 2)
 
-            async with aiohttp.ClientSession() as session:
-                url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.lte={upper_strike}&strike_price.gte={lower_strike}&expiration_date.lte={fifteen_days_from_now_str}&expiration_date.gt={today_str}&limit=250&apiKey={YOUR_API_KEY}"
-                async with session.get(url) as resp:
-                    r = await resp.json()
-                    results = r['results']
-                    if results is not None:
-                        results = UniversalOptionSnapshot(results)
-                        tickers = results.ticker
-                        atm_tickers = ','.join(tickers)
-                        return atm_tickers
-        else:
-            return None
+                async with aiohttp.ClientSession() as session:
+                    url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.lte={upper_strike}&strike_price.gte={lower_strike}&expiration_date.lte={fifteen_days_from_now_str}&expiration_date.gt={today_str}&limit=250&apiKey={YOUR_API_KEY}"
+                    async with session.get(url) as resp:
+                        r = await resp.json()
+                        results = r['results']
+                        if results is not None:
+                            results = UniversalOptionSnapshot(results)
+                            tickers = results.ticker
+                            atm_tickers = ','.join(tickers)
+                            return atm_tickers
+            else:
+                return None
+        return None
                 
     async def fetch_data(self, session, url):
         async with session.get(url) as resp:
@@ -193,13 +200,16 @@ class MasterSDK(PolygonOptionsSDK):
         url = f"https://api.polygon.io/v3/snapshot?ticker.any_of=I:{ticker}&apiKey={self.api_key}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
-
                 data = await resp.json()
                 results = data['results'] if data['results'] is not None else None
                 if results is None:
                     print(f"Error - results from price request.")
-                value = results[0]['value']
-                return value
+
+                else:
+                    value = results[0]['value'] if results and len(results) > 0 and 'value' in results[0] else None
+                    if value is not None:
+                        return value
+        return None
     
     async def get_stock_price(self, ticker=str):
         url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={self.api_key}"
@@ -212,7 +222,61 @@ class MasterSDK(PolygonOptionsSDK):
                         value = results[0]['session']['close']
                         if value is not None:
                             return value
+                        else:
+                            return None
                 except KeyError:
                     pass  # Handle the KeyError and continue with the next ticker
 
         return None  # Return None if the stock price couldn't be retrieved
+    async def fetch_rsi(self, session, url, ticker, timespan):
+        async with session.get(url) as resp:
+            r = await resp.json()
+            results = r.get('results')
+
+            if results:
+                values = results.get('values')
+                if values:
+                    rsi_value = values[0]['value']  # Get the first RSI value
+                    return (ticker, timespan, rsi_value)
+        return None
+
+    async def scan_all_rsi(self):
+        """Scans top 500 tickers and returns RSI snapshots."""
+        async with aiohttp.ClientSession() as session:
+            tickers = await webull.get_top_traded_options()
+            more_tickers = await webull.get_top_options()
+
+            combined_tickers = list(set(tickers) | set(more_tickers))
+            timespans = ['minute', 'hour', 'day', 'week', 'month', 'quarter', 'year']
+
+            tasks = []
+            for ticker in combined_tickers:
+                for timespan in timespans:
+                    url = f"https://api.polygon.io/v1/indicators/rsi/{ticker}?timespan={timespan}&adjusted=true&window=14&series_type=close&order=desc&limit=1000&apiKey={self.api_key}"
+                    task = asyncio.create_task(self.fetch_rsi(session, url, ticker, timespan))
+                    tasks.append(task)
+
+            results = await asyncio.gather(*tasks)
+            results = [result for result in results if result is not None]
+
+            # Initialize a dictionary for storing the results
+            rsi_dict = {}
+
+            for result in results:
+                ticker, timespan, rsi_value = result
+                if rsi_value < 30 or rsi_value > 70:
+                    if ticker not in rsi_dict:
+                        rsi_dict[ticker] = {}
+                    rsi_dict[ticker][timespan] = rsi_value
+
+            # Convert the nested dictionary to a list of dictionaries for tabulate
+            table = []
+            for ticker, timespan_values in rsi_dict.items():
+                row = {"Ticker": ticker}
+                row.update(timespan_values)
+                table.append(row)
+            df = pd.DataFrame(table)
+            df.to_csv('rsi_values.csv', index=False)
+            print(tabulate(table, headers="keys", tablefmt="pretty"))
+
+            return df

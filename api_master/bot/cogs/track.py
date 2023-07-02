@@ -2,6 +2,7 @@ import disnake
 from disnake.ext import commands
 from autocomp import ticker_autocomp
 import numpy as np
+from sdks.polygon_sdk.masterSDK import MasterSDK
 from discord_webhook import DiscordEmbed,DiscordWebhook
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from cfg import YOUR_API_KEY, today_str
@@ -13,7 +14,7 @@ from tabulate import tabulate
 import aiohttp
 import asyncio
 import pandas as pd
-
+master = MasterSDK()
 class Track(commands.Cog):
     def __init__(self, bot):
         self.bot=bot
@@ -138,10 +139,15 @@ class Track(commands.Cog):
                         table = tabulate(merged_df, headers='keys', tablefmt='fancy', showindex=False)
                         embed = disnake.Embed(title=f"Support + Resistance Tracker", description=f"```{table}```", color=disnake.Colour.random())
                         embed.add_field(name=f"Info:", value=f"```py\nViewing calls vs put volume for {ticker} in real time. A Check = support. An X = resistance.```")
-
-
-                    
                         await inter.edit_original_message(embed=embed)
+    @track.sub_command()
+    async def rsi(self, inter:disnake.AppCmdInter):
+        await inter.response.defer()
+        await master.scan_all_rsi()
+        await inter.edit_original_message(file=disnake.File('rsi_values.csv'))
+        await inter.send(f"> Market finished scanning all RSIs across all timeframes.")
+           
+
     @track.sub_command()
     async def volume_oi(self, inter:disnake.AppCmdInter,tickers:str):
         """Track volume, oi, and IV skew for multiple tickers"""

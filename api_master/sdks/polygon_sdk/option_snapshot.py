@@ -7,111 +7,102 @@ from cfg import YOUR_API_KEY as API_KEY, today_str, seven_days_from_now_str
 import json
 class OptionSnapshotData:
     def __init__(self, data):
-        if isinstance(data, str):
-            try:
-                data = json.loads(data)
-            except json.JSONDecodeError:
-                print(f"JSONDecodeError: Unable to parse JSON data: {data}")
-                return
+        self.implied_volatility = [i['implied_volatility'] if 'implied_volatility' in i else None for i in data]
+        self.open_interest = [i['open_interest'] if 'open_interest' in i else None for i in data]
+        self.break_even_price = [i['break_even_price'] if 'break_even_price' in i else None for i in data]
 
-        for i in data:
-            self.implied_volatility = i.get("implied_volatility", None)
-            self.open_interest = i.get("open_interest")
-            self.break_even_price = i.get("break_even_price")
+        day = [i['day'] if i['day'] is not None else None for i in data]
+        self.day_close = [i['day_close'] if 'day_close' in i else None for i in day]
+        self.day_high = [i['day_high'] if 'day_high' in i else None for i in day]
+        self.last_updated  = [i['last_updated'] if 'last_updated' in i else None for i in day]
+        self.day_low  = [i['day_low'] if 'day_low' in i else None for i in day]
+        self.day_open  = [i['day_open'] if 'day_open' in i else None for i in day]
+        self.day_change_percent  = [i['day_change_percent'] if 'day_change_percent' in i else None for i in day]
+        self.day_change  = [i['day_change'] if 'day_change' in i else None for i in day]
+        self.previous_close = [i['previous_close'] if 'previous_close' in i else None for i in day]
+        self.day_volume = [i['day_volume'] if 'day_volume' in i else None for i in day]
+        self.day_vwap  = [i['day_vwap'] if 'day_vwap' in i else None for i in day]
 
-            day = i.get('day')
-            self.day_close = day.get("close")
-            self.day_high = day.get("high")
-            self.last_updated = day.get("last_updated")
-            self.day_low = day.get("low")
-            self.day_open = day.get("open")
-            self.day_change_percent = day.get('change_percent')
-            self.day_change = day.get('change')
-            self.previous_close = day.get("previous_close")
-            self.day_volume = day.get("volume")
-            self.day_vwap = day.get("vwap")
+        details = [i['details'] if i['details'] is not None else None for i in data]
+        self.contract_type = [i['contract_type'] if 'contract_type' in i else None for i in details]
+        self.exercise_style = [i['exercise_style'] if 'exercise_style' in i else None for i in details]
+        self.expiration_date = [i['expiration_date'] if 'expiration_date' in i else None for i in details]
+        self.shares_per_contract= [i['shares_per_contract'] if 'shares_per_contract' in i else None for i in details]
+        self.strike_price = [i['strike_price'] if 'strike_price' in i else None for i in details]
+        self.option_symbol = [i['option_symbol'] if 'option_symbol' in i else None for i in details]
 
-            details = i.get('details')
-            self.contract_type = details.get("contract_type")
-            self.exercise_style = details.get("exercise_style")
-            self.expiration_date = details.get("expiration_date")
-            self.shares_per_contract = details.get("shares_per_contract")
-            self.strike_price = details.get("strike_price")
-            self.option_symbol = details.get("option_symbol")
+        greeks = [i['greeks'] if i['greeks'] is not None else None for i in data]
+        self.delta = [i['delta'] if 'delta' in i else None for i in greeks]
+        self.gamma= [i['gamma'] if 'gamma' in i else None for i in greeks]
+        self.theta= [i['theta'] if 'theta' in i else None for i in greeks]
+        self.vega = [i['vega'] if 'vega' in i else None for i in greeks]
 
-            greeks = i.get('greeks')
-            self.delta = greeks.get("delta")
-            self.gamma = greeks.get("gamma")
-            self.theta = greeks.get("theta")
-            self.vega = greeks.get("vega")
+        lastquote = [i['last_quote'] if i['last_quote'] is not None else None for i in data]
+        self.ask = [i['ask'] if 'ask' in i else None for i in lastquote]
+        self.ask_size = [i['ask_size'] if 'ask_size' in i else None for i in lastquote]
+        self.bid= [i['bid'] if 'bid' in i else None for i in lastquote]
+        self.bid_size= [i['bid_size'] if 'bid_size' in i else None for i in lastquote]
+        self.quote_last_updated= [i['quote_last_updated'] if 'quote_last_updated' in i else None for i in lastquote]
+        self.midpoint = [i['midpoint'] if 'midpoint' in i else None for i in lastquote]
 
-            lastquote = i.get('last_quote')
-            self.ask = lastquote.get("ask")
-            self.ask_size = lastquote.get("ask_size")
-            self.bid = lastquote.get("bid")
-            self.bid_size = lastquote.get("bid_size")
-            self.quote_last_updated = lastquote.get("last_updated")
-            self.midpoint = lastquote.get("midpoint")
 
-            lasttrade = i.get('last_trade')
-            self.conditions = lasttrade.get("conditions")
-            self.exchange = lasttrade.get("exchange")
-            self.price = lasttrade.get("price")
-            self.sip_timestamp = lasttrade.get("sip_timestamp")
-            self.size = lasttrade.get("size")
+        lasttrade = [i['last_trade'] if i['last_trade'] is not None else None for i in data]
+        self.conditions = [i['conditions'] if 'conditions' in i else None for i in lasttrade]
+        self.exchange = [i['exchange'] if 'exchange' in i else None for i in lasttrade]
+        self.price= [i['price'] if 'price' in i else None for i in lasttrade]
+        self.sip_timestamp= [i['sip_timestamp'] if 'sip_timestamp' in i else None for i in lasttrade]
+        self.size= [i['size'] if 'size' in i else None for i in lasttrade]
 
-            underlying = i.get('underlying_asset')
-            self.change_to_break_even = underlying.get("change_to_break_even")
-            self.underlying_last_updated = underlying.get("last_updated")
-            self.underlying_price = underlying.get("price")
-            self.underlying_ticker = underlying.get("ticker")
-            self.data_dict = {
-            "implied_volatility": [i.get("implied_volatility", None) for i in data],
-            "open_interest": [i.get("open_interest") for i in data],
-            "break_even_price": [i.get("break_even_price") for i in data],
-            "day_close": [i.get('day').get("close") for i in data],
-            "day_high": [i.get('day').get("high") for i in data],
-            "last_updated": [i.get('day').get("last_updated") for i in data],
-            "day_low": [i.get('day').get("low") for i in data],
-            "day_open": [i.get('day').get("open") for i in data],
-            "day_change_percent": [i.get('day').get("change_percent") for i in data],
-            "day_change": [i.get('day').get("change") for i in data],
-            "previous_close": [i.get('day').get("previous_close") for i in data],
-            "day_volume": [i.get('day').get("volume") for i in data],
-            "day_vwap": [i.get('day').get("vwap") for i in data],
-            "contract_type": [i.get('details').get("contract_type") for i in data],
-            "exercise_style": [i.get('details').get("exercise_style") for i in data],
-            "expiration_date": [i.get('details').get("expiration_date") for i in data],
-            "shares_per_contract": [i.get('details').get("shares_per_contract") for i in data],
-            "strike_price": [i.get('details').get("strike_price") for i in data],
-            "option_symbol": [i.get('details').get("ticker") for i in data],
-            "delta": [i.get('greeks').get("delta") for i in data],
-            "gamma": [i.get('greeks').get("gamma") for i in data],
-            "theta": [i.get('greeks').get("theta") for i in data],
-            "vega": [i.get('greeks').get("vega") for i in data],
-            "ask": [i.get('last_quote').get("ask") for i in data],
-            "ask_size": [i.get('last_quote').get("ask_size") for i in data],
-            "bid": [i.get('last_quote').get("bid") for i in data],
-            "bid_size": [i.get('last_quote').get("bid_size") for i in data],
-            "quote_last_updated": [i.get('last_quote').get("last_updated") for i in data],
-            "midpoint": [i.get('last_quote').get("midpoint") for i in data],
-            "conditions": [i.get('last_trade').get("conditions") for i in data],
-            "exchange": [i.get('last_trade').get("exchange") for i in data],
-            "price": [i.get('last_trade').get("price") for i in data],
-            "sip_timestamp": [i.get('last_trade').get("sip_timestamp") for i in data],
-            "size": [i.get('last_trade').get("size") for i in data],
-            "change_to_break_even": [i.get('underlying_asset').get("change_to_break_even") for i in data],
-            "underlying_last_updated": [i.get('underlying_asset').get("last_updated") for i in data],
-            "underlying_price": [i.get('underlying_asset').get("price") for i in data],
-            "underlying_ticker": [i.get('underlying_asset').get("ticker") for i in data]
-        }
+        underlying = [i['underlying_asset'] if i['underlying_asset'] is not None else None for i in data]
+        self.change_to_break_even = [i['change_to_break_even'] if 'change_to_break_even' in i else None for i in underlying]
+        self.underlying_last_updated = [i['underlying_last_updated'] if 'underlying_last_updated' in i else None for i in underlying]
+        self.underlying_price = [i['underlying_price'] if 'underlying_price' in i else None for i in underlying]
+        self.underlying_ticker = [i['underlying_ticker'] if 'underlying_ticker' in i else None for i in underlying]
+
+
+        self.data_dict = {
+        "implied_volatility": self.implied_volatility,
+        "open_interest": self.open_interest,
+        "break_even_price": self.break_even_price,
+        "day_close": self.day_close,
+        "day_high": self.day_high,
+        "last_updated": self.last_updated,
+        "day_low": self.day_low,
+        "day_open": self.day_open,
+        "day_change_percent": self.day_change_percent,
+        "day_change": self.day_change,
+        "previous_close": self.previous_close,
+        "day_volume": self.day_volume,
+        "day_vwap": self.day_vwap,
+        "contract_type": self.contract_type,
+        "exercise_style": self.exercise_style,
+        "expiration_date": self.expiration_date,
+        "shares_per_contract": self.shares_per_contract,
+        "strike_price": self.strike_price,
+        "option_symbol": self.option_symbol,
+        "delta": self.delta,
+        "gamma": self.gamma,
+        "theta": self.theta,
+        "vega": self.vega,
+        "ask": self.ask,
+        "ask_size": self.ask_size,
+        "bid": self.bid,
+        "bid_size": self.bid_size,
+        "quote_last_updated": self.quote_last_updated,
+        "midpoint": self.midpoint,
+        "conditions": self.conditions,
+        "exchange": self.exchange,
+        "price": self.price,
+        "sip_timestamp": self.sip_timestamp,
+        "size": self.size,
+        "change_to_break_even": self.change_to_break_even,
+        "underlying_last_updated": self.underlying_last_updated,
+        "underlying_price": self.underlying_price,
+        "underlying_ticker": self.underlying_ticker
+    }
 
 
 
-    @classmethod
-    def to_dict(self):
-        return {slot: getattr(self, slot) for slot in self.__slots__}
-    
 
 
 async def get_near_the_money_options(ticker: str, lower_strike, upper_strike):

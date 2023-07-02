@@ -1,14 +1,17 @@
 import disnake
 from disnake.ext import commands
 from autocomp import ticker_autocomp
-
+from sdks.helpers.helpers import human_readable, extract_underlying_symbol
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+from datetime import datetime
 import pandas as pd
-from cfg import YOUR_API_KEY
+from tabulate import tabulate
+from cfg import YOUR_API_KEY, today_str, thirty_days_ago_str
 import asyncio
 
 polygon_sdk = AsyncPolygonSDK(YOUR_API_KEY)
-
+poly = PolygonOptionsSDK(YOUR_API_KEY)
 class PolygonCMD(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -106,6 +109,54 @@ class PolygonCMD(commands.Cog):
         embed.set_footer(text=f"Data Provided by Polygon.io | Implemented by FUDSTOP")
         await inter.edit_original_message(embed=embed)
 
+
+    @poly.sub_command()
+
+    async def option_aggregates(self, inter: disnake.AppCmdInter, underlying_ticker:str, strike_price:str, expiration_date:str, call_put: str = commands.Param(choices=["C", "P"])):
+        """Returns option aggregate data for the last 30 days with a spreadsheet."""
+        underlying_ticker = underlying_ticker.upper()
+        await inter.response.defer()
+        symbol = await poly.generate_option_symbol(underlying_ticker,expiration_date,call_put,strike_price)
+        underlying_symbol = await extract_underlying_symbol(symbol)
+        x = await polygon_sdk.get_aggregates(symbol,1,'day', from_date=thirty_days_ago_str, to_date=today_str, limit=500) 
+        close = x.close
+        high = x.high
+        low = x.low
+        open = x.open
+        timestamp = x.timestamp
+        volume = x.volume
+        vwap = x.volume_weighted_average
+        n = x.n
+
+        data_dict = { 
+
+            'close':close,
+            'high':high,
+            'open':open,
+            'low':low,
+            'volume':volume,
+            'vwap':vwap,
+            'timestamp':timestamp,
+            'num_trades':n
+        }
+
+        timestamps = [datetime.fromtimestamp(ts/1000).strftime('%m-%d') for ts in data_dict['timestamp']]
+
+        # Remove timestamp from data dictionary
+        data_dict.pop('timestamp')
+
+        # Set the timestamps as the index
+        data_dict['Timestamp'] = timestamps
+
+        table = tabulate(data_dict, headers='keys', tablefmt='fancy', showindex=True)
+
+        print(table)        
+        df = pd.DataFrame(data_dict)
+
+        df.to_csv('files/options/aggregates.csv')
+        embed = disnake.Embed(title=f"Option Aggregates - {human_readable(symbol)}", description=f"```{table}```", color=disnake.Colour.dark_gold())
+        embed.set_footer(text="Data Provided by Polygon.io", icon_url=await polygon_sdk.get_polygon_logo(underlying_symbol))
+        await inter.edit_original_message(embed=embed, file=disnake.File('files/options/aggregates.csv'))
 
 
 

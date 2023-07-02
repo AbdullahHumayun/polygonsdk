@@ -175,7 +175,7 @@ usdcny = os.environ.get('usdcny')
 
 ##OPTION EXCHANGES##
 nyse_amer_options = os.environ.get('nyse_amer_options')
-
+TRADING_IDEAS = os.environ.get('TRADING_IDEAS')
 
 
 

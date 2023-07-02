@@ -9,6 +9,7 @@ from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from cfg import YOUR_API_KEY
+import numpy as np
 from cfg import today_str,seven_days_from_now_str, today_str
 from sdks.polygon_sdk.universal_snapshot import UniversalOptionSnapshot,UniversalSnapshot
 from sdks.polygon_sdk.masterSDK import MasterSDK
@@ -17,7 +18,37 @@ from _discord import emojis
 import pandas as pd
 poly_opt = PolygonOptionsSDK(YOUR_API_KEY)
 sdk = MasterSDK()
+master = MasterSDK()
 webull = AsyncWebullSDK()
+
+class Stop(disnake.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+
+
+    @disnake.ui.button(style=disnake.ButtonStyle.red, emoji=f"🛑", disabled=True)
+    async def stop_start(self, button: disnake.ui.Button, inter:disnake.AppCmdInter):
+        button.disabled = True
+        await inter.client.loop.close()
+        view = Start()
+        await inter.edit_original_message(f"> Loop has been stopped!", view=view)
+        
+
+
+class Start(disnake.ui.View):
+
+    @disnake.ui.button(style=disnake.ButtonStyle.green,emoji=f"✅", disabled=False)
+    async def start_stop(self, button:disnake.ui.Button, inter:disnake.AppCmdInter):
+        button.disabled = True
+        view = Stop()
+        await inter.client.loop.call_soon(Skew(bot=commands.Bot).allskew(inter))
+        await inter.edit_original_message(view=view)
+        
+
+
+        
+
+
 class Skew(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
@@ -33,52 +64,55 @@ class Skew(commands.Cog):
     
     @skew.sub_command()
     async def allskew(self, inter:disnake.AppCmdInter):
+        """Scans and returns all skews with a depth of 5 or more, or -5 or less."""
         await inter.response.defer()
-        tickers = ["AMD", "GME", "NVDA", "TSLA", "UPST", "BIDU", "U", "W", "MSFT"]
-        all_rows = []
+        async def process_ticker(ticker, skews_outside_range):
+            x = await master.get_near_the_money_single(ticker, 5)
+            try:
+                skew = await master.find_skew(x)
+        
+                if 'Close' not in skew.columns or 'Skew' not in skew.columns:
+                    return
 
-        for ticker in tickers:
-            options_lists = await sdk.get_near_the_money_single(ticker, 5)
-            print(options_lists)
-            x = await poly_opt.get_universal_snapshot(options_lists)
+                skew['depth'] = skew['Strike'] - skew['💲']
+                
+                mask = (skew['depth'] < -10) | (skew['depth'] > 10)
+                selected_columns = skew[mask][['Sym', '💲', 'Skew', '🗓️', 'depth', 'IV']]
+                selected_columns['🗓️'] = selected_columns['🗓️'].str[5:]
+                selected_columns['Direction'] = np.where(selected_columns['💲'] > selected_columns['Skew'], '🔥', '🟢')
+                skews_outside_range.extend(selected_columns.to_dict('records'))
+                
+            except AttributeError:
+                return
+        counter = 0
+        while True:
+            counter = counter  + 1
+            tickers = await webull.top_total_volume()
+            tickers = tickers.symbol
+            more_tickers = await webull.get_top_options()
 
-            df = x.df
-            calls = df[df['C/P'] == 'call'].sort_values('IV', ascending=True)
-            puts = df[df['C/P'] == 'put'].sort_values('IV', ascending=True)
+            tickers = list(set(tickers) | set(more_tickers))
 
-            call_skew = calls.iloc[[0]]
-            put_skew = puts.iloc[[0]]
-            # Rename headers in call_skew DataFrame
-            call_skew = call_skew.rename(columns={"Vol": "C Vol", "OI": "C OI", "Skew": "C Skew", "IV": "C IV"})
+            tasks = []
+            skews_outside_range = []
 
-            # Rename headers in put_skew DataFrame
-            put_skew = put_skew.rename(columns={"Vol": "P Vol", "OI": "P OI", "Skew": "P Skew", "IV": "P IV"})
+            for ticker in tickers:
+                tasks.append(process_ticker(ticker, skews_outside_range))
 
-            # Select specific columns from call_skew DataFrame
-            call_skew_selected = call_skew[["Sym","C IV", "C OI", "C Skew"]].reset_index(drop=True)
+            await asyncio.gather(*tasks)
 
-            # Select specific columns from put_skew DataFrame
-            put_skew_selected = put_skew[["💲", "P Skew", "P OI", "P IV"]].reset_index(drop=True)
+            sorted_skews = sorted(skews_outside_range, key=lambda x: x['depth'])
 
-            combined_skew = pd.concat([call_skew_selected, put_skew_selected], axis=1)
-            combined_skew = combined_skew.fillna("")  # Replace remaining NaN values with empty string
 
-            # Dropping the duplicated 'Sym' column
-            # Modify IV columns
-            combined_skew["C IV"] = combined_skew["C IV"].apply(lambda x: round(float(x) * 100, 6) if x != "" else x)
-            combined_skew["P IV"] = combined_skew["P IV"].apply(lambda x: round(float(x) * 100, 6) if x != "" else x)
 
-            # Dropping the duplicated 'Sym' column
-            combined_skew = combined_skew.loc[:, ~combined_skew.columns.duplicated()]
-            all_rows.append(combined_skew)
+            table = tabulate(sorted_skews, headers='keys', tablefmt='fancy', showindex=False)
 
-        # Combine all dataframes in all_rows
-        all_data = pd.concat(all_rows)
-
-        # Print DataFrame as a fancy grid
-        data_table = tabulate(all_data, headers='keys', tablefmt='fancy', showindex=False)
-        embed = disnake.Embed(title=f"All Skew", description=f"```{data_table}```")
-        await inter.edit_original_message(embed=embed)
+            embed = disnake.Embed(title=f"{emojis.leftarrow} SKEW-DE-BOP-BOX {emojis.rightarrow}", description=f"```{table}```", color=disnake.Colour.random())
+            
+            await inter.edit_original_message(embed=embed)
+            if counter == 150:
+                await inter.send(f"> </skew allskew:1124756467724066824>")
+                break
 
     @skew.sub_command()
     async def multiple(inter: disnake.AppCmdInter, tickers: str):

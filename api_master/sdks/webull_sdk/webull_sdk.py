@@ -67,21 +67,6 @@ thresholds = {
 class AsyncWebullSDK:
     def __init__(self, tickerId=None, symbol=None):
         self.tickerId = tickerId
-        self._ticker = None
-        self._values = None
-        self._earning_release_id = None
-        self._ticker_id = None
-        self._region_id = None
-        self._qualifier = None
-        self._eps = None
-        self._eps_estimate = None
-        self._year = None
-        self._quarter = None
-        self._release_date = None
-        self._is_live = None
-        self._last_release_date = None
-        self._publish_status = None
-        self.tickerId = tickerId
         self.symbol = symbol
         self.base_url = "https://quotes-gw.webullfintech.com/api/"
 
@@ -97,14 +82,36 @@ class AsyncWebullSDK:
             return results    
     async def get_top_traded_options(self):
         async with aiohttp.ClientSession() as session:
-            url="https://quotes-gw.webullfintech.com/api/wlas/option/rank/list?regionId=6&rankType=totalVolume&pageIndex=1&pageSize=300"
-            async with session.get(url) as resp:
-                r = await resp.json()
-                data = r['data']
-                if data is not None:
-                    ticker = [i['ticker'] if 'ticker' in i else None for i in data]
-                    symb = [i['symbol'] if 'symbol' in i else None for i in ticker]
-                    return symb
+            rank_types = ['totalVolume', 'totalPosition']
+            ticker_symbols = []  # List to accumulate ticker symbols
+
+            for rank_type in rank_types:
+                url = f"https://quotes-gw.webullfintech.com/api/wlas/option/rank/list?regionId=6&rankType={rank_type}&pageIndex=1&pageSize=350"
+                async with session.get(url) as resp:
+                    r = await resp.json()
+                    data = r['data']
+                    if data is not None:
+                        ticker = [i['ticker'] if 'ticker' in i else None for i in data]
+                        symb = [i['symbol'] if 'symbol' in i else None for i in ticker]
+                        ticker_symbols.extend(symb)  # Append symbols to the accumulator list
+
+            unique_tickers = list(set(ticker_symbols))  # Remove duplicates using set() and convert back to a list
+            return unique_tickers  # Return the list of unique tickers
+        
+    async def get_top_options(self):
+        async with aiohttp.ClientSession() as session:
+            rank_types = ['impVol', 'volume', 'position', 'posIncrease', 'posDecrease']
+            ticker_symbols = []  # List to accumulate ticker symbols
+            for rank_type in rank_types:
+                url = f"https://quotes-gw.webullfintech.com/api/wlas/option/rank/list?regionId=6&rankType={rank_type}&pageIndex=1&pageSize=350"
+                async with session.get(url) as resp:
+                    r = await resp.json()
+                    data = r['data']
+                    derivative = [i['derivative'] if 'derivative' in i else None for i in data]
+                    sym = [i['unSymbol'] if 'unSymbol' in i else None for i in data]
+                    ticker_symbols.extend(sym)  # Append symbols to the accumulator list
+            unique_tickers = list(set(ticker_symbols))
+            return unique_tickers
 
     async def fifty_two_high_and_lows(self):
         """Returns tickers near low/high or new low/high on the year."""
@@ -118,18 +125,44 @@ class AsyncWebullSDK:
                     data = datas['data']
                     tickers += [i['ticker'] if 'ticker' in i else None for i in data]
         return Ticker(tickers)
-    async def top_active_stocks(self):
+    
+
+    async def top_total_position(self):
+        """Get the most active tickers by total open interest."""
+        url = f"https://quotes-gw.webullfintech.com/api/wlas/option/rank/list?regionId=6&rankType=totalPosition&pageIndex=1&pageSize=270"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                datas = await response.json()
+                data = datas['data']
+                tickers = [i['ticker'] if 'ticker' in i else None for i in data]
+            return Ticker(tickers)
+        
+    async def top_total_volume(self):
         """Get the most active tickers by relative volume, turnover, range, and volume"""
-        rank_types = ['rvol10d', 'volume', 'turnover', 'range']
-        tickers = []
-        for rank_type in rank_types:
-            url = f"https://quotes-gw.webullfintech.com/api/wlas/ranking/topActive?regionId=6&rankType={rank_type}&pageIndex=1&pageSize=350"
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url) as response:
-                    datas = await response.json()
-                    data = datas['data']
-                    tickers += [i['ticker'] if 'ticker' in i else None for i in data]
-        return Ticker(tickers)
+
+        url = f"https://quotes-gw.webullfintech.com/api/wlas/option/rank/list?regionId=6&rankType=totalVolume&pageIndex=1&pageSize=250"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                datas = await response.json()
+                data = datas['data']
+                tickers = [i['ticker'] if 'ticker' in i else None for i in data]
+            return Ticker(tickers)
+
+    async def get_top_option_string(self, type):
+        async with aiohttp.ClientSession() as session:
+            url = f"https://quotes-gw.webullfintech.com/api/wlas/option/rank/list?regionId=6&rankType={type}&pageIndex=1&pageSize=150"
+            async with session.get(url) as resp:
+                r = await resp.json()
+                data =r['data']
+                derivative = [i['derivative'] if 'derivative' in i else None for i in data]
+                symbols = [i['symbol'] if 'symbol' in i else None for i in derivative]
+
+                options_list = ['O:' + option for option in symbols]
+                options_string = ','.join(options_list)
+                print(options_string)
+                return options_string
+
+
     async def top_options_chains(self):
         rank_types = ['volume', 'position', 'turnover', 'posIncrease', 'posDecrease', 'impVol']
         tickers = []

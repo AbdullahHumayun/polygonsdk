@@ -88,14 +88,16 @@ class PolygonOptionsSDK:
                 results = data['results'] if data['results'] is not None else None
                 if results is not None:
                     return UniversalSnapshot(results)
-
-    async def _request_all_pages_concurrently(session, initial_url,api_key=YOUR_API_KEY):
+                else:
+                    return None
+ 
+    async def _request_all_pages_concurrently(self, session, initial_url):
 
         all_results = []
         next_url = initial_url
         while next_url:
             try:
-                async with session.get(next_url, params=params) as response:
+                async with session.get(next_url) as response:
                     response.raise_for_status()
                     data = await response.json()
 
@@ -104,8 +106,7 @@ class PolygonOptionsSDK:
 
                     next_url = data.get("next_url")
                     if next_url:
-                        next_url += f'&{urlencode({"apiKey": api_key})}'
-                        params = {}
+                        next_url += f'&{urlencode({"apiKey": YOUR_API_KEY})}'
 
             except aiohttp.ClientResponseError as http_err:
                 print(f"An HTTP error occurred: {http_err}")
@@ -132,24 +133,19 @@ class PolygonOptionsSDK:
         
         return underlying_symbol
 
-    async def get_option_quote(self, option_symbol, order="desc", limit="10", sort="timestamp", timestamp_lt=None, timestamp_lte=None, timestamp_gt=None, timestamp_gte=None):
-        url = f"{self.base_url}/v3/quotes/{option_symbol}?order={order}&limit={limit}&sort={sort}&apiKey={self.api_key}"
-        
-        if timestamp_lt:
-            url += f"&timestamp.lt={timestamp_lt}"
-        if timestamp_lte:
-            url += f"&timestamp.lte={timestamp_lte}"
-        if timestamp_gt:
-            url += f"&timestamp.gt={timestamp_gt}"
-        if timestamp_gte:
-            url += f"&timestamp.gte={timestamp_gte}"
-        
+    async def option_quotes(self, symbol:str, limit=10000):
         async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                data = await response.json()
-                print(url)
-                results = data['results']
-                return OptionQuote(results)
+            url = f"https://api.polygon.io/v3/quotes/{symbol}?limit={limit}&apiKey={self.api_key}"
+            async with session.get(url) as resp:
+                r = await resp.json()
+                results = r['results']
+                if results is not None:
+                    data = OptionQuote(results)
+                    return data
+                else:
+                    return None
+         
+
     async def _request(self, endpoint, params=None):
         if params is None:
             params = {}
@@ -577,31 +573,7 @@ class PolygonOptionsSDK:
         endpoint = f"/v2/last/trade/{options_ticker}"
         return await self._request(endpoint)
 
-    async def get_options_quotes(self, options_ticker, timestamp=None, order=None, limit=None, sort=None):
-        """
-        Get quotes for an options ticker symbol in a given time range.
-        
-        :param api_key: str, API key to access Polygon.io API
-        :param options_ticker: str, The ticker symbol to get quotes for
-        :param timestamp: str, optional, Query by timestamp (date format YYYY-MM-DD or a nanosecond timestamp)
-        :param order: str, optional, Order results based on the sort field
-        :param limit: int, optional, Limit the number of results returned (default is 10, max is 50000)
-        :param sort: str, optional, Sort field used for ordering
-        :return: dict, JSON response containing quote data
-        """
-        endpoint = f"/v3/quotes/{options_ticker}"
-        params = {}
-        if timestamp:
-            params += f"&timestamp={timestamp}"
-        if order:
-            params += f"&order={order}"
-        if limit:
-            params += f"&limit={limit}"
-        if sort:
-            params += f"&sort={sort}"
 
-        return await self._request(endpoint)
-    
 
     async def get_option_contract_snapshot(self, underlying_asset, option_contract):
         """
@@ -666,36 +638,33 @@ class PolygonOptionsSDK:
         :param sort: Sort field used for ordering.
         :return: A list containing all option chain data across all pages.
         """
-        endpoint = f"{self.base_url}/v3/snapshot/options/{underlying_asset}"
-        params = {
-            "strike_price": strike_price,
-            "expiration_date": expiration_date,
-            "contract_type": contract_type,
-            "order": order,
-            "limit": limit,
-            "sort": sort,
-            "apiKey": self.api_key
-        }
-        response_data = await self._request_all_pages(endpoint, params=params)
-        option_data = OptionSnapshotData(response_data)
+        endpoint = f"{self.base_url}/v3/snapshot/options/{underlying_asset}?limit=250&apiKey={self.api_key}"
+
+        async with aiohttp.ClientSession() as session:
+            response_data = await self._request_all_pages_concurrently(session, endpoint)
+            option_data = OptionSnapshotData(response_data)
   
-        return option_data
+            return option_data
     
 
     async def get_index_price(self, ticker=str):
         """Fetch the price of an index ticker"""
-        if ticker == "SPX":
-            url = f"https://api.polygon.io/v3/snapshot?ticker.any_of=I:{ticker}&apiKey={self.api_key}"
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url) as resp:
+        if ticker.startswith('SPXW'):
+            ticker = ticker.replace('SPXW','SPX')
+        url = f"https://api.polygon.io/v3/snapshot?ticker.any_of=I:{ticker}&apiKey={self.api_key}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
 
-                    data = await resp.json()
-                    results = data['results'] if data['results'] is not None else None
-                    if results is None:
-                        print(f"Error - results from price request.")
-                    value = results[0]['value']
+                data = await resp.json()
+                results = data['results'] if data['results'] is not None else None
+                if results is None:
+                    print(f"Error - results from price request.")
+                value = results[0]['value']
+                if value is not None:
                     return value
-    
+                else:
+                    return None
+
     async def get_stock_price(self, ticker=str):
         url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={self.api_key}"
         async with aiohttp.ClientSession() as session:

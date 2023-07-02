@@ -30,11 +30,9 @@ class StockeraSDK:
         Returns:
             Optional[JimCramer]: JimCramer data for the stock, or None if data is not available.
         """
-        data = JimCramer(client.jim_cramer(ticker=stock, segment="", call=""))
+        data = client.jim_cramer(ticker=stock, segment="", call="")
         if data:
-            return data
-        return None
-
+            return JimCramer(data) if data else JimCramer([])
     def jobless_claims(self, days: int = 100) -> Optional[JoblessClaims]:
         """Retrieve jobless claims data for a specific number of days.
 
@@ -44,10 +42,9 @@ class StockeraSDK:
         Returns:
             Optional[JoblessClaims]: Jobless claims data for the specified number of days, or None if data is not available.
         """
-        data = JoblessClaims(client.jobless_claims(days=days))
+        data = client.jobless_claims(days=days)
         if data:
-            return data
-        return None
+            return JoblessClaims(data) if data else JoblessClaims([])
     
     def IPO_calendar(self) -> Optional[IPOs]:
         """Retrieve IPO calendar data.
@@ -55,11 +52,9 @@ class StockeraSDK:
         Returns:
             Optional[IPOs]: IPO calendar data, or None if data is not available.
         """
-        data = IPOs(client.ipo_calendar())
+        data = client.ipo_calendar()
         if data:
-            return data
-        return None
-
+            return IPOs(data) if data else IPOs([])
     def earnings_calendar(self, date_from: str = today_str, date_to: str = thirty_days_from_now_str) -> Optional[EarningsCalendar]:
         """Retrieve earnings calendar data for a specified date range.
 
@@ -70,11 +65,9 @@ class StockeraSDK:
         Returns:
             Optional[EarningsCalendar]: Earnings calendar data for the specified date range, or None if data is not available.
         """
-        data = EarningsCalendar(client.earnings_calendar(date_from=date_from, date_to=date_to))
+        data = client.earnings_calendar(date_from=date_from, date_to=date_to)
         if data:
-            return data
-        else:
-            return None
+            return EarningsCalendar(data) if data else EarningsCalendar([])
 
     def ftd(self, date_from: str = two_years_ago_str, date_to: str = today_str) -> Optional[FTD]:
         """Retrieve Failure to Deliver (FTD) data for a specified date range.
@@ -86,10 +79,9 @@ class StockeraSDK:
         Returns:
             Optional[FTD]: Failure to Deliver (FTD) data for the specified date range, or None if data is not available.
         """
-        data = FTD(client.ftd(date_from=date_from, date_to=date_to))
+        data = client.ftd(date_from=date_from, date_to=date_to)
         if data:
-            return data
-        return None
+            return FTD(data) if data else FTD([])
 
     def low_float(self) -> List[LowFloat]:
         """Retrieve low float data.
@@ -97,10 +89,9 @@ class StockeraSDK:
         Returns:
             List[LowFloat]: List of low float data, or an empty list if data is not available.
         """
-        data = LowFloat(client.low_float())
+        data = client.low_float()
         if data:
-            return data
-        return []
+            return LowFloat(data) if data else LowFloat([])
 
     def market_news(self) -> List[MarketNews]:
         """Retrieve market news data.
@@ -108,10 +99,9 @@ class StockeraSDK:
         Returns:
             List[MarketNews]: List of market news data, or an empty list if data is not available.
         """
-        data = MarketNews(client.market_news())
+        data = client.market_news()
         if data:
-            return data
-        return []
+            return MarketNews(data) if data else MarketNews([])
 
     def house(self, name: str, ticker: str, state: str, date_from: str = today_str, date_to: str = thirty_days_from_now_str) -> Optional[House]:
         """Retrieve house data for a specific name, ticker, state, and date range.
@@ -126,10 +116,10 @@ class StockeraSDK:
         Returns:
             Optional[House]: House data for the specified parameters, or None if data is not available.
         """
-        data = House(client.house(name=name, ticker=ticker, state=state, date_from=date_from, date_to=date_to))
+        data = client.house(name=name, ticker=ticker, state=state, date_from=date_from, date_to=date_to)
         if data:
-            return data
-        return None
+            return House(data) if data else House([])
+
 
     def trading_halts(self) -> List[TradingHalts]:
         """Retrieve trading halts data.
@@ -137,10 +127,9 @@ class StockeraSDK:
         Returns:
             List[TradingHalts]: List of trading halts data, or an empty list if data is not available.
         """
-        data = TradingHalts(client.trading_halts())
+        data = client.trading_halts()
         if data:
-            return data
-        return []
+            return TradingHalts(data) if data else TradingHalts([])
 
     def retail_sales(self) -> List[RetailSales]:
         """Retrieve retail sales data.
@@ -148,10 +137,9 @@ class StockeraSDK:
         Returns:
             List[RetailSales]: List of retail sales data, or an empty list if data is not available.
         """
-        data = RetailSales(client.retail_sales())
+        data = client.retail_sales()
         if data:
-            return data
-        return []
+            return RetailSales(data) if data else RetailSales([])
 
     def inflation(self) -> pd.DataFrame:
         """Retrieve inflation data.
@@ -181,10 +169,9 @@ class StockeraSDK:
         Returns:
             List[ReverseRepo]: List of reverse repo data for the specified number of days, or an empty list if data is not available.
         """
-        data = ReverseRepo(client.reverse_repo(days=days))
+        data = client.reverse_repo(days=days)
         if data:
-            return data
-        return []
+            return ReverseRepo(data) if data else ReverseRepo([])
     
     def latest_insider_summary(self) -> Optional[LatestInsiderTradingSummary]:
         """Retrieve the latest insider trading summary data.
@@ -192,10 +179,9 @@ class StockeraSDK:
         Returns:
             Optional[LatestInsiderTradingSummary]: Latest insider trading summary data, or None if data is not available.
         """
-        data = LatestInsiderTradingSummary(client.latest_insider_trading_summary())
+        data = client.latest_insider_trading_summary()
         if data:
-            return data
-        return []
+            return LatestInsiderTradingSummary(data) if data else LatestInsiderTradingSummary([])
 
     def sec_fillings(self, stock: str) -> Optional[SECFillings]:
         """Retrieve SEC filings data for a specific stock.
@@ -206,10 +192,10 @@ class StockeraSDK:
         Returns:
             Optional[SECFillings]: SEC filings data for the stock, or None if data is not available.
         """
-        data = SECFillings(client.sec_fillings(stock))
+        data = client.sec_fillings(stock)
+
         if data:
-            return data
-        return []
+            return SECFillings(data) if data else SECFillings([])
 
     def senate(self, name: str, ticker: str, date_from: str = two_years_ago_str, date_to: str = today_str) -> Optional[Senate]:
         """Retrieve Senate data for a specific name, ticker, and date range.
@@ -240,10 +226,9 @@ class StockeraSDK:
         Returns:
             List[ShortVolume]: List of short volume data for the specified stock and date range, or an empty list if data is not available.
         """
-        data = ShortVolume(client.short_volume(stock))
+        data = client.short_volume(stock)
         if data:
-            return data
-        return []
+            return ShortVolume(data) if data else ShortVolume([])
     
     def short_interest(self) -> Optional[ShortInterest]:
         """Retrieve short interest data.
@@ -251,10 +236,9 @@ class StockeraSDK:
         Returns:
             Optional[ShortInterest]: Short interest data, or None if data is not available.
         """
-        data = ShortInterest(client.short_interest())
+        data = client.short_interest()
         if data:
-            return data
-        return []
+            return ShortInterest(data) if data else ShortInterest([])
 
     def stocktwits(self, stock: str) -> Optional[StockTwits]:
         """Retrieve StockTwits data for a specific stock.
@@ -265,10 +249,9 @@ class StockeraSDK:
         Returns:
             Optional[StockTwits]: StockTwits data for the stock, or None if data is not available.
         """
-        data = StockTwits(client.stocktwits(stock))
+        data = client.stocktwits(stock)
         if data:
-            return data
-        return None
+            return StockTwits(data) if data else StockTwits([])
 
     def subreddit(self, stock: str) -> List[Subreddit]:
         """Retrieve subreddit data for a specific stock.
@@ -279,10 +262,9 @@ class StockeraSDK:
         Returns:
             List[Subreddit]: List of subreddit data for the stock, or an empty list if data is not available.
         """
-        data = Subreddit(client.subreddit(stock))
+        data = client.subreddit(ticker=stock)
         if data:
-            return data
-        return []
+            return Subreddit(data) if data else Subreddit([])
 
     def daily_treasury(self, days: int = 100) -> List[DailyTreasury]:
         """Retrieve daily treasury data for a specific number of days.
@@ -293,10 +275,9 @@ class StockeraSDK:
         Returns:
             List[DailyTreasury]: List of daily treasury data for the specified number of days, or an empty list if data is not available.
         """
-        data = DailyTreasury(client.daily_treasury(days=days))
+        data = client.daily_treasury(days=days)
         if data:
-            return data
-        return []
+            return DailyTreasury(data) if data else DailyTreasury([])
 
     def wsb_mentions(self, stock: str) -> Optional[WSBMentions]:
         """Retrieve WSB mentions data for a specific stock.
@@ -307,10 +288,9 @@ class StockeraSDK:
         Returns:
             Optional[WSBMentions]: WSB mentions data for the stock, or None if data is not available.
         """
-        data = WSBMentions(client.wsb_mentions(stock))
+        data = client.wsb_mentions(stock)
         if data:
-            return data
-        return None
+            return WSBMentions(data) if data else WSBMentions([])
 
     def wsb_options(self, days: int) -> List[WSBOptions]:
         """Retrieve WSB options data for a specific number of days.
@@ -321,12 +301,11 @@ class StockeraSDK:
         Returns:
             List[WSBOptions]: List of WSB options data for the specified number of days, or an empty list if data is not available.
         """
-        data = WSBOptions(client.wsb_options(days=days))
+        data  = client.wsb_options(days=days)
         if data:
-            return data
-        return []
+            return WSBOptions(data) if data else WSBOptions([])
 
-    def news_sentiment(self, ticker: str) -> List[NewsSentiment]:
+    def news_sentiment(self, ticker: str):
         """Retrieve news sentiment data for a specific stock.
 
         Args:
@@ -335,7 +314,6 @@ class StockeraSDK:
         Returns:
             List[NewsSentiment]: List of news sentiment data for the stock, or an empty list if data is not available.
         """
-        data = NewsSentiment(client.news_sentiment(ticker))
+        data = client.news_sentiment(ticker)
         if data:
-            return data
-        return []
+            return NewsSentiment(data) if data else NewsSentiment([])

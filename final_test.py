@@ -2,57 +2,46 @@
 import aiohttp
 from api_master.sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 
-from collections import defaultdict
-from api_master.sdks.polygon_sdk.universal_snapshot import UniversalOptionSnapshot,UniversalSnapshot
+
 import asyncio
+from api_master.sdks.polygon_sdk.masterSDK import MasterSDK
 import pandas as pd
 from api_master.sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 import numpy as np
 from tabulate import tabulate
-from api_master.cfg import YOUR_API_KEY, today_str, thirty_days_from_now_str, two_years_from_now_str
+
 opts = PolygonOptionsSDK(YOUR_API_KEY)
 poly = AsyncPolygonSDK(YOUR_API_KEY)
+import json
+from api_master.sdks.polygon_sdk.news import TickerNews
+master = MasterSDK()
+async def get_news(session, url, previous_articles):
+    async with session.get(url) as resp:
+        r = await resp.json()
+        results = r['results'] if 'results' in r else None
 
-ticker="GME"
-async def main(tickers:str):
-    table_data = []
+        current_articles = set(json.dumps(article, sort_keys=True) for article in results)
+        new_articles = current_articles - previous_articles
 
-    for ticker in tickers:
-        atm_calls, atm_puts = await opts.get_near_the_money_options(ticker)
-        if ticker.startswith("SPX"):
-            price = await poly.get_index_price(ticker)
-        else:
-            price = await poly.get_stock_price(ticker)
+        return current_articles, new_articles
 
-        first_row_volume_calls = atm_calls.iloc[0]['Vol']
-        first_row_volume_puts = atm_puts.iloc[0]['Vol']
-        first_row_oi_calls = atm_calls.iloc[0]['OI']
-        first_row_oi_puts = atm_puts.iloc[0]['OI']
-        first_row_iv_puts = atm_puts.iloc[0]['IV']
-        first_row_iv_calls = atm_calls.iloc[0]['IV']
+async def main():
+    previous_articles = set()
 
-        first_row_exp_calls = atm_calls.iloc[0]['🗓️']
-        first_row_exp_puts = atm_puts.iloc[0]['🗓️']
-        first_row_skew_calls = atm_calls.iloc[0]['Skew']
-        first_row_skew_puts = atm_puts.iloc[0]['Skew']
+    url = f"https://api.polygon.io/v2/reference/news?limit=10&apiKey={YOUR_API_KEY}"
 
-        data_dict = {
-            'Ticker': ticker,
-            'Call Vol': first_row_volume_calls,
-            'Call OI': first_row_oi_calls,
-            'Call Skew': first_row_skew_calls,
-            'Price': price,
-            'Put Skew': first_row_skew_puts,
-            'Put OI': first_row_oi_puts,
-            'Put Vol': first_row_volume_puts,
-        }
+    async with aiohttp.ClientSession() as session:
+        while True:
+            current_articles, new_articles = await get_news(session, url, previous_articles)
 
-        table_data.append(data_dict)
+            for article in new_articles:
+                article = json.loads(article)
+                keywords = TickerNews(article).keywords
+                for keyword in keywords:
+                    print(keyword)
 
-    df = pd.DataFrame(table_data)
-    table = tabulate(df, headers='keys', tablefmt='fancy')
-    print(table)
+            previous_articles = current_articles
 
-tickers = ['SPX','AMD','NVDA']
+            await asyncio.sleep(60)  # Sleep for a minute before checking again
 
-# asyncio.run(main(tickers=tickers))
+asyncio.run(main())

@@ -15,35 +15,50 @@ from sdks.models.test_events import TestStocksEvent
 import pandas as pd
 
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-
+from sdks.polygon_sdk.masterSDK import MasterSDK
+from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from cfg import YOUR_API_KEY
 
 from asyncio import Queue
 
-
+master = MasterSDK()
+webull = AsyncWebullSDK()
 sdk = AsyncPolygonSDK(YOUR_API_KEY)
 df = pd.read_csv('files/stocks/all_snapshots.csv') #you must first download this file by running the "get_latest_ticker_data.py" file.
 
+from tabulate import tabulate
 
-async def consume(queue: Queue):
+async def consume(queue: asyncio.Queue):
     while True:
-        m = await queue.get()
-        ask = m.last_quote_ask
-        close =m.close
-        low=m.low
-        open = m.open
-        high = m.high
-        volume = m.volume
-        prev_volume = m.prev_volume
-        prev_vwap = m.prev_vwap
-        vwap = m.vwap
-        bid = m.last_quote_bid
-        conditions = m.last_trade_conditions
-        print(open, high)
-        # Process the event as necessary
-        
-        
+        ticker_list = await webull.top_active_stocks()
+        tickers = ticker_list.symbol
 
+        tasks = []
+        skews_outside_range = []
+        for ticker in tickers:
+            tasks.append(process_ticker(ticker, skews_outside_range))
+
+        await asyncio.gather(*tasks)
+
+        table = tabulate(skews_outside_range, headers='keys', tablefmt='psql', showindex=False)
+        print(table)
+
+async def process_ticker(ticker, skews_outside_range):
+    x = await master.get_near_the_money_single(ticker, 5)
+    try:
+        skew = await master.find_skew(x)
+
+        if 'Close' not in skew.columns or 'Skew' not in skew.columns:
+            return
+
+        skew['skew_metric'] = skew['Strike'] - skew['💲']
+        print(skew['skew_metric'])
+        mask = (skew['skew_metric'] < -5) | (skew['skew_metric'] > 5)
+        selected_columns = skew[mask][['Sym', '💲',  'Skew', '🗓️', 'IV']]
+        skews_outside_range.extend(selected_columns.to_dict('records'))
+    except AttributeError:
+        return
+    
 async def handle_msg(msgs: List[TestStocksEvent], queue: Queue):
     for m in msgs:
 
@@ -63,16 +78,16 @@ async def send_messages(handler, queue):  # pass queue as an argument
         await handler([event], queue)
         await asyncio.sleep(0.01)
 
-async def main():
-    data_queue = Queue() 
+# async def main():
+#     data_queue = Queue() 
 
-    num_workers = 15  # adjust this value based on your requirements
-    sdk_tasks = [
-        consume(data_queue) for _ in range(num_workers)
-    ]
+#     num_workers = 15  # adjust this value based on your requirements
+#     sdk_tasks = [
+#         consume(data_queue) for _ in range(num_workers)
+#     ]
 
-    sdk_tasks.append(asyncio.create_task(send_messages(handle_msg, data_queue)))
+#     sdk_tasks.append(asyncio.create_task(send_messages(handle_msg, data_queue)))
 
-    await asyncio.gather(*sdk_tasks)  # include consume_task in gather()
+#     await asyncio.gather(*sdk_tasks)  # include consume_task in gather()
 
-asyncio.run(main())
+# asyncio.run(main())
