@@ -200,8 +200,8 @@ def setup(bot: commands.Bot):
 
     'Views and Buttons':`
 class MyDropdown(disnake.ui.Select):
-def __init__(self):
-    super().__init__( 
+    def __init__(self):
+        super().__init__( 
 
         placeholder=f"Select an Option -->",
         min_values=1,
@@ -263,10 +263,67 @@ class MyDropdown(disnake.ui.Select):
 async def view(ctx: commands.Context):
 
 
-    await ctx.send(view=MyView())
+    await ctx.send(view=MyView())`,
 
-    
-    `
+ 'STOCKSERA COMMAND COG':`
+
+
+#file : cogs/ss.py
+
+import disnake
+from disnake.ext import commands
+
+import stocksera
+
+from config import STOCKSERA_KEY
+
+from models.ss import NewsSentiment
+
+client = stocksera.Client(STOCKSERA_KEY)
+
+
+class SS(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.slash_command()
+    async def ss(self, inter):
+        pass
+
+
+
+    @ss.sub_command()
+    async def news(inter: disnake.AppCmdInter, ticker):
+        """Gets the latest news for a ticker"""
+
+        news = client.news_sentiment(ticker)
+
+        news_data = NewsSentiment(news)
+        news_sentiment = news_data.Sentiment[0].strip()
+        if news_sentiment is not None and news_sentiment == "Bullish":
+            color = disnake.Colour.dark_green()
+        elif news_sentiment is not None and news_sentiment == "Neutral":
+            color = disnake.Colour.dark_grey()
+        elif news_sentiment is not None and news_sentiment== "Bearish":
+            color = disnake.Colour.dark_red()
+
+
+
+
+        embed = disnake.Embed(title=f"News for {ticker}", 
+                            description=f"> News Title: **{news_data.Title[0]}**\n News Sentiment: **{news_sentiment}**", 
+                            color=color)
+        embed.add_field(name=f"Link", value=f"> **{news_data.Link[0]}**")
+
+
+        await inter.send(embed=embed)
+
+
+def setup(bot: commands.Bot):
+    bot.add_cog(SS(bot))
+    print(f"SS commands have been loaded!")
+ 
+ `
 
   },
 
