@@ -1,7 +1,6 @@
 class RSI:
-
     def __init__(self, values):
-
-        #self.timestamp = [i['timestamp'] if (i is not None and callable(i) and 'timestamp' in i) else None for i in values]
-        if values is not None:
+        if values is not None and len(values) > 0:
             self.rsi_value = [i['value'] if 'value' in i else None for i in values]
+        else:
+            self.rsi_value = None

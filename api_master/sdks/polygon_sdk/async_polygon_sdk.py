@@ -512,7 +512,7 @@ class AsyncPolygonSDK:
         ticker_data = [Quote.from_dict(ticker) for ticker in response_data.get('results', []) if ticker is not None]
         return ticker_data
     
-    async def get_aggregates(self, ticker, multiplier, timespan, from_date, to_date, order="asc", limit=50):
+    async def get_aggregates(self, ticker, multiplier, timespan, from_date, to_date, limit=1000):
         """
         Retrieve aggregate data for a given stock ticker.
 
@@ -523,7 +523,7 @@ class AsyncPolygonSDK:
         :param to_date: The end date for the data as a string in YYYY-MM-DD format.
         :return: An instance of AggregatesData containing the aggregate data.
         """
-        url = f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/{multiplier}/{timespan}/{from_date}/{to_date}?adjusted=true&sort={order}&limit={limit}&apiKey={YOUR_API_KEY}"
+        url = f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/{multiplier}/{timespan}/{from_date}/{to_date}?adjusted=true&limit={limit}&apiKey={YOUR_API_KEY}"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:

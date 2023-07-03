@@ -18,6 +18,8 @@ oldapp.py
 polygon_enhanced/
 api_master.egg_info/
 test.py
+func_call_test.py
+testy.py
 dump.txt
 .env
 trial.py

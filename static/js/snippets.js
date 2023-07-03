@@ -1,157 +1,181 @@
 window.snippets = {
 
-    QUICKSTART: { 
-    "Quickstart":`
-    import asyncio
+  BOT_TUTORIAL: { 
+    "Lesson 1 - Bot Start-up & Commands":` 
 
-    from sdks.fed_newyork_sdk.sdk import FedNewyork
-    from sdks.nasdaq_sdk.sdk import Nasdaq
-    from sdks.occ_sdk.sdk import occSDK
-    from sdks.stocksera_sdk.sdk import StockeraSDK
-    from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
-    from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-    from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+
+import disnake #almost identical to discord.py
+from disnake.ext import commands
+
+#get token from https://discord.com/developers/applications
+from config import token 
+
+intents = disnake.Intents.all()
+command_prefix = ">>"
+
+
+
+class MyBot(commands.Bot):
+    def __init__(self, command_prefix, intents=intents):
+        super().__init__(command_prefix, intents=intents)
+
+    async def on_ready(self):
+        print(f"Bot is ready! Logged in as {self.user.name}")
+
+    async def on_message(self, message):
+        if message.author == self.user:
+            return
+
+        await self.process_commands(message)
+
+
+
+bot = MyBot(intents=intents, command_prefix=command_prefix)
+
+
+
+
+
+bot.load_extensions("cmds")
+bot.run(token)
+    `,
+    "Lesson 2 - Command Cogs":`
+
+
+# file: cogs/general.py
     
-    from cfg import YOUR_API_KEY,today_str ##replace with your API keys - links in cfg.py
+class General(commands.Cog):
+def __init__(self, bot):
+    self.bot = bot
+
+
+@commands.slash_command()
+async def general(self, interaction):
+    pass
+
+
+
+@mybot.command()
+async def goodbye(ctx: commands.Context):
     
+    """Says goodbye in chat."""
+    embed = Embed(
+        title="Goodbye!",
+        description="Farewell! See you next time.",
+        color= disnake.Colour.dark_purple(),
+        url="https://ww.google.com"
+    )
+
+    # Add sequential fields!@
+    for i in range(1, 26):
+        embed.add_field(name=f"Field Name {i}", value=f"Field Value {i}")
+
+    await ctx.send(embed=embed)
+
+@general.sub_command()
+async def hello(interaction: disnake.ApplicationCommandInteraction):
+    """Says hello in chat."""
+    embed = Embed(
+        title="Hello!",
+        description="Hello! How are you?",
+        color= disnake.Colour.dark_teal(),
+        url="https://ww.google.com"
+    )
+
+    # Add sequential fields
+    for i in range(1, 26):
+        embed.add_field(name=f"Field Name {i}", value=f"Field Value {i}")
+
+    await interaction.send(embed=embed)  
+
+
+def setup(bot: commands.Bot):
+    bot.add_cog(General(bot))
+    print(f"General commands have been loaded!")
     
-    polygon = AsyncPolygonSDK(YOUR_API_KEY) #async
-    polygon_options = PolygonOptionsSDK(YOUR_API_KEY) #async
-    webull = AsyncWebullSDK() #async
-    
-    stocksera = StockeraSDK() 
-    nasdaq = Nasdaq()
-    occ = occSDK()
-    fed = FedNewyork()
-    
-    
-    async def polygon_quickstart(ticker="GME"): #for polygon, polygon_options, webull functions
-    
-        ##polygon##
-    
-        company_info = await polygon.company_info("GME")
-    
-        #accessing the attributes for functions works the same throughout this project
-        cik = company_info.cik
-        composite_figi = company_info.composite_figi
-        currency_name = company_info.currency_name
-        description = company_info.description
-        homepage_url = company_info.homepage_url
-        list_date = company_info.list_date
-        locale = company_info.locale
-        market = company_info.market
-        market_cap = company_info.market_cap
-        name = company_info.name
-        phone_number = company_info.phone_number
-        primary_exchange = company_info.primary_exchange
-        round_lot = company_info.round_lot
-        share_class_figi = company_info.share_class_figi
-        share_class_shares_outstanding = company_info.share_class_shares_outstanding
-        sic_code = company_info.sic_code
-        sic_description = company_info.sic_description
-        ticker = company_info.ticker
-    
-        #print the attributes
-        print("CIK:", cik)
-        print("Composite FIGI:", composite_figi)
-        print("Currency Name:", currency_name)
-        print("Description:", description)
-        print("Homepage URL:", homepage_url)
-        print("List Date:", list_date)
-        print("Locale:", locale)
-        print("Market:", market)
-        print("Market Cap:", market_cap)
-        print("Name:", name)
-        print("Phone Number:", phone_number)
-        print("Primary Exchange:", primary_exchange)
-        print("Round Lot:", round_lot)
-        print("Share Class FIGI:", share_class_figi)
-        print("Share Class Shares Outstanding:", share_class_shares_outstanding)
-        print("SIC Code:", sic_code)
-        print("SIC Description:", sic_description)
-        print("Ticker:", ticker)
-    
-    asyncio.run(polygon_quickstart(ticker="GME"))
-    
-    #webull##
-    
-    async def webull_quickstart(ticker="GME"):
-        ##webull##
-        volume_analysis = await webull.get_webull_vol_analysis_data("GME")
-        avg_price = volume_analysis.avePrice
-        buy_volume = volume_analysis.buyVolume
-        neutral_volume = volume_analysis.nVolume
-        sell_volume = volume_analysis.sellVolume
-        total_volume = volume_analysis.totalVolume
-    
-        print(f"Average Price:", avg_price)
-        print(f"Buy Volume:", buy_volume)
-        print(f"Sell Volume:", sell_volume)
-        print(f"Neutral Volume:", neutral_volume)
-        print(f"Total Volume:", total_volume)
-    
-    
-    
-    asyncio.run(webull_quickstart(ticker="GME"))
-    
-    ## stocksera ##
-    
-    inflation = stocksera.inflation()
-    print(inflation)
-    
-    ## nasdaq ##
-    bicmac = nasdaq.bigmac()
-    
-    ## fed ##
-    mbs_operations = fed.agency_mbs_search(start_date="2023-01-01", end_date=today_str)
-    auctionStatus = mbs_operations.auctionStatus
-    classType = mbs_operations.classType
-    closeTime = mbs_operations.closeTime
-    lastUpdated = mbs_operations.lastUpdated
-    method = mbs_operations.method
-    note = mbs_operations.note
-    operationId = mbs_operations.operationId
-    operationDate = mbs_operations.operationDate
-    operationDirection = mbs_operations.operationDirection
-    operationType = mbs_operations.operationType
-    settlementDate = mbs_operations.settlementDate
-    totalAcceptedOrigFace = mbs_operations.totalAcceptedOrigFace
-    totalAcceptedCurrFace = mbs_operations.totalAcceptedCurrFace
-    totalAmtAcceptedPar = mbs_operations.totalAmtAcceptedPar
-    totalAmtSubmittedPar = mbs_operations.totalAmtSubmittedPar
-    totalSubmittedCurrFace = mbs_operations.totalSubmittedCurrFace
-    totalSubmittedOrigFace = mbs_operations.totalSubmittedOrigFace
-    
-    print("Auction Status:", mbs_operations.auctionStatus)
-    print("Class Type:", mbs_operations.classType)
-    print("Close Time:", mbs_operations.closeTime)
-    print("Last Updated:", mbs_operations.lastUpdated)
-    print("Method:", mbs_operations.method)
-    print("Note:", mbs_operations.note)
-    print("Operation ID:", mbs_operations.operationId)
-    print("Operation Date:", mbs_operations.operationDate)
-    print("Operation Direction:", mbs_operations.operationDirection)
-    print("Operation Type:", mbs_operations.operationType)
-    print("Settlement Date:", mbs_operations.settlementDate)
-    print("Total Accepted Original Face:", mbs_operations.totalAcceptedOrigFace)
-    print("Total Accepted Current Face:", mbs_operations.totalAcceptedCurrFace)
-    print("Total Amount Accepted Par:", mbs_operations.totalAmtAcceptedPar)
-    print("Total Amount Submitted Par:", mbs_operations.totalAmtSubmittedPar)
-    print("Total Submitted Current Face:", mbs_operations.totalSubmittedCurrFace)
-    print("Total Submitted Original Face:", mbs_operations.totalSubmittedOrigFace)
-    
-    
-    
-    
-    
-    ## occ ##
-    ##this example shows you how to access the data-frame. all functions will have an "as_dataframe" option
-    
-    loans = occ.stock_loans(report_date=today_str, type="daily")
-    df = loans.as_dataframe
-    print(df)
-    `
-    },
+    `,
+
+  "Bonus Lesson - Add GPT4 To Discord":`
+  from disnake.ext import commands
+  import disnake
+  from mybot.bot import MyBot
+  import asyncio
+  import openai
+  from config import openaikey
+  
+  mybot = MyBot(command_prefix="!", intents=disnake.Intents.all())
+  openai.api_key = openaikey
+  class GPT(commands.Cog):
+      def __init__(self, bot):
+          self.bot = bot
+  
+      
+      @commands.command()
+      async def gpt4(self, ctx: commands.Context, prompt: str):
+          """Talk with CHATGPT. Call the command once and then reply as normal."""
+          messages = [
+              {"role": "user", "content": f"Use all of the data and come up with a solution. Pay close attention to the option IV versus the current price. You have the nearest option symbols to the money along with all corresponding data to make these determinations."}
+          ]
+          conversation_history = {}
+          conversation_id = str(ctx.author.id)
+          prompt = prompt
+          # Retrieve the conversation history from the dictionary
+          history = conversation_history.get(conversation_id, [])
+  
+          while True:
+              # Add the new prompt to the conversation history
+              history.append({"role": "user", "content": prompt})
+  
+              # Create the messages list including system message and conversation history
+              messages = [
+                  {"role": "system", "content": "You will help me save as much time as possible on this project for creating an sdk.'"},
+                  {"role": "assistant", "content": "Absolutely! Let me know when I can help you save time."},
+              ]
+              messages.extend(history)
+  
+              # Generate a response based on the full conversation history
+              completion = openai.ChatCompletion.create(
+                  model="gpt-3.5-turbo",
+                  messages=messages
+              )
+  
+              message_content = completion.choices[0].message.content
+  
+              # Store the updated conversation history in the dictionary
+              conversation_history[conversation_id] = history
+  
+              embed = disnake.Embed(title="Chat with GPT4", description=f"```py\n{message_content}```")
+              embed.add_field(name="YOUR PROMPT:", value=f"```py\nYou asked: {prompt}```")
+  
+              # Send the response to the user
+              await ctx.send(embed=embed)
+              print(message_content)
+              # Check if the user wants to stop the conversation
+              if prompt.lower() == "stop":
+                  await ctx.send("Conversation ended.")
+                  break
+  
+              # Wait for the user's next message
+              def check(m):
+                  return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+  
+              try:
+                  user_message = await self.bot.wait_for("message", check=check, timeout=60)
+              except asyncio.TimeoutError:
+                  await ctx.send("Conversation timed out. Please start a new conversation.")
+                  break
+  
+              prompt = user_message.content
+  
+  
+  def setup(bot: commands.Bot):
+      bot.add_cog(GPT(bot))
+      print(f"GPT commands have been loaded!")
+  
+  `
+
+  },
+
   polygonSnippets: {
       "Get All Stock Snapshots": `
         import asyncio

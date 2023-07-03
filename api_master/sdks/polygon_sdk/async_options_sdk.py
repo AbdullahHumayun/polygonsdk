@@ -665,7 +665,7 @@ class PolygonOptionsSDK:
                 else:
                     return None
 
-    async def get_stock_price(self, ticker=str):
+    async def get_stock_price(self, ticker:str):
         url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={self.api_key}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:

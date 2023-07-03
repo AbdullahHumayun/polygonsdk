@@ -7,7 +7,7 @@ import json
 from cogs.analysis import Analysis
 import pandas as pd
 from cogs.ss import SS
-from func_call_test import analyze_data
+from func_call_test import run_discord_conversation, analyze_data
 from views.mainview import MainView
 import asyncio
 from cogs.learn import Learn
@@ -189,135 +189,6 @@ class RsiHourOption(OptionChoice):
         )
     ]
 
-@bot.command()
-async def gpt4(ctx: commands.Context, prompt: str, ticker=None):
-    # Step 1: Send the conversation and available functions to GPT
-    messages = [{"role": "user", "content": prompt}]
-    functions = [
-        {
-            "name": "analyze_data",
-            "description": "Analyze the given data to determine the likely direction.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "ticker": {
-                        "type": "string",
-                        "description": f"The ticker to query. {ticker}",
-                    },
-                },
-                "required": ["ticker"],
-                "returns": {
-                    "type": "object",
-                    "properties": {
-                        "strike_price": {
-                            "type": "string",
-                            "description": "The strike price of the option symbol."
-                        },
-                        "expiration": {
-                            "type": "string",
-                            "description": "The expiration date of the option symbol."
-                        },
-                        "implied_volatility": {
-                            "type": "number",
-                            "description": "The implied volatility of the option symbol."
-                        },
-                        "theta": {
-                            "type": "number",
-                            "description": "The theta value."
-                        },
-                        "gamma": {
-                            "type": "number",
-                            "description": "The gamma value."
-                        },
-                        "delta": {
-                            "type": "number",
-                            "description": "The delta value."
-                        },
-                        "vega": {
-                            "type": "number",
-                            "description": "The vega value."
-                        },
-                        "change_percent": {
-                            "type": "number",
-                            "description": "The contract's performance."
-                        },
-                        "ask": {
-                            "type": "number",
-                            "description": "The ask price."
-                        },
-                        "bid": {
-                            "type": "number",
-                            "description": "The bid price."
-                        },
-                        "ask_size": {
-                            "type": "number",
-                            "description": "The size of the ask."
-                        },
-                        "bid_size": {
-                            "type": "number",
-                            "description": "The size of the bid."
-                        },
-                        "volume": {
-                            "type": "number",
-                            "description": "The volume of the option."
-                        },
-                        "open_interest": {
-                            "type": "number",
-                            "description": "The open interest for the option."
-                        }
-                    }
-                }
-            }
-        }
-    ]
-
-    while True:
-        # Send user message and get GPT's response
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-0613",
-            messages=messages,
-            functions=functions,
-            function_call="auto",
-        )
-        response_message = response["choices"][0]["message"]
-        await ctx.send(response_message["content"])
-
-        # Check if GPT wanted to call a function
-        if response_message.get("function_call"):
-            # Call the function
-            available_functions = {
-                "analyze_data": analyze_data,
-            }
-            function_name = response_message["function_call"]["name"]
-            function_to_call = available_functions[function_name]
-            function_args = json.loads(response_message["function_call"]["arguments"])
-            function_response = await function_to_call(**function_args)
-            await ctx.send(str(function_response))
-
-            # Convert function_response to a string format
-            function_response_str = str(function_response)
-
-            # Send the info on the function call and function response to GPT
-            messages.append(response_message)  # Extend conversation with assistant's reply
-            messages.append(
-                {
-                    "role": "function",
-                    "name": function_name,
-                    "content": function_response_str,
-                }
-            )
-        else:
-            # Send the user message and GPT's response to continue the conversation
-            messages.append(response_message)  # Extend conversation with assistant's reply
-
-        # Check if the user wants to stop the conversation
-        user_input = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
-        user_input = user_input.content
-        if user_input.lower() == "stop":
-            break  # Exit the loop if the user inputs "Stop"
-
-        # Add the user's message to the conversation
-        messages.append({"role": "user", "content": user_input})
 
 
 @bot.slash_command()
@@ -340,6 +211,162 @@ async def get_live_trades(inter:disnake.AppCmdInter, subscription: str = command
     await inter.edit_original_message(WebSocketMessage)
     
 
+messages = [{"role": "user", "content": f"Use all of the data and come up with a solution. Pay close attention to the option IV versus the current price. You have the nearest option symbols to the money along with all corresponding data to make these determinations."}]
+functions = [
+    {
+        "name": "analyze_data",
+        "description": "Analyze the given data to determine the likely direction.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "ticker": {
+                    "type": "string",
+                    "description": "The ticker to query.",
+                },
+            },
+            "required": ["ticker"],
+        },
+        "returns": {
+            "type": "object",
+            "properties": {
+                "strike_price": {"type": "string", "description": "The strike price of the option symbol"},
+                "expiration": {"type": "string", "description": "The expiration date of the option symbol."},
+                "implied_volatility": {"type": "string", "description": "The implied volatility of the option symbol"},
+                "theta": {"type": "string", "description": "The theta value"},
+                "gamma": {"type": "string", "description": "The gamma value"},
+                "delta": {"type": "string", "description": "The delta value"},
+                "vega": {"type": "string", "description": "The vega value"},
+                "change_percent": {"type": "string", "description": "The contract's performance."},
+                "ask": {"type": "number", "description": "The ask price"},
+                "bid": {"type": "number", "description": "The bid price"},
+                "ask_size": {"type": "number", "description": "The size of the ask"},
+                "bid_size": {"type": "number", "description": "The size of the bid"},
+                "volume": {"type": "number", "description": "The volume of the option"},
+                "open_interest": {"type": "number", "description": "The open interest for the option"},
+                "Underlying Data": {
+                    "type": "object",
+                    "properties": {
+                        "buyVolume": {"type": "number", "description": "The buy volume"},
+                        "sellVolume": {"type": "number", "description": "The sell volume"},
+                        "neutralVolume": {"type": "number", "description": "The neutral volume"},
+                        "avgPrice": {"type": "number", "description": "The average price"},
+                        "Stock Price": {"type": "number", "description": "The stock price"},
+                        "Fifty Two Week High": {"type": "number", "description": "The fifty-two week high"},
+                        "Fifty Two Week Low": {"type": "number", "description": "The fifty-two week low"},
+                        "Vibration Ratio": {"type": "number", "description": "The vibration ratio"},
+                        "One Hour RSI": {"type": "number", "description": "The one-hour RSI"}
+                    }
+                }
+            },
+        },
+    },
+]
+@bot.command()
+async def gpt4(ctx):
+    # Send user message and get GPT's response
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo-0613",
+        messages=messages,
+    )
+    response_message = response["choices"][0]["message"]
+
+    if response_message.get("content"):
+        await ctx.send(response_message["content"])
+
+        # Check if GPT wanted to call a function
+        if "function_call" in response_message:
+            # Call the function
+            function_name = response_message["function_call"]["name"]
+            function_args = json.loads(response_message["function_call"]["arguments"])
+            function_response = await analyze_data(function_name, function_args)
+            await ctx.send(str(function_response))
+            
+            # Send the info on the function call and function response to GPT
+            messages.append(response_message)  # extend conversation with assistant's reply
+            messages.append(
+                {
+                    "role": "function",
+                    "name": function_name,
+                    "content": str(function_response),
+                }
+            )
+        else:
+            # Send the user message and GPT's response to continue the conversation
+            messages.append(response_message)  # extend conversation with assistant's reply
+
+    while True:
+        try:
+            # Wait for the user's response
+            user_message = await bot.wait_for("message", check=lambda message: message.author == ctx.author)
+            user_input = user_message.content
+
+            if user_input.lower() == "stop":
+                break  # Exit the loop if the user inputs "Stop"
+
+            # Add the user's message to the conversation
+            messages.append({"role": "user", "content": user_input})
+
+            # Send user message and get GPT's response
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo-0613",
+                messages=messages,
+            )
+            response_message = response["choices"][0]["message"]
+
+            if response_message.get("content"):
+                embed = disnake.Embed(title=f"GPT4 Func-Call", description=f"```py\n{response_message['content']}```", color=disnake.Colour.random())
+                await ctx.send(embed=embed)
+
+                # Check if GPT wanted to call a function
+                if "function_call" in response_message:
+                    # Call the function
+                    function_name = response_message["function_call"]["name"]
+                    function_args = json.loads(response_message["function_call"]["arguments"])
+                    function_response = await call_function(function_name, function_args)
+                    embed = disnake.Embed(title=f"Func Call", description=f"> **{function_response}**")
+                    await ctx.send(embed=embed)
+                    
+                    # Send the info on the function call and function response to GPT
+                    messages.append(response_message)  # extend conversation with assistant's reply
+                    messages.append(
+                        {
+                            "role": "function",
+                            "name": function_name,
+                            "content": str(function_response),
+                        }
+                    )
+                else:
+                    # Send the user message and GPT's response to continue the conversation
+                    messages.append(response_message)  # extend conversation with assistant's reply
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    # End the conversation if the user inputs "Stop"
+    messages.append({"role": "user", "content": "Stop"})
+
+async def call_function(function_name, function_args):
+    if function_name == "analyze_data":
+        ticker = function_args["ticker"]
+        # Your code to analyze data goes here
+        return {
+            "strike_price": "100",
+            "expiration": "2023-07-31",
+            "implied_volatility": "0.25",
+            # Add other data fields here
+        }
+    else:
+        return None
+
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+    if message.content.lower() == "stop":
+        await bot.logout()
+    else:
+        messages.append({"role": "user", "content": message.content})
+        await bot.process_commands(message)
 
 
 @bot.slash_command()
@@ -944,64 +971,6 @@ async def cmds(ctx: disnake.AppCommandInter):
 import openai
 from cfg import YOUR_OPENAI_KEY as openaikey
 openai.api_key = openaikey
-
-@bot.command()
-async def gpt4(ctx: commands.Context, prompt:str):
-    
-    """Talk with CHATGPT. Call the command once and then reply as normal."""
-
-    conversation_history = {}
-    conversation_id = str(ctx.message.author.id)
-    prompt = ctx.message.content
-    # Retrieve the conversation history from the dictionary
-    history = conversation_history.get(conversation_id, [])
-
-    while True:
-        # Add the new prompt to the conversation history
-        history.append({"role": "user", "content": prompt})
-
-        # Create the messages list including system message and conversation history
-
-        messages =  [
-        {"role": "system", "content": "You will help me save as much time as possible on this project for creating an sdk.'"},
-        {"role": "assistant", "content": "Absolutely! Let me know when I can help you save time."},
-        ]
-        messages.extend(history)
-
-        # Generate a response based on the full conversation history
-        completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=messages
-        )
-
-        message_content = completion.choices[0].message.content
-
-        # Store the updated conversation history in the dictionary
-        conversation_history[conversation_id] = history
-
-        embed = disnake.Embed(title=f"Chat with GPT4 ", description=f"```py\n{message_content}```")
-        embed.add_field(name=f"YOUR PROMPT:", value=f"```py\nYou asked: {prompt}```")
-
-        # Send the response to the user
-        await ctx.message.channel.send(embed=embed)
-        print(message_content)
-        # Check if the user wants to stop the conversation
-        if prompt.lower() == "stop":
-            await ctx.message.channel.send("conversation ended.")
-            break
-
-        # Wait for the user's next message
-        def check(m):
-            return m.author.id == ctx.message.author.id and m.channel.id == ctx.message.channel.id
-
-        try:
-            user_message = await bot.wait_for("message", check=check, timeout=60)
-        except asyncio.TimeoutError:
-            await ctx.message.channel.send("Conversation timed out. Please start a new conversation.")
-            break
-
-        prompt = user_message.content
-
 
 
 
