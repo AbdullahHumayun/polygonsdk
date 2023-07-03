@@ -71,9 +71,9 @@ def __init__(self, bot):
     self.bot = bot
 
 
-@commands.slash_command()
-async def general(self, interaction):
-    pass
+    @commands.slash_command()
+    async def general(self, interaction):
+        pass
 
 
 
