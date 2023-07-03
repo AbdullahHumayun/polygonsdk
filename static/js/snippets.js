@@ -198,6 +198,76 @@ def setup(bot: commands.Bot):
   
   `,
 
+    'Views and Buttons':`
+class MyDropdown(disnake.ui.Select):
+def __init__(self):
+    super().__init__( 
+
+        placeholder=f"Select an Option -->",
+        min_values=1,
+        max_values=1,
+        custom_id="dropdown1",
+        options = [ 
+
+            disnake.SelectOption(label=f'Button 1', description="This is button 1.", value=1),
+            disnake.SelectOption(label=f'Button 2', description="This is button 2.", value=2),
+            disnake.SelectOption(label=f'Button 3', description="This is button 3.", value=3),
+            disnake.SelectOption(label=f'Button 4', description="This is button 4.", value=4),
+            disnake.SelectOption(label=f'Button 5', description="This is button 5.", value=5),
+
+        ]
+
+    )
+
+async def callback(self, interaction: disnake.MessageCommandInteraction):
+    if self.values[0] == self.values[0]:
+        await interaction.response.edit_message(f"You selected {self._selected_values}")
+
+
+
+
+class MyView(disnake.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+
+
+        self.add_item(MyDropdown())
+
+
+class MyDropdown(disnake.ui.Select):
+    def __init__(self):
+        super().__init__( 
+
+            placeholder=f"Select an Option -->",
+            min_values=1,
+            max_values=1,
+            custom_id="dropdown1",
+            options = [ 
+
+                disnake.SelectOption(label=f'Button 1', description="This is button 1.", value=1),
+                disnake.SelectOption(label=f'Button 2', description="This is button 2.", value=2),
+                disnake.SelectOption(label=f'Button 3', description="This is button 3.", value=3),
+                disnake.SelectOption(label=f'Button 4', description="This is button 4.", value=4),
+                disnake.SelectOption(label=f'Button 5', description="This is button 5.", value=5),
+
+            ]
+
+        )
+
+    async def callback(self, interaction: disnake.MessageCommandInteraction):
+        if self.values[0] == self.values[0]:
+            await interaction.response.edit_message(f"You selected {self._selected_values}")
+
+
+@bot.command()
+async def view(ctx: commands.Context):
+
+
+    await ctx.send(view=MyView())
+
+    
+    `
+
   },
 
   polygonSnippets: {
