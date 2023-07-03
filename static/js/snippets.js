@@ -50,13 +50,21 @@ bot = MyBot(intents=intents, command_prefix=command_prefix)
 
 
 
-bot.load_extensions("cmds")
+bot.load_extensions("cogs")
 bot.run(token)
     `,
     "Lesson 2 - Command Cogs":`
 
 
 # file: cogs/general.py
+
+import disnake
+from disnake.ext import commands
+from disnake import Embed
+
+
+bot = commands.Bot(command_prefix=">>", intents=disnake.Intents.all())
+
     
 class General(commands.Cog):
 def __init__(self, bot):
@@ -69,38 +77,38 @@ async def general(self, interaction):
 
 
 
-@mybot.command()
-async def goodbye(ctx: commands.Context):
-    
-    """Says goodbye in chat."""
-    embed = Embed(
-        title="Goodbye!",
-        description="Farewell! See you next time.",
-        color= disnake.Colour.dark_purple(),
-        url="https://ww.google.com"
-    )
+    @bot.command()
+    async def goodbye(ctx: commands.Context):
+        
+        """Says goodbye in chat."""
+        embed = Embed(
+            title="Goodbye!",
+            description="Farewell! See you next time.",
+            color= disnake.Colour.dark_purple(),
+            url="https://ww.google.com"
+        )
 
-    # Add sequential fields!@
-    for i in range(1, 26):
-        embed.add_field(name=f"Field Name {i}", value=f"Field Value {i}")
+        # Add sequential fields!@
+        for i in range(1, 26):
+            embed.add_field(name=f"Field Name {i}", value=f"Field Value {i}")
 
-    await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
 
-@general.sub_command()
-async def hello(interaction: disnake.ApplicationCommandInteraction):
-    """Says hello in chat."""
-    embed = Embed(
-        title="Hello!",
-        description="Hello! How are you?",
-        color= disnake.Colour.dark_teal(),
-        url="https://ww.google.com"
-    )
+    @general.sub_command()
+    async def hello(interaction: disnake.ApplicationCommandInteraction):
+        """Says hello in chat."""
+        embed = Embed(
+            title="Hello!",
+            description="Hello! How are you?",
+            color= disnake.Colour.dark_teal(),
+            url="https://ww.google.com"
+        )
 
-    # Add sequential fields
-    for i in range(1, 26):
-        embed.add_field(name=f"Field Name {i}", value=f"Field Value {i}")
+        # Add sequential fields
+        for i in range(1, 26):
+            embed.add_field(name=f"Field Name {i}", value=f"Field Value {i}")
 
-    await interaction.send(embed=embed)  
+        await interaction.send(embed=embed)  
 
 
 def setup(bot: commands.Bot):
@@ -115,12 +123,11 @@ def setup(bot: commands.Bot):
 
 from disnake.ext import commands
 import disnake
-from mybot.bot import MyBot
 import asyncio
 import openai
 from config import openaikey
 
-mybot = MyBot(command_prefix="!", intents=disnake.Intents.all())
+bot = commands.Bot(command_prefix="!", intents=disnake.Intents.all())
 openai.api_key = openaikey
 class GPT(commands.Cog):
     def __init__(self, bot):
