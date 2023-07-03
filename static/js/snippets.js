@@ -1,8 +1,22 @@
 window.snippets = {
 
-  BOT_TUTORIAL: { 
+  BotTutorial: { 
+    "SCRIPT: Create Project Folders":`
+
+    #Windows - copy/paste this into your CMD \
+    #to create the file structure...
+
+
+    #change "PROJECT_FOLDER" to the name you want
+
+
+    mkdir PROJECT_FOLDER && type nul > PROJECT_FOLDER\main.py && type nul > PROJECT_FOLDER\config.py && mkdir PROJECT_FOLDER\MYBOT && type nul > PROJECT_FOLDER\MYBOT\bot.py && mkdir PROJECT_FOLDER\COGS && type nul > PROJECT_FOLDER\COGS\general.py && type nul > PROJECT_FOLDER\COGS\gpt4.py && echo Project folder and files created successfully.
+    
+    `,
+
     "Lesson 1 - Bot Start-up & Commands":` 
 
+#file: main.py
 
 import disnake #almost identical to discord.py
 from disnake.ext import commands
@@ -96,83 +110,86 @@ def setup(bot: commands.Bot):
     `,
 
   "Bonus Lesson - Add GPT4 To Discord":`
-  from disnake.ext import commands
-  import disnake
-  from mybot.bot import MyBot
-  import asyncio
-  import openai
-  from config import openaikey
+
+#file: cogs/gpt4.py
+
+from disnake.ext import commands
+import disnake
+from mybot.bot import MyBot
+import asyncio
+import openai
+from config import openaikey
+
+mybot = MyBot(command_prefix="!", intents=disnake.Intents.all())
+openai.api_key = openaikey
+class GPT(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    
+    @commands.command()
+    async def gpt4(self, ctx: commands.Context, prompt: str):
+        """Talk with CHATGPT. Call the command once and then reply as normal."""
+        messages = [
+            {"role": "user", "content": f"Use all of the data and come up with a solution. Pay close attention to the option IV versus the current price. You have the nearest option symbols to the money along with all corresponding data to make these determinations."}
+        ]
+        conversation_history = {}
+        conversation_id = str(ctx.author.id)
+        prompt = prompt
+        # Retrieve the conversation history from the dictionary
+        history = conversation_history.get(conversation_id, [])
+
+        while True:
+            # Add the new prompt to the conversation history
+            history.append({"role": "user", "content": prompt})
+
+            # Create the messages list including system message and conversation history
+            messages = [
+                {"role": "system", "content": "You will help me save as much time as possible on this project for creating an sdk.'"},
+                {"role": "assistant", "content": "Absolutely! Let me know when I can help you save time."},
+            ]
+            messages.extend(history)
+
+            # Generate a response based on the full conversation history
+            completion = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=messages
+            )
+
+            message_content = completion.choices[0].message.content
+
+            # Store the updated conversation history in the dictionary
+            conversation_history[conversation_id] = history
+
+            embed = disnake.Embed(title="Chat with GPT4", description=f"> {message_content}")
+            embed.add_field(name="YOUR PROMPT:", value=f"You asked: {prompt}")
+
+            # Send the response to the user
+            await ctx.send(embed=embed)
+            print(message_content)
+            # Check if the user wants to stop the conversation
+            if prompt.lower() == "stop":
+                await ctx.send("Conversation ended.")
+                break
+
+            # Wait for the user's next message
+            def check(m):
+                return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+
+            try:
+                user_message = await self.bot.wait_for("message", check=check, timeout=60)
+            except asyncio.TimeoutError:
+                await ctx.send("Conversation timed out. Please start a new conversation.")
+                break
+
+            prompt = user_message.content
+
+
+def setup(bot: commands.Bot):
+    bot.add_cog(GPT(bot))
+    print(f"GPT commands have been loaded!")
   
-  mybot = MyBot(command_prefix="!", intents=disnake.Intents.all())
-  openai.api_key = openaikey
-  class GPT(commands.Cog):
-      def __init__(self, bot):
-          self.bot = bot
-  
-      
-      @commands.command()
-      async def gpt4(self, ctx: commands.Context, prompt: str):
-          """Talk with CHATGPT. Call the command once and then reply as normal."""
-          messages = [
-              {"role": "user", "content": f"Use all of the data and come up with a solution. Pay close attention to the option IV versus the current price. You have the nearest option symbols to the money along with all corresponding data to make these determinations."}
-          ]
-          conversation_history = {}
-          conversation_id = str(ctx.author.id)
-          prompt = prompt
-          # Retrieve the conversation history from the dictionary
-          history = conversation_history.get(conversation_id, [])
-  
-          while True:
-              # Add the new prompt to the conversation history
-              history.append({"role": "user", "content": prompt})
-  
-              # Create the messages list including system message and conversation history
-              messages = [
-                  {"role": "system", "content": "You will help me save as much time as possible on this project for creating an sdk.'"},
-                  {"role": "assistant", "content": "Absolutely! Let me know when I can help you save time."},
-              ]
-              messages.extend(history)
-  
-              # Generate a response based on the full conversation history
-              completion = openai.ChatCompletion.create(
-                  model="gpt-3.5-turbo",
-                  messages=messages
-              )
-  
-              message_content = completion.choices[0].message.content
-  
-              # Store the updated conversation history in the dictionary
-              conversation_history[conversation_id] = history
-  
-              embed = disnake.Embed(title="Chat with GPT4", description=f"```py\n{message_content}```")
-              embed.add_field(name="YOUR PROMPT:", value=f"```py\nYou asked: {prompt}```")
-  
-              # Send the response to the user
-              await ctx.send(embed=embed)
-              print(message_content)
-              # Check if the user wants to stop the conversation
-              if prompt.lower() == "stop":
-                  await ctx.send("Conversation ended.")
-                  break
-  
-              # Wait for the user's next message
-              def check(m):
-                  return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
-  
-              try:
-                  user_message = await self.bot.wait_for("message", check=check, timeout=60)
-              except asyncio.TimeoutError:
-                  await ctx.send("Conversation timed out. Please start a new conversation.")
-                  break
-  
-              prompt = user_message.content
-  
-  
-  def setup(bot: commands.Bot):
-      bot.add_cog(GPT(bot))
-      print(f"GPT commands have been loaded!")
-  
-  `
+  `,
 
   },
 
