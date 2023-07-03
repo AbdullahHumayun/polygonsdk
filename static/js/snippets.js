@@ -323,7 +323,117 @@ def setup(bot: commands.Bot):
     bot.add_cog(SS(bot))
     print(f"SS commands have been loaded!")
  
- `
+ `,
+   "weballs.py file":`
+   
+
+#file: apis/weballs.py
+
+import requests
+
+from apis.helpers import get_ticker_id
+from models.webull_models import AnalysisRatings
+
+
+def get_analyst_ratings(ticker):
+    """Get the analyst ratings for a ticker"""
+
+
+    ticker_id = get_ticker_id(ticker)
+
+    r = requests.get("https://quotes-gw.webullfintech.com/api/information/" \
+                    f"securities/analysis?tickerId={ticker_id}").json()
+
+    rating = r['rating']
+    if rating is not None:
+        rating_data = AnalysisRatings(rating)
+
+        return rating_data
+    else:
+        return None
+      
+   
+   
+   `,
+   'helpers.py file':`
+   
+import requests
+
+def get_ticker_id(ticker):
+    url = f"https://quotes-gw.webullfintech.com/api/search/pc/tickers?keyword={ticker}&regionId=6&pageIndex=1&pageSize=20"
+
+    r = requests.get(url).json()
+    data = r['data']
+    if data is not None:
+        tickerId = data[0]['tickerId']
+        return tickerId
+   
+   `,
+    'webull_cmds Cog file':`
+from disnake.ext import commands
+from apis.weballs import get_analyst_ratings
+import disnake
+
+class WebullCMD(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.slash_command()
+    async def webull(self, inter):
+        pass
+
+
+
+    @webull.sub_command()
+    async def analyst_ratings(self, inter:disnake.AppCmdInter, ticker:str):
+        """Returns the analyst ratings for a stock."""
+
+        await inter.response.defer()
+
+        ratings = get_analyst_ratings(ticker)
+
+        embed = disnake.Embed(title=f"Analyst Ratings - {ticker}",description=f" "
+                                f"> Provides the latest analyst ratings for {ticker}.")
+        
+        embed.add_field(name=f"Ratings:", value=f"> Strong Buy: **{ratings.strongBuy}\n" 
+                        f"> Buy: **{ratings.buy}**\n"
+                        f"> Hold: **{ratings.hold}**\n"
+                        f"> Under Perform: **{ratings.underPerform}**\n"
+                        f"> Sell: **{ratings.sell}**")
+        embed.add_field(name=f"Overall Rating:", value=f"> **{ratings.ratingAnalysis}**\n"
+                        f"> Rating Totals: **{ratings.ratingAnalysisTotals}**")
+
+
+
+        await inter.edit_original_message(embed=embed)
+
+
+def setup(bot: commands.Bot):
+    bot.add_cog(WebullCMD(bot))
+    print(f"Webull commands have been loaded!")
+    
+    
+    `,
+   
+    'Webull Models folder':`
+    
+#file : models/webull_models.py
+
+class AnalysisRatings:
+def __init__(self, rating):
+    self.ratingAnalysisTotals = rating['ratingAnalysisTotals'] if 'ratingAnalysisTotals' in rating else None #good
+    self.ratingAnalysis = rating['ratingAnalysis'] if 'ratingAnalysis' in rating else None ##good
+    ratingSpread = rating['ratingSpread'] if 'ratingSpread' in rating else None
+
+    self.underPerform = ratingSpread['underPerform']
+    self.buy = ratingSpread['buy']
+    self.sell = ratingSpread['sell']
+    self.hold = ratingSpread['hold']
+    self.strongBuy = ratingSpread['strongBuy']
+    
+    
+    `
+
 
   },
 
