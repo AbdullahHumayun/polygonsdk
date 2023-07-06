@@ -29,7 +29,7 @@ import pandas as pd
 from .webull_data import Analysis, WebullStockData, WebullVolAnalysis
 from .top_gainers import GainersData
 from .etf_finder import ETFCommodity
-from .top_options import BelongTicker, Values, Derivative, TickerValues
+from .top_options import BelongTicker, Values, Derivative, WebullTopOptions
 from typing import Dict,Union
 from datetime import datetime, timedelta, timezone
 from .financial_statement import FinancialStatement, CashFlow, BalanceSheet
@@ -80,6 +80,9 @@ class AsyncWebullSDK:
                 results = GainersData(top_gainers)
                 
             return results    
+        
+
+
     async def get_top_traded_options(self):
         async with aiohttp.ClientSession() as session:
             rank_types = ['totalVolume', 'totalPosition']
@@ -97,21 +100,24 @@ class AsyncWebullSDK:
 
             unique_tickers = list(set(ticker_symbols))  # Remove duplicates using set() and convert back to a list
             return unique_tickers  # Return the list of unique tickers
-        
-    async def get_top_options(self):
+
+    async def get_top_traded_contracts(self):
         async with aiohttp.ClientSession() as session:
-            rank_types = ['impVol', 'volume', 'position', 'posIncrease', 'posDecrease']
-            ticker_symbols = []  # List to accumulate ticker symbols
+            rank_types = ["impVol", "posIncrease", "posDecrease", "volume", "position", "turnover"]
+            ticker_symbols = []
             for rank_type in rank_types:
                 url = f"https://quotes-gw.webullfintech.com/api/wlas/option/rank/list?regionId=6&rankType={rank_type}&pageIndex=1&pageSize=350"
                 async with session.get(url) as resp:
                     r = await resp.json()
                     data = r['data']
-                    derivative = [i['derivative'] if 'derivative' in i else None for i in data]
-                    sym = [i['unSymbol'] if 'unSymbol' in i else None for i in data]
-                    ticker_symbols.extend(sym)  # Append symbols to the accumulator list
-            unique_tickers = list(set(ticker_symbols))
-            return unique_tickers
+                    if data is not None:
+                        belongTicker = [i['belongTicker'] if 'belongTicker' in i else None for i in data]
+                        derivative = [i['derivative'] if 'derivative' in i else None for i in data]
+
+                        return BelongTicker(belongTicker),Derivative(derivative)
+                    else:
+                        return None
+
 
     async def fifty_two_high_and_lows(self):
         """Returns tickers near low/high or new low/high on the year."""
@@ -139,18 +145,19 @@ class AsyncWebullSDK:
         
     async def top_total_volume(self):
         """Get the most active tickers by relative volume, turnover, range, and volume"""
+        rank_types = ['totalVolume', 'totalPosition']
+        for rank_type in rank_types:
+            url = f"https://quotes-gw.webullfintech.com/api/wlas/option/rank/list?regionId=6&rankType={rank_type}&pageIndex=1&pageSize=250"
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as response:
+                    datas = await response.json()
+                    data = datas['data']
+                    tickers = [i['ticker'] if 'ticker' in i else None for i in data]
+                return Ticker(tickers)
 
-        url = f"https://quotes-gw.webullfintech.com/api/wlas/option/rank/list?regionId=6&rankType=totalVolume&pageIndex=1&pageSize=250"
+    async def get_top_option_string(self):
         async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                datas = await response.json()
-                data = datas['data']
-                tickers = [i['ticker'] if 'ticker' in i else None for i in data]
-            return Ticker(tickers)
-
-    async def get_top_option_string(self, type):
-        async with aiohttp.ClientSession() as session:
-            url = f"https://quotes-gw.webullfintech.com/api/wlas/option/rank/list?regionId=6&rankType={type}&pageIndex=1&pageSize=150"
+            url = f"https://quotes-gw.webullfintech.com/api/wlas/option/rank/list?regionId=6&rankType=volume&pageIndex=1&pageSize=150"
             async with session.get(url) as resp:
                 r = await resp.json()
                 data =r['data']
@@ -238,7 +245,7 @@ class AsyncWebullSDK:
             async with session.get(url) as response:
                 response = await response.json()
                 data = response.get('data', None)
-                values = [TickerValues.from_dict(data.get("values", {})) for data in data]
+                values = [Values.from_dict(data.get("values", {})) for data in data]
                 belongticker = [BelongTicker.from_dict(data.get("ticker", {})) for data in data]
 
 

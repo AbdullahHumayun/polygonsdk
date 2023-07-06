@@ -14,7 +14,7 @@ from tabulate import tabulate
 import aiohttp
 import asyncio
 import pandas as pd
-master = MasterSDK()
+master = MasterSDK(YOUR_API_KEY)
 class Track(commands.Cog):
     def __init__(self, bot):
         self.bot=bot
@@ -171,8 +171,8 @@ class Track(commands.Cog):
             first_row_iv_puts = atm_puts.iloc[0]['Strike']
             first_row_iv_calls = atm_calls.iloc[0]['Strike']
 
-            first_row_exp_calls = atm_calls.iloc[0]['🗓️']
-            first_row_exp_puts = atm_puts.iloc[0]['🗓️']
+            first_row_exp_calls = atm_calls.iloc[0]['Exp']
+            first_row_exp_puts = atm_puts.iloc[0]['Exp']
             first_row_skew_calls = atm_calls.iloc[0]['Skew']
             first_row_skew_puts = atm_puts.iloc[0]['Skew']
             skew_check = ''

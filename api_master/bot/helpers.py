@@ -14,3 +14,5 @@ def get_result(rsi_value):
         color = disnake.Colour.dark_grey()
         result = "⬜"
     return color, result
+
+

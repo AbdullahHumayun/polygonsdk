@@ -20,6 +20,12 @@ api_master.egg_info/
 test.py
 func_call_test.py
 testy.py
+testityo.py
+testy.py
+utilities/
+get_tickers.py
+getit.py
+
 dump.txt
 .env
 trial.py

@@ -995,18 +995,25 @@ class AsyncPolygonSDK:
 
         
         """
-        url=f"https://api.polygon.io/v1/indicators/rsi/{symbol}?timespan={timespan}&adjusted={adjusted}&window={window}&series_type=close&order={order}&limit={limit}&apiKey={self.api_key}"
-        async with aiohttp.ClientSession() as session:
-    
+    async def get_rsi(self, symbol, timespan="hour", window=14, limit=1000):
+        async def get_data(session, symbol):
+            url = f"https://api.polygon.io/v1/indicators/rsi/{symbol}?timespan={timespan}&window={window}&limit={limit}&apiKey={self.api_key}"
+        
             async with session.get(url) as response:
                 data = await response.json()
-                results = data['results']
+                results = data.get('results')
+            
                 if results is not None:
-                    values = results['values'] if 'values' in results else None
+                    values = results.get('values')
                     rsi = RSI(values)
-                    return rsi
+                    if rsi is not None:
+                        return rsi.rsi_value
                 else:
                     return None
+
+        async with aiohttp.ClientSession() as session:
+            rsi = await get_data(session, symbol)
+            return rsi
 
 
 

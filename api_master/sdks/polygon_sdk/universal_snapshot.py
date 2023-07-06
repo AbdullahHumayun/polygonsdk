@@ -79,7 +79,7 @@ class UniversalSnapshot:
             'Previous Close': self.prev_close,
             'C/P': self.contract_type,
             'Exercise Style': self.exercise_style,
-            '🗓️': self.expiry,
+            'Exp': self.expiry,
             'Skew': self.strike,
             'Strike': self.strike,
             'Delta': self.delta,
@@ -98,14 +98,14 @@ class UniversalSnapshot:
             'Size': self.trade_size,
             'Last Trade Exchange': self.exchange,
             'OI': self.open_interest,
-            '💲': self.underlying_price,
+            'Price': self.underlying_price,
             'Sym': self.underlying_ticker,
             'Name': self.name,
             'Market Status': self.market_status,
             'Ticker': self.ticker,
             'Types': self.type,
         }
-        self.df = pd.DataFrame(self.data_dict).sort_values('IV', ascending=False)
+        self.df = pd.DataFrame(self.data_dict)
 
     def __getitem__(self, index):
         return self.df[index]

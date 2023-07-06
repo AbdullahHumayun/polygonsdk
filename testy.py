@@ -79,7 +79,7 @@ async def find_skew(atm_options):
 
 from tabulate import tabulate
 from api_master.sdks.polygon_sdk.masterSDK import MasterSDK
-sdk = MasterSDK()
+sdk = MasterSDK(YOUR_API_KEY)
 async def main():
     tickers = ['TSLA', 'IWM', 
                 'AAPL', 'NVDA', 'AMD', 'MU', 'AMZN', 
@@ -96,7 +96,7 @@ async def main():
     put_rows = []  # List to store first put rows for each ticker
     
     for ticker in tickers:
-        atm_contracts = await sdk.get_near_the_money(ticker)
+        atm_contracts = await sdk.get_near_the_money_single(ticker, 5)
 
         atm_data = await find_skew(atm_contracts)
         if atm_data is not None and atm_data is not "N/A":
@@ -105,9 +105,9 @@ async def main():
 
             first_call = df[df['C/P'] == 'call'].iloc[[0]]
             first_put = df[df['C/P'] == 'put'].iloc[[0]]
-            # Modify the '🗓️' column to remove the '2023-' prefix
-            first_call['🗓️'] = first_call['🗓️'].str[5:]
-            first_put['🗓️'] = first_put['🗓️'].str[5:]
+            # Modify the 'Exp' column to remove the '2023-' prefix
+            first_call['Exp'] = first_call['Exp'].str[5:]
+            first_put['Exp'] = first_put['Exp'].str[5:]
             # Add 'Emoji' column to the first call rows and first put rows
             first_call['Emoji'] = first_call.apply(lambda row: '🔥' if row['Price'] > row['Skew'] else '🟢', axis=1)
             first_put['Emoji'] = first_put.apply(lambda row: '🔥' if row['Price'] > row['Skew'] else '🟢', axis=1)

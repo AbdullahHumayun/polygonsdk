@@ -15,9 +15,22 @@ class OptionAggs:
     def _convert_timestamp(timestamp):
         dt = datetime.fromtimestamp(timestamp // 1000)
         return dt.strftime('%Y/%m/%d:%I:%M %p')
-
+    
+    
+    def to_dict(self):
+        return {
+            'timestamp': self.timestamp,
+            'open': self.open,
+            'high': self.high,
+            'low': self.low,
+            'close': self.close,
+            'volume': self.volume,
+            'vw': self.vw,
+            'number_of_trades': self.number_of_trades
+        }
     def __str__(self):
         return f"OptionAggs(timestamp={self.timestamp}, open={self.open}, high={self.high}, low={self.low}, close={self.close}, volume={self.volume})"
 
     def __repr__(self):
         return self.__str__()
+    

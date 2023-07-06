@@ -3,21 +3,24 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from _discord import emojis as e
+from sdks.polygon_sdk.list_sets import subscriptions as subs
 import json
 from cogs.analysis import Analysis
 import pandas as pd
 from cogs.ss import SS
-from func_call_test import run_discord_conversation, analyze_data
+from func_call_test import analyze_data
 from views.mainview import MainView
 import asyncio
 from cogs.learn import Learn
 from cogs.fmp import FMP
+import numpy as np
 import disnake
 from menus.embedmenus import PageSelect
+from sdks.helpers.helpers import human_readable
 from disnake.ext import commands
 from disnake import Option, OptionType
 from autocomp import command_autocomp, ticker_autocomp
-from cfg import two_years_from_now_str
+from cfg import two_years_from_now_str, today_str
 import aiohttp
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.polygon_sdk.universal_snapshot import UniversalOptionSnapshot,UniversalSnapshot,CallsOrPuts
@@ -36,7 +39,7 @@ from _discord import emojis
 
 fudstop = fudstopSDK()
 from stock_market import PolygonStockMarket
-
+from sdks.polygon_sdk.masterSDK import MasterSDK
 
 from views.learnviews import MenuStart,AlertStart, DiscordStart,TAStart,MarketsView,CryptoViewStart,PageTwoView,PageThreeView,HighShortsViewStart,LowFloatDropdown
 from views.learnviews import ForexViewStart,FTDViewStart,LosersViewStart,GainersViewStart,ActiveViewStart
@@ -59,7 +62,7 @@ from views.learnviews import AvoidView
 
 from cfg import YOUR_API_KEY, YOUR_DISCORD_BOT_TOKEN
 
-
+master = MasterSDK(YOUR_API_KEY)
 polygon = AsyncPolygonSDK(YOUR_API_KEY)
 poly_options = PolygonOptionsSDK(YOUR_API_KEY)
 webull = AsyncWebullSDK()
@@ -188,6 +191,172 @@ class RsiHourOption(OptionChoice):
             required=True
         )
     ]
+class AllSkewSelect(disnake.ui.Select):
+    def __init__(self, bot, tickers):
+        self.bot = bot
+        # Prepare a list of SelectOptions
+        options = [disnake.SelectOption(label=ticker, value=ticker) for ticker in tickers]
+        
+        super().__init__(
+            placeholder='All-Skews -->',
+            min_values=1,
+            max_values=1,
+            custom_id="AllSkews!",
+            options=options
+        )
+
+    async def callback(self, inter: disnake.MessageCommandInteraction):
+        if self.values[0] == self.values[0]:
+            inter.send(await skew_pc(inter, self.values[0]))
+
+@bot.slash_command()
+async def allskew(self, inter:disnake.AppCmdInter):
+    """Scans and returns all skews with a depth of 5 or more, or -5 or less."""
+    await inter.response.defer()
+    async def process_ticker(ticker, skews_outside_range):
+        x = await master.get_near_the_money_single(ticker, 5)
+        try:
+            skew = await master.find_skew(x)
+    
+            if 'Close' not in skew.columns or 'Skew' not in skew.columns:
+                return
+
+            skew['depth'] = skew['Strike'] - skew['Price']
+            
+            mask = (skew['depth'] < -7.5) | (skew['depth'] > 7.5)
+            selected_columns = skew[mask][['Sym', 'Price', 'Skew', 'Exp', 'depth', 'IV']]
+            selected_columns['Exp'] = selected_columns['Exp'].str[5:]
+            selected_columns['IV'] = (selected_columns['IV'] * 100).round(5)
+            selected_columns['Direction'] = np.where(selected_columns['Price'] > selected_columns['Skew'], '🔥', '🟢')
+            skews_outside_range.extend(selected_columns.to_dict('records'))
+            
+        except AttributeError:
+            return
+    counter = 0
+
+    
+    while True:
+        counter = counter  + 1
+
+
+        tickers = list(set(subs))
+
+        tasks = []
+        skews_outside_range = []
+
+        for ticker in tickers:
+            
+            tasks.append(process_ticker(ticker, skews_outside_range))
+
+        await asyncio.gather(*tasks)
+
+        sorted_skews = sorted(skews_outside_range, key=lambda x: x['depth'])
+    
+        dropdown_tickers = sorted(list({item['Sym'] for item in sorted_skews}), key=str)[:25]
+
+        table = tabulate(sorted_skews, headers='keys', tablefmt='fancy', showindex=False)
+
+        embed = disnake.Embed(title=f"{emojis.leftarrow} SKEW-DE-BOP-BOX {emojis.rightarrow}", description=f"```{table}```", color=disnake.Colour.random())
+        view = disnake.ui.View()
+        view.add_item(AllSkewSelect(bot, dropdown_tickers))
+        await inter.edit_original_message(embed=embed, view=view)
+        if counter == 150:
+            await inter.send(f"> </skew allskew:1124756467724066824>")
+            break          
+
+@bot.slash_command()
+async def skew_pc(inter: disnake.AppCmdInter, ticker: str = commands.Param(autocomplete=ticker_autocomp)):
+    """View skews for the next 60 days. PC Format with more columns."""
+    MAX_CONCURRENCY = 60
+    await inter.response.defer()
+    ticker = ticker.upper()
+
+    async def fetch_data(session, tickers):
+        async with session.get(f"https://api.polygon.io/v3/snapshot?ticker.any_of={tickers}&apiKey={YOUR_API_KEY}") as response:
+            try:
+                near_money = await response.json(content_type=None)
+                near_money_results = near_money['results']
+                atm_data = UniversalSnapshot(near_money_results)
+                return atm_data.df.sort_values('IV', ascending=True)
+            except Exception as e:
+                print(f"Error processing tickers: {tickers}. Error: {e}")
+                return pd.DataFrame()
+
+    async def process_option_data(grouped_df, session, sem):
+        tasks = []
+        for _, group in grouped_df:
+            group_tickers = group['ticker'].tolist()
+            if not group_tickers:
+                continue
+            tickers_string = ','.join(group_tickers)
+            task = asyncio.create_task(fetch_data(session, tickers_string))
+            tasks.append(task)
+
+        results = []
+        async with sem:
+            for future in asyncio.as_completed(tasks):
+                result = await future
+                results.append(result)
+
+        return results
+
+    async with aiohttp.ClientSession() as session:
+        sem = asyncio.Semaphore(MAX_CONCURRENCY)
+        counter = 0
+        while True:
+            counter = counter + 1
+            if ticker.startswith("SPX"):
+                price = await polygon.get_index_price(ticker)
+                lower_strike = round(price) * 0.97
+                upper_strike = round(price) * 1.03
+            else:
+                price = await polygon.get_stock_price(ticker)
+                lower_strike = round(price) * 0.85
+                upper_strike = round(price) * 1.15
+            print(f"SPX TICKER: {ticker}: {lower_strike}, {price}, {upper_strike}")
+
+            initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte=2023-09-30&limit=250&apiKey={YOUR_API_KEY}"
+            results = await polygon._request_all_pages(initial_url)
+
+            if results is not None:
+                option_data = UniversalOptionSnapshot(results)
+                calls = option_data.df[option_data.df['type'] == 'call']
+                puts = option_data.df[option_data.df['type'] == 'put']
+                calls_grouped = calls.groupby('exp')
+                puts_grouped = puts.groupby('exp')
+
+                calls_results = await process_option_data(calls_grouped, session, sem)
+                calls_results_df = pd.concat(calls_results)
+                calls_grouped = calls_results_df.groupby('Exp', as_index=False)
+
+                puts_results = await process_option_data(puts_grouped, session, sem)
+                puts_results_df = pd.concat(puts_results)
+                puts_grouped = puts_results_df.groupby('Exp', as_index=False)
+
+                calls_first_rows = calls_grouped.first()
+                puts_first_rows = puts_grouped.first()
+
+                calls_selected_columns_df = calls_first_rows[['Exp', 'IV', 'Skew', 'Price', 'Size', 'Vol', 'OI']]
+                puts_selected_columns_df = puts_first_rows[['Exp', 'IV', 'Skew', 'Price', 'Size', 'Vol', 'OI']]
+                calls_selected_columns_df['Exp'] = calls_selected_columns_df['Exp'].apply(lambda x: x[5:])
+                puts_selected_columns_df['Exp'] = puts_selected_columns_df['Exp'].apply(lambda x: x[5:])
+                calls_selected_columns_df['IV'] = (calls_selected_columns_df['IV'] * 100).round(4)
+                puts_selected_columns_df['IV'] = (puts_selected_columns_df['IV'] * 100).round(4)
+                calls_selected_columns_df = calls_selected_columns_df.reset_index(drop=True)[['Exp', 'IV', 'Skew', 'Price', 'Size', 'Vol', 'OI']]
+                puts_selected_columns_df = puts_selected_columns_df.reset_index(drop=True)[['Exp', 'IV', 'Skew', 'Price', 'Size', 'Vol', 'OI']]
+
+                print(calls_selected_columns_df)
+                print(puts_selected_columns_df)
+                call_table = tabulate(calls_selected_columns_df, headers='keys', tablefmt='fancy', showindex=False)
+                put_table = tabulate(puts_selected_columns_df, headers='keys', tablefmt='fancy', showindex=False)
+                embed = disnake.Embed(title=f"Skews - {ticker} - Next 30 Days", description=f"**CALLS:**```{call_table}```\n**PUTS:**```{put_table}```", color=disnake.Colour.random())
+                embed.set_footer(text=f"Viewing Skews for {ticker}")
+                await inter.edit_original_message(embed=embed)
+                if counter == 50:
+                    await inter.send("stream ended")
+                    break
+
+
 
 
 
@@ -211,7 +380,7 @@ async def get_live_trades(inter:disnake.AppCmdInter, subscription: str = command
     await inter.edit_original_message(WebSocketMessage)
     
 
-messages = [{"role": "user", "content": f"Use all of the data and come up with a solution. Pay close attention to the option IV versus the current price. You have the nearest option symbols to the money along with all corresponding data to make these determinations."}]
+
 functions = [
     {
         "name": "analyze_data",
@@ -228,7 +397,6 @@ functions = [
         },
         "returns": {
             "type": "object",
-            "properties": {
                 "strike_price": {"type": "string", "description": "The strike price of the option symbol"},
                 "expiration": {"type": "string", "description": "The expiration date of the option symbol."},
                 "implied_volatility": {"type": "string", "description": "The implied volatility of the option symbol"},
@@ -259,114 +427,162 @@ functions = [
                 }
             },
         },
-    },
-]
-@bot.command()
-async def gpt4(ctx):
-    # Send user message and get GPT's response
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-0613",
-        messages=messages,
-    )
-    response_message = response["choices"][0]["message"]
 
-    if response_message.get("content"):
-        await ctx.send(response_message["content"])
+]
+
+
+
+conversation_history = {}  # Create an empty dictionary to store conversation history
+
+@bot.command()
+async def gpt4(ctx: commands.Context, ticker=str):
+    """Converse with GPT4"""
+    conversation_id = str(ctx.author.id)
+
+    history = conversation_history.get(conversation_id, [])
+
+    while True:
+        history.append({"role": "user", "content": f"analyze {ticker}"})
+
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo-0613",
+            messages=[{"role": "user", "content": ticker}],  # Pass the entire conversation history
+            functions=functions,
+            function_call="auto",
+        )
+
+        message_content = completion["choices"][0]["message"]
+        messages = [{'role': 'system', 'content': 'help answer questions to the best of your ability.'}]
+        conversation_history[conversation_id] = history
 
         # Check if GPT wanted to call a function
-        if "function_call" in response_message:
+        if message_content.get("function_call"):
             # Call the function
-            function_name = response_message["function_call"]["name"]
-            function_args = json.loads(response_message["function_call"]["arguments"])
-            function_response = await analyze_data(function_name, function_args)
-            await ctx.send(str(function_response))
-            
+            available_functions = {
+                "analyze_data": await analyze_data(ticker),
+            }
+            function_name = message_content["function_call"]["name"]
+            function_to_call = available_functions[function_name]
+            function_args = message_content["function_call"]["arguments"]
+            function_response = function_to_call(**function_args)
+
+            # Convert function_response to JSON serializable format
+            function_response = json.dumps(function_response)
+
             # Send the info on the function call and function response to GPT
-            messages.append(response_message)  # extend conversation with assistant's reply
+            messages.append(message_content)  # extend conversation with assistant's reply
             messages.append(
                 {
                     "role": "function",
                     "name": function_name,
-                    "content": str(function_response),
+                    "content": function_response,  # use the serialized JSON version here
                 }
             )
-        else:
-            # Send the user message and GPT's response to continue the conversation
-            messages.append(response_message)  # extend conversation with assistant's reply
 
-    while True:
+        # Convert message_content to JSON serializable format
+        message_content = json.dumps(message_content)
+
+        embed = disnake.Embed(title="Chat with GPT4", description=f"```py\n{message_content}```")
+        await ctx.send(embed=embed)
+
+
+        def check(m):
+            return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+
         try:
-            # Wait for the user's response
-            user_message = await bot.wait_for("message", check=lambda message: message.author == ctx.author)
-            user_input = user_message.content
+            user_message = await bot.wait_for("message", check=check, timeout=60)
+        except asyncio.TimeoutError:
+            await ctx.send("Conversation timed out. Please start a new conversation.")
+            break
 
-            if user_input.lower() == "stop":
-                break  # Exit the loop if the user inputs "Stop"
-
-            # Add the user's message to the conversation
-            messages.append({"role": "user", "content": user_input})
-
-            # Send user message and get GPT's response
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo-0613",
-                messages=messages,
-            )
-            response_message = response["choices"][0]["message"]
-
-            if response_message.get("content"):
-                embed = disnake.Embed(title=f"GPT4 Func-Call", description=f"```py\n{response_message['content']}```", color=disnake.Colour.random())
-                await ctx.send(embed=embed)
-
-                # Check if GPT wanted to call a function
-                if "function_call" in response_message:
-                    # Call the function
-                    function_name = response_message["function_call"]["name"]
-                    function_args = json.loads(response_message["function_call"]["arguments"])
-                    function_response = await call_function(function_name, function_args)
-                    embed = disnake.Embed(title=f"Func Call", description=f"> **{function_response}**")
-                    await ctx.send(embed=embed)
-                    
-                    # Send the info on the function call and function response to GPT
-                    messages.append(response_message)  # extend conversation with assistant's reply
-                    messages.append(
-                        {
-                            "role": "function",
-                            "name": function_name,
-                            "content": str(function_response),
-                        }
-                    )
-                else:
-                    # Send the user message and GPT's response to continue the conversation
-                    messages.append(response_message)  # extend conversation with assistant's reply
-
-        except Exception as e:
-            print(f"An error occurred: {e}")
-
-    # End the conversation if the user inputs "Stop"
-    messages.append({"role": "user", "content": "Stop"})
-
-async def call_function(function_name, function_args):
-    if function_name == "analyze_data":
-        ticker = function_args["ticker"]
-        # Your code to analyze data goes here
-        return {
-            "strike_price": "100",
-            "expiration": "2023-07-31",
-            "implied_volatility": "0.25",
-            # Add other data fields here
-        }
-    else:
-        return None
-
-@bot.event
-async def on_message(message):
-    if message.author == bot.user:
+import requests
+from testyo import Response
+@bot.command()
+async def parse(ctx: commands.Context, api_endpoint):
+    """Parse a URL"""
+    if not api_endpoint:
+        await ctx.send(f"Please provide a data URL.")
         return
-    if message.content.lower() == "stop":
-        await bot.logout()
-    else:
-        messages.append({"role": "user", "content": message.content})
-        await bot.process_commands(message)
+
+    try:
+        response = requests.get(api_endpoint)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        await ctx.send(f"HTTP error occurred: {err}")
+        return
+    except requests.exceptions.RequestException as err:
+        await ctx.send(f"Error occurred: {err}")
+        return
+
+    try:
+        data = response.json()
+    except ValueError:
+        await ctx.send("No JSON object could be decoded from the response.")
+        return
+
+    response_obj = Response.parse(data)
+
+    # Create an empty list to store the lines of the response
+    response_lines = []
+    response_obj.traverse(response_lines.append)
+
+    # Concatenate the lines with newline characters to form a single string
+    response_str = '\n'.join(response_lines)
+
+    # Send the response in chunks of 2000 characters to avoid hitting the Discord character limit
+    for i in range(0, len(response_str), 2000):
+        chunk = response_str[i:i+2000]
+        # If the chunk is cut off mid-line, move the last line to the next chunk
+        if i + 2000 < len(response_str) and response_str[i+2000] != '\n':
+            last_newline = chunk.rfind('\n')
+            next_chunk = chunk[last_newline+1:]
+            chunk = chunk[:last_newline]
+            response_str = response_str[:i+2000] + next_chunk + response_str[i+2000:]
+            await ctx.send(f"```{chunk}```")
+
+@bot.command()
+async def show_chain(ctx: commands.Context, ticker):
+    x = await master.get_near_the_money_single(ticker, 3)
+    print(x)
+    data = await master.show_the_chain(atm_options= x)
+    selected_columns = data[["Open","High", "Close", "Strike", "IV", "Vol", "OI", "Exp"]]
+    print(selected_columns)
+    embed = disnake.Embed(title=f"ATM Option Snapshot:", description=f"```{selected_columns}```")
+    await ctx.send(embed=embed)
+
+
+@bot.slash_command()
+async def atm_trades(inter:disnake.AppCmdInter, ticker:str=commands.Param(autocomplete=ticker_autocomp)):
+    """Get the atm TRADES for a ticker"""
+    await inter.response.defer()
+
+  
+    x = await master.get_near_the_money_single(ticker, 5)
+    print(x)
+    df= await master.atm_trades(atm_options= x)
+
+    x = x.split(',')
+    dfs = []  # to store all the dataframes
+    for option in x:
+        agg_objs = await master.get_aggregates(option)
+        agg_data = [obj.to_dict() for obj in agg_objs]  # convert each OptionAggs object to a dict
+        df = pd.DataFrame(agg_data).head(2)  # get the first two rows
+        df['option_symbol'] = human_readable(option)  # add option symbol to the dataframe
+        dfs.append(df)
+
+    # Concatenate all the dataframes and convert the result into a tabulate table
+    final_df = pd.concat(dfs, ignore_index=True)
+
+    # Keep only 'timestamp', 'high', 'low', 'close', 'volume', 'option_symbol' columns
+    final_df = final_df[['high', 'low', 'close', 'volume', 'option_symbol']].sort_values('volume', ascending=False)
+
+
+
+    table = tabulate(final_df, headers='keys', tablefmt='fancy', showindex=False)
+
+    embed = disnake.Embed(title=f"ATM Trades", description=f"```{table}```")
+
+    await inter.edit_original_message(embed=embed)
 
 
 @bot.slash_command()

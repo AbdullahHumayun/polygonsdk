@@ -647,7 +647,7 @@ class PolygonOptionsSDK:
             return option_data
     
 
-    async def get_index_price(self, ticker=str):
+    async def get_index_price(self, ticker:str):
         """Fetch the price of an index ticker"""
         if ticker.startswith('SPXW'):
             ticker = ticker.replace('SPXW','SPX')

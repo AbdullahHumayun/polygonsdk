@@ -21,7 +21,7 @@ from cfg import YOUR_API_KEY
 
 from asyncio import Queue
 
-master = MasterSDK()
+master = MasterSDK(YOUR_API_KEY)
 webull = AsyncWebullSDK()
 sdk = AsyncPolygonSDK(YOUR_API_KEY)
 df = pd.read_csv('files/stocks/all_snapshots.csv') #you must first download this file by running the "get_latest_ticker_data.py" file.
@@ -54,7 +54,7 @@ async def process_ticker(ticker, skews_outside_range):
         skew['skew_metric'] = skew['Strike'] - skew['💲']
         print(skew['skew_metric'])
         mask = (skew['skew_metric'] < -5) | (skew['skew_metric'] > 5)
-        selected_columns = skew[mask][['Sym', '💲',  'Skew', '🗓️', 'IV']]
+        selected_columns = skew[mask][['Sym', '💲',  'Skew', 'Exp', 'IV']]
         skews_outside_range.extend(selected_columns.to_dict('records'))
     except AttributeError:
         return

@@ -4,6 +4,7 @@ from flask import Flask
 import asyncio
 import requests
 from flask_cors import CORS
+import sqlite3
 import pandas as pd
 import aiohttp
 from flask import Flask, render_template, request, jsonify
@@ -23,10 +24,36 @@ loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 app = Flask(__name__)
 CORS(app)
-master = MasterSDK()
+master = MasterSDK(YOUR_API_KEY)
 @app.route('/')
 async def index():
     return render_template('index.html')
+
+@app.route("/search_equity_trades")
+def search_equity_trades():
+    search_term = request.args.get('search_term', default = "*", type = str)
+    conn = sqlite3.connect('stock_data.db')
+    trades = conn.execute(f"SELECT * FROM EquityTrades WHERE symbol LIKE '%{search_term}%'").fetchall()
+    return jsonify(trades)
+
+
+@app.route('/equity_trades')
+def equity_trades():
+    try:
+        conn = sqlite3.connect('stock_data.db')
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT * FROM EquityTrades")
+        rows = cursor.fetchall()
+
+        # Close the cursor and connection
+        cursor.close()
+        conn.close()
+
+        return render_template('equity_trades.html', rows=rows)
+    except Exception as e:
+        return str(e)  # 
+
 
 
 @app.route('/api/volume_analysis/<string:ticker>', methods=['GET', 'POST'])

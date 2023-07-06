@@ -1,9 +1,18 @@
-from cfg import YOUR_API_KEY, thirty_days_from_now_str, fifteen_days_from_now_str, two_days_from_now_str, today_str
+from cfg import YOUR_API_KEY, thirty_days_from_now_str, fifteen_days_from_now_str, two_days_from_now_str, today_str, five_days_from_now_str, thirty_days_ago_str
 import aiohttp
+from typing import Optional,Any,List, Union
+from .all_universal import UniversalSnapshotResult,UnderlyingAsset
+from .ticker_snapshot import TickerSnapshotResults
+from .crypto_snapshot import CryptoSnapshotResult
+from .universal_option import OptionsSnapshotResult
+from .universal_indices import IndicesSnapshotResult
+import json
 from .async_options_sdk import PolygonOptionsSDK
 from .universal_snapshot import UniversalOptionSnapshot, UniversalSnapshot
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
+from .option_aggs import OptionAggs
 from typing import List
+from .trades import DataContainer
 from tabulate import tabulate
 import pandas as pd
 import asyncio
@@ -11,10 +20,9 @@ sdk = PolygonOptionsSDK(YOUR_API_KEY)
 from urllib.parse import urlencode
 
 webull = AsyncWebullSDK()
-class MasterSDK(PolygonOptionsSDK):
-    def __init__(self):
-        self.api_key = YOUR_API_KEY
-        self.snapshot_base_url = f"https://api.polygon.io/v3/snapshot/options/"
+class MasterSDK:
+    def __init__(self, api_key):
+        self.sdk = PolygonOptionsSDK(api_key)
     
 
     async def _request_all_pages_concurrently(session, initial_url,api_key=YOUR_API_KEY):
@@ -47,15 +55,70 @@ class MasterSDK(PolygonOptionsSDK):
 
     async def find_skew(self, atm_options):
         async with aiohttp.ClientSession() as session:
-            url=f"https://api.polygon.io/v3/snapshot?ticker.any_of={atm_options}&limit=250&apiKey={YOUR_API_KEY}"
-            async with session.get(url):
-                r = await self._request_all_pages_concurrently(url)
+            url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={atm_options}&limit=250&apiKey={YOUR_API_KEY}"
+            print(url)
+            async with session.get(url) as response:
+                r = await response.json()  # assuming response is JSON
                 data = r['results'] if 'results' in r else None
                 if data is not None:
                     try:
                         option_data = UniversalSnapshot(data)
                         skew_row = option_data.df.sort_values('IV', ascending=True)
                         return skew_row.iloc[[0]]
+                    except KeyError:
+                        return None
+                    
+    async def atm_trades(self, atm_options: str) -> pd.DataFrame:
+        atm_options = atm_options.split(',')
+        data_containers = []
+        async with aiohttp.ClientSession() as session:
+            for option in atm_options:
+                url = f"https://api.polygon.io/v3/trades/{option}?limit=1000&apiKey={YOUR_API_KEY}"
+                print(url)
+                async with session.get(url) as response:
+                    r = await response.json()  # assuming response is JSON
+                    if 'results' in r:
+                        data = r['results']
+                        for result in data:
+                            container = DataContainer.from_dict(result)
+                            data_containers.append(container)
+                        print(data)
+
+        # Convert list of data containers to DataFrame
+        df = pd.DataFrame([dc.__dict__ for dc in data_containers])
+
+        # Convert 'sip_timestamp' to datetime and set as index
+        df['sip_timestamp'] = pd.to_datetime(df['sip_timestamp'])
+        df.set_index('sip_timestamp', inplace=True)
+
+        return df
+
+
+    async def get_aggregates(self,ticker: str, multiplier:int=1, timespan:str="day", from_date:str=thirty_days_ago_str, to_date:str=today_str):
+        url = f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/{multiplier}/{timespan}/{from_date}/{to_date}?apiKey={YOUR_API_KEY}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                agg_resp = await resp.json()
+                results = agg_resp['results']
+                aggs = [OptionAggs(bar) for bar in results]  # create OptionAggs object for each bar
+                return aggs
+               
+            
+    async def show_the_chain(self, atm_options):
+        async with aiohttp.ClientSession() as session:
+            url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={atm_options}&limit=250&apiKey={YOUR_API_KEY}"
+            async with session.get(url) as response:
+                r = await response.json()  # assuming response is JSON
+                data = r['results'] if 'results' in r else None
+                if data is not None:
+                    try:
+                        option_data = UniversalSnapshot(data)
+                        df = option_data.df
+                        df = df.sort_values('Strike', ascending=True)
+                        min_vol_index = df['IV'].idxmax()  # Get the index of the row with the lowest 'Vol' before converting to string
+                        df['Vol'] = df['IV'].astype(str)  # Convert 'Vol' to string
+                        df.loc[min_vol_index, 'IV'] = '🔥 ' + df.loc[min_vol_index, 'Vol']
+                        return df
                     except KeyError:
                         return None
     async def find_multiple_skews(self,atm_options_list):
@@ -70,22 +133,7 @@ class MasterSDK(PolygonOptionsSDK):
                 if results is not None:
                     option_data = UniversalOptionSnapshot(results)
                     all_option_data.append(option_data)
-            else:
-                async with aiohttp.ClientSession() as session:
-                    url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={options_combined}&limit=250&apiKey={YOUR_API_KEY}"
-                    try:
-                        async with session.get(url) as resp:
-                            if resp.content_type == 'application/json':
-                                r = await resp.json()
-                                data = r.get('results')
-                                if data is not None:
-                                    option_data = UniversalSnapshot(data)
-                                    all_option_data.append(option_data)
-                            else:
-                                print(f"Unexpected content type: {resp.content_type} for URL: {url}")
-                    except aiohttp.client_exceptions.ContentTypeError as e:
-                        print(f"Error decoding JSON response for URL: {url}")
-                        print(e)
+
 
         return all_option_data
     
@@ -135,9 +183,109 @@ class MasterSDK(PolygonOptionsSDK):
         print(tabulate(all_data, headers='keys', tablefmt='fancy_grid', showindex=False))
         return all_data
 
-    async def get_near_the_money_single(self, ticker: str, threshold: float):
+    async def fetch_polygon_snapshot_async(
+                self, snapshot_type: str, tickers: str,
+                order: Optional[str] = None, limit: Optional[str] = None, 
+                sort: Optional[str] = None, contract_type: Optional[str] = None,
+                expiration_date: Optional[str] = None, strike_price: Optional[str] = None, option_contract: Optional[str] = None) -> Union[List[Any], Any]:
+            """
+            Fetch the snapshot data of a specific type from Polygon API.
+            
+            :param snapshot_type: Type of the snapshot. Can be 'indices', 'stocks', 'options' or 'crypto'.
+            :param tickers: A string representing ticker symbols.
+            :param order: (Optional) The order of the results. Can be 'asc' or 'desc'.
+            :param limit: (Optional) The number of results to be returned.
+            :param sort: (Optional) The field to sort the results by.
+            :param contract_type: (Optional) Contract type, used for options snapshot.
+            :param expiration_date: (Optional) Expiration date, used for options snapshot.
+            :param strike_price: (Optional) Strike price, used for options snapshot.
+            
+            :return: A list of snapshot results if snapshot_type is 'indices' or 'options'. 
+                    An instance of TickerSnapshotResults if snapshot_type is 'stocks'. 
+                    An instance of CryptoSnapshotResult if snapshot_type is 'crypto'. 
+
+            :raise ValueError: If the snapshot_type is not one of 'indices', 'stocks', 'options' or 'crypto'.
+            """
+            params = {}
+            if snapshot_type == "indices":
+                url = f"https://api.polygon.io/v3/snapshot/{snapshot_type}"
+            elif snapshot_type == "stocks":
+                url = f"https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/{tickers}"
+            elif snapshot_type == "options":
+                url = f"https://api.polygon.io/v3/snapshot/options/{tickers}?apiKey={YOUR_API_KEY}"
+                print(url)
+            elif snapshot_type == "option_chain":
+                url = f"https://api.polygon.io/v3/snapshot/options/{tickers}/{option_contract}"
+                print(url)
+            elif snapshot_type == "universal":
+                url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={tickers}&apiKey={YOUR_API_KEY}"
+            elif snapshot_type == "crypto":
+                url = f"https://api.polygon.io/v2/snapshot/locale/global/markets/crypto/tickers/{tickers}"
+            else:
+                raise ValueError(f"Invalid snapshot type: {snapshot_type}")
+
+            # Building the params
+            if snapshot_type == "indices":
+                params = {
+                    "ticker.any_of": tickers,
+                    "order": order,
+                    "limit": limit,
+                    "sort": sort,
+                    "apiKey": f"{YOUR_API_KEY}",
+                }
+            elif snapshot_type in ("stocks"):
+                params = {
+                    "apiKey": f"{YOUR_API_KEY}",
+                }
+
+            elif snapshot_type in ("crypto"):
+                params = { 
+                    "apiKey": f"{YOUR_API_KEY}"
+                    
+                }
+            elif snapshot_type == "options":
+                params = {
+                    "contract_type": contract_type,
+                    "strike_price": strike_price,
+                    "order": order,
+                    "limit": limit,
+                    "sort": sort,
+                    "apiKey": f"{YOUR_API_KEY}",
+                }
+            elif snapshot_type == "option_chain":
+                params = {
+                    "contract_type": contract_type,
+                    "strike_price": strike_price,
+                    "option_contract": option_contract,
+                    "order": order,
+                    "limit": limit,
+                    "sort": sort,
+                    "apiKey": f"{YOUR_API_KEY}",
+                }
+
+            # Filter out None values
+            params = {k: v for k, v in params.items() if v is not None}
+
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, params=params) as response:
+                    data = await response.json()
+                    if data is not None:
+                        results = data['results']
+                    #print(f"API response for {tickers}: {data}")  # Add this line fo
+                    
+                if snapshot_type == "indices":
+                    return [IndicesSnapshotResult.from_dict(result) for result in data['results']]
+                elif snapshot_type in ("stocks"):
+                    return [TickerSnapshotResults.from_dict(data['ticker']) if snapshot_type == "stocks" else CryptoSnapshotResult.from_dict(data['ticker'])]
+                elif snapshot_type == "options":
+                    return [OptionsSnapshotResult.from_dict(results) for results in data['results']]
+                elif snapshot_type == "universal":
+                    return [UniversalSnapshotResult.from_dict(result) for result in data['results']]
+
+
+    async def get_near_the_money_single(self, ticker: str, threshold: float, exp_greater_than: str=today_str, exp_less_than:str=thirty_days_from_now_str):
         if ticker is not None:
-            if ticker.startswith("SPX") or ticker.startswith("VIX") or ticker.startswith("NDX"):
+            if ticker.startswith("SPX"):
                 price = await self.get_index_price(ticker)
             else:
                 price = await self.get_stock_price(ticker)
@@ -146,7 +294,7 @@ class MasterSDK(PolygonOptionsSDK):
                 upper_strike = round(price * (1 + threshold/100), 2)
 
                 async with aiohttp.ClientSession() as session:
-                    url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.lte={upper_strike}&strike_price.gte={lower_strike}&expiration_date.lte={fifteen_days_from_now_str}&expiration_date.gt={today_str}&limit=250&apiKey={YOUR_API_KEY}"
+                    url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.lte={upper_strike}&strike_price.gte={lower_strike}&expiration_date.lte={exp_less_than}&expiration_date.gt={exp_greater_than}&limit=250&apiKey={YOUR_API_KEY}"
                     async with session.get(url) as resp:
                         r = await resp.json()
                         results = r['results']
@@ -197,7 +345,7 @@ class MasterSDK(PolygonOptionsSDK):
                 
     async def get_index_price(self, ticker=str):
         """Fetch the price of an index ticker"""
-        url = f"https://api.polygon.io/v3/snapshot?ticker.any_of=I:{ticker}&apiKey={self.api_key}"
+        url = f"https://api.polygon.io/v3/snapshot?ticker.any_of=I:{ticker}&apiKey={YOUR_API_KEY}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
                 data = await resp.json()
@@ -212,7 +360,7 @@ class MasterSDK(PolygonOptionsSDK):
         return None
     
     async def get_stock_price(self, ticker=str):
-        url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={self.api_key}"
+        url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={YOUR_API_KEY}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
                 try:
@@ -244,7 +392,7 @@ class MasterSDK(PolygonOptionsSDK):
         """Scans top 500 tickers and returns RSI snapshots."""
         async with aiohttp.ClientSession() as session:
             tickers = await webull.get_top_traded_options()
-            more_tickers = await webull.get_top_options()
+            more_tickers = await webull.get_top_option_string()
 
             combined_tickers = list(set(tickers) | set(more_tickers))
             timespans = ['minute', 'hour', 'day', 'week', 'month', 'quarter', 'year']
@@ -252,7 +400,7 @@ class MasterSDK(PolygonOptionsSDK):
             tasks = []
             for ticker in combined_tickers:
                 for timespan in timespans:
-                    url = f"https://api.polygon.io/v1/indicators/rsi/{ticker}?timespan={timespan}&adjusted=true&window=14&series_type=close&order=desc&limit=1000&apiKey={self.api_key}"
+                    url = f"https://api.polygon.io/v1/indicators/rsi/{ticker}?timespan={timespan}&adjusted=true&window=14&series_type=close&order=desc&limit=1000&apiKey={YOUR_API_KEY}"
                     task = asyncio.create_task(self.fetch_rsi(session, url, ticker, timespan))
                     tasks.append(task)
 
