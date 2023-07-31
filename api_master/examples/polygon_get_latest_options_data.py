@@ -1,4 +1,3 @@
-"""FOR HIGH TIER SUBSCRIBERS"""
 
 import sys
 import os
@@ -18,7 +17,7 @@ async def get_all_options_data():
     # Fetch all option contracts concurrently
     contracts_task = polyoptions.fetch_all_option_contracts(
         expiration_date_gte=str(today_str),  # the expiration will be after today
-        expiration_date_lte="2023-06-30"  # select your desired date range
+        expiration_date_lte="2023-08-04"  # select your desired date range
     )
 
     contracts = await contracts_task
@@ -41,6 +40,3 @@ async def main():
 
 # Run the main function
 asyncio.run(main())
-
-
-

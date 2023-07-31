@@ -14,7 +14,7 @@ from tabulate import tabulate
 import aiohttp
 import asyncio
 import pandas as pd
-master = MasterSDK(YOUR_API_KEY)
+master = MasterSDK()
 class Track(commands.Cog):
     def __init__(self, bot):
         self.bot=bot

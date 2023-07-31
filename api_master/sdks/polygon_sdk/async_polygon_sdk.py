@@ -2,14 +2,22 @@ import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+import asyncio
 
+from .option_snapshot import OptionSnapshotData
+from tabulate import tabulate
+from .company_info import CompanyResults
 from requests import session
+from .ticker_news import NewsArticle
 import httpx
+from .tickernews import TickerNews
 from typing import List, Union, Tuple, Optional
+from .list_sets import indices_list
 from urllib.parse import urlencode, unquote
+from .list_sets import subscriptions
 import pandas as pd
-from .indices_snapshot import Indices,IndicesData
-from .company_info import CompanyInfo
+from .indices_snapshot import IndicesData
+
 from .forex_crypto import ForexSnapshot, CryptoSnapshot
 from .technicals.rsi import RSI
 from .technicals.macd import MACDData
@@ -27,7 +35,7 @@ from scipy.signal import argrelextrema
 from typing import List, Dict, Any
 from .models import Dividend, Condition
 from .pivot_points import PivotPointData
-from cfg import YOUR_NASDAQ_KEY
+from cfg import YOUR_NASDAQ_KEY, seven_days_from_now_str
 from .aggregates import AggregatesData
 from .quote import Quote
 import aiohttp
@@ -46,14 +54,44 @@ class AsyncPolygonSDK:
         self.conditions_map = None
         self.exchanges_map = {}  # Add this line to define the exchanges_map attribute
         self.session = httpx.AsyncClient()
-   
+
     async def __aenter__(self):
-        await self.session.__aenter__()
+        await session.__aenter__()
         return self
 
-    async def __aexit__(self, exc_type, exc, tb):
-        print("Closing session")
-        await self.session.__aexit__(exc_type, exc, tb)
+    async def process_conditions(self, ticker):
+        url = f"https://api.polygon.io/v3/quotes/{ticker}?limit=1&apiKey={YOUR_API_KEY}"
+        resp = await self.session.get(url)
+        data = resp.json()
+        if data is not None:
+            results = data['results']
+            for i in results:
+                indicators = i.get('indicators', None)
+                conditions = i.get('conditions', None)
+                yield indicators, conditions
+
+
+    async def get_nbbo_quotes(self, ticker):
+        async with aiohttp.ClientSession() as session:
+            url=f"https://api.polygon.io/v3/quotes/{ticker}?apiKey={YOUR_API_KEY}"
+            async with session.get(url) as resp:
+                data = await resp.json()
+                if data is not None:
+                    results = data['results'] if 'results' in data else None
+                    return Quote(results)
+                
+
+
+
+    async def process_news(self):
+        async with aiohttp.ClientSession() as session:
+            url=f"https://api.polygon.io/v2/reference/news?limit=1000&apiKey={YOUR_API_KEY}"
+
+            async with session.get(url) as resp:
+                data = await resp.json()
+                results = data['results'] if 'results' in data else None
+                if results is not None:
+                    return TickerNews(results)
 
     @staticmethod
     def create_data_model(data_type, data):
@@ -66,7 +104,30 @@ class AsyncPolygonSDK:
     async def initialize(self):
         self.conditions_map = await self.get_stock_conditions()
 
+    async def _request_all_pages_concurrently(self, session, initial_url):
+        all_results = []
+        next_url = initial_url
+        while next_url:
+            try:
+                async with session.get(next_url) as response:
+                    response.raise_for_status()
+                    data = await response.json()
 
+                    if "results" in data:
+                        all_results.extend(data["results"])
+
+                    next_url = data.get("next_url")
+                    if next_url:
+                        next_url += f'&apiKey={self.api_key}'
+
+            except aiohttp.ClientResponseError as http_err:
+                print(f"An HTTP error occurred: {http_err}")
+                break
+            except Exception as err:
+                print(f"An error occurred: {err}")
+                break
+
+        return all_results
 
     async def get_cik(self, ticker):
 
@@ -130,30 +191,21 @@ class AsyncPolygonSDK:
 
         return all_results
 
-    async def get_all_indices(self) -> pd.DataFrame:
+    async def get_all_indices(self):
         """Returns all up-to-date indices data in the form of a dataframe."""
         url = f"https://api.polygon.io/v3/snapshot/indices?apiKey={self.api_key}"
+        all_indices_data = []
         async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-                r = await resp.json()
-                results = r['results']
-                name = Indices(results)
-                session = IndicesData(results)
-                data = { 
-                    'ticker': name.ticker,
-                    'Name': name.name,
-                    'Dollar Change':session.change,
-                    'Change Percent':session.change_percent,
-                    'Close':session.close,
-                    'High':session.high,
-                    'Open':session.open,
-                    'Low':session.low,
-                    'Previous Close':session.previous_close
-                }
-                df = pd.DataFrame(data)
-                df.to_csv('files/indices/indices_data.csv')
+            r = await self._request_all_pages_concurrently(session, url)
+            print(r)
+            if r is not None:
+                print(r)
 
-                return df
+                all_indices_data.extend(r)  # use extend instead of append
+
+        return IndicesData(all_indices_data)
+
+
             
 
     async def get_all_crypto_snapshots(self) -> List[CryptoSnapshot]:
@@ -233,13 +285,17 @@ class AsyncPolygonSDK:
         :param ticker: The stock ticker symbol as a string.
         :return: An instance of the StockSnapshot class.
         """
-        snapshot_endpoint = f"/v2/snapshot/locale/us/markets/stocks/tickers/{ticker}"
-        snapshot_data = await self._request(snapshot_endpoint)
-        results = snapshot_data['ticker']
-        if snapshot_data is None:
-            return None
+        async with aiohttp.ClientSession() as session:
+            url=f"https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/{ticker}?apiKey={YOUR_API_KEY}"
+            print(url)
+            async with session.get(url) as resp:
+                data = await resp.json()
+                if data is None:
+                    return
+                results = data['ticker'] if 'ticker' in data else None
+                if results is not None:
+                    return StockSnapshot(results)
 
-        return StockSnapshot(results)
     
 
     async def find_gaps(self, o, h, l, c, t):
@@ -301,6 +357,9 @@ class AsyncPolygonSDK:
         gap_df = pd.concat([gap_up_df, gap_down_df], ignore_index=True)
 
         return gap_df
+
+
+
 
     async def find_gap_price_range(self, o, h, l, c, t, gap_index, filled=None) -> Union[Tuple[Optional[float], Optional[float]], Optional[datetime]]:
 
@@ -385,6 +444,99 @@ class AsyncPolygonSDK:
 
         return exchanges_data
         
+    async def all_options(self, ticker:str, expiration_date: Optional[str] = seven_days_from_now_str):
+        """Returns all options contracts for a ticker"""
+        async with aiohttp.ClientSession() as session:
+            all_option_data = []
+            url=f"https://api.polygon.io/v3/snapshot/options/{ticker}?expiration_date.lte={expiration_date}&limit=250&apiKey={YOUR_API_KEY}"
+            async with session.get(url) as resp:
+                results = await self._request_all_pages_concurrently(session, url)
+                if results is not None:
+                    option_data = OptionSnapshotData(results)
+                    return option_data
+
+    async def get_top_gainers(self):
+        async with aiohttp.ClientSession() as session:
+            url=f"https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/gainers?include_otc=false&apiKey={YOUR_API_KEY}"
+            async with session.get(url) as resp:
+                data = await resp.json()
+                tickers = [i['ticker'] if 'ticker' is not None and 'ticker' in i else None for i in data]
+                return tickers
+            
+
+    async def all_snapshots(self, type):
+        """Returns all snapshots for a data type.
+        
+        types:
+
+        >>> indices
+        >>> options
+        >>> stocks
+        >>> crypto
+        >>> forex
+
+    
+        """
+        async with aiohttp.ClientSession() as session:
+            url=f"https://api.polygon.io/v3/snapshot?type={type}&limit=250&apiKey={YOUR_API_KEY}"
+            async with session.get(url):
+                data = await self._request_all_pages_concurrently(session, url)
+                print(data)
+                if data is not None:
+                    results = [i['results'] if 'results' in i else None for i in data]
+                    if type == "indices":
+                        indices_data = IndicesData(results)
+                        return indices_data
+                    elif type == "options":
+                        option_data = OptionSnapshotData(results)
+                        return option_data
+                    elif type == "crypto":
+                        crypto_data = CryptoSnapshot(results)
+                        return crypto_data
+                    elif type == "forex":
+                        forex_data = ForexSnapshot(results)
+                        return forex_data
+                    elif type == "stocks":
+                        stock_data = StockSnapshot(results)
+                        return stock_data
+                    else:
+                        return None
+
+                
+                    
+
+
+
+    async def last_trade_condition(self, ticker:str):
+        """Returns the last trade and accompanying data for a ticker"""
+        async with aiohttp.ClientSession() as session:
+            url=f"https://api.polygon.io/v2/last/trade/{ticker}?apiKey={YOUR_API_KEY}"
+            async with session.get(url) as resp:
+                data = await resp.json()
+                if data is None:
+                    return
+                else:
+                    results = data['results'] if 'results' in data else None
+                    last_condition = results['c'] if 'c' in results else None
+                    return last_condition
+
+    async def last_quote_condition(self, ticker:str):
+        """Returns last quote condition for a ticker."""
+        async with aiohttp.ClientSession() as session:
+            url=f"https://api.polygon.io/v3/quotes/{ticker}?limit=1&apiKey={YOUR_API_KEY}"
+            async with session.get(url) as resp:
+                data = await resp.json()
+                if data is None:
+                    return
+                else:
+                    results = data['results'] if 'results' in data else None
+                    condition = [i['conditions'] if 'conditions' in i else None for i in results]
+                    indicator = [i['indicators'] if 'indicators' in i else None for i in results]
+                    return condition, indicator
+  
+
+
+
     async def get_polygon_logo(self, symbol: str) -> Optional[str]:
         """
         Fetches the URL of the logo for the given stock symbol from Polygon.io.
@@ -423,74 +575,47 @@ class AsyncPolygonSDK:
                     decoded_url = unquote(encoded_url)
                     url_with_api_key = f"{decoded_url}?apiKey={self.api_key}"
                     return url_with_api_key    
-    async def ticker_news(self, keyword_hooks):
-        sent_articles = set()
-        while True:
-            endpoint = "/v2/reference/news"
-            response = await self._request(endpoint)
-
-            if not response or "results" not in response:
-                continue
-
-            results = response['results']
-            publisher = [i['publisher'] if 'publisher' in i and i['publisher'] else 'N/A' for i in results]
-            home_url = [i['homepage_url'] if 'homepage_url' in i and i['homepage_url'] else 'N/A' for i in publisher]
-            icon_url = [i['logo_url'] if 'logo_url' in i and i['logo_url'] else 'N/A' for i in publisher]
-            name = [i['name'] if 'name' in i and i['name'] else "N/A" for i in results]
-            title = [i['title'] if 'title' in i and i['title'] else 'N/A' for i in results]
-            author = [i['author'] if 'author' in i and i['author'] else 'N/A' for i in results]
-            article_url = [i['article_url'] if 'article_url' in i and i['article_url'] else 'N/A' for i in results]
-            tickers = [i['ticker'] if 'ticker' in i and i['ticker'] else 'N/A' for i in results]
-            amp_url = [i['amp_url'] if 'amp_url' in i and i['amp_url'] else 'N/A' for i in results]
-            image_url = [i['image_url'] if 'image_url' in i and i['image_url'] else 'N/A' for i in results]
-            description = [i['description'] if 'description' in i and i['description'] else 'N/A' for i in results]
-            keywords = [i['keywords'] if 'keywords' in i and i['keywords'] else 'N/A' for i in results]
-
-            for article_index, article_url in enumerate(article_url):
-                if article_url in sent_articles:
-                    continue
-
-                article_keywords = keywords[article_index]
-                sent_webhook = False
-
-                for keyword, webhook_url in keyword_hooks.items():
-                    if keyword in article_keywords:
-                        await Data().make_news_embed(webhook_url, image_url[article_index], title[article_index], description[article_index], name[article_index], icon_url[article_index], article_url, tickers[article_index], home_url[article_index], article_keywords, author[article_index])
-                        sent_articles.add(article_url)
-                        sent_webhook = True
-                        print(f"New article processed: {title[article_index]} {keywords}")
+                    
 
 
-                if not sent_webhook:
-                    continue
 
 
-    async def get_stock_conditions(self, conditions) -> Dict[int, str]:
+    async def get_stock_conditions(self, type, conditions) -> Dict[int, str]:
         """
         Get stock conditions data from the Polygon.io API.
 
         :return: A dictionary with condition IDs as keys and condition names as values.
         """
-        url = f"https://api.polygon.io/v3/reference/conditions?asset_class=stocks&limit=1000&apiKey={self.api_key}"
+        for c in conditions:
+            url = f"https://api.polygon.io/v3/reference/conditions?id={c}&limit=1000&apiKey={self.api_key}"
+            stock_conditions = {}
+
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        conditions_data = data['results']
+
+                        for condition in conditions_data:
+                            condition_id = condition['id']
+                            condition_name = condition['name']
+                            print(condition_name)
+                            stock_conditions[condition_id] = condition_name
+                        else:
+                            print(f"Error: {response.status}")
+
+            return stock_conditions
+
+    async def fetch_condition_names(self, trade_conditions):
+
         stock_conditions = {}
 
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    conditions_data = data['results']
-
-                    for condition in conditions_data:
-                        condition_id = condition['id']
-                        condition_name = condition['name']
-                        stock_conditions[condition_id] = condition_name
-                else:
-                    print(f"Error: {response.status}")
+        for condition in trade_conditions:
+            name = await self.get_stock_conditions(type="stocks", condition=condition)
+            stock_conditions[condition] = name
 
         return stock_conditions
 
-
-    
     async def get_quotes(self, ticker, **kwargs):
         """
         Get NBBO quotes for a ticker symbol in a given time range.
@@ -641,6 +766,8 @@ class AsyncPolygonSDK:
                     pass
 
 
+
+
     async def get_exponential_moving_average(self, symbol, timestamp=None, timespan: str=None, adjusted=True, window: str=None, series_type="close", expand_underlying=None, order="desc", limit: str=None):
         """
         Get the exponential moving average (EMA) for a ticker symbol over a given time range.
@@ -697,8 +824,7 @@ class AsyncPolygonSDK:
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
                 data = await response.json()
-                results = data['results']
-                return(CompanyInfo(results))
+                return CompanyResults(data)
 
     async def get_cik(self, ticker):
 
@@ -762,12 +888,50 @@ class AsyncPolygonSDK:
             macd = [i['value'] for i in values]
             signal = [i['signal'] for i in values]
             histogram = [i['histogram'] for i in values]
-
+            if values is not None:
+                return MACDData(values)
         except (KeyError, TypeError) as e:
             print(f"KeyError in get_macd: {e}. The requested key is not available in the response.")
             return None
 
-        return macd, signal, histogram
+
+    async def get_and_check_bullish(self,ticker, timespan:str="hour"):
+        hist = await self.get_macd(ticker, timespan=timespan)
+        rsi = await self.get_rsi(ticker, timespan=timespan)  # Assume you have a method to get RSI
+
+        macd_bullish = await self.get_and_check_bullish(hist)
+        rsi_bullish = await self.get_and_check_bullish(rsi)
+
+        return ticker, macd_bullish, rsi_bullish
+
+    async def get_and_check_bearish(self,ticker, timespan:str="hour"):
+        hist = await self.get_macd(ticker, timespan=timespan)
+        rsi = await self.get_rsi(ticker, timespan=timespan)  # Assume you have a method to get RSI
+
+        macd_bearish = await self.get_and_check_bearish(hist)
+        rsi_bearish = await self.get_and_check_bearish(rsi)
+
+        return ticker, macd_bearish, rsi_bearish
+    
+    async def get_upside_downside(self, tickers, timespan:str="hour"):
+        bearish_tasks = [self.get_and_check_bearish(ticker, timespan) for ticker in tickers]
+        bullish_tasks = [self.get_and_check_bullish(ticker, timespan) for ticker in tickers]
+        bearish_results = await asyncio.gather(*bearish_tasks)
+        bullish_results = await asyncio.gather(*bullish_tasks)
+
+        bearish_df = pd.DataFrame(bearish_results, columns=['ticker', 'macd_bearish', 'rsi_bearish'])
+        bullish_df = pd.DataFrame(bullish_results, columns=['ticker', 'macd_bullish', 'rsi_bullish'])
+
+        # Filter the dataframes to only include rows where both conditions are met
+        bearish_df = bearish_df[(bearish_df['macd_bearish'] == True) & (bearish_df['rsi_bearish'] == True)]
+        bullish_df = bullish_df[(bullish_df['macd_bullish'] == True) & (bullish_df['rsi_bullish'] == True)]
+
+        # Drop duplicates
+        bearish_df = bearish_df.drop_duplicates('ticker')
+        bullish_df = bullish_df.drop_duplicates('ticker')
+
+        return bearish_df, bullish_df
+
 
     async def get_pivot_points(self, stock_ticker, multiplier, timespan, from_date, to_date):
         """
@@ -814,6 +978,227 @@ class AsyncPolygonSDK:
             pivot_points_data.append(pivot_data)
 
         return pivot_data
+
+    async def get_all_macd(self, symbol:str, timestamp_greater_than:str="2023-01-01", timstamp_less_than:str=today_str,timespan:str="hour", limit:str=1000):
+            all_results =[]
+            async with aiohttp.ClientSession() as session:
+                url=f"https://api.polygon.io/v1/indicators/macd/{symbol}?timespan={timespan}&timestamp.gte={timestamp_greater_than}&timestamp.lte={timstamp_less_than}&adjusted=true&short_window=12&long_window=26&signal_window=9&series_type=close&order=desc&limit={limit}&apiKey={YOUR_API_KEY}"
+                while url:
+                    print(url)
+                    async with session.get(url) as response:
+                        data = await response.json()
+                        try:
+                            all_results.extend(data['results']['values'])
+                        except KeyError:
+                            continue  # Extracting the 'values' part of the 'results'
+                        next_url = data.get('next_url', None)  # Get the next URL or set to None if it doesn't exist
+                        if next_url:
+                            url = f"{next_url}&apiKey={self.api_key}"  # Append the API key to the next URL
+                        else:
+                            url = None
+            return MACDData(all_results)    
+
+    async def get_all_aggregates(self, ticker, multiplier, timespan, from_date, to_date, limit=1000):
+        """
+        Retrieve aggregate data for a given stock ticker.
+
+        :param stock_ticker: The stock ticker symbol as a string.
+        :param multiplier: The multiplier for the timespan as an integer.
+        :param timespan: The timespan as a string (e.g., "minute", "hour", "day", "week", "month", "quarter", "year").
+        :param from_date: The start date for the data as a string in YYYY-MM-DD format.
+        :param to_date: The end date for the data as a string in YYYY-MM-DD format.
+        :return: An instance of AggregatesData containing the aggregate data.
+        """
+        url = f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/{multiplier}/{timespan}/{from_date}/{to_date}?adjusted=true&limit={limit}&apiKey={YOUR_API_KEY}"
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                all_results = []
+                next_url = url
+                data = await response.json()
+                while next_url:
+                    try:
+                        response = await self.session.get(next_url)
+                        response.raise_for_status()
+                        data = response.json()
+
+                        if "results" in data:
+                            all_results.extend(data["results"])
+
+                        next_url = data.get("next_url")
+                        if next_url:
+                            next_url += f'&{urlencode({"apiKey": self.api_key})}'
+
+                    except httpx.HTTPError as http_err:
+                        print(f"An HTTP error occurred: {http_err}")
+                        break
+                    except Exception as err:
+                        print(f"An error occurred: {err}")
+                        break
+
+                aggregates_data = AggregatesData({"results": all_results, "ticker": ticker})
+
+                return aggregates_data
+               
+    async def get_all_rsi(self, symbol, timespan="hour", window=14, limit=1000, timestamp_greater_than:str="2023-01-01", timestamp_less_than=today_str):
+        all_results = []
+        url = f"https://api.polygon.io/v1/indicators/rsi/{symbol}?timespan={timespan}&window={window}&limit={limit}&timestamp.gte={timestamp_greater_than}&timestamp.lte={timestamp_less_than}&apiKey={self.api_key}"
+        print(url)
+        async with aiohttp.ClientSession() as session:
+            while url:
+                async with session.get(url) as response:
+                    data = await response.json()
+                    all_results.extend(data['results']['values'])  # Extracting the 'values' part of the 'results'
+                    next_url = data.get('next_url', None)  # Get the next URL or set to None if it doesn't exist
+                    if next_url:
+                        url = f"{next_url}&apiKey={self.api_key}"  # Append the API key to the next URL
+                    else:
+                        url = None
+
+        return RSI(all_results)
+    
+    async def rsi_snapshot(self, ticker:str):
+        rsi  = await self.get_rsi(symbol=ticker,timespan="hour",window=14)
+        rsi_hour_value = rsi[0] if rsi is not None and len(rsi) > 0 else None
+        rsi_min = await self.get_rsi(symbol=ticker, timespan="minute",window=14)
+        rsi_min_value = rsi_min[0] if rsi_min is not None and len(rsi_min) > 0 else None
+        rsi_day = await self.get_rsi(symbol=ticker, timespan="day", window=14)
+        rsi_day_value = rsi_day[0] if rsi_day is not None and len(rsi_day) > 0 else None
+        rsi_week = await self.get_rsi(symbol=ticker, timespan="week", window=14)
+        rsi_week_value = rsi_week[0] if rsi_week is not None and len(rsi_week) > 0 else None
+        rsi_month = await self.get_rsi(symbol=ticker, window=14, timespan="month")
+        rsi_month_value = rsi_month[0] if rsi_month is not None and len(rsi_month) > 0 else None
+        rsi_quarter = await self.get_rsi(symbol=ticker, window=14, timespan="quarter")
+        rsi_quarter_value = rsi_quarter[0] if rsi_quarter is not None and len(rsi_quarter) > 0 else None
+        rsi_year = await self.get_rsi(symbol=ticker, timespan="year")
+        rsi_year_value = rsi_year[0] if rsi_year is not None and len(rsi_year) > 0 else None
+
+        if rsi_min_value is not None and rsi_min_value > 70:
+            rsi_min_result = "🐻"
+        elif rsi_min_value is not None and rsi_min_value < 30:
+            rsi_min_result = "🐂"
+        else:
+            rsi_min_result = ""
+
+        if rsi_day_value is not None and rsi_day_value > 70:
+            rsi_day_result = "🐻"
+        elif rsi_day_value is not None and rsi_day_value < 30:
+            rsi_day_result = "🐂"
+        else:
+            rsi_day_result = ""
+ 
+
+        if rsi_week_value is not None and rsi_week_value > 70:
+            rsi_week_result = "🐻"
+        elif rsi_week_value is not None and rsi_week_value < 30:
+            rsi_week_result = "🐂"
+        else:
+            rsi_week_result = ""           
+  
+
+        if rsi_month_value is not None and rsi_month_value > 70:
+            rsi_month_result = "🐻"
+        elif rsi_month_value is not None and rsi_month_value < 30:
+            rsi_month_result = "🐂"
+        else:
+            rsi_month_result = "" 
+
+        if rsi_hour_value is not None and rsi_hour_value > 70 :
+            rsi_hour_result = "🐻"
+        elif rsi_hour_value is not None and rsi_hour_value < 30:
+            rsi_hour_result = "🐂"
+        else:
+            rsi_hour_result = ""
+
+        if rsi_quarter_value is not None and rsi_quarter_value > 70:
+            rsi_quarter_result = "🐻"
+        elif rsi_quarter_value is not None and rsi_quarter_value < 30:
+            rsi_quarter_result = "🐂"
+        else:
+            rsi_quarter_result = ""
+
+
+        if rsi_year_value is not None and rsi_year_value > 70:
+            rsi_year_result = "🐻"
+        elif rsi_year_value is not None and rsi_year_value < 30:
+            rsi_year_result = "🐂"
+        else:
+            rsi_year_result = ""
+
+        self.data_dict = { 
+
+            'Minute': (rsi_min_value, rsi_min_result),
+            'Hour': (rsi_hour_value, rsi_hour_result),
+            'Day': (rsi_day_value, rsi_day_result),
+            'Week': (rsi_week_value, rsi_week_result),
+            'Month': (rsi_month_value, rsi_month_result),
+            'Quarter': (rsi_quarter_value, rsi_quarter_result),
+            'Year': (rsi_year_value, rsi_year_result)
+        }
+
+        self.df = pd.DataFrame(self.data_dict).transpose()
+
+        self.table = tabulate(self.df, headers=['Timespan', 'Value', 'Bull/Bear'], tablefmt='fancy', showindex=True)
+
+
+        return self.table
+    async def check_ticker(self, ticker):
+        timespans = ['minute', 'hour', 'day', 'week', 'month', 'quarter', 'year']
+        results = []
+        for timespan in timespans:
+            bear_result = await self.check_macd_condition_bearish(ticker, timespan=timespan)
+            bull_result = await self.check_macd_condition_bullish(ticker, timespan=timespan)
+            rsi = await self.get_rsi(ticker, timespan)
+            
+            bear_rsi_result = await self.check_rsi_condition_bearish(rsi)
+            bull_rsi_result = await self.check_rsi_condition_bearish(rsi)
+
+            results.append((ticker, timespan, bear_result, bull_result, bear_rsi_result, bull_rsi_result))
+        return results
+
+    async def check_rsi_condition_bullish(self,rsi):
+        if rsi is not None and len(rsi) > 0:
+            return rsi[0] <= 32
+
+
+    async def check_rsi_condition_bearish(self, rsi):
+        if rsi is not None and len(rsi) > 0:
+            return rsi[0] >= 68
+        
+
+
+    async def check_macd_condition_bullish(self, ticker, timespan):
+        data = await self.get_macd(ticker, timespan=timespan)
+        if data is not None:
+            hist = data.histogram
+            if hist is not None:
+                if hist is not None and len(hist) >= 3:
+                    
+                        last_three_values = hist[:3]
+                        print(last_three_values)
+                        return (
+                            abs(last_three_values[0] - (-0.03)) < 0.02
+                            and all(last_three_values[i] > last_three_values[i + 1] for i in range(len(last_three_values) - 1))
+                        )
+                    
+
+
+    async def check_macd_condition_bearish(self, ticker, timespan):
+        data = await self.get_macd(ticker, timespan=timespan)
+        if data is not None:
+            hist = data.histogram
+            if hist is not None and len(hist) >= 3:
+
+            
+
+                last_three_values = hist[:3]
+                print(last_three_values)
+                return (
+                    abs(last_three_values[0] - 0.03) < 0.02
+                    and all(last_three_values[i] < last_three_values[i + 1] for i in range(len(last_three_values) - 1))
+                )
+
+
 
     async def get_sec_filings(self, ticker):
         headers = {
@@ -1201,31 +1586,17 @@ class AsyncPolygonSDK:
 
 
 
-    async def get_index_price(self, ticker=str):
-        """Fetch the price of an index ticker"""
-        if ticker == "SPX":
-            url = f"https://api.polygon.io/v3/snapshot?ticker.any_of=I:{ticker}&apiKey={self.api_key}"
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url) as resp:
-
-                    data = await resp.json()
-                    results = data['results'] if data['results'] is not None else None
-                    if results is None:
-                        print(f"Error - results from price request.")
-                    value = results[0]['value']
-                    return value
-
-
-
-    async def get_stock_price(self, ticker=str):
+    async def get_price(self, ticker=str):
+        ticker = ticker if ticker not in indices_list else f"I:{ticker}"
         url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={self.api_key}"
+        print(url)
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
                 try:
                     data = await resp.json()
                     results = data['results'] if 'results' in data else None
                     if results is not None:
-                        value = results[0]['session']['close']
+                        value = results[0]['session']['close'] if 'session' in results else results[0]['value']
                         if value is not None:
                             return value
                 except KeyError:
@@ -1333,5 +1704,9 @@ class AsyncPolygonSDK:
                                 final_dicts_put.append(current_dict)
 
         return final_dicts_call, final_dicts_put
+    
+    async def __aexit__(self, exc_type, exc, tb):
+        print("Closing session")
+        await self.session.__aexit__(exc_type, exc, tb)
 
 

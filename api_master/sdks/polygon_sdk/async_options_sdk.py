@@ -2,12 +2,15 @@ import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from tabulate import tabulate
 
-from cfg import seven_days_from_now_str
 import requests
 from requests.exceptions import HTTPError
+from cfg import seven_days_from_now_str
+from .last_trade import LastTrade
 from .option_aggs import OptionAggs
 import asyncio
+from .list_sets import indices_list
 import pandas as pd
 import csv
 import aiohttp
@@ -25,7 +28,7 @@ from .option_quote import OptionQuote
 from requests.exceptions import HTTPError
 from urllib.parse import urlencode
 from cfg import YOUR_API_KEY, fifteen_days_from_now_str, five_days_from_now_str, today_str
-
+from sdks.polygon_sdk.mapping_dicts import OPTIONS_EXCHANGES
 MAX_SIMULTANEOUS_REQUESTS = 50 # adjust based on your needs. Lower = longer time to collect options data.
 
 class PolygonOptionsSDK:
@@ -34,6 +37,7 @@ class PolygonOptionsSDK:
         self.base_url = "https://api.polygon.io"
 
         self.conditions_map = None
+
 
 
 
@@ -78,19 +82,35 @@ class PolygonOptionsSDK:
                                     if skew_metric < -5 or skew_metric > 5:
                                         return [symbol, f"{strike}", f"{skew}", underlying_price, expiry, iv, volume, skew_metric,gamma,delta,vega,ask,bid,bid_size,ask_size, open_interest]
                         return None
+                    
+    async def get_option_volume(self, symbol):
+        data = await self.get_universal_snapshot(symbol)
+        volume = data.volume
+        if volume is not None and len(volume) > 0:  # Check if volume is not None and has at least one element
+            return volume[0]
+        return 0
+    
+    async def get_option_oi(self, symbol):
+        data = await self.get_universal_snapshot(symbol)
+        oi = data.open_interest
+        if oi is not None and len(oi) > 0:  # Check if volume is not None and has at least one element
+            return oi[0]
+        return 0
+
     async def get_universal_snapshot(self, tickers):
         """Fetches the Polygon.io universal snapshot API endpoint"""
-        url=f"https://api.polygon.io/v3/snapshot?ticker.any_of={tickers}&limit=250&apiKey={self.api_key}"
+        
+        url=f"https://api.polygon.io/v3/snapshot?ticker.any_of={tickers}&limit=250&apiKey={YOUR_API_KEY}"
         print(url)
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
                 data = await resp.json()
-                results = data['results'] if data['results'] is not None else None
+                results = data['results'] if 'results' in data else None
                 if results is not None:
                     return UniversalSnapshot(results)
                 else:
                     return None
- 
+            
     async def _request_all_pages_concurrently(self, session, initial_url):
 
         all_results = []
@@ -234,7 +254,7 @@ class PolygonOptionsSDK:
         if sort is not None:
             params["sort"] = sort
 
-        return await self._request_all_pages(initial_url, params=params)
+        return await self._request_all_pages_concurrently(initial_url, params=params)
     
 
  
@@ -555,23 +575,28 @@ class PolygonOptionsSDK:
         :return: A DataFrame containing the response data.
         """
         async with aiohttp.ClientSession() as session:
-            url=f"https://api.polygon.io/v3/trades/{symbol}?limit={limit}&apiKey={self.api_key}"
+            url = f"https://api.polygon.io/v3/trades/{symbol}?limit={limit}&apiKey={YOUR_API_KEY}"
             print(url)
             async with session.get(url) as response:
                 data = await response.json()
-                results = data['results']
+                results = data.get('results', [])
                 trades = [OptionTrade(i) for i in results]
                 return trades
           
-    async def get_last_option_trade(self, options_ticker):
+    async def get_last_option_trade(self, ticker):
         """
         Get the most recent trade for a given options contract.
 
         :param options_ticker: The ticker symbol of the options contract.
         :return: A dictionary containing the response data.
         """
-        endpoint = f"/v2/last/trade/{options_ticker}"
-        return await self._request(endpoint)
+        async with aiohttp.ClientSession() as session:
+            url=f"https://api.polygon.io/v2/last/trade/{ticker}?apiKey={YOUR_API_KEY}"
+            async with session.get(url) as resp:
+                data = await resp.json()
+                if data is not None:
+                    results = data['results'] if 'results' in data else None
+                    return LastTrade(results)
 
 
 
@@ -645,42 +670,30 @@ class PolygonOptionsSDK:
             option_data = OptionSnapshotData(response_data)
   
             return option_data
+    async def get_top_open_interest(self, df: pd.DataFrame):
+        df_sorted = df.sort_values(by='OI', ascending=False)
+        top_open_interest = df_sorted.iloc[0]
+        return top_open_interest
     
 
-    async def get_index_price(self, ticker:str):
-        """Fetch the price of an index ticker"""
-        if ticker.startswith('SPXW'):
-            ticker = ticker.replace('SPXW','SPX')
-        url = f"https://api.polygon.io/v3/snapshot?ticker.any_of=I:{ticker}&apiKey={self.api_key}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-
-                data = await resp.json()
-                results = data['results'] if data['results'] is not None else None
-                if results is None:
-                    print(f"Error - results from price request.")
-                value = results[0]['value']
-                if value is not None:
-                    return value
-                else:
-                    return None
-
-    async def get_stock_price(self, ticker:str):
-        url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={ticker}&apiKey={self.api_key}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-                try:
-                    data = await resp.json()
-                    results = data['results'] if 'results' in data else None
-                    if results is not None:
-                        value = results[0]['session']['close']
-                        if value is not None:
-                            return value
-                except KeyError:
-                    pass  # Handle the KeyError and continue with the next ticker
-
-        return None  # Return None if the stock price couldn't be retrieved
+    async def get_top_open_interest(self, df: pd.DataFrame):
+        df_sorted = df.sort_values(by='OI', ascending=False)
+        top_open_interest = df_sorted.iloc[0]
+        return top_open_interest
     
+    async def separate_calls_puts(self, df: pd.DataFrame):
+        call_df = df[df['C/P'] == 'call']
+        put_df = df[df['C/P'] == 'put']
+        return call_df, put_df
+
+    async def print_with_tabulate(self, series: pd.Series):
+        df = series.to_frame().T
+        table = tabulate(df, headers='keys', tablefmt='psql')
+        return table
+    async def organize_by_expiration(self, dataframe: pd.DataFrame):
+        grouped = dataframe.groupby('exp')
+        list_of_dfs = [group for name, group in grouped]
+        return list_of_dfs
     async def fetch_option_data(self, session, tickers):
         async with aiohttp.ClientSession() as session:
             async with session.get(f"https://api.polygon.io/v3/snapshot?ticker.any_of={tickers}&apiKey={YOUR_API_KEY}") as response:
@@ -693,56 +706,4 @@ class PolygonOptionsSDK:
                     print(f"Error processing tickers: {tickers}. Error: {e}")
                     return pd.DataFrame()
 
-    async def get_near_the_money_options(self, ticker: str, lower_threshold: float, upper_threshold: float):
-        ticker = ticker.upper()
-        if ticker.startswith("SPX"):
-            price = await self.get_index_price(ticker)
-            lower_strike = round(price) * 0.985
-            upper_strike = round(price) * 1.015
-        else:
-            price = await self.get_stock_price(ticker)
-            lower_strike = round(price * (1 - lower_threshold/100), 2)
-            upper_strike = round(price * (1 + upper_threshold/100), 2)
-        print(f"SPX TICKER: {ticker}: {lower_strike}, {price}, {upper_strike}")
-
-        async with aiohttp.ClientSession() as session:
-            initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte={fifteen_days_from_now_str}&limit=250&apiKey={YOUR_API_KEY}"
-
-            results = await self._request_all_pages(initial_url)
-            if results is not None:
-                option_data = UniversalOptionSnapshot(results)
-                calls = option_data.df[option_data.df['type'] == 'call']
-                puts = option_data.df[option_data.df['type'] == 'put']
-                calls_grouped = calls.groupby('exp')
-                puts_grouped = puts.groupby('exp')
-
-                async def process_grouped_tickers(grouped_df, session):
-                    results = []
-                    for _, group in grouped_df:
-                        group_tickers = group['ticker'].tolist()
-                        if not group_tickers:
-                            continue
-                        tickers_string = ','.join(group_tickers)
-                        async with session.get(f"https://api.polygon.io/v3/snapshot?ticker.any_of={tickers_string}&apiKey={YOUR_API_KEY}") as response:
-                            try:
-                                near_money = await response.json(content_type=None)
-                                near_money_results = near_money['results']
-                                atm_data = UniversalSnapshot(near_money_results)
-                                results.append(atm_data.df.sort_values('IV', ascending=True))
-                            except Exception as e:
-                                print(f"Error processing tickers_string: {tickers_string}. Error: {e}")
-                    return results
-
-                # Create a list of tasks to run concurrently
-                tasks = [
-                    process_grouped_tickers(calls_grouped, session),
-                    process_grouped_tickers(puts_grouped, session)
-                ]
-
-                # Run the tasks concurrently and gather the results
-                calls_results, puts_results = await asyncio.gather(*tasks)
-
-                calls_results_df = pd.concat(calls_results)
-                puts_results_df = pd.concat(puts_results)
-
-                return calls_results_df, puts_results_df
+   

@@ -22,7 +22,7 @@ async def get_all_options_data():
     await polyoptions.get_snapshots(contracts,'files/options/all_options_data.csv')
 
     print(f"Data has been successfully saved to files/options/all_options_data.csv")
-asyncio.run(get_all_options_data())
+# asyncio.run(get_all_options_data())
 
 
 

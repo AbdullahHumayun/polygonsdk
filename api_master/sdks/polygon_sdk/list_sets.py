@@ -1,39 +1,36 @@
 """WEBSOCKET TICKERS"""
 
-subscriptions = ['RTX', 'DASH', 'TELL', 'OPEN', 'PACW', 'MOS', 
-                 'CPRI', 'IQ', 'EQT', 'GT', 'TZA', 'VOD', 'PLTR', 
-                 'SPCE', 'CROX', 'PAA', 'KO', 'PCT', 'KMI', 'SHEL', 
-                 'XLY', 'WDC', 'AIG', 'AMAT', 'JNJ', 'STNG', 'NVS', 'MGM', 
-                 'BLNK', 'SIMO', 'SPWR', 'SLV', 'SPXS', 'RUN', 'XOM', 'ABNB', 
-                 'FIS', 'IAC', 'VIX', 'CAVA', 'SPXU', 'OSTK', 'DKNG', 'U', 'SCHW', 
-                 'QS', 'VFC', 'SPY', 'DIS', 'GOOG', 'CVS', 'SNAP', 'NU', 'EPD', 'FSLY', 
-                 'HBI', 'UVXY', 'AAL', 'PPC', 'BB', 'WYNN', 'HUM', 'VRM', 'DG', 'JPM', 'GME', 
-                 'TSN', 'UMC', 'SNDL', 'TGTX', 'EBIX', 'AAPL', 'TGT', 'TLRY', 'NNDM', 'MPW', 'AA', 
-                 'CMA', 'NET', 'EBAY', 'EWZ', 'V', 'LABU', 'EWJ', 'NKE', 'XLP', 'AZN', 'GDXJ', 'MULN', 
-                 'FTNT', 'KEY', 'VTNR', 'NCLH', 'GNRC', 'GS', 'DOW', 'NIO', 'CVX', 'FCEL', 'XLV', 'ROKU', 
-                 'TECK', 'BTU', 'FAS', 'NEE', 'UNH', 'OPCH', 'MMAT', 'PATH', 'XP', 'PYPL', 'TFC', 'MANU', 'FTCH', 
-                 'RSP', 'HPQ', 'SPB', 'FXI', 'MSOS', 'MDB', 'UPST', 'OKTA', 'WBD', 'LULU', 'BABA', 'HL', 'GOEV', 'XRT', 
-                 'BOIL', 'GMDA', 'JD', 'LLY', 'SMG', 'TMF', 'XLI', 'TEVA', 'JETS', 'COIN', 'AGNC', 'CGC', 'SGEN', 'SLG', 
-                 'BVN', 'KWEB', 'KRE', 'MP', 'QQQ', 'CPB', 'CLOV', 'PSNY', 'UUP', 'APA', 'SQ', 'VMW', 'LUMN', 'ONON', 'GOLD', 
-                 'USB', 'ACB', 'CVNA', 'LRCX', 'APLD', 'AMGN', 'UBS', 'DB', 'DPST', 'VXX', 'GM', 'XLF', 'PBR', 'PANW', 'USO', 
-                 'MDT', 'BYND', 'RBLX', 'Z', 'QCOM', 'GSAT', 'CLSK', 'YINN', 'ET', 'XLK', 'BIDU', 'C', 'DISH', 'HYG', 'MQ', 'NYCB', 
-                 'KSS', 'CRWD', 'MA', 'RYAM', 'ASTS', 'NVDA', 'JBLU', 'MRNA', 'EWY', 'FDX', 'FSLR', 'DOCU', 'ALB', 'MET', 'BA', 'EFA', 
-                 'GE', 'ALLY', 'COP', 'LNC', 'WULF', 'CAMT', 'SE', 'MCD', 'ORCL', 'KR', 'WBA', 'RIG', 'JWN', 'WMB', 'PINS', 'LUV', 'CPNG', 
-                 'BUD', 'MXL', 'CCJ', 'ON', 'IEF', 'ZS', 'ZION', 'SLB', 'ADBE', 'ABBV', 'MRK', 'AMD', 'LVS', 'AFRM', 'JOBY', 'MVIS', 'AVGO', 
-                 'GGB', 'ENPH', 'NUGT', 'HD', 'FL', 'DLR', 'TRUP', 'VLO', 'WMT', 'PARA', 'BMY', 'SOXL', 'ARKK', 'SMH', 'CAT', 'EOSE', 'UAL', 
-                 'COST', 'MMM', 'XPEV', 'CLF', 'LTHM', 'RIOT', 'MTCH', 'STWD', 'BTG', 'SBUX', 'NOK', 'TMC', 'UPS', 'UVIX', 'SMCI', 'EXPE', 
-                 'HUT', 'SIRI', 'XLU', 'SOXS', 'DVN', 'SABR', 'FSR', 'PENN', 'TQQQ', 'TSLL', 'LOW', 'RIVN', 'INTC', 'LQD', 'URI', 'CHPT', 
-                 'CRM', 'HAL', 'ABT', 'XHB', 'FUTU', 'AMRS', 'DNA', 'ZIM', 'MRO', 'PAAS', 'BTAI', 'BBBYQ', 'SHOP', 'GOOGL', 'AMZN', 'HTZ', 
-                 'TLT', 'TWLO', 'M', 'TTD', 'CVE', 'BKR', 'MS', 'PTON', 'FFIE', 'ISEE', 'VALE', 'GDX', 'DIA', 'AR', 'NEM', 'PDD', 'KGC', 
-                 'SPX', 'MSFT', 'WFC', 'PLUG', 'PG', 'HLT', 'MCHP', 'BITO', 'TSLA', 'ETRN', 'NVAX', 'RUT', 'DE', 'IBM', 'SOUN', 'SNOW', 
-                 'TNA', 'BEKE', 'BX', 'BAC', 'F', 'UNIT', 'CMCSA', 'LAZR', 'KOLD', 'IYR', 'LYFT', 'ABR', 'IONQ', 'TSM', 'AI', 'SOFI', 'HOOD', 
-                 'PEP', 'PTGX', 'PFE', 'SQQQ', 'CHWY', 'AAP', 'SAN', 'XBI', 'AMC', 'XOP', 'W', 'IEP', 'AG', 'WAL', 'SU', 'BBD', 'VZ', 'ULTA', 
-                 'IWM', 'ENVX', 'FCX', 'GLD', 'MSTR', 'BRK B', 'NFLX', 'AEM', 'BP', 'RCL', 'MU', 'MRVL', 'HZNP', 'X', 'XELA', 'NOV', 'WW', 'UNG', 
-                 'BHC', 'SWN', 'DDOG', 'UBER', 'RIO', 'TDOC', 'AIV', 'T', 'XLE', 'BTI', 'AXP', 'NDX', 'NKLA', 'SAVE', 'BBIO', 'DNN', 'CSCO', 'APPS', 
-                 'BILI', 'BITF', 'DAL', 'WKHS', 'CMG', 'MO', 'TXN', 'CCL', 'LCID', 'NEXT', 'LI', 'GILD', 'FUBO', 'KHC', 'ATVI', 'EEM', 'META', 'OXY', 
-                 'NLY', 'MARA', 'ETSY', 'TMUS', 'STLA', 'ZM']
+indices_list = ['NDX', 'SPX', 'SPXU', 'VIX', 'VVIX']
 
-subscriptions = list(set(subscriptions))
+
+etfs_list= [
+        'XLF', 'XLK', 'EWU', 'UUP', 'TNA', 'EWZ', 'DIA', 'UPRO', 'TMF', 'TQQQ', 
+        'XOP', 'TZA', 'UCO', 'SMH', 'EWG', 'SOXS', 'HYG', 'IWM', 'XLP', 'SPXL', 
+        'LQD', 'EFA', 'USO', 'EEM', 'SPXS', 'KWEB', 'KOLD', 'FXI', 'QQQ', 'XLV', 
+        'SPXU', 'IEI', 'XRT', 'EMB', 'TIP', 'SPY', 'BITO', 'MSOS', 'SOXL', 'UNG', 
+        'FNGS', 'ARKK', 'LABU', 'GLD', 'XLE', 'XHB', 'XBI', 'KRE', 'TBT', 'BOIL', 
+        'TSLL', 'DPST', 'IEF', 'SQQQ', 'EWJ', 'TLT', 'SLV', 'JETS', 'XLI', 'IYR', 
+        'XLU', 'XLY', 'VIX', 'NDX', 'QSPT', 'QQMG', 'BYLD', 'SPIB'
+
+    ]
+
+sublist2 = ['BTG', 'SLG', 'XOP', 'AEM', 'ON', 'CRM', 'JWN', 'NVDA', 'WKHS', 'FXI', 'ETRN', 'RSP', 'WFC', 'HBI', 'NEM', 'IAC', 'GOLD', 'ENPH', 'LVS', 'BX', 'ZION', 'JNJ', 'CLSK', 'CPB', 'TWLO', 'FAS', 'DNA', 'UPS', 'WAL', 'CHPT', 'BTI', 'MRK', 'LRCX', 'ABT', 'DDOG', 'W', 'LUV', 'MRO', 'PCT', 'DOW', 'SIRI', 'MCHP', 'MULN', 'PFE', 'QCOM', 'TSN', 'GME', 'DE', 'ABR', 'PLTR', 'OXY', 'SOFI', 'NVS', 'IWM', 'LTHM', 'APPS', 'DKNG', 'SPB', 'PG', 'LULU', 'VRM', 'RCL', 'ONON', 'OPCH', 'PANW', 'XLV', 'CVX', 'PARA', 'GM', 'STLA', 'GNRC', 'GSAT', 'XOM', 'BA', 'GE', 'WDC', 'OSTK', 'RBLX', 'ALB', 'AMGN', 'FL', 'AI', 'GILD', 'T', 'ZIM', 'LOW', 'FDX', 'DIS', 'GT', 'ADBE', 'APLD', 'UMC', 'BBBYQ', 'MPW', 'HZNP', 'ENVX', 'META', 'JD', 'TSM', 'LUMN', 'MU', 'AXP', 'CMA', 'EOSE', 'F', 'MP', 'ABNB', 'FCEL', 'LLY', 'PBR', 'WBD', 'PEP', 'HD', 'AMAT', 'BB', 'TTD', 'MSFT', 'UNIT', 'EPD', 'BABA', 'VTNR', 'TELL', 'NOV', 'Z', 'PTGX', 'HUM', 'LCID', 'CVNA', 'BITF', 'EQT', 'RIOT', 'NNDM', 'SAVE', 'MTCH', 'APA', 'BVN', 'CSCO', 'NKLA', 'NLY', 'PPC', 'AZN', 'KEY', 'ATVI', 'AMZN', 'CVS', 'CLF', 'MDT', 'ZM', 'GOOG', 'BBD', 'UBER', 'CHWY', 'SPWR', 'VZ', 'GDXJ', 'TXN', 'HTZ', 'VLO', 'WMT', 'KHC', 'EWY', 'NVAX', 'ULTA', 'QS', 'NFLX', 'COST', 'MDB', 'SNDL', 'MXL', 'DLR', 'RUN', 'BTU', 'EBIX', 'GOOGL', 'SMG', 'JBLU', 'PATH', 'BHC', 'C', 'PACW', 'IONQ', 'SMCI', 'ET', 'ORCL', 'URI', 'NYCB', 'SHOP', 'NEXT', 'KMI', 'ISEE', 'AIV', 'CAMT', 'SIMO', 'AAPL', 'WMB', 'EBAY', 'UAL', 'HLT', 'KGC', 'AG', 'PAA', 'MS', 'WBA', 'SPCE', 'RIO', 'VMW', 'PSNY', 'ABBV', 'FIS', 'ASTS', 'DOCU', 'PTON', 'TLRY', 'CGC', 'IQ', 'DAL', 'TRUP', 'MMM', 'DASH', 'MCD', 'GDX', 'VXX', 'GMDA', 'BLNK', 'LAZR', 'TGT', 'MRNA', 'NEE', 'RUT', 'STNG', 'MA', 'USB', 'FSR', 'FTCH', 'ACB', 'WULF', 'BTAI', 'LI', 'AMC', 'DNN', 'CROX', 'CLOV', 'GGB', 'VFC', 'CPNG', 'YINN', 'SNAP', 'MANU', 'MARA', 'NIO']
+sublist1 = ['SPX','U','XLF', 'XLK', 'EWU', 'UUP', 'TNA', 'EWZ', 'DIA', 'UPRO', 'TMF', 'TQQQ', 
+        'XOP', 'TZA', 'UCO', 'SMH', 'EWG', 'SOXS', 'HYG', 'IWM', 'XLP', 'SPXL', 
+        'LQD', 'EFA', 'USO', 'EEM', 'SPXS', 'KWEB', 'KOLD', 'FXI', 'QQQ', 'XLV', 
+        'SPXU', 'IEI', 'XRT', 'EMB', 'TIP', 'SPY', 'BITO', 'MSOS', 'SOXL', 'UNG', 
+        'FNGS', 'ARKK', 'LABU', 'GLD', 'XLE', 'XHB', 'XBI', 'KRE', 'TBT', 'BOIL', 
+        'TSLL', 'DPST', 'IEF', 'SQQQ', 'EWJ', 'TLT', 'SLV', 'JETS', 'XLI', 'IYR', 
+        'XLU', 'XLY', 'VIX', 'NDX', 'QSPT', 'QQMG', 'BYLD', 'SPIB','GM', 'WAL', 'NIO', 'AXP', 'ET', 'FTNT', 'FFIE', 'IAC', 'SPWR', 'CCL', 'MDB', 'ON', 'KO', 'AVGO', 'TTD', 'SHEL', 'GE', 'ALLY', 'TFC', 'LRCX', 'UNH', 'CAMT', 'AMRS', 'COIN', 'PATH', 'MVIS', 'TGTX', 'MDT', 'PAAS', 'M', 'SNAP', 'NVAX', 'MOS', 'MARA', 'TWLO', 'CSCO', 'CROX', 'RUN', 'CMA', 'RIOT', 'PLTR', 'UPST', 'MRK', 'HUT', 'GOEV', 'UVIX', 'ORCL', 'DIS', 'OSTK', 'XLV', 'BBIO', 'GS', 'LI', 'KEY', 'AFRM', 'SABR', 'DB', 'TGT', 'JWN', 'BA', 'AMAT', 'UBER', 'NEE', 'HBI', 'LCID', 'KSS', 'OPCH', 'CVS', 'ASTS', 'PANW', 'JNJ', 'BYND', 'BP', 'OKTA', 'DNA', 'MRVL', 'APA', 'FXI', 'ATVI', 'INTC', 'BABA', 'APLD', 'PDD', 'XOP', 'QCOM', 'AMC', 'STLA', 'HLT', 'UNIT', 'NKE', 'CVX', 'AI', 'META', 'NKLA', 'TEVA', 'UMC', 'GMDA', 'SIMO', 'MU', 'IBM', 'LTHM', 'EBAY', 'GOLD', 'FTCH', 'EWY', 'LULU', 'AAP', 'PBR', 'TXN', 'PACW', 'AEM', 'UVXY', 'PINS', 'GT', 'PARA', 'RTX', 'DNN', 'BIDU', 'ENVX', 'SWN', 'QS', 'IEP', 'BEKE', 'CLSK', 'BBBYQ', 'JD', 'SPCE', 'BITF', 'NEXT', 'CLOV', 'VLO', 'BX', 'HAL','BTG', 'SLG', 'XOP', 'AEM', 'ON', 'CRM', 'JWN', 'NVDA', 'WKHS', 'FXI', 'ETRN', 'RSP', 'WFC', 'HBI', 'NEM', 'IAC', 'GOLD', 'ENPH', 'LVS', 'BX', 'ZION', 'JNJ', 'CLSK', 'CPB', 'TWLO', 'FAS', 'DNA', 'UPS', 'WAL', 'CHPT', 'BTI', 'MRK', 'LRCX', 'ABT', 'DDOG', 'W', 'LUV', 'MRO', 'PCT', 'DOW', 'SIRI', 'MCHP', 'MULN', 'PFE', 'QCOM', 'TSN', 'GME', 'DE', 'ABR', 'PLTR', 'OXY', 'SOFI', 'NVS', 'IWM', 'LTHM', 'APPS', 'DKNG', 'SPB', 'PG', 'LULU', 'VRM', 'RCL', 'ONON', 'OPCH', 'PANW', 'XLV', 'CVX', 'PARA', 'GM', 'STLA', 'GNRC', 'GSAT', 'XOM', 'BA', 'GE', 'WDC', 'OSTK', 'RBLX', 'ALB', 'AMGN', 'FL', 'AI', 'GILD', 'T', 'ZIM', 'LOW', 'FDX', 'DIS', 'GT', 'ADBE', 'APLD', 'UMC', 'BBBYQ', 'MPW', 'HZNP', 'ENVX', 'META', 'JD', 'TSM', 'LUMN', 'MU', 'AXP', 'CMA', 'EOSE', 'F', 'MP', 'ABNB', 'FCEL', 'LLY', 'PBR', 'WBD', 'PEP', 'HD', 'AMAT', 'BB', 'TTD', 'MSFT', 'UNIT', 'EPD', 'BABA', 'VTNR', 'TELL', 'NOV', 'Z', 'PTGX', 'HUM', 'LCID', 'CVNA', 'BITF', 'EQT', 'RIOT', 'NNDM', 'SAVE', 'MTCH', 'APA', 'BVN', 'CSCO', 'NKLA', 'NLY', 'PPC', 'AZN', 'KEY', 'ATVI', 'AMZN', 'CVS', 'CLF', 'MDT', 'ZM', 'GOOG', 'BBD', 'UBER', 'CHWY', 'SPWR', 'VZ', 'GDXJ', 'TXN', 'HTZ', 'VLO', 'WMT', 'KHC', 'EWY', 'NVAX', 'ULTA', 'QS', 'NFLX', 'COST', 'MDB', 'SNDL', 'MXL', 'DLR', 'RUN', 'BTU', 'EBIX', 'GOOGL', 'SMG', 'JBLU', 'PATH', 'BHC', 'C', 'PACW', 'IONQ', 'SMCI', 'ET', 'ORCL', 'URI', 'NYCB', 'SHOP', 'NEXT', 'KMI', 'ISEE', 'AIV', 'CAMT', 'SIMO', 'AAPL', 'WMB', 'EBAY', 'UAL', 'HLT', 'KGC', 'AG', 'PAA', 'MS', 'WBA', 'SPCE','RIO', 'VMW', 'PSNY', 'ABBV', 'FIS', 'ASTS', 'DOCU', 'PTON', 'TLRY', 'CGC', 'IQ', 'DAL', 'TRUP', 'MMM', 'DASH', 'MCD', 'GDX', 'VXX', 'GMDA', 'BLNK', 'LAZR','TGT', 'MRNA', 'NEE', 'RUT', 'STNG', 'MA', 'USB', 'FSR', 'FTCH', 'ACB', 'WULF', 'BTAI', 'LI', 'AMC', 'DNN', 'CROX', 'CLOV', 'GGB', 'VFC', 'CPNG', 'YINN','SNAP', 'MANU', 'MARA', 'NIO','XLF', 'XLK', 'EWU', 'UUP', 'TNA', 'EWZ', 'DIA', 'UPRO', 'TMF', 'TQQQ',
+        'XOP', 'TZA', 'UCO', 'SMH', 'EWG', 'SOXS', 'HYG', 'IWM', 'XLP', 'SPXL', 
+        'LQD', 'EFA', 'USO', 'EEM', 'SPXS', 'KWEB', 'KOLD', 'FXI', 'QQQ', 'XLV', 
+        'SPXU', 'IEI', 'XRT', 'EMB', 'TIP', 'SPY', 'BITO', 'MSOS', 'SOXL', 'UNG', 
+        'FNGS', 'ARKK', 'LABU', 'GLD', 'XLE', 'XHB', 'XBI', 'KRE', 'TBT', 'BOIL', 
+        'TSLL', 'DPST', 'IEF', 'SQQQ', 'EWJ', 'TLT', 'SLV', 'JETS', 'XLI', 'IYR', 
+        'XLU', 'XLY', 'VIX', 'NDX', 'QSPT', 'QQMG', 'BYLD', 'SPIB']
+
+subscriptions= ['XLF', 'XLK', 'EWU', 'UUP', 'TNA', 'EWZ', 'DIA', 'UPRO', 'TMF', 'TQQQ', 'XOP', 'TZA', 'UCO', 'SMH', 'EWG', 'SOXS', 'HYG', 'IWM', 'XLP', 'SPXL', 'LQD', 'EFA', 'USO', 'EEM', 'SPXS', 'KWEB', 'KOLD', 'FXI', 'QQQ', 'XLV', 'SPXU', 'IEI', 'XRT', 'EMB', 'TIP', 'SPY', 'BITO', 'MSOS', 'SOXL', 'UNG', 'FNGS', 'ARKK', 'LABU', 'GLD', 'XLE', 'XHB', 'XBI', 'KRE', 'TBT', 'BOIL', 'TSLL', 'DPST', 'IEF', 'SQQQ', 'EWJ', 'TLT', 'SLV', 'JETS', 'XLI', 'IYR', 'XLU', 'XLY', 'VIX', 'NDX','BTG', 'SLG', 'XOP', 'AEM', 'ON', 'CRM', 'JWN', 'NVDA', 'WKHS', 'FXI', 'ETRN', 'RSP', 'WFC', 'HBI', 'NEM', 'IAC', 'GOLD', 'ENPH', 'LVS', 'BX', 'ZION', 'JNJ', 'CLSK', 'CPB', 'TWLO', 'FAS', 'DNA', 'UPS', 'WAL', 'CHPT', 'BTI', 'MRK', 'LRCX', 'ABT', 'DDOG', 'W', 'LUV', 'MRO', 'PCT', 'DOW', 'SIRI', 'MCHP', 'MULN', 'PFE', 'QCOM', 'TSN', 'GME', 'DE', 'ABR', 'PLTR', 'OXY', 'SOFI', 'NVS', 'IWM', 'LTHM', 'APPS', 'DKNG', 'SPB', 'PG', 'LULU', 'VRM', 'RCL', 'ONON', 'OPCH', 'PANW', 'XLV', 'CVX', 'PARA', 'GM', 'STLA', 'GNRC', 'GSAT', 'XOM', 'BA', 'GE', 'WDC', 'OSTK', 'RBLX', 'ALB', 'AMGN', 'FL', 'AI', 'GILD', 'T', 'ZIM', 'LOW', 'FDX', 'DIS', 'GT', 'ADBE', 'APLD', 'UMC', 'BBBYQ', 'MPW', 'HZNP', 'ENVX', 'META', 'JD', 'TSM', 'LUMN', 'MU', 'AXP', 'CMA', 'EOSE', 'F', 'MP', 'ABNB', 'FCEL', 'LLY', 'PBR', 'WBD', 'PEP', 'HD', 'AMAT', 'BB', 'TTD', 'MSFT', 'UNIT', 'EPD', 'BABA', 'VTNR', 'TELL', 'NOV', 'Z', 'PTGX', 'HUM', 'LCID', 'CVNA', 'BITF', 'EQT', 'RIOT', 'NNDM', 'SAVE', 'MTCH', 'APA', 'BVN', 'CSCO', 'NKLA', 'NLY', 'PPC', 'AZN', 'KEY', 'ATVI', 'AMZN', 'CVS', 'CLF', 'MDT', 'ZM', 'GOOG', 'BBD', 'UBER', 'CHWY', 'SPWR', 'VZ', 'GDXJ', 'TXN', 'HTZ', 'VLO', 'WMT', 'KHC', 'EWY', 'NVAX', 'ULTA', 'QS', 'NFLX', 'COST', 'MDB', 'SNDL', 'MXL', 'DLR', 'RUN', 'BTU', 'EBIX', 'GOOGL', 'SMG', 'JBLU', 'PATH', 'BHC', 'C', 'PACW', 'IONQ', 'SMCI', 'ET', 'ORCL', 'URI', 'NYCB', 'SHOP', 'NEXT', 'KMI', 'ISEE', 'AIV', 'CAMT', 'SIMO', 'AAPL', 'WMB', 'EBAY', 'UAL', 'HLT', 'KGC', 'AG', 'PAA', 'MS', 'WBA', 'SPCE', 'RIO', 'VMW', 'PSNY', 'ABBV', 'FIS', 'ASTS', 'DOCU', 'PTON', 'TLRY', 'CGC', 'IQ', 'DAL', 'TRUP', 'MMM', 'DASH', 'MCD', 'GDX', 'VXX', 'GMDA', 'BLNK', 'LAZR', 'TGT', 'MRNA', 'NEE', 'RUT', 'STNG', 'MA', 'USB', 'FSR', 'FTCH', 'ACB', 'WULF', 'BTAI', 'LI', 'AMC', 'DNN', 'CROX', 'CLOV', 'GGB', 'VFC', 'CPNG', 'YINN', 'SNAP', 'MANU', 'MARA', 'NIO','GM', 'WAL', 'NIO', 'AXP', 'ET', 'FTNT', 'FFIE', 'IAC', 'SPWR', 'CCL', 'MDB', 'ON', 'KO', 'AVGO', 'TTD', 'SHEL', 'GE', 'ALLY', 'TFC', 'LRCX', 'UNH', 'CAMT', 'AMRS', 'COIN', 'PATH', 'MVIS', 'TGTX', 'MDT', 'PAAS', 'M', 'SNAP', 'NVAX', 'MOS', 'MARA', 'TWLO', 'CSCO', 'CROX', 'RUN', 'CMA', 'RIOT', 'PLTR', 'UPST', 'MRK', 'HUT', 'GOEV', 'UVIX', 'ORCL', 'DIS', 'OSTK', 'XLV', 'BBIO', 'GS', 'LI', 'KEY', 'AFRM', 'SABR', 'DB', 'TGT', 'JWN', 'BA', 'AMAT', 'UBER', 'NEE', 'HBI', 'LCID', 'KSS', 'OPCH', 'CVS', 'ASTS', 'PANW', 'JNJ', 'BYND', 'BP', 'OKTA', 'DNA', 'MRVL', 'APA', 'FXI', 'ATVI', 'INTC', 'BABA', 'APLD', 'PDD', 'XOP', 'QCOM', 'AMC', 'STLA', 'HLT', 'UNIT', 'NKE', 'CVX', 'AI', 'META', 'NKLA', 'TEVA', 'UMC', 'GMDA', 'SIMO', 'MU', 'IBM', 'LTHM', 'EBAY', 'GOLD', 'FTCH', 'EWY', 'LULU', 'AAP', 'PBR', 'TXN', 'PACW', 'AEM', 'UVXY', 'PINS', 'GT', 'PARA', 'RTX', 'DNN', 'BIDU', 'ENVX', 'SWN', 'QS', 'IEP', 'BEKE', 'CLSK', 'BBBYQ', 'JD', 'SPCE', 'BITF', 'NEXT', 'CLOV', 'VLO', 'BX', 'HAL']
+combined_subscriptions = [sublist1, sublist2]
 
 
 stock_condition_dict = {
@@ -371,6 +368,7 @@ OPTIONS_EXCHANGES = {
     325:'Cboe BZX Options Exchange'}
 
 STOCK_EXCHANGES = {
+0:'OTC Equity Security',
 1:'NYSE American, LLC',
 2:'Nasdaq OMX BX, Inc.',
 3:'NYSE National, Inc.',
@@ -394,8 +392,7 @@ STOCK_EXCHANGES = {
 18:'Cboe BYX',
 19:'Cboe BZX',
 20:'MIAX Pearl',
-21:'Members Exchange',
-62:'OTC Equity Security',    
+21:'Members Exchange',   
  }
 
 TAPES = {1: "NYSE", 2: "AMEX", 3: "Nasdaq"}
@@ -702,7 +699,7 @@ market_sectors = {
 
     "etfs": [
         'XLF', 'XLK', 'EWU', 'UUP', 'TNA', 'EWZ', 'DIA', 'UPRO', 'TMF', 'TQQQ', 
-        'XOP', 'TZA', 'UCO', 'SMH', 'EWG', 'SOXS', 'HYG', 'IWM', 'XLP', 'SPXL', 
+        'XOP', 'TZA', 'UCO', 'SMH', 'EWG', 'SOXS', 'HYG', 'IWM', 'IWN', 'XLP', 'SPXL', 
         'LQD', 'EFA', 'USO', 'EEM', 'SPXS', 'KWEB', 'KOLD', 'FXI', 'QQQ', 'XLV', 
         'SPXU', 'IEI', 'XRT', 'EMB', 'TIP', 'SPY', 'BITO', 'MSOS', 'SOXL', 'UNG', 
         'FNGS', 'ARKK', 'LABU', 'GLD', 'XLE', 'XHB', 'XBI', 'KRE', 'TBT', 'BOIL', 

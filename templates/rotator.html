@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotating Discord Channels</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: black;
+    }
+    #channelContainer {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    widgetbot {
+      display: none;
+      width: 800px;
+      height: 600px;
+      margin: 1em;
+    }
+  </style>
+</head>
+<body>
+  <div id="channelContainer">
+    <widgetbot id="widgetbot1" server="888488311927242753" channel="1113439375179644979"></widgetbot>
+    <widgetbot id="widgetbot2" server="888488311927242753" channel="1129889300536889425"></widgetbot>
+    <widgetbot id="widgetbot3" server="888488311927242753" channel="1112740518753996851"></widgetbot>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+  <script>
+    const widgets = [
+      document.getElementById('widgetbot1'),
+      document.getElementById('widgetbot2'),
+      document.getElementById('widgetbot3')
+    ];
+
+    let currentWidget = 0;
+
+    function rotateChannels() {
+      widgets.forEach((widget, index) => {
+        widget.style.display = (index === currentWidget || index === (currentWidget + 1) % widgets.length) ? "block" : "none";
+      });
+      currentWidget = (currentWidget + 1) % widgets.length;
+    }
+
+    setInterval(rotateChannels, 10000); // 10 seconds
+    rotateChannels(); // Initial rotation
+  </script>
+</body>
+</html>

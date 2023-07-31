@@ -30,9 +30,8 @@ async def polygon_quickstart(ticker="GME"): #for polygon, polygon_options, webul
 
 
     #accessing the attributes for functions works the same throughout this project
-    cik = company_info.cik
+    cik = company_info
     composite_figi = company_info.composite_figi
-    currency_name = company_info.currency_name
     description = company_info.description
     homepage_url = company_info.homepage_url
     list_date = company_info.list_date

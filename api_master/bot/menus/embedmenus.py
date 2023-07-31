@@ -102,10 +102,10 @@ class AlertMenus(disnake.ui.View):
         # Sets the footer of the embeds with their respective page numbers.
         self.count = 0
 
-        for i, embed in enumerate(self.embeds):
-            embed.set_footer(
-                text=f"Page {i + 1} of {len(self.embeds)}",
-            )
+        # for i, embed in enumerate(self.embeds):
+        #     embed.set_footer(
+        #         text=f"Page {i + 1} of {len(self.embeds)}",
+        #     )
 
 
     @disnake.ui.button(

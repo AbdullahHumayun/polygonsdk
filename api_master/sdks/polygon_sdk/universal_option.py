@@ -1,6 +1,6 @@
 from dataclasses import dataclass, fields
 from typing import List, Optional
-from sdks.helpers.helpers import human_readable
+
 from discord_webhook import DiscordEmbed
 
 
@@ -139,7 +139,7 @@ class OptionsSnapshotResult:
 
     def to_embed(self) -> DiscordEmbed:
         """Create a Discord embed from this article."""
-        embed = DiscordEmbed(title=f"Ticker 📰 News", description=f"```py\nOption snapshot result - {human_readable(self.details.ticker)}```")
+        embed = DiscordEmbed(title=f"Ticker 📰 News", description=f"```py\nOption snapshot result - {self.details.ticker}```")
         # Adding author as a field
         if self.day is not None:
             if self.day.change and self.day.change_percent and self.day.close and self.day.high and self.day.low and self.day.open and self.day.vwap and self.day.previous_close:

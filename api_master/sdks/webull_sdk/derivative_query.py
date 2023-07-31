@@ -1,3 +1,5 @@
+import pandas as pd
+
 class QueryDerivatives:
     def __init__(self, option_data):
         self.open = option_data.get('open')
@@ -42,3 +44,37 @@ class QueryDerivatives:
         self.tzName = option_data.get('tzName')
         self.tradeStatus = option_data.get('tradeStatus')
         self.tradeStamp = option_data.get('tradeStamp')
+
+
+        self.data_dict = {
+            'open': self.open,
+            'high': self.high,
+            'low': self.low,
+            'strikePrice': self.strikePrice,
+            'preClose': self.preClose,
+            'openInterest': self.openInterest,
+            'volume': self.volume,
+            'latestPriceVol': self.latestPriceVol,
+            'delta': self.delta,
+            'vega': self.vega,
+            'impVol': self.impVol,
+            'gamma': self.gamma,
+            'theta': self.theta,
+            'rho': self.rho,
+            'close': self.close,
+            'change': self.change,
+            'changeRatio': self.changeRatio,
+            'expireDate': self.expireDate,
+            'tickerId': self.tickerId,
+            'belongTickerId': self.belongTickerId,
+            'openIntChange': self.openIntChange,
+            'activeLevel': self.activeLevel,
+            'executionType': self.executionType,
+            'direction': self.direction,
+            'symbol': self.symbol,
+            'unSymbol': self.unSymbol,
+            'askList': self.askList,
+            'bidList': self.bidList,
+        }
+
+        self.df = pd.DataFrame(self.data_dict)

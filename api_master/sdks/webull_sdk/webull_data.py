@@ -1,3 +1,4 @@
+import pandas as pd
 class WebullStockData:
     """A class representing stock data obtained from Webull.
 
@@ -41,6 +42,7 @@ class WebullStockData:
         self.avg_10d_vol = self.r.get("avgVol10D", None)
         self.outstanding_shares = self.r.get('outstandingShares', None)
         self.total_shares = self.r.get('totalShares', None)
+
         try:
             self.estimated_earnings = self.r.get("nextEarningDay", None)
             self.web_vibrate_ratio = self.r.get('vibrateRatio', None)
@@ -48,6 +50,27 @@ class WebullStockData:
             self.estimated_earnings = None
             self.web_vibrate_ratio = None
 
+
+        self.data_dict = {
+            'Company Name': self.r.get("name", None),
+            'Symbol': self.r.get("symbol", None),
+            'Exchange': self.r.get("disExchangeCode", None),
+            'Close Price': self.r.get("close", None),
+            'Latest Earnings': self.r.get('latestEarningsDate', None),
+            'Volume': self.r.get("volume", None),
+            'Change Ratio': self.r.get("changeRatio", None),
+            'Open Price': self.r.get("open", None),
+            'High Price': self.r.get("high", None),
+            'Low Price': self.r.get("low", None),
+            '52week High': self.r.get("fiftyTwoWkHigh", None),
+            'Avg 3month Volume': self.r.get('avgVol3M', None),
+            '52week Low': self.r.get("fiftyTwoWkLow", None),
+            'Avg 10day Volume': self.r.get("avgVol10D", None),
+            'Outstanding Shares': self.r.get('outstandingShares', None),
+            'Total Shares': self.r.get('totalShares', None)
+        }
+
+        
 # Cache expiration time in seconds
 class Analysis:
     def __init__(self, ticker):
@@ -69,12 +92,25 @@ class Analysis:
                 self.strongbuy = rating_spread.get('strongBuy', None)
                 self.sell = rating_spread.get('sell', None)
                 self.hold = rating_spread.get('hold', None)
+
+                self.data_dict = { 
+                    'Strong Buy Ratings': self.strongbuy,
+                    'Buy Ratings': self.buy,
+                    'Hold Ratings': self.hold,
+                    'Underperform Ratings': self.underperform,
+                    'Sell Ratings': self.sell,
+                }
+
+                self.df = pd.DataFrame(self.data_dict)
+            
             else:
                 self.buy = None
                 self.underperform = None
                 self.strongbuy = None
                 self.sell = None
                 self.hold = None
+                self.data_dict = None
+                self.df = None
         else:
             self.rating_suggestion = None
             self.rating_totals = None
@@ -83,6 +119,8 @@ class Analysis:
             self.strongbuy = None
             self.sell = None
             self.hold = None
+            self.df = None
+            self.data_dict = None
 
 
 
@@ -114,6 +152,21 @@ class WebullVolAnalysis:
             self.sellVolume = response.get('sellVolume', None)
             self.nVolume = response.get('nVolume', None)
             self.totalVolume = response.get('totalVolume', None)
+            self.buyPct = (self.buyVolume / self.totalVolume) * 100
+            self.sellPct = (self.sellVolume / self.totalVolume) * 100
+            self.nPct = (self.nVolume / self.totalVolume) * 100
+
+            self.data_dict = { 
+
+                'Avg Price': self.avePrice,
+                'Buy Volume': self.buyVolume,
+                'Sell Volume': self.sellVolume,
+                'Neutral Volume': self.nVolume,
+                'Total Volume': self.totalVolume,
+                'Buy Percent': self.buyPct,
+                'Neutral Percent': self.nPct,
+                'Sell Percent': self.sellPct
+            }
         else:
             # If the required keys are not present, set the attribute values to None
             self.avePrice = 0
@@ -121,3 +174,9 @@ class WebullVolAnalysis:
             self.sellVolume = 0
             self.nVolume = 0
             self.totalVolume = 0
+            self.buyPct = 0
+            self.sellPct = 0
+            self.nPct = 0
+
+
+        

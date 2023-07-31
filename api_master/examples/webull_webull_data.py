@@ -213,19 +213,19 @@ class Webull:
     
 
     # async def cost_distribution(self, ticker):
-    #     costDistribution = await webull.cost_distribution(ticker)
+        costDistribution = await webull.cost_distribution(ticker)
         
-    #     self.avgCost = [i.avgCost for i in costDistribution]
-    #     self.sharesInProfit70End = [i.chip70End for i in costDistribution]
-    #     self.sharesInProfit70Ratio = [i.chip70Ratio for i in costDistribution]
-    #     self.sharesInProfit70Start = [i.chip70Start for i in costDistribution]
-    #     self.sharesInProfit90End = [i.chip90End for i in costDistribution]
-    #     self.sharesInProfit90Ratio=[i.chip90Ratio for i in costDistribution]
-    #     self.sharesInProfit90Start=[i.chip90Start for i in costDistribution]
-    #     self.Close = [i.close for i in costDistribution]
-    #     self.closeProfitRatio = [i.closeProfitRatio for i in costDistribution]
-    #     self.distributions = [i.distributions for i in costDistribution]
-    #     self.totalShares = [i.totalShares for i in costDistribution]
+        self.avgCost = [i.avgCost for i in costDistribution]
+        self.sharesInProfit70End = [i.chip70End for i in costDistribution]
+        self.sharesInProfit70Ratio = [i.chip70Ratio for i in costDistribution]
+        self.sharesInProfit70Start = [i.chip70Start for i in costDistribution]
+        self.sharesInProfit90End = [i.chip90End for i in costDistribution]
+        self.sharesInProfit90Ratio=[i.chip90Ratio for i in costDistribution]
+        self.sharesInProfit90Start=[i.chip90Start for i in costDistribution]
+        self.Close = [i.close for i in costDistribution]
+        self.closeProfitRatio = [i.closeProfitRatio for i in costDistribution]
+        self.distributions = [i.distributions for i in costDistribution]
+        self.totalShares = [i.totalShares for i in costDistribution]
 
         
     

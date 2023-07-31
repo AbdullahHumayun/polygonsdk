@@ -1,40 +1,41 @@
 
 from dataclasses import dataclass
 from typing import List, Optional
+from typing import Dict, Any
 
-from sdks.helpers.helpers import human_readable
 from discord_webhook import DiscordEmbed
 
 @dataclass
 class Session:
-    change: float
-    change_percent: float
-    close: float
-    early_trading_change: float
-    early_trading_change_percent: float
-    high: float
-    late_trading_change: float
-    late_trading_change_percent: float
-    low: float
-    open: float
-    previous_close: float
-    volume: int
 
-    @classmethod
-    def from_dict(cls, data: dict) -> 'Session':
+    change: float = 0.0
+    change_percent: float = 0.0
+    close: float = 0.0
+    early_trading_change: float = 0.0
+    early_trading_change_percent: float = 0.0
+    high: float = 0.0
+    late_trading_change: float = 0.0
+    late_trading_change_percent: float = 0.0
+    low: float = 0.0
+    open: float = 0.0
+    previous_close: float = 0.0
+    volume: int = 0
+
+    @staticmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'Session':
         return cls(
-            change=data.get('change', None),
-            change_percent=data.get('change_percent', None),
-            close=data.get('close', None),
-            early_trading_change=data.get('early_trading_change', None),
-            early_trading_change_percent=data.get('early_trading_change_percent', None),
-            high=data.get('high', None),
-            late_trading_change=data.get('late_trading_change', None),
-            late_trading_change_percent=data.get('late_trading_change_percent', None),
-            low=data.get('low', None),
-            open=data.get('open', None),
-            previous_close=data.get('previous_close', None),
-            volume=data.get('volume', None)
+            change=data.get('change', 0.0),
+            change_percent=data.get('change_percent', 0.0),
+            close=data.get('close', 0.0),
+            early_trading_change=data.get('early_trading_change', 0.0),
+            early_trading_change_percent=data.get('early_trading_change_percent', 0.0),
+            high=data.get('high', 0.0),
+            late_trading_change=data.get('late_trading_change', 0.0),
+            late_trading_change_percent=data.get('late_trading_change_percent', 0.0),
+            low=data.get('low', 0.0),
+            open=data.get('open', 0.0),
+            previous_close=data.get('previous_close', 0.0),
+            volume=data.get('volume', 0)
         )
 
 
@@ -158,7 +159,7 @@ class UniversalSnapshotResult:
 
     def to_embed(self) -> DiscordEmbed:
         """Create a Discord embed from this article."""
-        embed = DiscordEmbed(title=f"Ticker 📰 News", description=f"```py\nOption snapshot result - {human_readable(self.ticker)}```")
+        embed = DiscordEmbed(title=f"Ticker 📰 News", description=f"```py\nOption snapshot result - {self.ticker}```")
         # Adding author as a field
 
         if self.open_interest is not None and self.implied_volatility is not None and self.market_status is not None:
@@ -197,7 +198,7 @@ class UniversalSnapshotResult:
         if not (self.session and self.open_interest is not None and self.session.volume is not None and self.session.volume > self.open_interest):
             return None
 
-        embed = DiscordEmbed(title="Unusual Option Activity 📈", description=f"```py\nUnusual option contract detected - {human_readable(self.ticker)}\nAn unusual option means that there is more contract volume than implied volatility.```")
+        embed = DiscordEmbed(title="Unusual Option Activity 📈", description=f"```py\nUnusual option contract detected - {self.ticker}\nAn unusual option means that there is more contract volume than implied volatility.```")
 
         embed.add_embed_field(name="Day Stats:", value=f"> Open: **${self.session.open}**\n> High: **${self.session.high}**\n> Last: **${self.session.close}**\n> Low: **${self.session.low}\n> Prev. Close: **${self.session.previous_close}**\n> Volume: **{self.session.volume}**", inline=False)
         embed.add_embed_field(name=f"Vol vs. OI:",value=f"> Vol: **{self.session.volume}**\n> OI: **{self.open_interest}**")

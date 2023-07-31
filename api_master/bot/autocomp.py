@@ -38,6 +38,59 @@ def ticker_autocomp(inter,ticker: str):
     return [tickers for tickers in df if tickers.lower().startswith(tlow)][:24]
 
 
+def multiplier_autocomp(inter,multiplier: str):
+    if not multiplier:
+        return ["How many mintues?"]
+    print(f"multiplier_autocomp [multiplier]: {multiplier}")
+    tlow = multiplier.lower()
+    col_list = ["Multiplier"]
+    file = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "files",
+        "ticks",
+        "multipliers.csv",
+    )
+    df = pd.read_csv(file, usecols=col_list)
+    df = df["Multiplier"]
+    return [multipliers for multipliers in df if multipliers.lower().startswith(tlow)][:24]
+
+
+def option_column_autocomp(inter,option_column: str):
+    if not option_column:
+        return ["MUST", "USE", "CAPS"]
+    print(f"option_column_autocomp [option_column]: {option_column}")
+    tlow = option_column.lower()
+    col_list = ["Name"]
+    file = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "files",
+        "ticks",
+        "option_columns.csv",
+    )
+    df = pd.read_csv(file, usecols=col_list)
+    df = df["Columns"]
+    return [option_columns for option_columns in df if option_columns.lower().startswith(tlow)]
+
+
+
+
+def ticker_autocomp(inter,ticker: str):
+    if not ticker:
+        return ["MUST", "USE", "CAPS"]
+    print(f"ticker_autocomp [ticker]: {ticker}")
+    tlow = ticker.lower()
+    col_list = ["Name"]
+    file = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "files",
+        "ticks",
+        "tickers.csv",
+    )
+    df = pd.read_csv(file, usecols=col_list)
+    df = df["Name"]
+    return [tickers for tickers in df if tickers.lower().startswith(tlow)][:24]
+
+
 
 
 

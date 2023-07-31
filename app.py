@@ -1,6 +1,6 @@
 
 
-from flask import Flask
+from flask import Flask,send_from_directory
 import asyncio
 import requests
 from flask_cors import CORS
@@ -24,7 +24,7 @@ loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 app = Flask(__name__)
 CORS(app)
-master = MasterSDK(YOUR_API_KEY)
+master = MasterSDK()
 @app.route('/')
 async def index():
     return render_template('index.html')
@@ -36,6 +36,15 @@ def search_equity_trades():
     trades = conn.execute(f"SELECT * FROM EquityTrades WHERE symbol LIKE '%{search_term}%'").fetchall()
     return jsonify(trades)
 
+
+@app.route('/.well-known/ai-plugin.json')
+def serve_manifest():
+    return send_from_directory('static', 'well_known_ai_plugin.json')
+
+
+@app.route('/discord_display')
+def discorddisplay():
+    return render_template('rotator.html')
 
 @app.route('/equity_trades')
 def equity_trades():

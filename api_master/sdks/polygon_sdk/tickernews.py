@@ -1,77 +1,40 @@
-"""FETCHES TICKER-NEWS FROM POLYGON BY CATEGORY - SENDS TO DISCORD."""
-
-
-from polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
-from cfg import YOUR_API_KEY
 from dataclasses import dataclass
 
-api_key = YOUR_API_KEY
-async_sdk = AsyncPolygonSDK(api_key)
-@dataclass
-class Publisher:
-    def __init__(self, name, homepage_url, logo_url, favicon_url):
-        self.name = name
-        self.homepage_url = homepage_url
-        self.logo_url = logo_url
-        self.favicon_url = favicon_url
-@dataclass
-class NewsArticle:
-    def __init__(self, id, publisher, title, author, published_utc, article_url, tickers, image_url, description, keywords):
-        self.id = id
-        self.publisher = publisher
-        self.title = title
-        self.author = author
-        self.published_utc = published_utc
-        self.article_url = article_url
-        self.tickers = tickers
-        self.image_url = image_url
-        self.description = description
-        self.keywords = keywords
+from typing import Optional, List
+
+
+class TickerNews:
+    def __init__(self, results):
+
+
+        self.amp_url = [i['amp_url'] if 'amp_url' is not None and 'amp_url' in i else None for i in results]
+        self.article_url = [i['article_url'] if 'article_url' is not None and 'article_url' in i else None for i in results]
+        self.author = [i['author'] if 'author' is not None and 'author' in i else None for i in results]
+        self.description = [i['description'] if 'description' is not None and 'description' in i else None for i in results]
+        self.id = [i['id'] if 'id' is not None and 'id' in i else None for i in results]
+        self.image_url = [i['image_url'] if 'image_url' is not None and 'image_url' in i else None for i in results]
+        self.keywords = [i['keywords'] if 'keywords' is not None and 'keywords' in i else None for i in results]
         
-keyword_hooks= {
-        "Trading Ideas": "YOUR DISCORD WEBHOOK URL",
-        "Long Ideas": "YOUR DISCORD WEBHOOK URL",
-        "Short Sellers":"YOUR DISCORD WEBHOOK URL",
-        "Trading Penny Stocks":"YOUR DISCORD WEBHOOK URL",
-        "penny stocks to watch":"YOUR DISCORD WEBHOOK URL",
-        "top penny stocks":"YOUR DISCORD WEBHOOK URL",
-        "Short Ideas": "YOUR DISCORD WEBHOOK URL",
-        "Penny Stock News":"YOUR DISCORD WEBHOOK URL",
-        "Tech":"YOUR DISCORD WEBHOOK URL",
-        "Rumors":"YOUR DISCORD WEBHOOK URL",
-        "Penny Stocks": "YOUR DISCORD WEBHOOK URL",
-        "best penny stocks":"YOUR DISCORD WEBHOOK URL",
-        "list of penny stocks":"YOUR DISCORD WEBHOOK URL",
+        publisher = [i['publisher'] if 'publisher' is not None and 'publisher' in i else None for i in results]
+        self.tickers = [i['tickers'] if 'tickers' is not None and 'tickers' in i else None for i in results]
+        self.favicon_url = [i['favicon_url'] if 'favicon_url' is not None and 'favicon_url' in i else None for i in publisher]
+        self.name = [i['name'] if 'name' is not None and 'name' in i else None for i in publisher]
+        self.logo_url = [i['favicon_url'] if 'favicon_url' is not None and 'favicon_url' in i else None for i in publisher]
+        self.homepage_url = [i['homepage_url'] if 'homepage_url' is not None and 'homepage_url' in i else None for i in publisher]
+        self.title = [i['title'] if 'title' is not None and 'title' in i else None for i in results]
 
-        "Large Cap": "YOUR DISCORD WEBHOOK URL",
-        "Upgrades": "YOUR DISCORD WEBHOOK URL",
-        "Downgrades":"YOUR DISCORD WEBHOOK URL",
-        "Price Target": "YOUR DISCORD WEBHOOK URL",
-        "Small Cap": "YOUR DISCORD WEBHOOK URL",
-        "Analyst Ratings": "YOUR DISCORD WEBHOOK URL",
-        "Initial Public Offerings": "YOUR DISCORD WEBHOOK URL",
-        "Financing Agreements": "YOUR DISCORD WEBHOOK URL",
-        "Conference Calls/ Webcasts":"YOUR DISCORD WEBHOOK URL",
-        "Calendar of Events": "YOUR DISCORD WEBHOOK URL",
-        "Law & Legal Issues":"YOUR DISCORD WEBHOOK URL",
-        "Company Announcement":"YOUR DISCORD WEBHOOK URL",
-        "Earnings":"YOUR DISCORD WEBHOOK URL",
-        "earningscall-transcripts":"YOUR DISCORD WEBHOOK URL",
-        "Earnings Releases and Operating Results":"YOUR DISCORD WEBHOOK URL",
-        "Partnerships":"YOUR DISCORD WEBHOOK URL",
-        "Mergers and Acquisitions":"YOUR DISCORD WEBHOOK URL",
-        "Movers":"YOUR DISCORD WEBHOOK URL",
-        "Cryptocurrency":"YOUR DISCORD WEBHOOK URL",
-        "Top Stories":"YOUR DISCORD WEBHOOK URL",
-        "Global":"YOUR DISCORD WEBHOOK URL",
-        "Government":"YOUR DISCORD WEBHOOK URL",
-        "European Regulatory News": "YOUR DISCORD WEBHOOK URL",
-        "Sector ETFs": "YOUR DISCORD WEBHOOK URL",
-        "Broad U.S. Equity ETFs": "YOUR DISCORD WEBHOOK URL",
-        "Management statements": "YOUR DISCORD WEBHOOK URL",
-        "ETFs": "YOUR DISCORD WEBHOOK URL",
-        "investing": "YOUR DISCORD WEBHOOK URL",
-        "Company Regulatory Filings": "YOUR DISCORD WEBHOOK URL",
-        "Insider's Buy/Sell": "YOUR DISCORD WEBHOOK URL"
 
-    }
+
+        self.data_dict = {
+            'Title': self.title,
+            'Name': self.name,
+            'Author': self.author,
+            'Article URL': self.article_url,
+            'Homepage URL': self.homepage_url,
+            'Logo URL': self.logo_url,
+            'Image URL': self.image_url,
+            'Tickers Mentioned': self.tickers,
+            'Description': self.description,
+            'Keywords': self.keywords
+
+        }

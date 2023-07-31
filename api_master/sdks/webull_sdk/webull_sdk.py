@@ -9,9 +9,10 @@ cfg_module_path = current_file_path.parent.parent / 'cfg'
 
 # Add the module path to sys.path
 sys.path.append(str(cfg_module_path))
+from aiohttp.client_exceptions import ClientOSError
 
-
-
+from cfg import YOUR_WEBULL_HEADERS
+from sdks.polygon_sdk.list_sets import etfs_list
 import aiohttp
 from .derivative_query import QueryDerivatives
 from typing import List, Optional
@@ -74,7 +75,7 @@ class AsyncWebullSDK:
         async with aiohttp.ClientSession() as session:
             async with session.get(f"https://quotes-gw.webullfintech.com/api/bgw/market/topGainers?regionId=6&rankType={type}&pageIndex=1&pageSize=350") as response:
                 data = await response.json()
-                print(data)
+               
                 datas = data['data']
                 top_gainers = [d['ticker'] for d in datas]
                 results = GainersData(top_gainers)
@@ -166,7 +167,7 @@ class AsyncWebullSDK:
 
                 options_list = ['O:' + option for option in symbols]
                 options_string = ','.join(options_list)
-                print(options_string)
+             
                 return options_string
 
 
@@ -257,21 +258,28 @@ class AsyncWebullSDK:
         url = f"{self.base_url}search/pc/tickers?keyword={keyword}&regionId=6&pageIndex=1&pageSize=1"
 
         async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                r = await response.json()
-                data = r.get('data', None)
-                if data is not None:
-                    try:
-                        self.tickerId = data[0]['tickerId']
-                        self.symbol = data[0]['symbol']
-                    except IndexError:
+            try:
+                async with session.get(url) as response:
+                    r = await response.json()
+                    data = r.get('data', None)
+                    if data is not None:
+                        try:
+                            self.tickerId = data[0]['tickerId']
+                            self.symbol = data[0]['symbol']
+                        except IndexError:
+                            pass
+                    else:
                         pass
-                else:
-                    pass
-                return self.tickerId, self.symbol
+                    return self.tickerId, self.symbol
+            except ClientOSError:
+                return None
             
 
-    async def cost_distribution(self, ticker, start_date=thirty_days_ago_str, end_date=today_str):
+    async def cost_distribution(self, ticker:str, start_date=thirty_days_ago_str, end_date=today_str):
+
+        if ticker in etfs_list:
+            print(f"Doesn't Work with ETFs.")
+            return
         async with aiohttp.ClientSession() as session:
             tickerid, _ = await self.fetch_ticker_id(ticker)
             url = f"https://quotes-gw.webullfintech.com/api/quotes/chip/query?tickerId={tickerid}&startDate={start_date}&endDate={end_date}"
@@ -279,10 +287,13 @@ class AsyncWebullSDK:
             async with session.get(url,headers=headers) as response:
                 try:
                     response_data = await response.json()
-                    print(await response.text())
-                    data = response_data['data']
-                    cost_distribution = [CostDistribution(item) for item in data]
-                    return cost_distribution
+           
+                    data = response_data['data'] if 'data' in response_data else None
+                    if data is None:
+                        return
+                    else:
+                        cost_distribution = [CostDistribution(item) for item in data]
+                        return cost_distribution
                 except ContentTypeError as e:
                     print(f"Error: {e}\nResponse text: {await response.text()}")
                     return None
@@ -367,7 +378,7 @@ class AsyncWebullSDK:
                 return earnings_calendars
             
 
-    async def get_balancesheet(self, ticker: str) -> List[BalanceSheet]:
+    async def get_balancesheet(self, ticker: str) -> 'BalanceSheet':
         """
         Retrieves a list of BalanceSheet instances for a given stock ticker.
 
@@ -378,6 +389,7 @@ class AsyncWebullSDK:
             List[BalanceSheet]: A list of BalanceSheet instances containing balance sheet statement data.
         """
         async with aiohttp.ClientSession() as session:
+        
             tickerid, _ = await self.fetch_ticker_id(ticker)
             
             async with session.get(f"https://quotes-gw.webullfintech.com/api/information/financial/balancesheet?tickerId={tickerid}&type=102&fiscalPeriod=1,2,3,4&limit=50") as response:
@@ -386,14 +398,14 @@ class AsyncWebullSDK:
                     r = await response.json()
                     try:
                         data = r['data']
-                        balance_sheets = [BalanceSheet(statement) for statement in data]
+                        balance_sheets = BalanceSheet(data)
                         return balance_sheets
                     except KeyError:
                         pass
 
 
 
-    async def get_financial_statement(self, ticker: str) -> List[FinancialStatement]:
+    async def get_financial_statement(self, ticker: str):
 
         """
         Retrieves a list of FinancialStatement instances for a given stock ticker.
@@ -405,18 +417,19 @@ class AsyncWebullSDK:
             List[FinancialStatement]: A list of FinancialStatement instances containing financial statement data.
         """
         async with aiohttp.ClientSession() as session:
+
             tickerid, _ = await self.fetch_ticker_id(ticker)
             async with session.get(f"https://quotes-gw.webullfintech.com/api/information/financial/incomestatement?tickerId={tickerid}&type=102&fiscalPeriod=1,2,3,4&limit=11") as resp:
                 if resp.status == 200:
                     r = await resp.json()
                     try:
                         data = r['data']
-                        financial_statements = [FinancialStatement(statement) for statement in data]
+                        financial_statements = FinancialStatement(data)
                         return financial_statements
                     except KeyError:
                         pass
 
-    async def get_cash_flow(self, ticker):
+    async def get_cash_flow(self, ticker:str):
         """
         Retrieves a list of CashFlow instances for a given stock ticker.
 
@@ -427,19 +440,20 @@ class AsyncWebullSDK:
             List[CashFlow]: A list of CashFlow instances containing cash flow statement data.
         """
         async with aiohttp.ClientSession() as session:
+
             tickerid, _ = await self.fetch_ticker_id(ticker)
             async with session.get(f"https://quotes-gw.webullfintech.com/api/information/financial/cashflow?tickerId={tickerid}&type=102&fiscalPeriod=1,2,3,4&limit=11") as resp:
                 if resp.status == 200:
                     r = await resp.json()
                     try:
                         data = r['data']
-                        financial_statements = [CashFlow(statement) for statement in data]
+                        financial_statements = CashFlow(data)
                         return financial_statements
                     except KeyError:
                         pass
 
 
-    async def get_short_interest(self, ticker):
+    async def get_short_interest(self, ticker:str):
         """
         Get the short interest data for a given ticker ID.
 
@@ -450,16 +464,20 @@ class AsyncWebullSDK:
             ShortInterest: An instance of the ShortInterest class containing short interest data in the form of a List, or None if an error occurs.
         """
         async with aiohttp.ClientSession() as session:
+      
             tickerid, _ = await self.fetch_ticker_id(ticker)
-            async with session.get(f"https://quotes-gw.webullfintech.com/api/information/brief/shortInterest?tickerId={tickerid}") as resp:
-                if resp.status != 200:
-                    return None
-                data = await resp.json()
-                short_interest = ShortInterest(data)
-                return short_interest
+            try:
+                async with session.get(f"https://quotes-gw.webullfintech.com/api/information/brief/shortInterest?tickerId={tickerid}") as resp:
+                    if resp.status != 200:
+                        return None
+                    data = await resp.json()
+                    short_interest = ShortInterest(data)
+                    return short_interest
+            except ClientOSError:
+                return None
 
 
-    async def get_institutional_holdings(self, ticker):
+    async def get_institutional_holdings(self, ticker:str):
         """
         Retrieves institutional holdings for a given ticker.
 
@@ -470,6 +488,7 @@ class AsyncWebullSDK:
             InstitutionHolding: An object representing the institutional holdings for the given ticker.
         """
         async with aiohttp.ClientSession() as session:
+           
             tickerid, symbol = await self.fetch_ticker_id(ticker)
             async with session.get(f"https://quotes-gw.webullfintech.com/api/information/stock/getInstitutionalHolding?tickerId={tickerid}") as resp:
                 if resp.status == 200:
@@ -484,8 +503,9 @@ class AsyncWebullSDK:
 
         
 
-    async def capital_flow(self, ticker):
+    async def capital_flow(self, ticker:str):
         async with aiohttp.ClientSession() as session:
+        
             tickerid, _ = await self.fetch_ticker_id(ticker)
             async with session.get(f"https://quotes-gw.webullfintech.com/api/stock/capitalflow/ticker?tickerId={tickerid}&showHis=true") as response:
                 r = await response.json()
@@ -499,7 +519,7 @@ class AsyncWebullSDK:
 
 
 
-    async def get_webull_stock_data(self, ticker):
+    async def get_webull_stock_data(self, ticker:str):
         """Fetches and returns a `WebullStockData` object containing stock data for the specified ticker symbol.
 
         Args:
@@ -526,7 +546,7 @@ class AsyncWebullSDK:
             >>> estimated_earnings (str): The date of the company's next earnings report (if available).
             >>> web_vibrate_ratio (float): The volatility of the stock.
         """
-
+     
         tickerid, _ = await self.fetch_ticker_id(ticker)
         webull_stock_data = WebullStockData(tickerid)
 
@@ -535,7 +555,8 @@ class AsyncWebullSDK:
 
 
 
-    async def get_analysis_data(self, ticker):
+    async def get_analysis_data(self, ticker:str):
+ 
         try:
             async with aiohttp.ClientSession() as session:
                 tickerid, _ = await self.fetch_ticker_id(ticker)
@@ -555,7 +576,8 @@ class AsyncWebullSDK:
             return None
         
 
-    async def get_webull_vol_analysis_data(self, ticker):
+    async def get_webull_vol_analysis_data(self, ticker:str):
+         
             tickerid, _ = await self.fetch_ticker_id(ticker)
             # If the ticker WebullVolAnalysis data is not in the cache or has expired, fetch it
             webull_vol_analysis_data = WebullVolAnalysis(tickerid)
@@ -605,7 +627,8 @@ class AsyncWebullSDK:
             "total_cash_dividends_paid": total_cash_dividends_paid,
             "score": score
         }
-    async def financial_score(self, ticker):
+    async def financial_score(self, ticker: str):
+
         score = 0
         ticker_id, _ = await self.fetch_ticker_id(ticker)
 
@@ -836,7 +859,8 @@ class AsyncWebullSDK:
 
             }
 
-    async def get_etfs_for_ticker(self, ticker):
+    async def get_etfs_for_ticker(self, ticker:str):
+   
         async with aiohttp.ClientSession() as session:
             ticker_id, _ = await self.fetch_ticker_id(ticker)
             url = f"https://quotes-gw.webullfintech.com/api/information/company/queryEtfList?tickerId={ticker_id}&pageIndex=1&pageSize=350"
@@ -850,14 +874,16 @@ class AsyncWebullSDK:
 
 
 
-    async def get_webull_news(self, ticker, current_news_id: int = 0, page_size: int = 50, headers: dict = None) -> List[NewsItem]:
-        async with aiohttp.ClientSession(headers="YOUR_WEBULL_HEADERS") as session:
+    async def get_webull_news(self, ticker:str, current_news_id: int = 0, page_size: int = 50, headers: dict = None) -> List[NewsItem]:
+       
+        async with aiohttp.ClientSession(headers=YOUR_WEBULL_HEADERS) as session:
             ticker_id, _ = await self.fetch_ticker_id(ticker)
             url = f"https://quotes-gw.webullfintech.com/api/information/news/tickerNews?tickerId={ticker_id}&currentNewsId={current_news_id}&pageSize={page_size}"
             async with session.get(url) as response:
                 news_data = await response.json()
                 return [NewsItem(news) for news in news_data]
-    async def check_recent_news(self, ticker, webull_headers):
+    async def check_recent_news(self, ticker:str, webull_headers):
+
 
         ticker_id, _ = await self.fetch_ticker_id(ticker)
         news = await self.get_webull_news(ticker_id, headers=webull_headers)

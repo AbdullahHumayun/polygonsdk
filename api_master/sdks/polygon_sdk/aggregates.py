@@ -1,3 +1,4 @@
+import pandas as pd
 class AggregatesData:
     def __init__(self, response_data):
         self.adjusted = response_data.get("adjusted")
@@ -20,11 +21,25 @@ class AggregatesData:
             self.close = [i['c'] for i in self.results]
             self.high = [i['h'] for i in self.results]
             self.low = [i['l'] for i in self.results]
-            self.n = [i['n'] for i in self.results]
+      
             self.open = [i['o'] for i in self.results]
             self.timestamp = [i['t'] for i in self.results]
             self.volume = [i['v'] for i in self.results]
-            self.volume_weighted_average = [i['vw'] for i in self.results]
+
+
+            self.data_dict = { 
+                'Open': self.open,
+                'High': self.high,
+                'Low': self.low,
+                'Close': self.close,
+                'Volume': self.volume,
+
+
+                'Timestamp': self.timestamp
+
+            }
+
+            self.df = pd.DataFrame(self.data_dict)
 
     def __str__(self):
         return f"AggregatesData({self.ticker})"

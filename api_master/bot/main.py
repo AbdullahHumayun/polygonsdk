@@ -3,14 +3,31 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from _discord import emojis as e
-from sdks.polygon_sdk.list_sets import subscriptions as subs
+import aiosonic
+from mybot import ChannelsView
+from sdks.polygon_sdk.list_sets import subscriptions as subs, sublist1
+from func_call.func_view import FuncCall
+from sdks.helpers.helpers import chunked
+from disnake import File,Embed
+from polygonIO.master_control import MasterControl
+from func_call.stock_functions import fc_stock_functions
+from cfg import thirty_days_from_now_str
 import json
+from new_views.viewmenus import ServerView
 from cogs.analysis import Analysis
+from discord_webhook import AsyncDiscordWebhook, DiscordEmbed
+from views.learnviews import AlertMenus
 import pandas as pd
+from sdks.helpers.helpers import chunked
+from dataAnalyzer import DataAnalyzer
+from cfg import seven_days_from_now_str, technicals_webhooks
+
 from cogs.ss import SS
-from func_call_test import analyze_data
+from cfg import hex_colors
+
 from views.mainview import MainView
 import asyncio
+from sdks.datamaster import DataMaster
 from cogs.learn import Learn
 from cogs.fmp import FMP
 import numpy as np
@@ -18,9 +35,9 @@ import disnake
 from menus.embedmenus import PageSelect
 from sdks.helpers.helpers import human_readable
 from disnake.ext import commands
-from disnake import Option, OptionType
+
 from autocomp import command_autocomp, ticker_autocomp
-from cfg import two_years_from_now_str, today_str
+from cfg import two_years_from_now_str, today_str, thirty_days_ago_str
 import aiohttp
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.polygon_sdk.universal_snapshot import UniversalOptionSnapshot,UniversalSnapshot,CallsOrPuts
@@ -30,144 +47,62 @@ from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from cogs.skews import Skew
 
 from tabulate import tabulate
-from disnake import Option, OptionType, OptionChoice
+
 from disnake.ext import commands
 
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
 from _discord import emojis
 
 
-fudstop = fudstopSDK()
-from stock_market import PolygonStockMarket
-from sdks.polygon_sdk.masterSDK import MasterSDK
 
-from views.learnviews import MenuStart,AlertStart, DiscordStart,TAStart,MarketsView,CryptoViewStart,PageTwoView,PageThreeView,HighShortsViewStart,LowFloatDropdown
-from views.learnviews import ForexViewStart,FTDViewStart,LosersViewStart,GainersViewStart,ActiveViewStart
-from views.learnviews import TotalOIViewStart,TotalVolumeViewStart
-from views.learnviews import CoreStart, LinksStartView,LitStart,DataViewStart
-from views.learnviews import WebullCmdViewStart,DDCmdViewStart,OptionCmdViewStart,FlowCmdViewStart,DPSCmdViewStart,EarningsCmdViewStart,EconomyCmdViewStart,LearnCmdViewStart,StreamCmdViewStart,StockCmdViewStart,ChartingCmdViewStart
-from views.learnviews import HelpStart,VideoStartView,VideoStart2View,VideoStart3View,TopOptionsViewStart, AgencyViewStart
-from views.learnviews import DTCCViewStart,NYSEViewStart, CBOEViewStart, OFRDataViewStart
-from views.learnviews import TopOIDownViewStart,TopOIUpViewStart,TopIVViewStart,TopOIViewStart,TopVolumeViewStart,TotalTurnoverViewStart,TotalOIViewStart,TotalVolumeViewStart
-from views.learnviews import FedDataStart,FINRADataStart,BlockchainDataStart,InflationDataStart,EconomicDataStart,TreasuryDataStart,HKEXDataStart,MMFDataStart,RepoDataStart
-from views.learnviews import StockPage1,StockPage2,StockPage3,StockPage4,StockPage5, AppStart, ToolsViewStart
-from views.learnviews import OFRViewStart, RepoCitedViewStart,CriteriaView,CommandsStart,PermaFTDViewStart
+fudstop_ = fudstopSDK()
+
+from sdks.polygon_sdk.masterSDK import MasterSDK
+mastery = MasterControl()
+
+import aiohttp
+import asyncio
+import requests
+from cfg import YOUR_API_KEY
+
+from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
+from polygonIO.master_control import MasterControl
+from disnake.ext import commands
+import disnake
+from sdks.polygon_sdk.list_sets import sublist1
+
+import pandas as pd
+from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
+from cfg import YOUR_DISCORD_BOT_TOKEN, YOUR_API_KEY,today_str, seven_days_from_now_str
+from new_views.mainview import MainView
+from autocomp import ticker_autocomp
+from mybot import PersistentViewBot
+from tabulate import tabulate
+bot = PersistentViewBot(command_prefix="!", intents=disnake.Intents.all)
+master = MasterControl()
+opts = PolygonOptionsSDK(YOUR_API_KEY)
+
+from new_views.atm_options import AtmOptionsSelect, AtmOptionsView
+
+
+
+poly = AsyncPolygonSDK(YOUR_API_KEY)
+
+
+
 import disnake
 from disnake.ext import commands
 
-from views.learnviews import CriteriaView
-from polygon_enhanced.polygon_enhanced.websocket import WebSocketClient,WebSocketMessage,Market,EquityAgg,EquityQuote,EquityTrade
-from views.learnviews import AvoidView
-
-
 from cfg import YOUR_API_KEY, YOUR_DISCORD_BOT_TOKEN
 
-master = MasterSDK(YOUR_API_KEY)
+
+
+import csv
+master = MasterSDK()
 polygon = AsyncPolygonSDK(YOUR_API_KEY)
 poly_options = PolygonOptionsSDK(YOUR_API_KEY)
 webull = AsyncWebullSDK()
-
-intents=disnake.Intents.all()
-class PersistentViewBot(commands.Bot):
-    def __init__(self, command_prefix, intents, tickers=['PG', 'RBLX', 'JD', 'TSCO', 'BYND', 'GOOG', 'UBER', 'CAG', 'GME', 'CCL', 'QQQ', 'CSCO', 'FUTU', 'ARCC', 'GPN', 'CG', 'HUN', 'TNA', 'DXC', 'GRPN', 'ENTG', 'PEP', 'PGR', 'MSFT', 'PACW', 'PCG', 'ADBE', 'KRE', 'GILD', 'VST', 'VFC', 'JNJ', 'AMC', 'SQNS', 'CVS', 'CDE', 'SUP', 'TBIO', 'YALA', 'INO', 'LVS', 'WDAY', 'SPXU', 'TDOC', 'SBUX', 'LTRX', 'KIM', 'EMR', 'BOX', 'DD', 'TMUS', 'ATVI', 'ASAN', 'FTDR', 'HD', 'SCHW', 'IPSC', 'TARO', 'HASI', 'DIA', 'JWN', 'AVDX', 'MARA', 'PPL', 'MOS', 'ET', 'IAI', 'HOLI', 'QS', 'JBT', 'KEY', 'SFIX', 'AUPH', 'DXCM', 'CHRS', 'CRVS', 'SMRT', 'IBN', 'SQ', 'ACGL', 'ABT', 'AZN', 'INFN', 'KLR', 'BBAI', 'LYV', 'CTLT', 'TECK', 'BRMK', 'EFA', 'FCEL', 'ZGN', 'SBOW', 'NOVA', 'ARDX', 'FITB', 'GOOGL', 'SHOP', 'DAC', 'LNC', 'AMGN', 'TUYA', 'SYNH', 'NMTR', 'SMH', 'BGS', 'AEG', 'DKNG', 'FCX', 'NI', 'NMR', 'TSE', 'OBLG', 'CHPT', 'AES', 'NU', 'CRC', 'UNH', 'CIEN', 'FTCH', 'SWN', 'UP', 'RNG', 'EZPW', 'XPEV', 'PAAS', 'LBTYA', 'MUFG', 'BUD', 'INTZ', 'RKT', 'CLNE', 'APO', 'OTIS', 'VLY', 'DT', 'M', 'QCOM', 'PCT', 'TIL', 'IPG', 'ARKK', 'ADI', 'YUM', 'WMT', 'SMCI', 'XP', 'CCCC', 'AG', 'SAM', 'MGM', 'BOH', 'CAT', 'RYAN', 'MDT', 'HOWL', 'JETS', 'SYY', 'FLEX', 'VTRS', 'PYPL', 'VVV', 'UNIT', 'MRK', 'BANX', 'MRIN', 'VTR', 'NVDA', 'AVGO', 'GLUE', 'DOCU', 'KR', 'ASTS', 'CANO', 'MMM', 'ADVM', 'BIGC', 'SNDL', 'CZR', 'LX', 'HOOD', 'MDB', 'VIAV', 'SO', 'FTFT', 'STKH', 'RMTI', 'WEN', 'V', 'RYAM', 'AEP', 'TAP', 'PM', 'LOW', 'ALLO', 'DRH', 'AR', 'HBB', 'LESL', 'TELL', 'VTS', 'GLD', 'ASX', 'CCJ', 'STNE', 'NAT', 'SEE', 'NET', 'EA', 'EVA', 'LMB', 'BN', 'IEF', 'DELL', 'DADA', 'CX', 'RFL', 'DOW', 'INDI', 'DASH', 'ISEE', 'KWEB', 'XOP', 'TBLA', 'BX', 'FTV', 'PAYX', 'CL', 'XLU', 'LQD', 'STLA', 'MCHX', 'MSTR', 'ALLY', 'SU', 'HST', 'MULN', 'DLO', 'ONB', 'ACB', 'ABBV', 'FHN', 'XLI', 'AI', 'ORCL', 'CNET', 'BILI', 'COMP', 'EWZ', 'DSEY', 'WOW', 'BABA', 'BA', 'TLRY', 'EEM', 'SQQQ', 'CS', 'ANSS', 'NTCO', 'RIOT', 'KGC', 'TSP', 'BRDG', 'SKY', 'CSX', 'IBM', 'XIN', 'NEX', 'AAP', 'MCD', 'WRAP', 'LUMN', 'RPRX', 'BLDR', 'RXT', 'LABU', 'SYF', 'RPD', 'SGBX', 'RVLP', 'NXE', 'FNCB', 'SYPR', 'DVN', 'AQN', 'ONON', 'CNX', 'AGI', 'SPY', 'SVM', 'XLE', 'APPS', 'FRHC', 'AGEN', 'IOT', 'ZIM', 'BHC', 'ACN', 'AAL', 'SNAP', 'AFL', 'CRDO', 'BLNK', 'BOWL', 'VRAY', 'TRTX', 'ELAN', 'EOSE', 'UVXY', 'ZYNE', 'MQ', 'LYFT', 'ENVX', 'NKE', 'TNP', 'SAND', 'VZ', 'IWM', 'GE', 'XME', 'HTHT', 'XLK', 'GT', 'FAST', 'GLNG', 'IYR', 'DAL', 'KPTI', 'GS', 'BLDP', 'AVTR', 'BAC', 'NEWR', 'USAP', 'API', 'ANET', 'CRNT', 'LXP', 'SHLS', 'IP', 'BMBL', 'S', 'BFLY', 'LBTYK', 'LNT', 'DHT', 'CCO', 'NTAP', 'DOC', 'NGVC', 'PD', 'LAW', 'GTBP', 'RTX', 'BAX', 'LLY', 'FFIE', 'FLNT', 'PEG', 'FLO', 'COIN', 'CLOV', 'YMM', 'ETRN', 'IMAX', 'HSKA', 'WFC', 'GH', 'NEM', 'HITI', 'SSTI', 'EXPE', 'PFE', 'PATH', 'MFIN', 'ZTO', 'SGEN', 'UPRO', 'BCRX', 'CSIQ', 'ALIT', 'KOLD', 'AFRM', 'RXRX', 'TLT', 'NGM', 'OCGN', 'CTRA', 'FE', 'VERA', 'UDR', 'EVLV', 'XLC', 'NLY', 'TMF', 'GRAB', 'HAL', 'BITO', 'VALE', 'GSM', 'LBRDK', 'PRU', 'DNB', 'BP', 'HTZ', 'PXLW', 'CHWY', 'HYFM', 'LMNL', 'STT', 'ST', 'BGFV', 'FUBO', 'RUN', 'XLY', 'CGC', 'EFC', 'CNP', 'DISH', 'MANU', 'CVNA', 'AAOI', 'FSR', 'SANW', 'MREO', 'W', 'TMO', 'USB', 'DE', 'TDCX', 'ITRI', 'ZDGE', 'FXLV', 'ROKU', 'AVAH', 'PINS', 'VOD', 'SLP', 'PDS', 'AESI', 'CMCSA', 'PR', 'INTC', 'XLV', 'TSLA', 'WMB', 'OXY', 'IONQ', 'AMH', 'PLTR', 'ALEC', 'ACI', 'OSS', 'BIVI', 'JPM', 'MGNX', 'SPWR', 'LMT', 'SCPL', 'DLTR', 'ED', 'HPQ', 'LAZR', 'OSK', 'AIRS', 'FHTX', 'INSE', 'X', 'ADP', 'VMW', 'HRTG', 'BRLT', 'RDFN', 'ITUB', 'ETON', 'BIG', 'RCL', 'CBAT', 'RRC', 'ARR', 'SLI', 'ETN', 'OPEN', 'SENS', 'OWL', 'HBI', 'NVAX', 'DEI', 'ARMK', 'XRT', 'WEX', 'LSCC', 'LRCX', 'GOOS', 'IVZ', 'TLSA', 'APA', 'ROST', 'SLM', 'CERS', 'LGMK', 'DDOG', 'KMI', 'BTCM', 'AXLA', 'BTE', 'PAGS', 'FNGS', 'CRWD', 'ENOB', 'MGI', 'CMA', 'KHC', 'SGMO', 'WYNN', 'HYG', 'IOVA', 'ENSV', 'AMLX', 'VZIO', 'F', 'CIM', 'NFLX', 'ASC', 'WAL', 'AUMN', 'SOFI', 'DFS', 'TFC', 'FATE', 'JCI', 'CPB', 'HUT', 'CFG', 'IRIX', 'SKX', 'KSS', 'NRG', 'HZO', 'MCHP', 'AMX', 'KMB', 'MO', 'SPXS', 'IBRX', 'T', 'LC', 'MMAT', 'FUSN', 'FYBR', 'PEAK', 'CROX', 'PRDO', 'AMD', 'AEM', 'IFF', 'AMBA', 'U', 'CUZ', 'BOIL', 'XLF', 'EQT', 'DHI', 'AMZN', 'EGO', 'SOXS', 'VTGN', 'BBWI', 'FOXA', 'ASRT', 'GSAT', 'TXN', 'SPWH', 'HR', 'PDD', 'NVTS', 'ESI', 'KDP', 'DB', 'ERIC', 'OGN', 'SOXL', 'UPST', 'WOOF', 'PENN', 'ARAV', 'AIN', 'TPR', 'VKTX', 'MS', 'TIGR', 'GTLB', 'TSN', 'IRS', 'MA', 'GDXJ', 'FANH', 'UUP', 'FTCI', 'UNG', 'ETSY', 'KO', 'PAA', 'DNN', 'AA', 'TJX', 'ARRY', 'AM', 'CVE', 'AIG', 'COTY', 'LNG', 'TSM', 'NWL', 'BRFS', 'WTI', 'COST', 'AGNC', 'MTLS', 'RF', 'TOST', 'WBD', 'HLIT', 'MRNA', 'BMY', 'Z', 'TGT', 'XOM', 'URBN', 'DIS', 'SSSS', 'ENIC', 'DBRG', 'VXX', 'MLCO', 'RYN', 'ANF', 'ORC', 'LULU', 'SLG', 'SAVE', 'XENE', 'VERX', 'GEN', 'BIDU', 'SONO', 'GPRK', 'GP', 'NM', 'UAL', 'RITM', 'FXI', 'UPS', 'GURE', 'REXR', 'AAPL', 'SLB', 'MITT', 'IMBI', 'ODV', 'NEE', 'MESA', 'AEO', 'TQQQ', 'MRVL', 'SIG', 'ULTA', 'FDX', 'BB', 'ABR', 'EL', 'BEN', 'SIMO', 'PBR', 'CRBP', 'CAH', 'USO', 'SLV', 'META', 'GOLD', 'HPE', 'JFIN', 'EGHT', 'IEP', 'NTR', 'SID', 'SMWB', 'SPCE', 'ESLT', 'XBI', 'MSOS', 'CVX', 'RXST', 'CVT', 'AMRS', 'MTG', 'PRM', 'CHS', 'EPIX', 'COLB', 'ATUS', 'GM', 'MET', 'HZNP', 'SHEL', 'EQH', 'AMRN', 'PARA', 'ICLN', 'TARS', 'GFI', 'BEKE', 'NIO', 'GOEV', 'NCLH', 'EMB'], embeds=str):
-        self.ticker = tickers
-        super().__init__(command_prefix=command_prefix, intents=intents)
-        self.persistent_views_added = False
-        self.embeds = []
-
-    async def on_ready(self):
-        if not self.persistent_views_added:
-            # Register the persistent view for listening here.
-            # Note that this does not send the view to any message.
-            # In order to do this you need to first send a message with the View, which is shown below.
-            # If you have the message_id you can also pass it as a keyword argument, but for this example
-            # we don't have one.
-            self.add_view(AvoidView())
-            self.add_view(PageTwoView())
-            self.add_view(PageThreeView())
-            self.add_view(CommandsStart())
-            self.add_view(MenuStart())
-            self.add_view(CoreStart())
-            self.add_view(AlertStart())
-            self.add_view(LitStart())
-            self.add_view(DiscordStart())
-            self.add_view(TAStart())
-            self.add_view(MarketsView())
-            self.add_view(CryptoViewStart())
-            self.add_view(ForexViewStart())
-            self.add_view(HighShortsViewStart())
-            self.add_view(LowFloatDropdown())
-            self.add_view(AlertMenus(embeds=self.embeds))
-            self.add_view(FTDViewStart())
-            self.add_view(LosersViewStart())
-            self.add_view(GainersViewStart())
-            self.add_view(ActiveViewStart())
-            self.add_view(TotalOIViewStart())
-            self.add_view(TotalVolumeViewStart())
-            self.add_view(LinksStartView())
-            self.add_view(AppStart())
-            self.add_view(TopOptionsViewStart())
-            self.add_view(WebullCmdViewStart())
-            self.add_view(OptionCmdViewStart())
-            self.add_view(PermaFTDViewStart())
-            self.add_view(OFRViewStart())
-            self.add_view(DDCmdViewStart())
-            self.add_view(FlowCmdViewStart())
-            self.add_view(DPSCmdViewStart())
-            self.add_view(EconomyCmdViewStart())
-            self.add_view(EarningsCmdViewStart())
-            self.add_view(FlowCmdViewStart())
-            self.add_view(StreamCmdViewStart())
-            self.add_view(ChartingCmdViewStart())
-            self.add_view(StockCmdViewStart())
-            self.add_view(HelpStart())
-            self.add_view(LearnCmdViewStart())
-            self.add_view(ToolsViewStart())
-            self.add_view(NYSEViewStart())
-            self.add_view(DTCCViewStart())
-            self.add_view(CBOEViewStart())
-            self.add_view(StockPage1())
-            self.add_view(StockPage2())
-            self.add_view(StockPage3())
-            self.add_view(StockPage4())
-            self.add_view(StockPage5())
-            self.add_view(TopIVViewStart())
-            self.add_view(TopOIDownViewStart())
-            self.add_view(TopOIUpViewStart())
-            self.add_view(TotalTurnoverViewStart())
-            self.add_view(TopVolumeViewStart())
-            self.add_view(TopOIViewStart())
-            self.add_view(VideoStartView())
-            self.add_view(VideoStart3View())
-            self.add_view(VideoStart2View())
-            self.add_view(OFRDataViewStart())
-            self.add_view(AgencyViewStart())
-            self.add_view(DataViewStart())
-            self.add_view(InflationDataStart())
-            self.add_view(BlockchainDataStart())
-            self.add_view(HKEXDataStart())
-            self.add_view(FINRADataStart())
-            self.add_view(MMFDataStart())
-            self.add_view(FedDataStart())
-            self.add_view(TreasuryDataStart())
-            self.add_view(EconomicDataStart())
-            self.add_view(RepoDataStart())
-            self.add_view(RepoCitedViewStart())
-            self.add_view(CriteriaView())
-            self.add_view(AvoidView())
-            self.add_view(ServerMenuView())
-
-
-            self.persistent_views_added = True
-
-
-        print(f"Logged in as {self.user} (ID: {self.user.id})")
-
-
-
-
-
-bot = PersistentViewBot(command_prefix=">>", intents=intents)
+from tabulate import tabulate
 skew_cmds = Skew(bot=bot)
 analysis_cmds = Analysis(bot)
 learn_cmds = Learn(bot)
@@ -175,94 +110,712 @@ ss_cmds = SS(bot)
 fmp_cmds = FMP(bot)
 
 
+leftover={}
+class MyBotYo(commands.Bot):
+    def __init__(self):
+        super().__init__(command_prefix="$", intents=disnake.Intents.all())
+        self.function_map = {
+            "1": self.run_in_executor(webull.financial_score),
+            "2": self.run_in_executor(webull.cost_distribution),
+            "3": self.run_in_executor(webull.fifty_two_high_and_lows),
+            "4": self.run_in_executor(webull.get_webull_stock_data),
+            "5": self.run_in_executor(webull.get_balancesheet),
+            "6": self.run_in_executor(webull.get_cash_flow),
+            "7": self.run_in_executor(webull.get_financial_statement),
+            "8": self.run_in_executor(webull.get_webull_vol_analysis_data),
+            # add more functions here
+        }
+        self.conversation_history = {}
 
-
-stock_market = PolygonStockMarket()
-
-class RsiHourOption(OptionChoice):
-    name = "rsi_hour"
-    description = "Get the RSI for the specified hour"
-    type = OptionType.sub_command
-    options = [
-        Option(
-            name="ticker",
-            description="Ticker to get RSI for",
-            type=OptionType.string,
-            required=True
-        )
-    ]
-class AllSkewSelect(disnake.ui.Select):
-    def __init__(self, bot, tickers):
-        self.bot = bot
-        # Prepare a list of SelectOptions
-        options = [disnake.SelectOption(label=ticker, value=ticker) for ticker in tickers]
         
-        super().__init__(
-            placeholder='All-Skews -->',
-            min_values=1,
-            max_values=1,
-            custom_id="AllSkews!",
-            options=options
-        )
+    def run_in_executor(self, func):
+        async def wrapper(ticker):
+            loop = asyncio.get_event_loop()
+            return await loop.run_in_executor(None, func, ticker)
+        return wrapper
 
-    async def callback(self, inter: disnake.MessageCommandInteraction):
-        if self.values[0] == self.values[0]:
-            inter.send(await skew_pc(inter, self.values[0]))
+
+@bot.command()
+async def welcome(ctx):
+    embed = disnake.Embed(title=f"Welcome to FUDSTOP!", description=f"```py\nTo begin - select the channels you want from the list of channels below.```")
+    embed.add_field(name=f"➖OPTION VOLUME➖", value=f'> 1k➖5k volume\n> 5k➖10k volume\n> 10k➕ volume')
+    embed.add_field(name=f"➖STOCK VOLUME➖", value=f"> 500➖1k volume\n \
+                                                        > 1k➖5k volume\n \
+                                                        > 5k➖10k volume\n \
+                                                        > 20k➖50k volume\n \
+                                                        > 50k➖100k volume\n \
+                                                        > 100k➕ volume")
+    embed.add_field(name=f"TECHNICAL📈SIGNALS", value=f"> os🐂minute🐂rsi\n \
+                                        > ob🐻minute🐻rsi\n\n  \
+                                        > os🐂hour🐂rsi\n  \
+                                        > ob🐻hour🐻rsi\n\n  \
+                                        > ob🐻day🐻rsi\n  \
+                                        > os🐂day🐂rsi\n \n \
+                                        > os🐂week🐂rsi\n  \
+                                        > ob🐻week🐻rsi\n\n  \
+                                        > super🐻overbought \
+                                        > super🐂oversold")
+    embed.add_field(name=f"🔮AI BOTS 🔮- TradyTics", value='> analyst🔮grades\n \
+                                                            > breakouts🔮\n \
+                                                            > bullseye🔮\n \
+                                                            > darkpool🔮\n \
+                                                            > golden🔮sweeps\n \
+                                                            > crypto🔮signals\n \
+                                                            > scalps🔮\n \
+                                                            > insider🔮trades\n \
+                                                            > ai🔮news\n \
+                                                            > option🔮sweeps\n')
+
+    embed.add_field(name=f'❗STOCK CONDITIONS❗', value='> financially🩸deficient\n \
+                                                        > contingent🪃\n \
+                                                        > retail🐐bid🐐ask\n \
+                                                        > 🧹sweeps\n\ \
+                                                        > ssr🪃\n \
+                                                        > late📛filing\n \
+                                                        > below📛req\n \
+                                                        > bankrupt📛delinquent\n')
+    embed.add_field(name=f'❗OPTIONS FEEDS❗', value=f"> spy🔻puts\n \
+                                                        > spy🌲calls\n \
+                                                        > spx🌲calls\n \
+                                                        > spx🔻puts\n \
+                                                        > zero⭕dte\n \
+                                                        > unusual💥options\n \
+                                                        > vwap💹options")
+    
+
+    embed.add_field(name="➖➖➖", value=f"➖➖➖", inline=False)
+    
+    embed.add_field(name=f"❗STOCK FEEDS❗", value=f"> squeeze💦potential\n \
+                    > 🆕52_low\n \
+                    > 🆕52_high\n \
+                    > near🔻52🔻low\n \
+                    > near🔺52🔺high\n \
+                    > above⏫avg⏫vol\n \
+                    > below⏬avg⏬vol\n \
+                    > fire🔥sale\n \
+                    > accumulation🚀\n \
+                    > earnings💰today"
+                    
+                    )
+    embed.add_field(name=f"📶 OPENBB 🇫 🇪 🇪 🇩 🇸🔔", value=f"> fd📶buys_sells\n \
+        > fd📶opening_flow\n \
+        > fd📶unusual_options\n \
+        > fd📶goldensweep\n")
+    
+
+    embed.add_field(name=f"💫Momentum💫Scalps💫", value=f"> downside💫day⏬\n \
+    upside💫day⏫\n \
+    upside💫hour⏫\n \
+    downside💫hour⏬")
+
+    embed.add_field(name="➖➖➖", value=f"➖➖➖", inline=False)
+
+    embed.add_field(name=f"❗OPTIONS EXCHANGES❗", value="> nyse🏭american\n \
+                    > nyse🏭arca\n \
+                    > nasdaq🏭global\n \
+                    > nasdaq🏭mrx\n \
+                    > nasdaq🏭philly\n \
+                    > nasdaq🏭bx\n \
+                    > cboe🏭bzx\n \
+                    > cboe🏭c2\n \
+                    > boston🏭exchange\n \
+                    > miax🏭emerald\n \
+                    > miax🏭pearl\n \
+                    > cboe🏭edgx")
+    
+
+    embed.add_field(name=f"❗STOCK EXCHANGES❗", value=f"> finra🏛adf\n \
+                    > ise🏛\n \
+                    > nyse🏛\n \
+                    > nyse🏛american\n \
+                    > nyse🏛chicago\n \
+                    > nyse🏛arca\n \
+                    > nasdaq🏛\n \
+                    > nasdaq🏛philly\n \
+                    > members🏛exchange\n \
+                    > investors🏛exchange\n \
+                    > miax🏛pearl\n \
+                    > cboe🏛edga\n \
+                    > cboe🏛edgx\n \
+                    > cboe🏛byx\n \
+                    > cboe🏛bzx")
+
+
+
+
+    await ctx.send(embed=embed)
+
+# @bot.event
+# async def on_ready():
+#     # Assuming the guild ID is provided in the URL
+#     guild_id = 888488311927242753
+#     guild = bot.get_guild(guild_id)
+#     if guild is None:
+#         print(f"Unable to find the guild with ID {guild_id}")
+#         return
+
+
+
+#     for channel_name, channel_id in leftover.items():
+#         # Get the channel object
+#         channel = guild.get_channel(channel_id)
+#         if channel is None:
+#             print(f"Unable to find the channel with ID {channel_id}")
+#             continue
+
+#         # Create permissions for the role
+#         permissions = disnake.Permissions(
+#             read_messages=True,
+#             read_message_history=True,
+#             send_messages=True,
+#             # Add any other necessary permissions here
+#         )
+
+#         # Create the role with the given permissions
+#         # Create the role
+#         try:
+#             role = await guild.create_role(name=channel_name)
+#             print(f"Role {channel_name} created successfully.")
+#         except disnake.Forbidden:
+#             print(f"Bot does not have permission to create role {channel_name}")
+#             continue
+#         except disnake.HTTPException:
+#             print(f"Failed to create role {channel_name}")
+#             continue
+
+#         # Set the channel permissions for the role
+#         overwrite = disnake.PermissionOverwrite(
+#             read_messages=True,
+#             read_message_history=True,
+#             send_messages=True,
+#             use_application_commands=True,
+#             create_forum_threads=True,
+#             create_public_threads=True,
+#             manage_channels=False,
+#             manage_permissions=False,
+#             send_messages_in_threads=True,
+#             add_reactions=True,
+#             attach_files=True,
+#             embed_links=True,
+#             use_external_emojis=True,
+#             external_stickers=True
+#             # Add any other necessary permissions here
+#         )
+#         await channel.set_permissions(role, overwrite=overwrite)
+#         print(f"Permissions set for role {channel_name} in channel {channel_name}")
+
+
+@bot.command()
+async def print_roles(ctx):
+    for role in ctx.guild.roles:
+        print(f"'{role.name}':'{role.id}',")
+@bot.command()
+async def m(ctx):
+    await ctx.send(view=ServerView())
+
+
+
+async def get_all_data(ticker):
+    data_master = await DataMaster.create(ticker)
+    
+    return data_master
+
 
 @bot.slash_command()
-async def allskew(self, inter:disnake.AppCmdInter):
-    """Scans and returns all skews with a depth of 5 or more, or -5 or less."""
+async def list_channels(inter: disnake.AppCmdInter):
+    guild = inter.guild
+    channels = guild.channels
+    channel_dict = {}
+    for channel in channels:
+        channel_dict[channel.name] = channel.id
+    print(channel_dict)
+
+
+async def get_skews(ticker: str):
+    data = await master.tabulate_options()
+    data = data.drop(['Call IV%', 'Put IV%', 'Call Change', 'Put Change'], axis=1)  # Remove Call IV% and Put IV% columns
+    data = data.rename(columns={'Low IV Call Strike': 'Res.', 'Low IV Put Strike': 'Supt.', 'Put OI': 'pOI', 'Call OI': 'cOI'})  # Rename columns
+
+    # Remove "2023-" from the date results
+    data['Exp'] = data['Exp'].str.replace(r'^2023-', '', regex=True)
+    # Reorder columns
+    columns = ['Sym', 'Exp', 'pOI', 'cOI','Supt.', 'Price',  'Res.']
+    data = data[columns]
+    # Create a new metric "depth"
+    data['depth'] = data['Supt.'] - data['Res.']
+
+    # Sort by the new metric
+    data = data.sort_values(by='depth')
+    data['Play'] = data.apply(lambda row: '🔴🔥' if row['Price'] > row['Res.'] and row['Price'] > row['Supt.'] else
+                                       '🟢🔥' if row['Price'] < row['Res.'] and row['Price'] < row['Supt.'] else
+                                       '🔴' if row['Price'] > row['Res.'] else
+                                       '🟢' if row['Price'] < row['Supt.'] else
+                                       '◽', axis=1)
+    data = data.drop(columns=['depth'])
+
+    # Convert DataFrame to JSON
+    json_data = data.to_json(orient='records')
+
+    return json_data
+def paginate_dataframe(data, items_per_page=10):
+    return [data[i:i+items_per_page] for i in range(0, len(data), items_per_page)]
+
+
+@bot.slash_command()
+async def atm_options(inter: disnake.AppCmdInter, ticker:str=commands.Param(autocomplete=ticker_autocomp)):
+    """Returns ATM options to query further in the form of a select menu"""
     await inter.response.defer()
-    async def process_ticker(ticker, skews_outside_range):
-        x = await master.get_near_the_money_single(ticker, 5)
-        try:
-            skew = await master.find_skew(x)
-    
-            if 'Close' not in skew.columns or 'Skew' not in skew.columns:
-                return
+    atm = await master.get_near_the_money_single(ticker)
 
-            skew['depth'] = skew['Strike'] - skew['Price']
-            
-            mask = (skew['depth'] < -7.5) | (skew['depth'] > 7.5)
-            selected_columns = skew[mask][['Sym', 'Price', 'Skew', 'Exp', 'depth', 'IV']]
-            selected_columns['Exp'] = selected_columns['Exp'].str[5:]
-            selected_columns['IV'] = (selected_columns['IV'] * 100).round(5)
-            selected_columns['Direction'] = np.where(selected_columns['Price'] > selected_columns['Skew'], '🔥', '🟢')
-            skews_outside_range.extend(selected_columns.to_dict('records'))
-            
-        except AttributeError:
-            return
+    data = str(atm).split(',')  # Split into list
+
+
+    menus = []  # List to hold all select menus
+    current_menu = AtmOptionsSelect()  # Start the first select menu
+
+    for i, option in enumerate(data):
+        if i != 0 and i % 25 == 0:  # If we've added 25 options
+            menus.append(current_menu)  # Add the current menu to menus
+            current_menu = AtmOptionsSelect()  # Start a new select menu
+
+        # Add option to the current select menu
+        current_menu.add_option(label=option, value=f"{human_readable(option) if option.startswith('O:') else option}_{i}")
+
+    menus.append(current_menu)  # Add the last select menu to menus
+
+    # Add menus to view and send view
+    view = disnake.ui.View()
+    for menu in menus:
+        view.add_item(menu)
+
+    await inter.edit_original_message("Please select an option:", view=view)
+
+        
+@bot.command()
+async def channels(ctx):
+    await ctx.send(view=ChannelsView())
+
+
+
+@bot.slash_command()
+async def atm_trades(inter: disnake.AppCmdInter, ticker: str=commands.Param(autocomplete=ticker_autocomp)):
+    """Returns all trades for the ATM options for a ticker."""
+    await inter.response.defer()
+    atm_options = await master.get_near_the_money_single(ticker, exp_greater_than=today_str, exp_less_than=seven_days_from_now_str)
+    atm_options = str(atm_options).split(',')
+    dfs = []  # A list to store each DataFrame
+    for option in atm_options:
+        trades = await opts.get_all_trades(option)
+        df = pd.DataFrame(trades.data_dict)  # Convert the dictionary to a DataFrame
+        df['OptionSymbol'] = human_readable(option)  # Add a new column for the option symbol
+        dfs.append(df)  # Append the DataFrame to the list
+
+    all_trades_df = pd.concat(dfs, ignore_index=True)  # Concatenate all DataFrames
+    all_trades_df = all_trades_df.sort_values('OptionSymbol', ascending=False)
+    print(all_trades_df)
+    table = tabulate(all_trades_df, keys='headers', tablefmt='fancy')
+    all_trades_df.to_csv('all_trades.csv')
+    embed = disnake.Embed(title=f"All Trades - {ticker}", description=f"```py\nView the spreadsheet above to view all of the ATM option trades for {ticker}.```")
+    await inter.edit_original_message(embed=embed, file=disnake.File("all_trades.csv"))
+
+
+
+
+
+
+#clear read channels = 
+#https://discord.com/api/v9/read-states/ack-bulk
+
+@bot.command()
+async def check(ctx):
+# Assuming sublist1 is a list of tickers
+    tickers = sublist1
+    
+    bulls,bears= await poly.get_upside_downside(tickers)
+    print("Bearish:")
+    bears = tabulate(bears, headers='keys', tablefmt='fancy', showindex=False)
+
+    print("\nBullish:")
+    bulls = tabulate(bulls, headers='keys', tablefmt='fancy', showindex=False)
+        
+    embed = disnake.Embed(title=f"Upside/Downside Results", description=f"**BULLISH**:\n```{bears}```\n**BEARISH:**\n```{bulls}```")
+    embed.set_footer(text=f"Showing upside/downside candidates on the hourly.")
+    await ctx.send(embed=embed)
+
+
+
+@bot.slash_command()
+async def fudstop(inter: disnake.AppCmdInter, ticker: str = commands.Param(autocomplete=ticker_autocomp)):
+    """All In One"""
+    
+    await inter.response.defer()
+    atm_options = await master.get_near_the_money_single(ticker)
+    print(atm_options)
+    _ = await master.get_universal_snapshot(atm_options)
+    # Filter the dataframe for rows where 'C/P' is 'C' (for calls)
+    calls_df = pd.DataFrame(_.skew_df)
+    print(calls_df)
+    calls_df = calls_df[calls_df['C/P'] == 'call'].sort_values('strike', ascending=True)
+    calls_df['exp'] = calls_df['exp'].str.replace(r'^2023-', '', regex=True)
+
+    # Convert the 'IV' column to numeric and percentage
+    calls_df['iv'] = pd.to_numeric(calls_df['iv'], errors='coerce') * 100
+
+    # Create a new 'skew' column filled with ' ' (empty space)
+    calls_df['skew'] = ' '
+
+    # Find the index of the row with the smallest IV for calls and puts
+    lowest_iv_index_calls = calls_df['iv'].idxmin()
+    calls_df['iv'] = calls_df['iv'].round(6)
+
+    # Set the skew value to '<---' for the row with the lowest IV call
+    calls_df.at[lowest_iv_index_calls, 'skew'] = '<---Skew'
+    highest_vol_calls = calls_df['vol'].idxmax()
+    calls_df.at[highest_vol_calls, 'skew'] = '<--TopVol' 
+
+    calls_df.at[highest_vol_calls, 'skew'] = '<--TopOI' 
+
+
+    df_divider = pd.DataFrame([['➖'] * calls_df.shape[1]], columns=calls_df.columns)
+
+    # Filter the dataframe for rows where 'C/P' is 'P' (for puts)
+    puts_df = pd.DataFrame(_.skew_df)
+    puts_df = puts_df[puts_df['C/P'] == 'put'].sort_values('strike', ascending=False)
+    puts_df['skew'] = ' '
+    puts_df['iv'] = pd.to_numeric(puts_df['iv'], errors='coerce') * 100
+    puts_df['exp'] = puts_df['exp'].str.replace(r'^2023-', '', regex=True)
+
+    lowest_iv_index_puts = puts_df['iv'].idxmin()
+    puts_df['iv'] = puts_df['iv'].round(6)
+    puts_df.at[lowest_iv_index_puts, 'skew'] = '<--Skew'
+
+
+    df_divider2 = pd.DataFrame([['➖'] * puts_df.shape[1]], columns=puts_df.columns)
+    puts_df = puts_df.head(15)
+    calls_df = calls_df.head(15)
+
+
+    
+    df_combined = pd.concat([calls_df, df_divider, df_divider2, puts_df], axis=0, ignore_index=True)
+
+    tabulated_df = tabulate(df_combined, headers='keys', tablefmt='fancy', showindex=False)
+
+    logo = await poly.get_polygon_logo(ticker)
+
+    embed = disnake.Embed(title=f"Chain Monitor", description=f"```py\n{tabulated_df}```", color=disnake.Colour.random())
+    
+    embed.set_footer(text=f"View more data by selecting the category you want.", icon_url=logo)
+    view = MainView(ticker,bot)
+
+
+    await inter.edit_original_message(embed=embed, view=view)
+
+
+
+
+
+@bot.slash_command()
+async def chain(inter:disnake.AppCmdInter, ticker:str=commands.Param(autocomplete=ticker_autocomp)):
+    """Returns the ticker chain in real-time"""
+
+    await inter.response.defer()
     counter = 0
-
-    
     while True:
-        counter = counter  + 1
+        counter = counter + 1
+        atm_options = await master.get_near_the_money_single(ticker)
+        print(atm_options)
+        _ = await master.get_universal_snapshot(atm_options)
+        # Filter the dataframe for rows where 'C/P' is 'C' (for calls)
+        calls_df = pd.DataFrame(_.skew_df)
+        calls_df = calls_df[calls_df['C/P'] == 'call'].sort_values('strike', ascending=True)
+        calls_df['exp'] = calls_df['exp'].str.replace(r'^2023-', '', regex=True)
+
+        # Convert the 'IV' column to numeric
+        calls_df['iv'] = pd.to_numeric(calls_df['iv'], errors='coerce')
+
+        # Create a new 'skew' column filled with ' ' (empty space)
+        calls_df['skew'] = ' '
+        
+        ticker_name = calls_df['ticker'].iloc[0]  # Replace with the appropriate column name and dataframe if necessary
+
+        # Find the index of the row with the smallest IV for calls and puts
+        lowest_iv_index_calls = calls_df['iv'].idxmin()
+        
+        # Set the skew value to '<---' for these rows
+        calls_df.at[lowest_iv_index_calls, 'skew'] = '<---🛡️'
+        
+        string = "Expiring"
+        ticker_exp = calls_df['exp'].iloc[0]
+        ticker_price = calls_df['Price'].iloc[0]
+        df_divider = pd.DataFrame([['****'] * calls_df.shape[1]], columns=calls_df.columns)
+        
 
 
-        tickers = list(set(subs))
+        # Filter the dataframe for rows where 'C/P' is 'P' (for puts)
+        puts_df = pd.DataFrame(_.skew_df)
+        puts_df = puts_df[puts_df['C/P'] == 'put'].sort_values('strike', ascending=False)
+        puts_df['skew'] = ' '
+        puts_df['iv'] = pd.to_numeric(puts_df['iv'], errors='coerce')
+        puts_df['exp'] = puts_df['exp'].str.replace(r'^2023-', '', regex=True)
+        
+        lowest_iv_index_puts = puts_df['iv'].idxmin()
+        puts_df.at[lowest_iv_index_puts, 'skew'] = '<---⚔️'
+        df_divider2 = pd.DataFrame([['****'] * puts_df.shape[1]], columns=puts_df.columns)
 
-        tasks = []
-        skews_outside_range = []
+        
+        ticker_row_index = len(calls_df) 
+        ticker_row_index2 =len(calls_df) 
+        
 
-        for ticker in tickers:
-            
-            tasks.append(process_ticker(ticker, skews_outside_range))
 
-        await asyncio.gather(*tasks)
-
-        sorted_skews = sorted(skews_outside_range, key=lambda x: x['depth'])
+        # Your existing code
+        puts_df = puts_df.drop(['name', 'ticker', 'price', 'mid'], axis=1)
+        calls_df = calls_df.drop(['name', 'ticker', 'price', 'mid'], axis=1)
+        df_divider = df_divider.drop(['name', 'ticker', 'price', 'mid'], axis=1)
+        df_divider2 = df_divider2.drop(['name', 'ticker', 'price', 'mid'], axis=1)
+        df_combined = pd.concat([calls_df, df_divider, puts_df], axis=0, ignore_index=True)
+        df_combined.rename(columns={'call': 'c', 'put': 'p'})
+        df_combined.at[ticker_row_index, 'exp'] = ticker_name
+        df_combined.at[ticker_row_index, 'iv'] = ticker_price
+        tabulated_df = tabulate(df_combined, headers='keys', tablefmt='fancy', showindex=False)
     
-        dropdown_tickers = sorted(list({item['Sym'] for item in sorted_skews}), key=str)[:25]
+        
 
-        table = tabulate(sorted_skews, headers='keys', tablefmt='fancy', showindex=False)
+        embed = disnake.Embed(title=f"Chain Monitor", description=f"```py\n{tabulated_df}```")
+        embed.add_field(name=f"Info:", value=f"> **Showing live chain for {ticker}**.\n> **Note: The '<---' is always pointing to the lowest IV strike price.**\n\n> 🛡️ = Support\n> ⚔️ = Resistance")
 
-        embed = disnake.Embed(title=f"{emojis.leftarrow} SKEW-DE-BOP-BOX {emojis.rightarrow}", description=f"```{table}```", color=disnake.Colour.random())
+        await inter.edit_original_message(embed=embed)
+        if counter == 100:
+            break
+
+
+@bot.slash_command()
+async def oi(inter: disnake.AppCmdInter, ticker: str=commands.Param(autocomplete=ticker_autocomp)):
+    """Fetches OI for the nearest 5 options."""
+    await inter.response.defer()
+    counter = 0
+    while True:
+        counter = counter + 1
+        calls,puts, results, data = await master.get_near_the_money_oi(ticker)
+        data = data.drop(['Call IV%', 'Put IV%', 'Call Change', 'Put Change'], axis=1)  # Remove Call IV% and Put IV% columns
+        data = data.rename(columns={'Low IV Call Strike': 'Res.', 'Low IV Put Strike': 'Supt.', 'Put OI': 'pOI', 'Call OI': 'cOI'})  # Rename columns
+
+
+        # Remove "202sym3-" from the date results
+        data['Exp'] = data['Exp'].str.replace(r'^2023-', '', regex=True)
+        # Reorder columns
+        columns = ['Sym', 'Exp', 'pOI', 'cOI','Supt.', 'Price', 'Res.']
+        data = data[columns]
+        # Create a new metric "depth"
+        data['depth'] = data['Supt.'] - data['Res.']
+
+        # Sort by the new metric
+        data = data.sort_values(by='depth')
+        data['Play'] = data.apply(lambda row: '🔴🔥' if row['Price'] > row['Res.'] and row['Price'] > row['Supt.'] else
+                                        '🟢🔥' if row['Price'] < row['Res.'] and row['Price'] < row['Supt.'] else
+                                        '🔴' if row['Price'] > row['Res.'] else
+                                        '🟢' if row['Price'] < row['Supt.'] else
+                                        '◽', axis=1)
+        data = data.drop(columns=['depth'])
+        calls = calls.applymap(lambda x: f'{x:,}' if isinstance(x, (int, float)) else x)
+        puts = puts.applymap(lambda x: f'{x:,}' if isinstance(x, (int, float)) else x)
+        embed = disnake.Embed()
+        call_table = tabulate(calls, headers='keys', tablefmt='fancy', showindex=False)
+
         view = disnake.ui.View()
-        view.add_item(AllSkewSelect(bot, dropdown_tickers))
+        
+        put_table = tabulate(puts, headers='keys', tablefmt='fancy', showindex=False)
+        embed.title=f"OI {ticker} | {results.underlying_price[0]}"
+        embed.description=f"```py\nThink of OI as a shield. High OI for calls = resistance. High OI for puts = Support.```"
+        embed.add_field(name=f"<a:_:1043589872885174292> ATM Calls:", value=f"```py\n{call_table}```", inline=False)
+
+        embed.add_field(name=f"<a:_:1043589715145805934> ATM Puts: ", value=f"```py\n{put_table}```", inline=False)
+        embed.add_field(name=f"Live Option Price:", value=f"> Bid: **${results.bid[0]}**\n> Mid: **${results.midpoint[0]}**\n> Ask: **${results.ask[0]}**")
+        try:
+            embed.add_field(name=f"Live Greeks:", value=f"> Delta: **{round(float(results.delta[0]),2)}**\n> Gamma: **{round(float(results.gamma[0]),2)}**\n> Theta: **{round(float(results.theta[0]),2)}**\n> Vega: **{round(float(results.vega[0]),2)}**")
+        except TypeError:
+            continue
+        embed.add_field(name=f"Live Trades:", value=f"> Last Size: **{results.trade_size[0]}**\n> Price: **{results.trade_size[0]}**\n> Ticker: **${(results.strike[0])}** **{results.contract_type[0]}** **{results.expiry[0]}**")
+        embed.add_field(name=f"Live Skew:", value=f"```py\n{data}```", inline=False)
+        embed.color=disnake.Colour.dark_magenta()
+
+        button = disnake.ui.Button(style=disnake.ButtonStyle.red, emoji=f"🛑")
+        button.callback = lambda interaction: interaction.response.edit_message(f"> **Run Again -->**\n\n> </oi:1131482453857546260>")
+        view.add_item(button)
+        embed.set_footer(text=f"Live {ticker} price: ${results.underlying_price[0]}")
+        
         await inter.edit_original_message(embed=embed, view=view)
+
         if counter == 150:
-            await inter.send(f"> </skew allskew:1124756467724066824>")
-            break          
+            await bot.reload.conjugate()
+
+# @bot.slash_command()
+# async def allskew(inter:disnake.AppCmdInter):
+#     """Scans and returns all skews with a depth of 5 or more, or -5 or less."""
+#     await inter.response.defer()
+#     tasks = []
+
+#     async def process_ticker(ticker, skews_outside_range):
+#         x = await master.get_near_the_money_single(ticker, exp_greater_than=today_str, exp_less_than=seven_days_from_now_str)
+#         if x is None:
+#             return False
+
+#         skew = await master.find_skew(x)
+
+#         if 'Close' not in skew.columns or 'strike' not in skew.columns:
+#             return False
+
+#         skew['depth'] = skew['Strike'] - skew['Price']
+        
+#         mask = (skew['depth'] < -7.5) | (skew['depth'] > 7.5)
+#         selected_columns = skew[mask][['sym', 'Price', 'strike', 'exp', 'depth', 'IV']]
+#         selected_columns['exp'] = selected_columns['Exp'].str[5:]
+#         selected_columns['IV'] = (selected_columns['IV'] * 100).round(5)
+#         selected_columns['Direction'] = np.where(selected_columns['Price'] > selected_columns['Skew'], '🔥', '🟢')
+#         skews_outside_range.extend(selected_columns.to_dict('records'))
+
+
+#     counter = 0
+#     print(counter)
+#     skews_outside_range = []
+#     while True:
+#         counter = counter  + 1
+#         subs = ['PTON', 'MTCH', 'SBUX', 'AZN', 'KHC', 'EBIX', 'ENPH', 'BTAI', 'BEKE', 'APA', 'CMG', 'HPQ', 'NNDM', 'SWN', 'KMI', 'SQQQ', 'SGEN', 'LNC', 'GFI', 'XOP', 'LOW', 'CHWY', 'DRI', 'TEVA', 'AMZN', 'BBY', 'WMB', 'ZM', 'AFRM', 'BYND', 'PARA', 'AMD', 'SAVE', 'UNG', 'FTCH', 'DM', 'C', 'TWLO', 'RUN', 'DNN', 'PBR', 'TSM', 'CIM', 'CCL', 'ORCL', 'DB', 'VFC', 'EEM', 'PDD', 'CPRI', 'GSAT', 'MGM', 'VLO', 'GT', 'MCD', 'MDB', 'AR', 'KO', 'NLY', 'FSLR', 'JWN', 'STNE', 'MRK', 'U', 'FCEL', 'IYR', 'UBS', 'VMW', 'ZIM', 'AMC', 'IQ', 'MRNA', 'EOSE', 'NKE', 'KWEB', 'XLE', 'MA', 'XLI', 'KR', 'DIS', 'FIS', 'IONQ', 'PG', 'NEM', 'TMC', 'AMGN', 'BCS', 'PAA', 'DOCU', 'ISEE', 'JBLU', 'CRWD', 'CMCSA', 'LAZR', 'CLOV', 'TLT', 'MARA', 'FUBO', 'IEF', 'HAL', 'NCLH', 'SPWR', 'CHPT', 'FDX', 'STLA', 'CRBU', 'AUPH', 'IBM', 'BA', 'MRVL', 'LABU', 'MP', 'MMM', 'MSFT', 'MT', 'TBT', 'ETSY', 'XHB', 'COTY', 'APLD', 'LCID', 'CLF', 'SIRI', 'SNDL', 'EWZ', 'NEE', 'RIO', 'TNA', 'JNJ', 'GENI', 'TFC', 'HD', 'KOLD', 'TECK', 'UAL', 'NKLA', 'SLV', 'LULU', 'DD', 'MET', 'GOLD', 'Z', 'BBBYQ', 'CVNA', 'EWJ', 'SABR', 'LVS', 'ASTS', 'SVXY', 'SLB', 'DOW', 'X', 'BBD', 'PLUG', 'COIN', 'ABT', 'ALB', 'UBER', 'GM', 'SCHW', 'XRT', 'RIOT', 'CBL', 'ABNB', 'RIVN', 'PINS', 'BITO', 'RUT', 'DDOG', 'DNA', 'TIP', 'SE', 'TDOC', 'CSCO', 'HL', 'GOEV', 'KRE', 'FUTU', 'XLU', 'SOXL', 'EFA', 'KEY', 'TRUP', 'NDX', 'LQD', 'GDX', 'SLG', 'GME', 'LLY', 'EWU', 'COST', 'QQQ', 'MRO', 'BMBL', 'AAL', 'PEP', 'NIO', 'LUV', 'IAT', 'XLV', 'SNAP', 'BMY', 'BTU', 'XLF', 'RCL', 'DOCN', 'AAP', 'MVIS', 'LRCX', 'UPS', 'INTC', 'HOOD', 'PAAS', 'SMH', 'MPW', 'WBA', 'BRK B', 'SPXS', 'PENN', 'NVDA', 'HUM', 'BITF', 'JPM', 'BP', 'ROKU', 'TSLA', 'JOBY', 'CZR', 'XP', 'LEVI', 'BIDU', 'SPX', 'WFC', 'SPCE', 'PACW', 'SOXS', 'EWG', 'JETS', 'BAC', 'AG', 'DWAC', 'UNH', 'DAL', 'FXI', 'HTZ', 'AGNC', 'PCG', 'CCJ', 'HYG', 'ZS', 'FFIE', 'NYCB', 'GILD', 'INVZ', 'MANU', 'MS', 'LEN', 'BTG', 'SHOP', 'CVX', 'IWM', 'DIA', 'XOM', 'COF', 'UUP', 'RTX', 'RIG', 'GS', 'AEM', 'BBIO', 'OPEN', 'COP', 'IEI', 'JMIA', 'TZA', 'USO', 'UVXY', 'VOD', 'ZION', 'WBD', 'ACB', 'KGC', 'OSTK', 'MELI', 'GE', 'BUD', 'CLSK', 'SBSW', 'EPD', 'MOS', 'SHEL', 'SU', 'MSOS', 'AI', 'XLP', 'TXN', 'XLK', 'VBIV', 'UVIX', 'ONON', 'SMCI', 'ON', 'BABA', 'ITB', 'MULN', 'LUMN', 'T', 'DVN', 'PSNY', 'CVS', 'GLD', 'ATVI', 'SPXU', 'TMUS', 'VXX', 'DASH', 'ABBV', 'CRM', 'PANW', 'DUK', 'ARKK', 'BOIL', 'AMAT', 'TTD', 'ABR', 'PFE', 'OXY', 'WMT', 'OKTA', 'RBLX', 'MU', 'ALLY', 'GOOGL', 'SOUN', 'UPST', 'QS', 'AVGO', 'XSP', 'GNRC', 'SQ', 'MQ', 'LYFT', 'AXP', 'HZNP', 'PLTR', 'WYNN', 'NFLX', 'XBI', 'QCOM', 'AA', 'F', 'NU', 'CARR', 'MSTR', 'TLRY', 'SPY', 'HBI', 'SNOW', 'NVAX', 'AAPL', 'JD', 'EQT', 'W', 'BX', 'FNGS', 'SOFI', 'SIMO', 'VIX', 'CGC', 'PYPL', 'XPEV', 'XLY', 'PATH', 'PACB', 'VZ', 'MMAT', 'DISH', 'CROX', 'WDC', 'TMF', 'EBAY', 'MO', 'CPNG', 'LI', 'ENVX', 'META', 'NOK', 'BVN', 'ETRN', 'V', 'MDT', 'TSLL', 'FCX', 'TSN', 'VALE', 'M', 'TELL', 'NET', 'GOOG', 'BB', 'USB', 'ET', 'BILI', 'HUT', 'TQQQ', 'FSR', 'DKNG', 'TGT', 'CAT', 'ADBE']
+
+#         tickers = subs
+
+
+#         # Now get option data concurrently
+#         option_data_tasks = [
+#             poly_options.get_option_data(ticker, await process_ticker(ticker, skews_outside_range)) for ticker in tickers
+#         ]
+#         results = await asyncio.gather(*option_data_tasks)
+#         print(results)
+
+#         # Filter out None results and add valid results to data_list
+#         data_list = [result for result in results if result is not None]
+#         data_list = sorted(data_list, key=lambda x: x[6], reverse=True)
+
+#         # Create a new list that only includes the parts you want to display
+#         display_data = [row[:7] for row in data_list]
+
+#         # Now, display_data contains the data you want to display for all tickers.
+#         # Format it into a table and send it in discord chat.
+#         table = tabulate(display_data, headers=['Symbol', 'Skew', ' ', 'Price', 'Expiry', 'IV', 'Vol','Skew Metric'], tablefmt='fancy')
+
+#         embed = disnake.Embed(
+#             title=f"All - Skew",
+#             description=f"```\n" + table + "\n```",
+#             color=disnake.Colour.random()
+#         )
+#         embed.set_footer(text=f"{counter} | Data Provided by Polygon.io | Implemented by FUDSTOP")
+#         await inter.edit_original_message(embed=embed)  # Send the table in a code block
+
+#         if counter == 100:
+#             await inter.send(f"> **Click to Run:**\n> </allskew:1121980575276879983>")
+#             break
+
+from cfg import konviction
+@bot.slash_command()
+async def full_skew(inter: disnake.AppCmdInter, ticker: str = commands.Param(autocomplete=ticker_autocomp)):
+    """View skews for the next 60 days. PC Format with more columns."""
+    MAX_CONCURRENCY = 60
+    await inter.response.defer()
+    ticker = ticker.upper()
+
+    async def fetch_data(session, tickers):
+        async with session.get(f"https://api.polygon.io/v3/snapshot?ticker.any_of={tickers}&apiKey={YOUR_API_KEY}") as response:
+            try:
+                near_money = await response.json(content_type=None)
+                near_money_results = near_money['results']
+                atm_data = UniversalSnapshot(near_money_results)
+                return atm_data.df.sort_values('IV', ascending=True)
+            except Exception as e:
+                print(f"Error processing tickers: {tickers}. Error: {e}")
+                return pd.DataFrame()
+
+    async def process_option_data(grouped_df, session, sem):
+        tasks = []
+        for _, group in grouped_df:
+            group_tickers = group['ticker'].tolist()
+            if not group_tickers:
+                continue
+            tickers_string = ','.join(group_tickers)
+            task = asyncio.create_task(fetch_data(session, tickers_string))
+            tasks.append(task)
+
+        results = []
+        async with sem:
+            for future in asyncio.as_completed(tasks):
+                result = await future
+                results.append(result)
+
+        return results
+
+    async with aiohttp.ClientSession() as session:
+        sem = asyncio.Semaphore(MAX_CONCURRENCY)
+        counter = 0
+        counter = counter + 1
+        price = await master.get_price(ticker)
+        lower_strike = round(price) * 0.97
+        upper_strike = round(price) * 1.03
+        print(f"SPX TICKER: {ticker}: {lower_strike}, {price}, {upper_strike}")
+
+        initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte=2027-12-31&limit=250&apiKey={YOUR_API_KEY}"
+        results = await polygon._request_all_pages(initial_url)
+
+        if results is not None:
+            option_data = UniversalOptionSnapshot(results)
+            calls = option_data.df[option_data.df['C/P'] == 'call']
+            puts = option_data.df[option_data.df['C/P'] == 'put']
+
+            calls_grouped = calls.groupby('exp')
+            puts_grouped = puts.groupby('exp')
+
+            calls_results = await process_option_data(calls_grouped, session, sem)
+            calls_results_df = pd.concat(calls_results)
+            calls_grouped = calls_results_df.groupby('Exp', as_index=False)
+
+            puts_results = await process_option_data(puts_grouped, session, sem)
+            puts_results_df = pd.concat(puts_results)
+            puts_grouped = puts_results_df.groupby('Exp', as_index=False)
+
+            calls_first_rows = calls_grouped.first()
+            puts_first_rows = puts_grouped.first()
+
+            calls_selected_columns_df = calls_first_rows[['Exp', 'IV', 'Skew', 'Price', 'Vol', 'OI']]
+            puts_selected_columns_df = puts_first_rows[['Exp', 'IV', 'Skew', 'Price', 'Vol', 'OI']]
+            calls_selected_columns_df['Exp'] = calls_selected_columns_df['Exp'].apply(lambda x: x[2:])
+            puts_selected_columns_df['Exp'] = puts_selected_columns_df['Exp'].apply(lambda x: x[2:])
+            calls_selected_columns_df['IV'] = (calls_selected_columns_df['IV'] * 100).round(4) if not TypeError else None
+            puts_selected_columns_df['IV'] = (puts_selected_columns_df['IV'] * 100).round(4) if not TypeError else None
+            calls_selected_columns_df = calls_selected_columns_df.reset_index(drop=True)[['Exp', 'IV', 'Skew', 'Price', 'Vol', 'OI']]
+            puts_selected_columns_df = puts_selected_columns_df.reset_index(drop=True)[['Exp', 'IV', 'Skew', 'Price', 'Vol', 'OI']]
+
+            calls_dfs = [calls_selected_columns_df[i:i+10] for i in range(0,len(calls_selected_columns_df),10)]
+            puts_dfs = [puts_selected_columns_df[i:i+10] for i in range(0,len(puts_selected_columns_df),10)]
+            print(calls_selected_columns_df)
+            print(puts_selected_columns_df)
+            call_table = tabulate(calls_selected_columns_df, headers='keys', tablefmt='fancy', showindex=False)
+            put_table = tabulate(puts_selected_columns_df, headers='keys', tablefmt='fancy', showindex=False)
+            embeds = []
+            for call_df, put_df in zip(calls_dfs, puts_dfs):
+                call_table = tabulate(call_df, headers='keys', tablefmt='fancy', showindex=False)
+                put_table = tabulate(put_df, headers='keys', tablefmt='fancy', showindex=False)
+                embed = disnake.Embed(title=f"Skews - {ticker} - Next 30 Days", color=disnake.Colour.random())
+                embed.description = f"**CALLS:**```{call_table}```\n**PUTS:**```{put_table}```"
+                embed.set_footer(text=f"Viewing Skews for {ticker}")
+                embeds.append(embed)
+            
+
+
+            await inter.edit_original_message(view=AlertMenus(embeds), embed=embeds[0])
+
+from sdks.polygon_sdk.list_sets import sublist2
+
+
+
+
 
 @bot.slash_command()
 async def skew_pc(inter: disnake.AppCmdInter, ticker: str = commands.Param(autocomplete=ticker_autocomp)):
@@ -311,11 +864,14 @@ async def skew_pc(inter: disnake.AppCmdInter, ticker: str = commands.Param(autoc
                 upper_strike = round(price) * 1.03
             else:
                 price = await polygon.get_stock_price(ticker)
-                lower_strike = round(price) * 0.85
-                upper_strike = round(price) * 1.15
+                if price is not None:
+                    lower_strike = round(price) * 0.85
+                    upper_strike = round(price) * 1.15
+                else:
+                    price = 0
             print(f"SPX TICKER: {ticker}: {lower_strike}, {price}, {upper_strike}")
 
-            initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte=2023-09-30&limit=250&apiKey={YOUR_API_KEY}"
+            initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte=2027-12-31&limit=250&apiKey={YOUR_API_KEY}"
             results = await polygon._request_all_pages(initial_url)
 
             if results is not None:
@@ -351,194 +907,354 @@ async def skew_pc(inter: disnake.AppCmdInter, ticker: str = commands.Param(autoc
                 put_table = tabulate(puts_selected_columns_df, headers='keys', tablefmt='fancy', showindex=False)
                 embed = disnake.Embed(title=f"Skews - {ticker} - Next 30 Days", description=f"**CALLS:**```{call_table}```\n**PUTS:**```{put_table}```", color=disnake.Colour.random())
                 embed.set_footer(text=f"Viewing Skews for {ticker}")
+            
+                dEmbed = DiscordEmbed(title=f"Skews - {ticker} - Long Outlook", color=hex_colors['yellow'])
+                dEmbed.description = f"**CALLS:**```{call_table}```\n**PUTS:**```{put_table}```"
+                dEmbed.set_timestamp()
+                dEmbed.set_footer(text=f"{ticker} | Implemented by FUDSTOP")
+     
+                print(f"Sent to konviction.")
                 await inter.edit_original_message(embed=embed)
                 if counter == 50:
                     await inter.send("stream ended")
                     break
+def get_date_string(number_of_days) -> str:
+    date = datetime.now() - timedelta(days=number_of_days)
+    return date.strftime('%Y-%m-%d')
+from datetime import datetime, timedelta
+@bot.slash_command()
+async def calls_and_puts(inter: disnake.AppCmdInter, ticker:str=commands.Param(autocomplete=ticker_autocomp)):
+    """Returns the total amount of calls and put OI and Volume for the next 30 days for a ticker"""
+    await inter.response.defer()
+
+    data = await polygon.all_options(ticker=ticker, expiration_date=thirty_days_from_now_str)
+
+    symbols = data.option_symbol
+    put_symbols = []
+    call_symbols = []
+
+    for symbol in symbols:
+        if 'C0' in symbol:
+            call_symbols.append(symbol)
+        elif 'P0' in symbol:
+            put_symbols.append(symbol)
+
+    total_put_volume = 0
+    total_call_volume = 0
+    total_put_oi = 0
+    total_call_oi = 0
+
+    # Getting volumes for call symbols in chunks
+    call_chunks = chunked(call_symbols, 250)
+    for call_chunk in call_chunks:
+        volume_tasks = [poly_options.get_option_volume(symbol) for symbol in call_chunk]
+        oi_tasks = [poly_options.get_option_oi(symbol) for symbol in call_chunk]
+        call_volumes_chunk = await asyncio.gather(*volume_tasks)
+        call_ois_chunk = await asyncio.gather(*oi_tasks)
+        total_call_volume += sum(filter(None, call_volumes_chunk))  # sum up volumes, ignoring None values
+        total_call_oi += sum(filter(None, call_ois_chunk))  # sum up ois, ignoring None values
+
+    # Getting volumes for put symbols in chunks
+    put_chunks = chunked(put_symbols, 250)
+    for put_chunk in put_chunks:
+        volume_tasks = [poly_options.get_option_volume(symbol) for symbol in put_chunk]
+        oi_tasks = [poly_options.get_option_oi(symbol) for symbol in put_chunk]
+        put_volumes_chunk = await asyncio.gather(*volume_tasks)
+        put_ois_chunk = await asyncio.gather(*oi_tasks)
+        total_put_volume += sum(filter(None, put_volumes_chunk))  # sum up volumes, ignoring None values
+        total_put_oi += sum(filter(None, put_ois_chunk))  # sum up ois, ignoring None values
+
+    if total_call_oi > total_put_oi:
+        color = disnake.Colour.dark_green()
+    else:
+        color = disnake.Colour.dark_red()
 
 
+    embed = disnake.Embed(title=f"Calls and Puts - {ticker} - 30 Days Out", description=f"```py\nDisplaying total calls and puts for the next 30 days {ticker}.```", color=color)
+    embed.add_field(name=f"Volume:", value=f"> Calls: **{float(total_call_volume):,}**\n> Puts: **{float(total_put_volume):,}**")
+    embed.add_field(name=f"Open Interest:", value=f"> Calls: **{float(total_call_oi):,}**\n> Puts: **{float(total_put_oi):,}**")
+    embed.set_thumbnail(await polygon.get_polygon_logo(ticker))
+    dEmbed = DiscordEmbed(title=f"Calls and Puts - {ticker} - 30 Days Out", description=f"```py\nDisplaying total calls and puts for the next 30 days {ticker}.```", color=hex_colors['yellow'])
+    dEmbed.add_embed_field(name=f"Volume:", value=f"> Calls: **{float(total_call_volume):,}**\n> Puts: **{float(total_put_volume):,}**")
+    dEmbed.add_embed_field(name=f"Open Interest:", value=f"> Calls: **{float(total_call_oi):,}**\n> Puts: **{float(total_put_oi):,}**")
+    dEmbed.set_thumbnail(await polygon.get_polygon_logo(ticker))
+    dEmbed.set_timestamp()
+    dEmbed.set_footer(text=f"{ticker} | Implemented by FUDSTOP")
+
+    print(f"Sent to konviction.")
+    await inter.edit_original_message(embed=embed)
+
+    print(f"{ticker} CALL VOLUME: {total_call_volume}")
+    print(f"{ticker} PUT VOLUME: {total_put_volume}")
+    print(f"{ticker} CALL OI: {total_call_volume}")
+    print(f"{ticker} PUT OI: {total_put_volume}")
+
+
+class ResponseSelect(disnake.ui.Select):
+    def __init__(self, bot, ticker, options):
+        self.bot = bot
+        self.ticker = ticker
+        super().__init__(
+            placeholder="Select a function",
+            min_values=1,
+            max_values=5,  # allow multiple selections
+            options=options
+        )
+
+    async def callback(self, interaction: disnake.Interaction):
+        selected_options = self.values
+        results = []
+        conversation_id = str(interaction.user.id)
+        history = self.bot.conversation_history.get(conversation_id, [])
+
+        for option in selected_options:
+            function = self.bot.function_map.get(option)
+            
+            if function:
+                # Perform the function call
+                function_call = await function(self.ticker)
+                
+                # Process the function response
+                if isinstance(function_call, pd.DataFrame):
+                    function_response = function_call.to_string()
+                elif isinstance(function_call, dict) and "function_response" in function_call:
+                    function_response = function_call["function_response"]
+                else:
+                    function_response = str(function_call)
+                
+                results.append(function_response)
+
+        response = "\n".join(results)
+        
+        # Add the DataFrame string to the prompt for the function call
+        prompt = f"{self.ticker} {response}"
+        
+        # Call the function
+        view = FuncCall(prompt, self.bot)
+
+        # Send the prompt to GPT-3.5-turbo
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo-16k",
+            messages=history + [{"role": "user", "content": prompt}],
+            function_call="auto",
+        )
+
+        # Process the response from GPT-3.5-turbo and update the conversation history
+        message = completion.choices[0].message
+        history.append(message)
+        self.bot.conversation_history[conversation_id] = history
+
+        if "function_response" in message:
+            # Function response received, send it to the user
+            embed = disnake.Embed(title="Function Response", description=message["function_response"])
+            await interaction.response.send_message(embed=embed)
+        else:
+            # No function response, continue the conversation as usual
+            embed = disnake.Embed(title="GPT4", description=message["content"])
+            await interaction.response.edit_message(embed=embed)
+
+
+
+
+@bot.command()
+async def gpt4(ctx: commands.Context, prompt: str):
+    """Talk with GPT4 using CHATGPT. Call the command once and then reply as normal."""
+    messages = [
+        {"role": "user", "content": f"Use all of the data and come up with a solution. Pay close attention to the option IV versus the current price. You have the nearest option symbols to the money along with all corresponding data to make these determinations."}
+    ]
+    conversation_id = str(ctx.author.id)
+
+    # Store the initial prompt in the conversation history
+    conversation_history = {
+        conversation_id: [{"role": "user", "content": prompt}]
+    }
+
+    # Create a list of options for the response dropdown
+    response_options = [
+        disnake.SelectOption(label=f"Response {i+1}", value=str(i+1), description=f"#snippet of response {i+1}", emoji=f"<a:_:1043272438378672248>")
+        for i in range(3)  # Modify this number to add more response options if needed
+    ]
+
+    # Create the dropdown for response selection
+    view = disnake.ui.View()
+    view.add_item(ResponseSelect(prompt, bot, options=response_options))
+
+    # Send the initial response and the response selection dropdown to the user
+    initial_response = await bot.get_gpt3_response(messages)
+    embed = disnake.Embed(title="Chat with GPT4", description=f"> {initial_response}")
+    await ctx.send(embed=embed, view=view)
+
+
+
+@bot.command()
+async def all(ctx: commands.Context, ticker):
+    datamaster = DataMaster(ticker=ticker)
+    logo = await polygon.get_polygon_logo(ticker)
+    data = await datamaster.create(ticker)
+
+    data_chunks = [data.df.transpose()[i:i+20] for i in range(0, len(data.df.transpose()), 20)]
+    
+    for chunk in data_chunks:
+
+        embed = disnake.Embed(title=f"All", description=f"```{chunk}```")
+        embed.set_thumbnail(logo)
+        await ctx.send(embed=embed)
+
+    
+# @bot.command()
+# async def gpt4(ctx: commands.Context, prompt: str):
+#     """Talk with CHATGPT. Call the command once and then reply as normal."""
+#     messages = [
+#         {"role": "user", "content": f"Use all of the data and come up with a solution. Pay close attention to the option IV versus the current price. You have the nearest option symbols to the money along with all corresponding data to make these determinations."}
+#     ]
+#     conversation_history = {}
+#     conversation_id = str(ctx.author.id)
+#     prompt = prompt
+#     # Retrieve the conversation history from the dictionary
+#     history = conversation_history.get(conversation_id, [])
+
+#     while True:
+#         # Add the new prompt to the conversation history
+#         history.append({"role": "user", "content": prompt})
+
+#         # Create the messages list including system message and conversation history
+#         messages = [
+#             {"role": "system", "content": "Hello! You have two main purposes: Purpose 1: You are an all helpful bot! Purpose 2: Whenever the phrase 'start project!' is said by the user - you must kick in to project mode and follow the subsequent instructions. You will be given one line of code at a time. You will listen to the user, and help them with their project. DO NOT OVER-EXPLAIN THINGS. They do not need you to explain anything. In fact - only explain something if specifically asked. You are a master python coder. You're working exclusively with stock market data - and have access to every data metric and the user who you are helping has a deep understanding of the financial market data. Provide the most efficient code possible for the purpose of a real-time discord-integrated market system."},
+#             {"role": "assistant", "content": "Absolutely! I'll be glad to help, and will listen for the phrase 'start project!' at which point I will follow all instructions given."},
+#         ]
+#         messages.extend(history)
+
+#         # Generate a response based on the full conversation history
+#         completion = openai.ChatCompletion.create(
+#             model="gpt-3.5-turbo-16k",
+#             messages=messages
+#         )
+
+#         message_content = completion.choices[0].message.content
+
+#         # Store the updated conversation history in the dictionary
+#         conversation_history[conversation_id] = history
+
+#         embed = disnake.Embed(title="Chat with GPT4", description=f"> {message_content}")
+
+
+#         # Send the response to the user
+#         await ctx.send(embed=embed)
+#         print(message_content)
+#         # Check if the user wants to stop the conversation
+#         if prompt.lower() == "stop":
+#             await ctx.send("Conversation ended.")
+#             break
+
+#         # Wait for the user's next message
+#         def check(m):
+#             return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+
+#         try:
+#             user_message = await bot.wait_for("message", check=check, timeout=60)
+#         except asyncio.TimeoutError:
+#             await ctx.send("Conversation timed out. Please start a new conversation.")
+#             break
+
+#         prompt = user_message.content
+
+
+async def balance_sheet_dataframe(ticker):
+    
+    balance_sheet= await webull.get_balancesheet(ticker)
+    balance_sheet_df = balance_sheet.df
+    print(balance_sheet_df)
+
+    return balance_sheet_df
+
+
+async def financial_statement_dataframe(ticker):
+
+    financial_statement = await webull.get_financial_statement(ticker)
+
+    financial_statement_df = financial_statement.df
+    return financial_statement_df
+
+
+conversation_history = {}  # Create an empty dictionary to store conversation history
+from cfg import YOUR_OPENAI_KEY
+
+
+@bot.command()
+async def data(ctx: commands.Context):
+    _data = await poly.get_aggregates(ticker="SPY",multiplier=1,timespan="hour", from_date="2023-01-01", to_date="2023-07-25",limit=1000)
+    df=_data.df.transpose().head(10)
+    table = tabulate(df, headers='keys', tablefmt='fancy', showindex=False)
+    await ctx.send(f"```{df}```")
 
 
 
 @bot.slash_command()
+async def function_call(inter: disnake.MessageCommandInteraction, ticker: str = None):
+    await inter.response.defer()
+    openai.api_key = YOUR_OPENAI_KEY  # replace with your OpenAI key
+    conversation_history = {}
+    conversation_id = str(inter.author.id)
 
-async def get_live_trades(inter:disnake.AppCmdInter, subscription: str = commands.Param(choices=["trades", "quotes", "aggregates"])):
-    if subscription == "trades":
-        
-        await stock_market.run_stream(subscriptions="T.*", inter=inter)
-        await inter.edit_original_message(WebSocketMessage)
-
-    elif subscription == "quotes":
-        await stock_market.run_stream(subscriptions="Q.*", inter=inter)
- 
-
-
-
-
-    """Stream live trades directly from the polygon cluster."""
-
-    await inter.edit_original_message(WebSocketMessage)
-    
-
-
-functions = [
-    {
-        "name": "analyze_data",
-        "description": "Analyze the given data to determine the likely direction.",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "ticker": {
-                    "type": "string",
-                    "description": "The ticker to query.",
-                },
-            },
-            "required": ["ticker"],
-        },
-        "returns": {
-            "type": "object",
-                "strike_price": {"type": "string", "description": "The strike price of the option symbol"},
-                "expiration": {"type": "string", "description": "The expiration date of the option symbol."},
-                "implied_volatility": {"type": "string", "description": "The implied volatility of the option symbol"},
-                "theta": {"type": "string", "description": "The theta value"},
-                "gamma": {"type": "string", "description": "The gamma value"},
-                "delta": {"type": "string", "description": "The delta value"},
-                "vega": {"type": "string", "description": "The vega value"},
-                "change_percent": {"type": "string", "description": "The contract's performance."},
-                "ask": {"type": "number", "description": "The ask price"},
-                "bid": {"type": "number", "description": "The bid price"},
-                "ask_size": {"type": "number", "description": "The size of the ask"},
-                "bid_size": {"type": "number", "description": "The size of the bid"},
-                "volume": {"type": "number", "description": "The volume of the option"},
-                "open_interest": {"type": "number", "description": "The open interest for the option"},
-                "Underlying Data": {
-                    "type": "object",
-                    "properties": {
-                        "buyVolume": {"type": "number", "description": "The buy volume"},
-                        "sellVolume": {"type": "number", "description": "The sell volume"},
-                        "neutralVolume": {"type": "number", "description": "The neutral volume"},
-                        "avgPrice": {"type": "number", "description": "The average price"},
-                        "Stock Price": {"type": "number", "description": "The stock price"},
-                        "Fifty Two Week High": {"type": "number", "description": "The fifty-two week high"},
-                        "Fifty Two Week Low": {"type": "number", "description": "The fifty-two week low"},
-                        "Vibration Ratio": {"type": "number", "description": "The vibration ratio"},
-                        "One Hour RSI": {"type": "number", "description": "The one-hour RSI"}
-                    }
-                }
-            },
-        },
-
-]
-
-
-
-conversation_history = {}  # Create an empty dictionary to store conversation history
-
-@bot.command()
-async def gpt4(ctx: commands.Context, ticker=str):
-    """Converse with GPT4"""
-    conversation_id = str(ctx.author.id)
-
+    # Retrieve the conversation history from the dictionary
     history = conversation_history.get(conversation_id, [])
 
-    while True:
-        history.append({"role": "user", "content": f"analyze {ticker}"})
+    # Initialize GPT-4
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo-16k",
+        messages=history + [{"role": "user", "content": ticker}],
+        functions=fc_stock_functions,
+        function_call="auto",
+    )
+    message = response["choices"][0]["message"]
 
-        completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-0613",
-            messages=[{"role": "user", "content": ticker}],  # Pass the entire conversation history
-            functions=functions,
-            function_call="auto",
+    # Update the conversation history
+    history.append(message)
+    conversation_history[conversation_id] = history
+
+    if ticker and message.get("function_call"):
+        # Call the function
+        view = FuncCall(ticker, bot)
+
+
+        # Send model the info on the function call and function response
+        second_response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo-16k", 
+            max_tokens=12000,
+            messages=[
+                {"role": "system", "content": f"Waiting for functions to be called."},
+
+            
+                    
+                
+            ],
         )
+        second_message = second_response.choices[0].message['content']
+        message_chunks = [second_message[i:i + 3000] for i in range(0, len(second_message), 3000)]
 
-        message_content = completion["choices"][0]["message"]
-        messages = [{'role': 'system', 'content': 'help answer questions to the best of your ability.'}]
-        conversation_history[conversation_id] = history
+        for chunk in message_chunks:
+            embed = disnake.Embed(title=f"GPT-4 FUNCTION CALL", description=f"```py\n{chunk}```")
+            await inter.edit_original_message(embed=embed, view=view)
+    
 
-        # Check if GPT wanted to call a function
-        if message_content.get("function_call"):
-            # Call the function
-            available_functions = {
-                "analyze_data": await analyze_data(ticker),
-            }
-            function_name = message_content["function_call"]["name"]
-            function_to_call = available_functions[function_name]
-            function_args = message_content["function_call"]["arguments"]
-            function_response = function_to_call(**function_args)
-
-            # Convert function_response to JSON serializable format
-            function_response = json.dumps(function_response)
-
-            # Send the info on the function call and function response to GPT
-            messages.append(message_content)  # extend conversation with assistant's reply
-            messages.append(
-                {
-                    "role": "function",
-                    "name": function_name,
-                    "content": function_response,  # use the serialized JSON version here
-                }
-            )
-
-        # Convert message_content to JSON serializable format
-        message_content = json.dumps(message_content)
-
-        embed = disnake.Embed(title="Chat with GPT4", description=f"```py\n{message_content}```")
-        await ctx.send(embed=embed)
-
-
-        def check(m):
-            return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
+        def check2(m):
+            return m.author.id == inter.author.id and m.channel.id == inter.channel.id
 
         try:
-            user_message = await bot.wait_for("message", check=check, timeout=60)
+            user_message = await bot.wait_for("message", check=check2, timeout=60)
         except asyncio.TimeoutError:
-            await ctx.send("Conversation timed out. Please start a new conversation.")
-            break
+            await inter.channel.send("Conversation timed out. Please start a new conversation.")
+            return
+        prompt = user_message.content
+    else:
+        message_content = response.choices[0].message.content
+        embed = disnake.Embed(title=f"GPT4", description=f"```py\n{message_content}```")
+        await inter.edit_original_message(embed=embed, view=view)
+
 
 import requests
-from testyo import Response
-@bot.command()
-async def parse(ctx: commands.Context, api_endpoint):
-    """Parse a URL"""
-    if not api_endpoint:
-        await ctx.send(f"Please provide a data URL.")
-        return
 
-    try:
-        response = requests.get(api_endpoint)
-        response.raise_for_status()
-    except requests.exceptions.HTTPError as err:
-        await ctx.send(f"HTTP error occurred: {err}")
-        return
-    except requests.exceptions.RequestException as err:
-        await ctx.send(f"Error occurred: {err}")
-        return
 
-    try:
-        data = response.json()
-    except ValueError:
-        await ctx.send("No JSON object could be decoded from the response.")
-        return
-
-    response_obj = Response.parse(data)
-
-    # Create an empty list to store the lines of the response
-    response_lines = []
-    response_obj.traverse(response_lines.append)
-
-    # Concatenate the lines with newline characters to form a single string
-    response_str = '\n'.join(response_lines)
-
-    # Send the response in chunks of 2000 characters to avoid hitting the Discord character limit
-    for i in range(0, len(response_str), 2000):
-        chunk = response_str[i:i+2000]
-        # If the chunk is cut off mid-line, move the last line to the next chunk
-        if i + 2000 < len(response_str) and response_str[i+2000] != '\n':
-            last_newline = chunk.rfind('\n')
-            next_chunk = chunk[last_newline+1:]
-            chunk = chunk[:last_newline]
-            response_str = response_str[:i+2000] + next_chunk + response_str[i+2000:]
-            await ctx.send(f"```{chunk}```")
 
 @bot.command()
 async def show_chain(ctx: commands.Context, ticker):
@@ -552,7 +1268,7 @@ async def show_chain(ctx: commands.Context, ticker):
 
 
 @bot.slash_command()
-async def atm_trades(inter:disnake.AppCmdInter, ticker:str=commands.Param(autocomplete=ticker_autocomp)):
+async def at_the_money_trades(inter:disnake.AppCmdInter, ticker:str=commands.Param(autocomplete=ticker_autocomp)):
     """Get the atm TRADES for a ticker"""
     await inter.response.defer()
 
@@ -724,114 +1440,150 @@ async def get_option_calls(ticker):
 # Global dictionary to store user's tickers
 
 
+@bot.slash_command()
+async def get_gap_chart(inter: disnake.AppCmdInter, ticker:str,multiplier:str,timespan:str=commands.Param(choices=['minute','hour','day','week','month','quarter','year']),):
+    await inter.response.defer()
+    aggs = await mastery.get_aggs(ticker, multiplier, timespan, thirty_days_ago_str, today_str)
+    if aggs:  
+        gaps = await mastery.find_gaps(aggs)
+        # Assuming `gaps` is your list of gaps
+        table_str = await mastery.gaps_to_table(gaps)
+
+        # Now you can print the table or use it however you want
+        print(table_str)
+        await mastery.chart_gaps(aggs, gaps)
+        file = File('chart.png', filename='chart.png')
+        embed = Embed(title=f"Test Chart - Gaps", description=f"This chart is showing you the gaps from {ticker} on the {timespan} timeframe.\n\n```{table_str}```", color=0xFFD700)
+        embed.set_image(url="attachment://chart.png")
+        await inter.send(embed=embed, file=file)
+
+    else:
+        await inter.edit_original_message("No data returned from get_aggs().")
 
 
 
 @bot.slash_command()
-async def all_spx(ctx: disnake.AppCommandInter):
-    await ctx.response.defer(with_message=True)
-    ticker = "SPX"
+async def allskew(inter:disnake.AppCmdInter):
+    """Scans and returns all skews with a depth of 5 or more, or -5 or less."""
+    await inter.response.defer()
+    async def process_ticker(ticker, skews_outside_range):
+        x = await master.get_near_the_money_single(ticker, exp_greater_than=today_str, exp_less_than=seven_days_from_now_str)
+        try:
+            skew = await master.find_skew(x)
+    
+            if 'Close' not in skew.columns or 'Skew' not in skew.columns:
+                print('Close or Skew not found in columns')
+                return
 
-    def chunk_list(input_list, chunk_size):
-        """Yield successive n-sized chunks from a list."""
-        for i in range(0, len(input_list), chunk_size):
-            yield input_list[i:i + chunk_size]
-    if ticker.startswith("SPX"): #check if the ticker is SPX - must be queried differently
-        price = await polygon.get_index_price(ticker)
-        lower_strike = round(price) * 0.98
-        upper_strike = round(price) * 1.02
-        print(f"SPX TICKER: {ticker}: {lower_strike}, {price}, {upper_strike}")
-        
-        async with aiohttp.ClientSession() as session:
-            initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte=2023-06-27&expiration_date.lte={two_years_from_now_str}&limit=250&apiKey={YOUR_API_KEY}"
-            async with session.get(initial_url) as resp:
-                results = await polygon._request_all_pages(initial_url)
-                if results is not None:
-                    option_data = UniversalOptionSnapshot(results)
+            skew['depth'] = skew['Strike'] - skew['Price']
+            
+            mask = (skew['depth'] < -5.0) | (skew['depth'] > 5.0)
+            selected_columns = skew[mask][['Sym', 'Price', 'Skew', 'Exp', 'depth', 'IV', 'OI']]
+            selected_columns['Exp'] = selected_columns['Exp'].str[5:]
+            selected_columns['IV'] = (selected_columns['IV'] * 100).round(5)
+            selected_columns['Direction'] = np.where(selected_columns['Price'] > selected_columns['Skew'], '🔥', '🟢')
+            skews_outside_range.extend(selected_columns.to_dict('records'))
+            
+        except AttributeError:
+            return
+    counter = 0
 
-
-                    
-                    # Assuming option_data.ticker gives a list of tickers
-      
-                    symbols_list = option_data.ticker
-                    chunks = list(chunk_list(symbols_list, 250))
-
-                    # Create a dictionary to hold results grouped by expiration date
-        
-                    for chunk in chunks:
-                        # Use chunk for API request
-                        # Each chunk will contain max 250 items
-                        chunk = str(chunk).replace("'","").replace(']','').replace('[','').replace(' ','')
-                        initial_url = f"https://api.polygon.io/v3/snapshot?ticker.any_of={chunk}&apiKey={YOUR_API_KEY}"
-                        async with session.get(initial_url):
-
-                            near_money = await polygon._request_all_pages(initial_url)
-                            near_money_results = near_money['results']
-                            print(near_money_results)
-                            atm_data = UniversalSnapshot(near_money_results)
-                            # Append DataFrame to the list
-                            atm_data.df.to_csv('atm_spx.csv')
-                            await ctx.send(file=disnake.File('atm_spx.csv'))  # Print the DataFrame for debugging
-        
+    
+    while True:
+        counter = counter  + 1
 
 
+        tickers = list(set(sublist1))
+
+        tasks = []
+        skews_outside_range = []
+
+        for ticker in tickers:
+            
+            tasks.append(process_ticker(ticker, skews_outside_range))
+
+        await asyncio.gather(*tasks)
+
+        sorted_skews = sorted(skews_outside_range, key=lambda x: x['depth'])
+    
+  
+        table = tabulate(sorted_skews, headers='keys', tablefmt='fancy', showindex=False)
+        df = pd.DataFrame(sorted_skews)
+        df.to_csv('sorted_skews.csv')
+
+        embed = disnake.Embed(title=f"{emojis.leftarrow} SKEW-DE-BOP-BOX {emojis.rightarrow}", description=f"```{table}```", color=disnake.Colour.random())
+        view = disnake.ui.View()
+        await inter.edit_original_message(embed=embed, view=view)
+        if counter == 150:
+            await inter.send(f"> </skew allskew:1124756467724066824>")
+            break          
 
 
-# @bot.slash_command(name="allskew")
-# async def allskew(inter: disnake.AppCmdInter):
-#     """Scan multiple skews in real time"""
-#     tickers = [
-#         'COIN', 'WFC', 'GM', 'PYPL', 'CVS', 'CVX', 'BKNG', 'NVDA', 'AMD', 'MSFT',
-#         'META', 'U', 'W', 'ADBE', 'MSTR', 'LLY', 'BLK', 'MCD', 'WMT', 'TGT', 'SPY',
-#         'F', 'SHOP', 'SNAP', 'AMC', 'GME', 'BABA', 'BIDU', 'JD', 'NFLX', 'AMZN',
-#         'BAC', 'KRE', 'EWZ', 'M', 'SO', 'KO', 'PEP', 'CSCO', 'COST', 'SBUX', 'BBY',
-#         'SQQQ', 'QQQ', 'TQQQ', 'EEM', 'CHZ', 'HYG', 'TSLA', 'AMD', 'QCOM', 'INTC'
-#     ]
+@bot.command()
+async def company(ctx: commands.Context, ticker:str):
+    """Provides comapny information"""
+    await ctx.send(f"> One Moment while I look-up the data...", delete_after=3)
+    get = await DataAnalyzer.company_data(ticker)
+    # Here's the correction. We instantiate a DataAnalyzer instance first
+    analyzer = DataAnalyzer(get)
+    response = analyzer.analyze(f"Analyze this company information: {get}")
+    embed = disnake.Embed(title=f"Company Information - {ticker}", description=f"```py\n{response}```", color=disnake.Colour.dark_blue())
+    embed.set_thumbnail(await polygon.get_polygon_logo(ticker))
+    embed.set_footer(icon_url=await polygon.get_polygon_logo(ticker),text=f"{ticker} - | Data Provided by Polygon.io")
+    await ctx.send(embed=embed)
 
-#     await inter.response.defer()
 
-#     counter = 0
-#     while True:
-#         counter += 1
+@bot.command()
+async def anal(ctx: commands.Context, ticker:str):
+    """Provides comapny information"""
+    get = await DataAnalyzer.volume_analysis(ticker)
+    # Here's the correction. We instantiate a DataAnalyzer instance first
+    analyzer = DataAnalyzer(get)
+    response = analyzer.analyze(f"Analyze today's volume analysis for {ticker}: {get}")
+    embed = disnake.Embed(title=f"Volume Analysis - {ticker}", description=f"```py\n{response}```", color=disnake.Colour.dark_gold())
+    embed.set_thumbnail(await polygon.get_polygon_logo(ticker))
+    embed.set_footer(icon_url=await polygon.get_polygon_logo(ticker),text=f"{ticker} - | Data Provided by Polygon.io")
+    await ctx.send(embed=embed)
 
-#         # Get prices for all tickers concurrently
-#         price_tasks = [polygon.get_stock_price(ticker) for ticker in tickers]
-#         prices = await asyncio.gather(*price_tasks)
-#         ticker_prices = dict(zip(tickers, prices))  # Assuming no None prices
-#         print(ticker_prices)
 
-#         # Now get option data concurrently
-#         option_data_tasks = [
-#             poly_options.get_option_data(ticker, ticker_prices[ticker]) for ticker in tickers
-#         ]
-#         results = await asyncio.gather(*option_data_tasks)
-#         print(results)
+@bot.command()
+async def rsi(ctx: commands.Context, ticker:str):
+    """Provides an RSI snapshot across all timeframes."""
 
-#         # Filter out None results and add valid results to data_list
-#         data_list = [result for result in results if result is not None]
-#         data_list = sorted(data_list, key=lambda x: x[6], reverse=True)
-
-#         # Create a new list that only includes the parts you want to display
-#         display_data = [row[:7] for row in data_list]
-
-#         # Now, display_data contains the data you want to display for all tickers.
-#         # Format it into a table and send it in discord chat.
-#         table = tabulate(display_data, headers=['Symbol', 'Skew', ' ', 'Price', 'Expiry', 'IV', 'Vol','Skew Metric'], tablefmt='fancy')
-
-#         embed = disnake.Embed(
-#             title=f"All - Skew",
-#             description=f"```\n" + table + "\n```",
-#             color=disnake.Colour.random()
-#         )
-#         embed.set_footer(text=f"{counter} | Data Provided by Polygon.io | Implemented by FUDSTOP")
-#         await inter.edit_original_message(embed=embed)  # Send the table in a code block
-
-#         if counter == 100:
-#             await inter.send(f"> **Click to Run:**\n> </allskew:1121980575276879983>")
-#             break
+    get = await DataAnalyzer.rsi_snapshot(ticker)
+    # Here's the correction. We instantiate a DataAnalyzer instance first
+    analyzer = DataAnalyzer(get)
+    response = analyzer.analyze(f"Analyze the RSI over all timespans for {ticker}. Provide cool emojis and insights for what the data portrays. An rsi of 30  or below = bullish. 70+ = bearish. The closer to 30 = more bullish .. the closer to 70 = more bearish.. 40-60 is neutral: {get}")
+    embed = disnake.Embed(title=f"RSI Snapshot - {ticker}", description=f"```py\n{response}```", color=disnake.Colour.dark_gold())
+    embed.set_thumbnail(await polygon.get_polygon_logo(ticker))
+    embed.set_footer(icon_url=await polygon.get_polygon_logo(ticker),text=f"{ticker} - | Data Provided by Polygon.io")
+    await ctx.send(embed=embed)
 
 
 
+
+
+@bot.command()
+async def summary(ctx: commands.Context, ticker:str):
+    """Provides comapny information"""
+    get = await DataAnalyzer.rsi_snapshot(ticker)
+    GET = await DataAnalyzer.macd_snapshot(ticker)
+    vol = await DataAnalyzer.volume_analysis(ticker)
+
+    cost_dist = await webull.cost_distribution(ticker)
+
+    
+
+    # Here's the correction. We instantiate a DataAnalyzer instance first
+    analyzer = DataAnalyzer(get)
+    response = analyzer.analyze(f"Analyze the RSI over all timespans for {ticker}. Provide cool emojis and insights for what the data portrays. An rsi of 30  or below = bullish. 70+ = bearish. The closer to 30 = more bullish .. the closer to 70 = more bearish.. 40-60 is neutral: {get}. Also - check the results of the MACD data for each timespan - provide emojis as well: {GET}\nAlso - give a brief summary of the volume analysis data: {vol}. Also - check the cost distribution and give some insight.Make summaries VERY BRIEF not to exceed a total of 4096 characters.")
+    response2 = analyzer.analyze(f'Heres the cost distribution data: This is a list of the percent of players profiting: {cost_dist.closeProfitRatio[:10]}. Scan it over and be very brief with the output.' )
+
+    embed = disnake.Embed(title=f"RSI Snapshot - {ticker}", description=f"```py\n{response}```", color=disnake.Colour.dark_gold())
+    embed.add_field(name=f"Cost Distribution:", value=f"```{response2}```")
+    embed.set_thumbnail(await polygon.get_polygon_logo(ticker))
+    embed.set_footer(icon_url=await polygon.get_polygon_logo(ticker),text=f"{ticker} - | Data Provided by Polygon.io")
+    await ctx.send(embed=embed)
 
 class ServerMenu(disnake.ui.ChannelSelect):
     def __init__(self):
@@ -894,13 +1646,26 @@ class ThreadMenu(disnake.ui.ChannelSelect):
             await interaction.send("No channel was selected!", ephemeral=False)
 
 
+
+@bot.slash_command()
+async def iv(inter:disnake.AppCmdInter):
+    await inter.response.defer()
+    while True:
+        url=f"https://api.polygon.io/v3/snapshot?ticker.any_of=O:SPY250321C00380000&apiKey={YOUR_API_KEY}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                r = await resp.json()
+                results = r['results']
+                iv = results[0]['implied_volatility']
+                print(iv)
+                await inter.edit_original_message(f"> IV: **{iv}**")
 @bot.slash_command()
 async def data(inter:disnake.AppCmdInter, ticker: str):
     """Launch the terminal."""
     ticker = ticker.upper()
     logo = await polygon.get_polygon_logo(ticker)
     view = MainView(bot, ticker)
-    totals = await fudstop.option_market_totals()
+    totals = await fudstop_.option_market_totals()
 
     f2high=float(totals.fiftytwohigh)
     f2low=float(totals.fiftytwolow)
@@ -917,6 +1682,38 @@ async def data(inter:disnake.AppCmdInter, ticker: str):
 
 
     await inter.send(view=view, embed=embed)
+
+
+@bot.command()
+async def top_oi(ctx: commands.Context, ticker:str=commands.Param(autocomplete=ticker_autocomp)):
+    """Fetches the top open interest and volume across all expirations."""
+    data = await poly_options.get_option_chain_all(ticker)
+    dataframe = data.df
+    list_of_dfs = await poly_options.organize_by_expiration(dataframe)
+    all_rows = []
+    for df in list_of_dfs:
+        call_df, put_df = await poly_options.separate_calls_puts(df)
+        top_call = await poly_options.get_top_open_interest(call_df)
+        top_put = await poly_options.get_top_open_interest(put_df)
+        top_call['exp'] = datetime.strptime(top_call['exp'], '%Y-%m-%d').strftime('%m-%d-%y')
+        top_put['exp'] = datetime.strptime(top_put['exp'], '%Y-%m-%d').strftime('%m-%d-%y')
+        top_call['C/P'] = top_call['C/P'].replace('call', 'C')
+        top_put['C/P'] = top_put['C/P'].replace('put', 'P')
+        all_rows.append(top_call[['C/P', 'strike', 'vol', 'OI', 'exp']].to_frame().T.reset_index(drop=True))
+        all_rows.append(top_put[['C/P', 'strike', 'vol', 'OI', 'exp']].to_frame().T.reset_index(drop=True))
+        divider = pd.DataFrame([['➖'] * 5], columns=['C/P', 'strike', 'vol', 'OI', 'exp'])
+        all_rows.append(divider)
+    
+    price = await master.get_price(ticker)
+    final_df = pd.concat(all_rows, axis=0, ignore_index=True)
+    final_table = tabulate(final_df, headers='keys', tablefmt='fancy', showindex=False)
+    embed = disnake.Embed(title=f"Top OI - All Exp. {ticker}", description=f"```{final_table}```", color=disnake.Colour.dark_orange())
+    embed.add_field(name=f"{ticker}'s Price:", value=f"> **${price}**")
+    embed.add_field(name=f"{ticker}", value=f"```py\nViewing top OI/VOL for calls and puts across all expirations for {ticker}.```", inline=False)
+    embed.set_footer(text=f"{ticker}", icon_url=await poly.get_polygon_logo(ticker))
+    print(len(embed.description))
+    await ctx.send(embed=embed)
+
 
 
 
@@ -1184,28 +1981,77 @@ async def cmds(ctx: disnake.AppCommandInter):
 
     await ctx.send(embed=webull_commands, view=view)
 
+
+
+
+
+@bot.command()
+async def skews(ctx):
+    data, table = await master.tabulate_options(sublist1)
+    data = data.drop(['Call IV%', 'Put IV%', 'Call Change', 'Put Change'], axis=1)  # Remove Call IV% and Put IV% columns
+    data = data.rename(columns={'Low IV Call Strike': 'Res.', 'Low IV Put Strike': 'Supt.', 'Put OI': 'pOI', 'Call OI': 'cOI'})  # Rename columns
+
+
+    # Remove "2023-" from the date results
+    data['Exp'] = data['Exp'].str.replace(r'^2023-', '', regex=True)
+    # Reorder columns
+    columns = ['Sym', 'Exp', 'pOI', 'cOI','Supt.', 'Price', 'Res.']
+    data = data[columns]
+    # Create a new metric "depth"
+    data['depth'] = data['Supt.'] - data['Res.']
+    data['Res.'] = data['Res.'].astype(float)
+    data['Supt.'] = data['Supt.'].astype(float)
+    # Sort by the new metric
+    data = data.sort_values(by='depth')
+# Perform comparisons using float values
+    # data['Play'] = data.apply(lambda row: '🔴🔥' if float(row['Price']) > row['Res.'] and float(row['Price']) > row['Supt.'] else
+    #                                     '🟢🔥' if float(row['Price']) < row['Res.'] and float(row['Price']) < row['Supt.'] else
+    #                                     '🔴' if float(row['Price']) > row['Res.'] else
+    #                                     '🟢' if float(row['Price']) < row['Supt.'] else
+    #                                     '◽', axis=1)
+    data = data.drop(columns=['depth'])
+
+    paginated_data = paginate_dataframe(data)  # Paginate the data into a list of dataframes
+
+
+
+    embeds = []  # List to store the embeds
+    for i, df in enumerate(paginated_data):
+        table = tabulate(df, headers='keys', tablefmt='fancy', showindex=False)
+        embed = disnake.Embed(title=f"Page {i + 1} of {len(paginated_data)}")
+        embed.description = f"```{table}```"
+        embeds.append(embed)
+
+
+    view = AlertMenus(embeds)
+
+    await ctx.send(embed=embeds[0], view=view)
+
+def paginate_dataframe(data, items_per_page=10):
+    return [data[i:i+items_per_page] for i in range(0, len(data), items_per_page)]
 import openai
 from cfg import YOUR_OPENAI_KEY as openaikey
 openai.api_key = openaikey
 
 
 
+def load_extensions(bot):
+    extensions = []
+    cogs_directory = os.path.join(os.path.dirname(__file__), 'cogs')
 
-extensions = []
-cogs_directory = os.path.join(os.path.dirname(__file__), 'cogs')
+    for filename in os.listdir(cogs_directory):
+        if filename.endswith('.py'):
+            extension_name = filename[:-3]  # Remove the .py extension
+            extensions.append(f'cogs.{extension_name}')
 
-for filename in os.listdir(cogs_directory):
-    if filename.endswith('.py'):
-        extension_name = filename[:-3]  # Remove the .py extension
-        extensions.append(f'cogs.{extension_name}')
-
-for extension in extensions:
-    bot.load_extension(f'bot.{extension}')
-
-bot.run(YOUR_DISCORD_BOT_TOKEN)
-
-
-
+    for extension in extensions:
+        try:
+            bot.load_extension(f'bot.{extension}')
+        except Exception as e:
+            print(f"Failed to load extension {extension} due to {e}")
+if __name__ == '__main__':
+    load_extensions(bot)
+    bot.run(YOUR_DISCORD_BOT_TOKEN)
 
 
 

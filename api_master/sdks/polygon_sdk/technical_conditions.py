@@ -7,37 +7,36 @@ sem = Semaphore()
 
 
 async def check_macd_condition_bullish(hist):
-    if len(hist) < 3:
-        return False
+    if hist is not None and len(hist) >= 3:
+    
+        last_three_values = hist[:3]
+        print(last_three_values)
+        return (
+            abs(last_three_values[0] - (-0.03)) < 0.02
+            and all(last_three_values[i] > last_three_values[i + 1] for i in range(len(last_three_values) - 1))
+        )
 
-    last_three_values = hist[:3]
-    print(last_three_values)
-    return (
-        abs(last_three_values[0] - (-0.03)) < 0.02
-        and all(last_three_values[i] > last_three_values[i + 1] for i in range(len(last_three_values) - 1))
-    )
 
 async def check_macd_condition_bearish(hist):
-    if len(hist) < 3:
-        return False
+    if hist is not None and len(hist) >= 3:
+        
 
-    last_three_values = hist[:3]
-    print(last_three_values)
-    return (
-        abs(last_three_values[0] - 0.03) < 0.02
-        and all(last_three_values[i] < last_three_values[i + 1] for i in range(len(last_three_values) - 1))
-    )
+        last_three_values = hist[:3]
+        print(last_three_values)
+        return (
+            abs(last_three_values[0] - 0.03) < 0.02
+            and all(last_three_values[i] < last_three_values[i + 1] for i in range(len(last_three_values) - 1))
+        )
+
 
 async def check_rsi_condition_bullish(rsi):
-    if not rsi:
-        return False
-    return rsi[0] <= 32
+    if rsi is not None and len(rsi) > 0:
+        return rsi[0] <= 32
 
 
 async def check_rsi_condition_bearish(rsi):
-    if not rsi:
-        return False
-    return rsi[0] >= 68
+    if rsi is not None and len(rsi) > 0:
+        return rsi[0] >= 68
 
 async def get_macd_rsi(ticker, queue):
     async with sem:

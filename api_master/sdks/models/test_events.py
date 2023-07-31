@@ -3,7 +3,7 @@ import pandas as pd
 from typing import Union, List, NewType, Dict, Any
 from dataclasses import dataclass
 
-from .maps import option_condition_dict, EQUITY_TRADE_CONDITIONS
+from .maps import option_condition_dict
 
 
 @dataclass
@@ -94,7 +94,7 @@ class TestStocksEvent:
             low=row['Day Low'],
             volume=row['Day Volume'],
             vwap=row['Day VWAP'],
-            last_trade_conditions=EQUITY_TRADE_CONDITIONS.get(row["Last Trade Conditions"] if pd.notna(row["Last Trade Conditions"]) else ""),
+            last_trade_conditions=row['Last Trade Conditions'],
 
             last_exchange=row['Last Trade Exchange'],
             last_price=row['Last Trade Price'],
@@ -126,6 +126,48 @@ class TestStocksEvent:
     def from_dict(cls, data: Dict[str, Any]) -> 'TestStocksEvent':
         return cls(**data)
 
+from typing import Optional
+from datetime import datetime
+@dataclass
+class TestIndicesEvent:
+    """
+    This class represents a simulated market event for indices. It's primarily used during after-market hours to simulate 
+    a websocket feed and process data quickly. The data encapsulated in each instance of this class typically includes
+    the event type, the value of the index, the ticker symbol, and the timestamp of the event.
+
+    Attributes:
+        event_type: The type of the event.
+        value: The value of the index.
+        ticker: The ticker symbol for the index.
+        timestamp: The timestamp of the event.
+    """
+    name: str= None
+    ticker: str = None
+    change: str= None
+    change_percent: str = None
+    open: str=None
+    high: str = None
+    low:str=None
+    close: str = None
+    previous_close: str = None
+    @classmethod
+    def from_row(cls, row) -> 'TestIndicesEvent':
+        return cls(
+            name=row['name'],
+            ticker=row["ticker"],
+            change=row["change"],
+            change_percent=row["change_percent"],
+            open = row['open'],
+            high=row["high"],
+            low = row['low'],
+            close=row["close"],
+            previous_close=row["previous_close"],
+        )
+
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'TestIndicesEvent':
+        return cls(**data)
 @dataclass
 class TestOptionsEvent:
     """
@@ -215,9 +257,7 @@ class TestOptionsEvent:
     change_to_break_even: float
     price: float
     underlying_ticker: str
-    @property
-    def last_trade_condition_name(self) -> str:
-        return option_condition_dict.get(self.last_trade_conditions, "Unknown")
+
     @classmethod
     def from_row(cls, row) -> 'TestOptionsEvent':
         last_trade_conditions = row["last_trade_conditions"] if pd.notna(row["last_trade_conditions"]) else None
@@ -278,6 +318,7 @@ TestMessage = NewType(
         Union[
             TestStocksEvent,
             TestOptionsEvent,
+
         ]
     ],
 )

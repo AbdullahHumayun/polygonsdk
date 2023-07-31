@@ -3,17 +3,17 @@
 
 from discord_webhook import DiscordEmbed, AsyncDiscordWebhook
 
-from sdks.webull_sdk.webull_sdk import AsyncWebullSDK
-
-
-
-from _discord.hooks.channel_webhooks import daybanana,weekbanana,hourbanana
 
 
 
 
+from hooks.channel_webhooks import daybanana,weekbanana,hourbanana
 
-webull = AsyncWebullSDK()
+
+
+
+
+
 class Data:
     def __init__(self, symbol=None):
         self.symbol = symbol

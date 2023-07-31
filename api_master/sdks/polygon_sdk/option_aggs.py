@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import pandas as pd
 class OptionAggs:
     def __init__(self, bar_data):
         self.open = bar_data.get("o")
@@ -11,6 +11,18 @@ class OptionAggs:
         self.number_of_trades = bar_data.get("n")
         self.timestamp = self._convert_timestamp(bar_data.get("t"))
 
+        self.data_dict = {
+            'Timestamp': self.timestamp,
+            'Open': self.open,
+            'High': self.high,
+            'Low': self.low,
+            'Close': self.close,
+            'Volume': self.volume,
+            'VWAP': self.vw,
+            'Number of Trades': self.number_of_trades
+        }
+
+        self.df = pd.DataFrame(self.data_dict)
     @staticmethod
     def _convert_timestamp(timestamp):
         dt = datetime.fromtimestamp(timestamp // 1000)

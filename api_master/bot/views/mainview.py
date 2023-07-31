@@ -12,7 +12,7 @@ import requests
 from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 from sdks.webull_sdk.webull_sdk import AsyncWebullSDK, thresholds
 from sdks.helpers.helpers import get_checkmark, get_date_string
-from examples.polygon_get_latest_ticker_data import get_all_ticker_data
+
 from sdks.polygon_sdk.async_options_sdk import PolygonOptionsSDK
 from sdks.webull_sdk.forecast import ForecastEvaluator
 
@@ -357,6 +357,8 @@ class MainView(disnake.ui.View):
         try:
             # Wait for the user to enter a new ticker
             message = await self.bot.wait_for('message', timeout=60.0, check=check)
+
+
         except asyncio.TimeoutError:
             pass  # You may handle the case when the user does not enter anything here
         else:

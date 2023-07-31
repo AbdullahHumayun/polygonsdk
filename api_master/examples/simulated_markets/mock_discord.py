@@ -21,7 +21,7 @@ from sdks.polygon_sdk.async_polygon_sdk import AsyncPolygonSDK
 
 from cfg import YOUR_API_KEY
 
-from _discord.hooks.hook_dicts import stock_exchange_hooks
+from hooks.hook_dicts import stock_exchange_hooks
 from discord_webhook import AsyncDiscordWebhook, DiscordEmbed
 from asyncio import Queue
 from _discord.embeddings import Data
@@ -39,8 +39,8 @@ class MockDiscord(Data):
         while True:
             tasks=[]
             m = await queue.get()
-            self.ask = m.last_quote_ask_price
-            self.bid = m.last_quote_bid_price
+            self.ask = m.last_quote_ask
+            self.bid = m.last_quote_bid
             self.bid_size = m.last_quote_bid_size
             self.ask_size = m.last_quote_ask_size
             self.snapshot_close = m.close
@@ -54,7 +54,16 @@ class MockDiscord(Data):
             self.prev_vwap = m.prev_vwap
             self.snapshot_vwap = m.vwap
             self.snapshot_exchange = STOCK_EXCHANGES.get(m.last_exchange)
-            self.conditions = [stock_condition_dict.get(condition, 'Unknown') for condition in m.last_trade_conditions]
+            self.conditions = []
+            self.conditions = []
+            if m.last_trade_conditions is not None:
+                for condition in m.last_trade_conditions:
+                    if condition is not None:
+                        self.conditions.append(stock_condition_dict.get(condition, 'Unknown'))
+                    else:
+                        self.conditions.append('Unknown')
+            else:
+                self.conditions.append('Unknown')
             self.snapshot_size = m.last_size
             self.snapshot_price = m.last_price
             self.minute_close = m.min_close
@@ -119,6 +128,7 @@ async def send_messages(handler, queue):  # pass queue as an argument
         # Call the handler with the message
         await handler([event], queue)
         await asyncio.sleep(0.01)
+
 
 async def main():
     data = MockDiscord()

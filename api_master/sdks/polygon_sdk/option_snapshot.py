@@ -12,16 +12,16 @@ class OptionSnapshotData:
         self.break_even_price = [i['break_even_price'] if 'break_even_price' in i else None for i in data]
 
         day = [i['day'] if i['day'] is not None else None for i in data]
-        self.day_close = [i['day_close'] if 'day_close' in i else None for i in day]
-        self.day_high = [i['day_high'] if 'day_high' in i else None for i in day]
+        self.day_close = [i['close'] if 'close' in i else None for i in day]
+        self.day_high = [i['high'] if 'high' in i else None for i in day]
         self.last_updated  = [i['last_updated'] if 'last_updated' in i else None for i in day]
-        self.day_low  = [i['day_low'] if 'day_low' in i else None for i in day]
-        self.day_open  = [i['day_open'] if 'day_open' in i else None for i in day]
-        self.day_change_percent  = [i['day_change_percent'] if 'day_change_percent' in i else None for i in day]
-        self.day_change  = [i['day_change'] if 'day_change' in i else None for i in day]
+        self.day_low  = [i['low'] if 'low' in i else None for i in day]
+        self.day_open  = [i['open'] if 'open' in i else None for i in day]
+        self.day_change_percent  = [i['change_percent'] if 'change_percent' in i else None for i in day]
+        self.day_change  = [i['change'] if 'change' in i else None for i in day]
         self.previous_close = [i['previous_close'] if 'previous_close' in i else None for i in day]
-        self.day_volume = [i['day_volume'] if 'day_volume' in i else None for i in day]
-        self.day_vwap  = [i['day_vwap'] if 'day_vwap' in i else None for i in day]
+        self.day_volume = [i['volume'] if 'volume' in i else None for i in day]
+        self.day_vwap  = [i['vwap'] if 'vwap' in i else None for i in day]
 
         details = [i['details'] if i['details'] is not None else None for i in data]
         self.contract_type = [i['contract_type'] if 'contract_type' in i else None for i in details]
@@ -29,7 +29,7 @@ class OptionSnapshotData:
         self.expiration_date = [i['expiration_date'] if 'expiration_date' in i else None for i in details]
         self.shares_per_contract= [i['shares_per_contract'] if 'shares_per_contract' in i else None for i in details]
         self.strike_price = [i['strike_price'] if 'strike_price' in i else None for i in details]
-        self.option_symbol = [i['option_symbol'] if 'option_symbol' in i else None for i in details]
+        self.option_symbol = [i['ticker'] if 'ticker' in i else None for i in details]
 
         greeks = [i['greeks'] if i['greeks'] is not None else None for i in data]
         self.delta = [i['delta'] if 'delta' in i else None for i in greeks]
@@ -56,30 +56,31 @@ class OptionSnapshotData:
         underlying = [i['underlying_asset'] if i['underlying_asset'] is not None else None for i in data]
         self.change_to_break_even = [i['change_to_break_even'] if 'change_to_break_even' in i else None for i in underlying]
         self.underlying_last_updated = [i['underlying_last_updated'] if 'underlying_last_updated' in i else None for i in underlying]
-        self.underlying_price = [i['underlying_price'] if 'underlying_price' in i else None for i in underlying]
-        self.underlying_ticker = [i['underlying_ticker'] if 'underlying_ticker' in i else None for i in underlying]
+        self.underlying_price = [i['price'] if 'price' in i else None for i in underlying]
+        self.underlying_ticker = [i['ticker'] if 'ticker' in i else None for i in underlying]
 
 
         self.data_dict = {
         "implied_volatility": self.implied_volatility,
-        "open_interest": self.open_interest,
+        "OI": self.open_interest,
         "break_even_price": self.break_even_price,
-        "day_close": self.day_close,
-        "day_high": self.day_high,
+        "close": self.day_close,
+        "high": self.day_high,
         "last_updated": self.last_updated,
-        "day_low": self.day_low,
-        "day_open": self.day_open,
-        "day_change_percent": self.day_change_percent,
-        "day_change": self.day_change,
+        "low": self.day_low,
+        "open": self.day_open,
+        "change_percent": self.day_change_percent,
+        "change": self.day_change,
         "previous_close": self.previous_close,
-        "day_volume": self.day_volume,
-        "day_vwap": self.day_vwap,
-        "contract_type": self.contract_type,
+        "vol": self.day_volume,
+        "vwap": self.day_vwap,
+        "C/P": self.contract_type,
         "exercise_style": self.exercise_style,
-        "expiration_date": self.expiration_date,
+        "exp": self.expiration_date,
         "shares_per_contract": self.shares_per_contract,
-        "strike_price": self.strike_price,
-        "option_symbol": self.option_symbol,
+        "strike": self.strike_price,
+        "ticker": self.option_symbol,
+
         "delta": self.delta,
         "gamma": self.gamma,
         "theta": self.theta,
@@ -92,23 +93,25 @@ class OptionSnapshotData:
         "midpoint": self.midpoint,
         "conditions": self.conditions,
         "exchange": self.exchange,
-        "price": self.price,
+        "cost": self.price,
         "sip_timestamp": self.sip_timestamp,
         "size": self.size,
         "change_to_break_even": self.change_to_break_even,
         "underlying_last_updated": self.underlying_last_updated,
-        "underlying_price": self.underlying_price,
-        "underlying_ticker": self.underlying_ticker
+        "price": self.underlying_price,
+        "symbol": self.underlying_ticker
     }
 
 
+        self.df = pd.DataFrame(self.data_dict)
 
 
 
-async def get_near_the_money_options(ticker: str, lower_strike, upper_strike):
+
+async def get_near_the_money_options(ticker: str, lower_strike, upper_strike, expiration_less_than:str=seven_days_from_now_str):
     if ticker.startswith('SPX'):
         ticker = ticker.replace(f"{ticker}", f"I:{ticker}")
-        initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte=2023-06-30&limit=250&apiKey={API_KEY}"
+        initial_url = f"https://api.polygon.io/v3/snapshot/options/{ticker}?strike_price.gte={lower_strike}&strike_price.lte={upper_strike}&expiration_date.gte={today_str}&expiration_date.lte={expiration_less_than}&limit=250&apiKey={API_KEY}"
 
         ticker = ticker.replace(f"{ticker}", f"I:{ticker}")
         atm_options = requests.get(initial_url).json()

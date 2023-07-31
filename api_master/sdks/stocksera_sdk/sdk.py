@@ -160,7 +160,7 @@ class StockeraSDK:
         df.columns = month_names
         return df
 
-    def reverse_repo(self, days: int) -> List[ReverseRepo]:
+    async def reverse_repo(self, days: int) -> List[ReverseRepo]:
         """Retrieve reverse repo data for a specific number of days.
 
         Args:
@@ -173,7 +173,7 @@ class StockeraSDK:
         if data:
             return ReverseRepo(data) if data else ReverseRepo([])
     
-    def latest_insider_summary(self) -> Optional[LatestInsiderTradingSummary]:
+    async def latest_insider_summary(self) -> Optional[LatestInsiderTradingSummary]:
         """Retrieve the latest insider trading summary data.
 
         Returns:
@@ -183,7 +183,7 @@ class StockeraSDK:
         if data:
             return LatestInsiderTradingSummary(data) if data else LatestInsiderTradingSummary([])
 
-    def sec_fillings(self, stock: str) -> Optional[SECFillings]:
+    async def sec_fillings(self, stock: str) -> Optional[SECFillings]:
         """Retrieve SEC filings data for a specific stock.
 
         Args:
@@ -215,7 +215,7 @@ class StockeraSDK:
             return senate
         return None
 
-    def short_volume(self, stock: str, date_from: str = thirty_days_ago_str, date_to: str = today_str) -> List[ShortVolume]:
+    async def short_volume(self, stock: str, date_from: str = thirty_days_ago_str, date_to: str = today_str) -> List[ShortVolume]:
         """Retrieve short volume data for a specific stock and date range.
 
         Args:
@@ -226,19 +226,19 @@ class StockeraSDK:
         Returns:
             List[ShortVolume]: List of short volume data for the specified stock and date range, or an empty list if data is not available.
         """
-        data = client.short_volume(stock)
+        data = client.short_volume(stock, date_from=thirty_days_ago_str, date_to=today_str)
         if data:
-            return ShortVolume(data) if data else ShortVolume([])
+            return ShortVolume.from_dict(data)
     
-    def short_interest(self) -> Optional[ShortInterest]:
+    def short_interest(self):
         """Retrieve short interest data.
 
         Returns:
             Optional[ShortInterest]: Short interest data, or None if data is not available.
         """
         data = client.short_interest()
-        if data:
-            return ShortInterest(data) if data else ShortInterest([])
+        if data is not None:
+            return ShortInterest(data)
 
     def stocktwits(self, stock: str) -> Optional[StockTwits]:
         """Retrieve StockTwits data for a specific stock.
@@ -317,3 +317,14 @@ class StockeraSDK:
         data = client.news_sentiment(ticker)
         if data:
             return NewsSentiment(data) if data else NewsSentiment([])
+
+    async def get_short_volume(self, ticker):
+        x = await self.short_volume(ticker)
+        dates = [i.date for i in x]
+        short_vol = [i.shortVol for i in x]
+        percent_short = [i.percentShorted for i in x]
+        short_volume_results = []
+        for i in zip(dates, short_vol, percent_short):
+            short_volume_results.append(i)
+
+        return short_volume_results

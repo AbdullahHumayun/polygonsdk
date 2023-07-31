@@ -8,9 +8,8 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
 
-
 import requests
-from cfg import discord_headers
+
 import requests
 from time import sleep
 import csv
@@ -21,19 +20,12 @@ from _discord import emojis as e
 
 #EXAMPLE CHANNEL LIST - CREATES CHANNELS FOR YOU TO MONITOR IN REAL TIME
 
-categories = [f"STOCK CONDITIONS",
-              f"OPTION CONDITIONS",
-              f"OPTION EXCHANGES" 
-              f"SSR STOCKS", 
-              f"INDICATORS", 
-              "STOCK EXCHANGES", 
-              f"QUOTE CONDITIONS", 
-              "POPULAR TICKERS",
-              "TICKER NEWS",
-              "TECHNICAL ANALYSIS",
-              "STOCK FEEDS",
-              "OPTIONS FEEDS"] 
+categories = [f"NEWS📰WORLD"] 
         
+news_dict = { 
+"TICKER NEWS": ["stocks📰", "penny📰stocks", "etfs📰", "market📰news", "corp📰news", "investing📰edu", "sector📰stocks", "investor📰rel", "earnings📰dividends", "legal📰info", "market📰regions", "news📰events", "market📰analysis", "crypto📰", "fed📰news", "fin📰services", "industry📰news", "econ📰indicators", "uncon📰invest", "product📰announce", "analyst📰ratings", "offers📰", "forex📰", "market📰sentiments"],
+}
+
 
 channels_dict = {
     'STOCK CONDITIONS': [f"Intermarket{e.broom}Sweep", f"SSR{e.blood}", f"OddLot{e.skull}Trade", f"Closing{e.cross}Prints", f"Derivative{e.building}Priced",
@@ -67,13 +59,6 @@ channels_dict = {
 
     "OPTIONS FEEDS": [f"Large{e.broom}Sweeps"],
 
-    "TICKER NEWS": [f"trading{e.world}ideas", f"price{e.world}target", f"large{e.world}cap",
-                     f"up{e.world}grades", f"down{e.world}grades", f"analyst{e.world}ratings", 
-                     f"small{e.world}cap", f"ipo{e.world}center", f"financing{e.world}agreements",
-                     f"conference{e.world}webcast", f"law{e.world}legal", f"company{e.world}announce", f"earnings{e.world}news", f"partnerships{e.world}",
-                     f"movers{e.world}", f"crypto{e.world}", f"top{e.world}stories", f"global{e.world}government", f"european{e.world}news",
-                     f"etfs{e.world}", f"calendar{e.world}events", f"regulatory{e.world}filings", f"insider{e.world}trades", f"tech{e.world}", f"rumors{e.world}"],
-
     "TECHNICAL ANALYSIS": [f"Oversold{e.greencircle}day", f"Overbought{e.redcircle}day", f"Oversold{e.greencircle}hour", 
                            f"Overbought{e.redcircle}hour", f"Oversold{e.greencircle}week", f"Overbought{e.redcircle}week"],
 
@@ -96,7 +81,7 @@ channels_dict = {
     saves them all to a CSV file for later use with the real-time websocket streaming.
 """
 
-YOUR_GUILD_ID = 000000
+YOUR_GUILD_ID = 00000000000
 
 
 def create_channels_and_webhooks(categories, channels_dict, guild_id):
@@ -104,7 +89,7 @@ def create_channels_and_webhooks(categories, channels_dict, guild_id):
     headers = discord_headers
     ticker_webhook_dict = {}
     
-    for category in categories:
+    for category in news_dict:
         sleep(10)  # Adjust, but rate limit is very high here
 
         # Create category
@@ -119,7 +104,7 @@ def create_channels_and_webhooks(categories, channels_dict, guild_id):
             category_id = category_response.json()["id"]
             
             # For each channel under this category
-            for ticker in channels_dict[category]:
+            for ticker in news_dict[category]:
                 sleep(10)  # Adjust, but rate limit is very high here
 
                 # Create channel under the category

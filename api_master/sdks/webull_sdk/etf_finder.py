@@ -1,3 +1,5 @@
+import pandas as pd
+
 class ETFCommodity:
     def __init__(self, tabs_data, ticker_data):
         self.ticker_id = ticker_data.get('tickerId')
@@ -42,6 +44,32 @@ class ETFCommodity:
         self.down_num = tabs_data.get('dowoNum')
         self.flat_num = tabs_data.get('flatNum')
 
-    
+
+        self.data_dict = {
+        'name': self.name,
+        'symbol': self.symbol,
+        'close': self.close,
+        'change': self.change,
+        'change_ratio': self.change_ratio,
+        'volume': self.volume,
+        'net_asset': self.net_asset,
+        'total_asset': self.total_asset,
+        'pe_ttm': self.pe_ttm,
+        'pre_close': self.pre_close,
+        'fifty_two_wk_high': self.fifty_two_wk_high,
+        'fifty_two_wk_low': self.fifty_two_wk_low,
+        'open': self.open,
+        'high': self.high,
+        'low': self.low,
+        'vibrate_ratio': self.vibrate_ratio,
+        'pchange': self.pchange,
+        'up_num': self.up_num,
+        'down_num': self.down_num,
+        'flat_num': self.flat_num
+
+        }
+        
+
+        self.df = pd.DataFrame(self.data_dict)
     def __repr__(self):
         return f"<ETFObject: {self.name[0]} ({self.symbol[0]})>"

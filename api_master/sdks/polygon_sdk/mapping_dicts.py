@@ -174,10 +174,9 @@ stock_condition_dict = {
     52: 'Contingent Trade',
     53: 'Qualified Contingent Trade',
     59: 'Placeholder for 611 exempt',
-    60: 'SSR in Effect',
+    60: 'SSR in Effect',}
 
-    # Add the string keys with their respective descriptions as values
-    'Corrected Consolidated Close (per listing market)': 'Corrected Consolidated Close (per listing market)',
+stuff={'Corrected Consolidated Close (per listing market)': 'Corrected Consolidated Close (per listing market)',
     'Cash Only Settlement': 'Cash Only Settlement',
     'Closing Prints': 'Closing Prints',
     'Slow Due Set Slow List Bid Ask': 'Slow Due Set Slow List Bid Ask',

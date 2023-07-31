@@ -1,5 +1,5 @@
 import pandas as pd
-
+from typing import Optional, List, Dict, Any
 class DailyTreasury:
     def __init__(self, data):
         self.date = [i.get('Date') if i.get('Date') is not None else None for i in data]
@@ -274,10 +274,10 @@ class ReverseRepo:
 class SECFillings:
     def __init__(self, data):
         self.Filling = [i['Filling'] if i['Filling'] is not None else None for i in data]
-        self.Description = [i['Description'] if i['Description'] is not None else None for i in data]
+        self.Description = [i['Description'] if 'description' in i else None for i in data]
         self.FillingDate = [i['Filling Date'] if i['Filling Date'] is not None else None for i in data]
-        self.report_url = [i['report_url'] if i['report_url'] is not None else None for i in data]
-        self.filing_url = [i['filing_url'] if i['filing_url'] is not None else None for i in data]
+        self.report_url = [i['report_url'] if 'report_url' in i else None for i in data]
+        self.filing_url = [i['filing_url'] if 'filing_url' in i else None for i in data]
 
         self.data_dict = {
             'Filling': self.Filling,
@@ -328,23 +328,50 @@ class ShortInterest:
         self.as_dataframe = pd.DataFrame(self.data_dict)
 
 class ShortVolume:
-    def __init__(self, data):
-        self.date = [i['Date'] if i['Date'] is not None else None for i in data]
-        self.short_vol = [i.get('Short Vol', None) for i in data]
-        self.short_exempt_vol = [i.get('Short Exempt Vol', None) for i in data]
-        self.total_vol = [i.get('Total Vol', None) for i in data]
-        self.percent_shorted = [i.get('% Shorted', None) for i in data]
-        self.data_dict = {
-            'Date': self.date,
-            'Short Vol': self.short_vol,
-            'Short Exempt Vol': self.short_exempt_vol,
-            'Total Vol': self.total_vol,
-            '% Shorted': self.percent_shorted
+    def __init__(
+        self,
+        date: Optional[str] = None,
+        shortVol: Optional[str] = None,
+        shortExemptVol: Optional[str] = None,
+        totalVol: Optional[str] = None,
+        percentShorted: Optional[str] = None
+    ):
+        self.date = date
+        self.shortVol = shortVol
+        self.shortExemptVol = shortExemptVol
+        self.totalVol = totalVol
+        self.percentShorted = percentShorted
+
+    def data_dict(self) -> Dict[str, Any]:
+        return {
+            'date': self.date,
+            'shortVol': self.shortVol,
+            'shortExemptVol': self.shortExemptVol,
+            'totalVol': self.totalVol,
+            'percentShorted': self.percentShorted
         }
 
-        self.as_dataframe = pd.DataFrame(self.data_dict)
+    def data_dict(self) -> Dict[str, Any]:
+        return {
+            'date': self.date,
+            'shortVol': self.shortVol,
+            'shortExemptVol': self.shortExemptVol,
+            'totalVol': self.totalVol,
+            'percentShorted': self.percentShorted
+        }
 
+    @classmethod
+    def from_dict(cls, data: List[Dict[str, Any]]) -> List['ShortVolume']:
+        return [cls(
+            date=item.get('Date'),
+            shortVol=item.get('Short Vol'),
+            shortExemptVol=item.get('Short Exempt Vol'),
+            totalVol=item.get('Total Vol'),
+            percentShorted=item.get('% Shorted')
+        ) for item in data]
 
+    def __iter__(self):
+        return iter(self.data_dict().values())
 class StockTwits:
     def __init__(self, data):
         self.rank = [i['rank'] if i['rank'] is not None else None for i in data]

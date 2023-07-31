@@ -1,4 +1,5 @@
 import aiohttp
+import pandas as pd
 class CapitalFlow:
     """
     A class representing capital flow data for a stock.
@@ -73,6 +74,41 @@ class CapitalFlow:
         self.retailout = float(item['retailOutFlow']) if 'retailOutFlow' in item else None
         self.retailoutratio = float(item['retailOutFlowRatio']) if 'retailOutFlowRatio' in item else None
 
+
+        self.data_dict = {
+            'superin': float(item['superLargeInFlow']) if 'superLargeInFlow' in item else None,
+            'superout': float(item['superLargeOutFlow']) if 'superLargeOutFlow' in item else None,
+            'supernet': float(item['superLargeNetFlow']) if 'superLargeNetFlow' in item else None,
+            'largein': float(item['largeInFlow']) if 'largeInFlow' in item else None,
+            'largeout': float(item['largeOutFlow']) if 'largeOutFlow' in item else None,
+            'largenet': float(item['largeNetFlow']) if 'largeNetFlow' in item else None,
+            'newlargein': float(item['newLargeInFlow']) if 'newLargeInFlow' in item else None,
+            'newlargeout': float(item['newLargeOutFlow']) if 'newLargeOutFlow' in item else None,
+            'newlargenet': float(item['newLargeNetFlow']) if 'newLargeNetFlow' in item else None,
+            'newlargeinratio': float(item['newLargeInFlowRatio']) if 'newLargeInFlowRatio' in item else None,
+            'newlargeoutratio': float(item['newLargeOutFlowRatio']) if 'newLargeOutFlowRatio' in item else None,
+            'mediumin': float(item['mediumInFlow']) if 'mediumInFlow' in item else None,
+            'mediumout': float(item['mediumOutFlow']) if 'mediumOutFlow' in item else None,
+            'mediumnet': float(item['mediumNetFlow']) if 'mediumNetFlow' in item else None,
+            'mediuminratio': float(item['mediumInFlowRatio']) if 'mediumInFlowRatio' in item else None,
+            'mediumoutratio': float(item['mediumOutFlowRatio']) if 'mediumOutFlowRatio' in item else None,
+            'smallin': float(item['smallInFlow']) if 'smallInFlow' in item else None,
+            'smallout': float(item['smallOutFlow']) if 'smallOutFlow' in item else None,
+            'smallnet': float(item['smallNetFlow']) if 'smallNetFlow' in item else None,
+            'smallinratio': float(item['smallInFlowRatio']) if 'smallInFlowRatio' in item else None,
+            'smalloutratio': float(item['smallOutFlowRatio']) if 'smallOutFlowRatio' in item else None,
+            'majorin': float(item['majorInFlow']) if 'majorInFlow' in item else None,
+            'majorinratio': float(item['majorInFlowRatio']) if 'majorInFlowRatio' in item else None,
+            'majorout': float(item['majorOutFlow']) if 'majorOutFlow' in item else None,
+            'majoroutratio': float(item['majorOutFlowRatio']) if 'majorOutFlowRatio' in item else None,
+            'majornet': float(item['majorNetFlow']) if 'majorNetFlow' in item else None,
+            'retailin': float(item['retailInFlow']) if 'retailInFlow' in item else None,
+            'retailinratio': float(item['retailInFlowRatio']) if 'retailInFlowRatio' in item else None,
+            'retailout': float(item['retailOutFlow']) if 'retailOutFlow' in item else None,
+            'retailoutratio': float(item['retailOutFlowRatio']) if 'retailOutFlowRatio' in item else None
+        }
+
+        self.df = pd.DataFrame(self.data_dict)
 
     async def fetch_data(self, id):
         async with aiohttp.ClientSession() as session:

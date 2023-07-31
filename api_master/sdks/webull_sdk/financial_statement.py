@@ -1,42 +1,43 @@
+import pandas as pd
+
 class FinancialStatement:
     def __init__(self, data):
-        self.quote_id = data.get("quoteId", None)
-        self.type = data.get("type", None)
-        self.fiscal_year = data.get("fiscalYear", None)
-        self.fiscal_period = data.get("fiscalPeriod", None)
-        self.end_date = data.get("endDate", None)
-        self.currency_id = data.get("currencyId", None)
-        self.publish_date = data.get("publishDate", None)
-        self.total_revenue = data.get("totalRevenue", None)
-        self.revenue = data.get("revenue", None)
-        self.cost_of_revenue_total = data.get("costofRevenueTotal", None)
-        self.gross_profit = data.get("grossProfit", None)
-        self.operating_expense = data.get("operatingExpense", None)
-        self.sell_gen_admin_expenses = data.get("sellGenAdminExpenses", None)
-        self.depreciation_and_amortization = data.get("depreciationAndAmortization", None)
-        self.inter_expse_inc_net_oper = data.get("interExpseIncNetOper", None)
-        self.unusual_expense_income = data.get("unusualExpenseIncome", None)
-        self.operating_income = data.get("operatingIncome", None)
-        self.inter_inc_expse_net_non_oper = data.get("interIncExpseNetNonOper", None)
-        self.net_income_before_tax = data.get("netIncomeBeforeTax", None)
-        self.income_tax = data.get("incomeTax", None)
-        self.net_income_after_tax = data.get("netIncomeAfterTax", None)
-        self.net_income_before_extra = data.get("netIncomeBeforeExtra", None)
-        self.total_extraordinary_items = data.get("totalExtraordinaryItems", None)
-        self.net_income = data.get("netIncome", None)
-        self.income_avaito_com_excl_extra_ord = data.get("incomeAvaitoComExclExtraOrd", None)
-        self.income_avaito_com_incl_extra_ord = data.get("incomeAvaitoComInclExtraOrd", None)
-        self.diluted_net_income = data.get("dilutedNetIncome", None)
-        self.diluted_weighted_average_shares = data.get("dilutedWeightedAverageShares", None)
-        self.diluted_eps_excl_extra_items = data.get("dilutedEPSExclExtraItems", None)
-        self.diluted_eps_incl_extra_items = data.get("dilutedEPSInclExtraItems", None)
-        self.diluted_normalized_eps = data.get("dilutedNormalizedEPS", None)
-        self.operating_profit = data.get("operatingProfit", None)
-        self.earning_after_tax = data.get("earningAfterTax", None)
-        self.earning_before_tax = data.get("earningBeforeTax", None)
+        self.quote_id = [i.get("quoteId", None) for i in data]
+        self.type = [i.get("type", None) for i in data]
+        self.fiscal_year = [i.get("fiscalYear", None) for i in data]
+        self.fiscal_period = [i.get("fiscalPeriod", None) for i in data]
+        self.end_date = [i.get("endDate", None) for i in data]
+        self.currency_id = [i.get("currencyId", None) for i in data]
+        self.publish_date = [i.get("publishDate", None) for i in data]
+        self.total_revenue = [i.get("totalRevenue", None) for i in data]
+        self.revenue = [i.get("revenue", None) for i in data]
+        self.cost_of_revenue_total = [i.get("costofRevenueTotal", None) for i in data]
+        self.gross_profit = [i.get("grossProfit", None) for i in data]
+        self.operating_expense = [i.get("operatingExpense", None) for i in data]
+        self.sell_gen_admin_expenses = [i.get("sellGenAdminExpenses", None) for i in data]
+        self.depreciation_and_amortization = [i.get("depreciationAndAmortization", None) for i in data]
+        self.inter_expse_inc_net_oper = [i.get("interExpseIncNetOper", None) for i in data]
+        self.unusual_expense_income = [i.get("unusualExpenseIncome", None) for i in data]
+        self.operating_income = [i.get("operatingIncome", None) for i in data]
+        self.inter_inc_expse_net_non_oper = [i.get("interIncExpseNetNonOper", None) for i in data]
+        self.net_income_before_tax = [i.get("netIncomeBeforeTax", None) for i in data]
+        self.income_tax = [i.get("incomeTax", None) for i in data]
+        self.net_income_after_tax = [i.get("netIncomeAfterTax", None) for i in data]
+        self.net_income_before_extra = [i.get("netIncomeBeforeExtra", None) for i in data]
+        self.total_extraordinary_items = [i.get("totalExtraordinaryItems", None) for i in data]
+        self.net_income = [i.get("netIncome", None) for i in data]
+        self.income_avaito_com_excl_extra_ord = [i.get("incomeAvaitoComExclExtraOrd", None) for i in data]
+        self.income_avaito_com_incl_extra_ord = [i.get("incomeAvaitoComInclExtraOrd", None) for i in data]
+        self.diluted_net_income = [i.get("dilutedNetIncome", None) for i in data]
+        self.diluted_weighted_average_shares = [i.get("dilutedWeightedAverageShares", None) for i in data]
+        self.diluted_eps_excl_extra_items = [i.get("dilutedEPSExclExtraItems", None) for i in data]
+        self.diluted_eps_incl_extra_items = [i.get("dilutedEPSInclExtraItems", None) for i in data]
+        self.diluted_normalized_eps = [i.get("dilutedNormalizedEPS", None) for i in data]
+        self.operating_profit = [i.get("operatingProfit", None) for i in data]
+        self.earning_after_tax = [i.get("earningAfterTax", None) for i in data]
+        self.earning_before_tax = [i.get("earningBeforeTax", None) for i in data]
         
-    def to_dict(self):
-        return {
+        self.data_dict ={
             'quoteId': self.quote_id,
             'type': self.type,
             'fiscalYear': self.fiscal_year,
@@ -73,6 +74,7 @@ class FinancialStatement:
             'earningBeforeTax': self.earning_before_tax
         }
 
+        self.df = pd.DataFrame(self.data_dict)
     @classmethod
     def from_dict(cls, data):
         return cls(data)
@@ -83,32 +85,31 @@ class FinancialStatement:
 
 class CashFlow:
     def __init__(self, data):
-      self.quoteid=data.get("quoteId", None)
-      self.type=data.get("type", None)
-      self.fiscal_year=data.get("fiscalYear", None)
-      self.fiscal_period=data.get("fiscalPeriod", None)
-      self.end_date=data.get("endDate", None)
-      self.currency_id=data.get("currencyId", None)
-      self.publish_date=data.get("publishDate", None)
-      self.cash_from_operating_activities=data.get("cashfromOperatingActivities", None)
-      self.net_income=data.get("netIncome", None)
-      self.depreciation_and_amortization=data.get("depreciationAndAmortization", None)
-      self.deferred_taxes=data.get("deferredTaxes", None)
-      self.non_cash_items=data.get("nonCashItems", None)
-      self.changes_in_working_capital=data.get("changesinWorkingCapital", None)
-      self.cash_from_investing_activities=data.get("cashfromInvestingActivities", None)
-      self.capital_expenditures=data.get("capitalExpenditures", None)
-      self.other_investing_cashflow_items_total=data.get("otherInvestingCashFlowItemsTotal", None)
-      self.cash_from_financing_activities=data.get("cashfromFinancingActivities", None)
-      self.financing_cashflow_items=data.get("financingCashFlowItems", None)
-      self.total_cash_dividends_paid=data.get("totalCashDividendsPaid", None)
-      self.issuance_retirement_of_stock_net=data.get("issuanceRetirementofStockNet", None)
-      self.issuance_retirement_of_debt_net=data.get("issuanceRetirementofDebtNet", None)
-      self.foreign_exchange_effects=data.get("foreignExchangeEffects", None)
-      self.net_change_in_cash=data.get("netChangeinCash", None)
+        self.quoteid = [i.get('quoteId', None) for i in data]
+        self.type = [i.get('type', None) for i in data]
+        self.fiscal_year = [i.get('fiscalYear', None) for i in data]
+        self.fiscal_period = [i.get('fiscalPeriod', None) for i in data]
+        self.end_date = [i.get('endDate', None) for i in data]
+        self.currency_id = [i.get('currencyId', None) for i in data]
+        self.publish_date = [i.get('publishDate', None) for i in data]
+        self.cash_from_operating_activities = [i.get('cashfromOperatingActivities', None) for i in data]
+        self.net_income = [i.get('netIncome', None) for i in data]
+        self.depreciation_and_amortization = [i.get('depreciationAndAmortization', None) for i in data]
+        self.deferred_taxes = [i.get('deferredTaxes', None) for i in data]
+        self.non_cash_items = [i.get('nonCashItems', None) for i in data]
+        self.changes_in_working_capital = [i.get('changesinWorkingCapital', None) for i in data]
+        self.cash_from_investing_activities = [i.get('cashfromInvestingActivities', None) for i in data]
+        self.capital_expenditures = [i.get('capitalExpenditures', None) for i in data]
+        self.other_investing_cashflow_items_total = [i.get('otherInvestingCashFlowItemsTotal', None) for i in data]
+        self.cash_from_financing_activities = [i.get('cashfromFinancingActivities', None) for i in data]
+        self.financing_cashflow_items = [i.get('financingCashFlowItems', None) for i in data]
+        self.total_cash_dividends_paid = [i.get('totalCashDividendsPaid', None) for i in data]
+        self.issuance_retirement_of_stock_net = [i.get('issuanceRetirementofStockNet', None) for i in data]
+        self.issuance_retirement_of_debt_net = [i.get('issuanceRetirementofDebtNet', None) for i in data]
+        self.foreign_exchange_effects = [i.get('foreignExchangeEffects', None) for i in data]
+        self.net_change_in_cash = [i.get('netChangeinCash', None) for i in data]
 
-    def to_dict(self):
-        return {
+        self.data_dict = {
             'quoteId': self.quoteid,
             'type': self.type,
             'fiscalYear': self.fiscal_year,
@@ -133,6 +134,8 @@ class CashFlow:
             'foreignExchangeEffects': self.foreign_exchange_effects,
             'netChangeinCash': self.net_change_in_cash
         }
+      
+        self.df = pd.DataFrame(self.data_dict)
 
     @classmethod
     def from_dict(cls, data):
@@ -145,53 +148,48 @@ class CashFlow:
 
 class BalanceSheet:
     def __init__(self, data):
-        self.quoteId = data.get('quoteId')
-        self.type = data.get('type')
-        self.fiscalYear = data.get('fiscalYear')
-        self.fiscalPeriod = data.get('fiscalPeriod')
-        self.endDate = data.get('endDate')
-        self.currencyId = data.get('currencyId')
-        self.publishDate = data.get('publishDate')
-        self.totalAssets = data.get('totalAssets')
-        self.totalCurrentAssets = data.get('totalCurrentAssets')
-        self.cashAndShortTermInvest = data.get('cashAndShortTermInvest')
-        self.cashEquivalents = data.get('cashEquivalents')
-        self.shortTermInvestments = data.get('shortTermInvestments')
-        self.totalReceivablesNet = data.get('totalReceivablesNet')
-        self.accountsReceTradeNet = data.get('accountsReceTradeNet')
-        self.totalInventory = data.get('totalInventory')
-        self.prepaidExpenses = data.get('prepaidExpenses')
-        self.otherCurrentAssetsTotal = data.get('otherCurrentAssetsTotal')
-        self.totalNonCurrentAssets = data.get('totalNonCurrentAssets')
-        self.ppeTotalNet = data.get('ppeTotalNet')
-        self.ppeTotalGross = data.get('ppeTotalGross')
-        self.accumulatedDepreciationTotal = data.get('accumulatedDepreciationTotal')
-        self.otherLongTermAssetsTotal = data.get('otherLongTermAssetsTotal')
-        self.totalLiabilities = data.get('totalLiabilities')
-        self.totalCurrentLiabilities = data.get('totalCurrentLiabilities')
-        self.accountsPayable = data.get('accountsPayable')
-        self.accruedExpenses = data.get('accruedExpenses')
-        self.notesPayableShortTermDebt = data.get('notesPayableShortTermDebt')
-        self.currentPortofLTDebtCapitalLeases = data.get('currentPortofLTDebtCapitalLeases')
-        self.totalNonCurrentLiabilities = data.get('totalNonCurrentLiabilities')
-        self.totalLongTermDebt = data.get('totalLongTermDebt')
-        self.longTermDebt = data.get('longTermDebt')
-        self.totalDebt = data.get('totalDebt')
-        self.otherLiabilitiesTotal = data.get('otherLiabilitiesTotal')
-        self.totalEquity = data.get('totalEquity')
-        self.totalStockhodersEquity = data.get('totalStockhodersEquity')
-        self.commonStock = data.get('commonStock')
-        self.additionalPaidInCapital = data.get('additionalPaidInCapital')
-        self.retainedEarnings = data.get('retainedEarnings')
-        self.otherEquityTotal = data.get('otherEquityTotal')
-        self.totalLiabilitiesShareholdersEquity = data.get('totalLiabilitiesShareholdersEquity')
-
-        self.totalLiabilitiesShareholdersEquity = data.get('totalLiabilitiesShareholdersEquity')
-        self.totalCommonSharesOutstanding = data.get('totalCommonSharesOutstanding')
-
-
-    def to_dict(self):
-        return {
+        self.quoteId = [i.get('quoteId', None) for i in data]
+        self.type = [i.get('type', None) for i in data]
+        self.fiscalYear = [i.get('fiscalYear', None) for i in data]
+        self.fiscalPeriod = [i.get('fiscalPeriod', None) for i in data]
+        self.endDate = [i.get('endDate', None) for i in data]
+        self.currencyId = [i.get('currencyId', None) for i in data]
+        self.publishDate = [i.get('publishDate', None) for i in data]
+        self.totalAssets = [i.get('totalAssets', None) for i in data]
+        self.totalCurrentAssets = [i.get('totalCurrentAssets', None) for i in data]
+        self.cashAndShortTermInvest = [i.get('cashAndShortTermInvest', None) for i in data]
+        self.cashEquivalents = [i.get('cashEquivalents', None) for i in data]
+        self.shortTermInvestments = [i.get('shortTermInvestments', None) for i in data]
+        self.totalReceivablesNet = [i.get('totalReceivablesNet', None) for i in data]
+        self.accountsReceTradeNet = [i.get('accountsReceTradeNet', None) for i in data]
+        self.totalInventory = [i.get('totalInventory', None) for i in data]
+        self.prepaidExpenses = [i.get('prepaidExpenses', None) for i in data]
+        self.otherCurrentAssetsTotal = [i.get('otherCurrentAssetsTotal', None) for i in data]
+        self.totalNonCurrentAssets = [i.get('totalNonCurrentAssets', None) for i in data]
+        self.ppeTotalNet = [i.get('ppeTotalNet', None) for i in data]
+        self.ppeTotalGross = [i.get('ppeTotalGross', None) for i in data]
+        self.accumulatedDepreciationTotal = [i.get('accumulatedDepreciationTotal', None) for i in data]
+        self.otherLongTermAssetsTotal = [i.get('otherLongTermAssetsTotal', None) for i in data]
+        self.totalLiabilities = [i.get('totalLiabilities', None) for i in data]
+        self.totalCurrentLiabilities = [i.get('totalCurrentLiabilities', None) for i in data]
+        self.accountsPayable = [i.get('accountsPayable', None) for i in data]
+        self.accruedExpenses = [i.get('accruedExpenses', None) for i in data]
+        self.notesPayableShortTermDebt = [i.get('notesPayableShortTermDebt', None) for i in data]
+        self.currentPortofLTDebtCapitalLeases = [i.get('currentPortofLTDebtCapitalLeases', None) for i in data]
+        self.totalNonCurrentLiabilities = [i.get('totalNonCurrentLiabilities', None) for i in data]
+        self.totalLongTermDebt = [i.get('totalLongTermDebt', None) for i in data]
+        self.longTermDebt = [i.get('longTermDebt', None) for i in data]
+        self.totalDebt = [i.get('totalDebt', None) for i in data]
+        self.otherLiabilitiesTotal = [i.get('otherLiabilitiesTotal', None) for i in data]
+        self.totalEquity = [i.get('totalEquity', None) for i in data]
+        self.totalStockhodersEquity = [i.get('totalStockhodersEquity', None) for i in data]
+        self.commonStock = [i.get('commonStock', None) for i in data]
+        self.additionalPaidInCapital = [i.get('additionalPaidInCapital', None) for i in data]
+        self.retainedEarnings = [i.get('retainedEarnings', None) for i in data]
+        self.otherEquityTotal = [i.get('otherEquityTotal', None) for i in data]
+        self.totalLiabilitiesShareholdersEquity = [i.get('totalLiabilitiesShareholdersEquity', None) for i in data]
+        self.totalCommonSharesOutstanding = [i.get('totalCommonSharesOutstanding', None) for i in data]
+        self.data_dict = {
             'quoteId': self.quoteId,
             'type': self.type,
             'fiscalYear': self.fiscalYear,
@@ -235,6 +233,8 @@ class BalanceSheet:
             'totalCommonSharesOutstanding': self.totalCommonSharesOutstanding
         }
 
+
+        self.df = pd.DataFrame(self.data_dict)
     @classmethod
     def from_dict(cls, data):
         return cls(data)

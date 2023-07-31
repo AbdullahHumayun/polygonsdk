@@ -1,5 +1,6 @@
 from datetime import datetime
 from .mapping_dicts import OPTIONS_EXCHANGES
+import pandas as pd
 class OptionQuote:
     """Class representing option quotes."""
 
@@ -21,6 +22,20 @@ class OptionQuote:
         self.sequence_number = [result.get('sequence_number') for result in results]
         self.sip_timestamp = [datetime.fromtimestamp(result.get('sip_timestamp') / 1e9).strftime('%Y-%m-%d %H:%M:%S') for result in results]
 
+
+        self.data_dict = {
+
+            'Ask Exchange': self.ask_exchange,
+            'Bid Exchange': self.bid_exchange,
+            'Ask Price': self.ask_price,
+            'Bid Price': self.bid_price,
+            'Ask Size': self.ask_size,
+            'Ask Price': self.ask_price,
+            'Timestamp': self.sip_timestamp
+        }
+
+
+        self.df = pd.DataFrame(self.data_dict)
     def to_dict(self):
         """
         Convert OptionQuote object to a dictionary.

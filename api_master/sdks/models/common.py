@@ -21,3 +21,4 @@ class Market(Enum):
 class EventType(Enum):
     TestOptionsEvent = "TO"
     TestStocksEvent = "TS"
+    TestIndicesEvent = "TI"
